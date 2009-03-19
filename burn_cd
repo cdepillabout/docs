@@ -1,0 +1,33 @@
+
+# the .m3u can be made with xmms
+# this should be run by root
+mp3burn -p nerdcore.m3u -o "-v -useinfo driveropts=noforcespeed,burnfree speed=48 dev=ATA:1,0,0"
+
+# change a song from lower sample rate to 44100 
+sox -r 32000 cakesong.mp3 -r 44100 cakesong.wav
+lame cakesong.wav
+mv cakesong.wav.mp3 cakesong.mp3
+
+# take a directory of wav files and make them mp3s
+ls -1 *.wav | perl -lane '$file = $_; chomp($file); $new_file = $file; $new_file =~ s/\.wav/\.mp3/; system("lame " . $file); system("mv " . $file . ".mp3" . " " . $new_file);'
+
+# !(MUST BE ROOT)!
+
+#### ******** the -n 20 is very important *********** ####
+
+# play the ninth track without writing anything
+cdda2wav -e -N -t 9 dev=1,0,0 -n 20
+cdda2wav -e -N -t 9 dev=ATAPI:0,0,0 -n 20
+
+# rip a cd into wav files
+cdda2wav -B -O wav dev=1,0,0 -n 20
+cdda2wav -B -O wav dev=ATAPI:0,0,0 -n 20
+
+# straight-up burn some wave files
+# could also use -overburn option
+cdrecord -v -useinfo -pad driveropts=noforcespeed,burnfree speed=48 dev=1,0,0 -audio *.wav
+
+# burn some non-music files (make into filesystem)
+# banana_phone/ will not be on the cd, but everything
+# under it will
+mkisofs -R banana_phone/ | cdrecord driveropts=noforcespeed,burnfree speed=48 dev=1,0,0 -

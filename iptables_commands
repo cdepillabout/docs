@@ -1,0 +1,37 @@
+
+
+# accept traffic that _I_ initiated
+iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+# accept traffic from localhost
+iptables -A INPUT -s localhost -j ACCEPT
+
+
+#
+# this is to limit connections to sshd
+# http://www.debian-administration.org/articles/187
+#
+
+# sets a list with the ip of new connections to port 50084
+iptables -A INPUT -p tcp --dport 50084 -m state --state NEW -m recent --set
+
+# updates that list of connections if they have had
+# more than 4 hits in 60 seconds.  if so, drop.
+iptables -A INPUT -p tcp --dport 50084 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 -j DROP
+
+# opens this port for connections that have not been dropped
+iptables -A INPUT -p tcp --dport 50084 -j ACCEPT
+
+
+
+
+
+# open a specific port
+iptables -A INPUT -p tcp -i eth0 --dport 80 -j ACCEPT
+
+# this might be better because it puts it before the DROP rule
+#iptables -I INPUT 2 -p tcp -i eth0 --dport 80 -j ACCEPT
+
+# make the policy for incomming traffic to DROP
+iptables -P INPUT DROP
+

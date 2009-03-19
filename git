@@ -1,0 +1,124 @@
+
+# create an empty git repository
+git init
+
+# create a "remote" for a repository at a certain url.
+# This creates a remote for the URL git@github...exercises.git and 
+# calls it "origin".
+git remote add origin git@github.com:cdepillabout/sicp-exercises.git
+
+# make some changes to the files in your repository...
+# then, commit those changes to your repository
+git commit -a
+
+# push those changes to the server.
+# We are pushing to our remote origin's master branch
+git push origin master
+
+
+# create new branch called experimental
+git branch experimental
+
+# change to the new branch
+git checkout experimental
+
+# now, edit a file, commit, and switch back to the master
+git commit -a
+git checkout master
+
+# to see what changes you're about to merge together'
+git diff master experimental
+
+# merge the experimental branch with the master branch (our current branch)
+git merge experimental
+
+# If we have conflicts, view them
+git diff
+
+# edit the conflicting files, then commit again
+git commit -a 
+
+# delete your experimental branch when all the files are already in the current branch.
+# this checks to make sure you don't have any pending changes.
+git branch -d experimental
+
+# delete your crazy idea branch even if you have files with changes that have not
+# been merged.
+git branch -D crazy-idea
+
+
+# push a local branch to your remote repository
+git push origin <branch_name>
+# remove a branch from the remote repository
+git push origin :somebranch
+
+
+# clone or copy a repository from github (after you've forked it to your account --
+# that's why the name is cdepillabout)
+git clone git@github.com:cdepillabout/merb-core.git
+# add their directory as a place you can pull from
+git remote add wycats git://github.com/wycats/merb-core.git
+
+# 1
+# go back to your copy
+git checkout master
+# get their latest copy and automatically merge
+git pull wycats master
+
+# OR
+
+# 2
+# go back to your copy
+git checkout master
+# get their latest updates
+git fetch wycats
+# manually merge
+git merge wycats/master
+
+
+
+# set up aliases
+git config --global alias.co checkout
+
+
+# ignore certain files
+# Create a file in the root directory called ".gitignore and add some files to it
+$ cat .gitignore
+
+*.log
+db/schema.rb
+db/schema.sql
+
+$ 
+
+
+
+# show the files that have been commited
+git ls-files
+
+# show the status
+git status
+
+
+# to create a new branch
+Git branch [name of your new branch]
+
+# to push the new branch to a remote repository
+Git push origin [new-remote]
+
+# to pull a new branch from a remote repository
+Git fetch origin [remote-branch]:[new-local-branch]
+
+# Git-pull and git-fetch are different because git-pull does a git-fetch 
+# followed by a git-merge. You can do a "git fetch" at any time to update 
+# your local copy of a remote branch. This operation never changes any of 
+# your own branches and is safe to do without changing your working copy. 
+# A "git pull" is what you would do to bring your repository up to date with 
+# a remote repository.
+
+
+# first...
+git remote add laptop duo2book.local:repos/m_project
+# then, to push a committed local change of the XYZ branch to the remote 
+# LAPTOP branch
+Git push laptop xyz

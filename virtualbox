@@ -1,0 +1,6 @@
+
+# load the module
+modprobe vboxdrv
+
+# start headless from the console
+VBoxManage startvm <vm name> -type vrdp

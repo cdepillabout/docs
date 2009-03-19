@@ -1,0 +1,17 @@
+
+# add a default gateway to the intarweb
+route add default gw 192.168.1.1
+
+# an alternative way
+route add -net 0.0.0.0/0 gw 192.168.1.1
+
+
+# this is the command run when an interface is brought up with
+# the command `ifconfig eth0 192.168.1.104`
+route add -net 192.168.1.0/24 dev eth0`
+
+
+# delete the route created for you when you bring up an if_interface 
+# with the command `ifconfig eth0 192.168.1.104`
+# (the /24 is important)
+route del -net 192.168.1.0/24 dev eth0

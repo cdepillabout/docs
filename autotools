@@ -1,0 +1,19 @@
+
+
+# when I am working with my files, I need the new package config path
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/home/illabout/b/test/filesystem/lib/pkgconfig/"
+
+# use this aclocal dir...
+aclocal -I /home/illabout/b/test/filesystem/share/aclocal/
+
+autoheader 
+
+automake -a
+
+autoconf
+
+./configure --prefix=/home/illabout/b/test/filesystem
+
+make
+
+make install

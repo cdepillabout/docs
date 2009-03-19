@@ -1,0 +1,61 @@
+
+#### THIS IS FOR THE STANDARD OS FROM THE CD ####
+
+# run test suite (as user "bin")
+cd /usr/src/test
+make
+./run
+
+# Rebuild the entire operating system
+
+# see the options available
+cd /usr/src/tools
+make
+
+# rebuild os?
+su
+make clean
+time make image
+make hdboot
+
+
+#### THIS IS FOR UPDATING FROM THE SUBVERSION REPOSITORY ####
+
+# get sources
+cd /usr
+svn --username username checkout https://gforge.cs.vu.nl/svn/minix/trunk/src
+
+# update sources
+cd /usr/src
+svn update
+
+# rebuild (may have to update files in /etc and /usr/src/etc manually)
+cd /usr/src
+make world
+
+# Make world does nothing with the 'etc files'. Sometimes it may 
+# be necessary to get new or updated etc files. There is no 
+# automated procedure for this, though. Compare files in 
+# src/etc and /etc and see if any updates have happened.
+
+
+# To boot your new image, see that your 'image' boot environment 
+# variable is set to '/boot/image' (the default). This means the 
+# newest image from /boot/image will be booted.
+# You should check to make sure that the just-installed image does
+# indeed have the newest modification time. If that is all in order, 
+# reboot your system by saying:
+reboot
+
+
+# The above procedure doesn't take the rebuilding required 
+# for the system libraries for GCC into account. If you have 
+# GCC installed, you can update your system libraries in 
+# /usr/gnu/lib by doing this, as bin:
+PATH=$PATH:/usr/gnu/bin
+make clean all-gnu install-gnu
+
+
+
+
+

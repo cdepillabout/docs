@@ -1,0 +1,21 @@
+
+# kill snort
+killall -3 snort
+
+# use as sniffer
+# show packet data, headers, and packet length headers
+snort -d -v -e
+
+# log to binary file in the directory log/ 
+# (you don't need to use -b because it automatically does it)
+# -h makes something centered on your home network or something
+snort -dev -l ./log/ -h 192.168.1.0/24
+
+# play back that respective binary log file
+snort -dv -r packet.log
+
+# same as above but only icmp packets
+snort -dvr packet.log icmp
+
+
+# http://www.snort.org/docs/snort_htmanuals/htmanual_261/node6.html

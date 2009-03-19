@@ -1,0 +1,23 @@
+
+# I tried `emerge -e world` but it failed like
+# half-way through (actually on 
+# jack-audio-connection-kit).  I want to emerge 
+# everything after jack-audio-connection-kit, 
+# without having to emerge everything before it.
+
+# perl ftw
+
+emerge -p -v -e world | grep ebuild |  \
+perl -nle 'm/\s\S+\/\S+\s/; $& =~ m/\S+/; print $&;' | \
+perl -e '$jack = 0; $emerge_line = ""; while($input = <>) {chomp $input; $emerge_line .= " =" . $input if $jack; if ($input ~= m/jack-audio-connection-kit/) {$jack = 1;}} print $emerge_line; system("emerge -p -v --oneshot " . $emerge_line);'
+
+# list available overlays
+layman -L
+
+# add overlay
+layman -a OVERLAY
+
+# update overlays
+layman -S
+
+

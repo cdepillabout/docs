@@ -1,0 +1,220 @@
+
+# This is command-line editing hax.
+#
+# Press Ctrl-R to search the bash history for another command
+# While your search is going, press Ctrl-R again to get another
+# item.
+#
+# !! repeats the previous command.  !-2 repeats two commands ago.
+# !-3 repeats three commands ago.  You can use !! anywhere.  
+# For example:
+
+$ ifconfig eth0
+bash: ifconfig: command not found
+$ /sbin/!!
+eth0 Link encap:Ethernet HWaddr 00:0C:29:95:AB:90
+     inet addr:192.168.127.129 Bcast:…
+
+# Use the command `history` to view your history and then select a 
+# command with !<n>, like !42.
+#
+# Also, !* gets you all the arguments to the previous command line.
+
+# you can use touch and find interestingly
+touch -t 200801160000 timestamp
+find / -newer timestamp print
+
+# use ".[^.]*" instead of ".*" to match dot files
+
+# view the end of a file in less
+less +G <file>
+
+# after using Ctrl-Z to suspend a program, you can have it run in the 
+# background by using the command `bg`.  You can bring it to the
+# foreground again by using `fg`.  The same thing can be done with a root
+# shell by using the command `suspend`.  This can also be done on ssh with
+# the command "~<Ctrl-Z>" (that's tilde, control-z).
+
+
+
+# reads in everything from .conkyrc and changes lightgrey to grey
+perl -ne 's/lightgrey/grey/g; print $_' < .conkyrc
+
+# this can also probably be done with sed
+sed -e 's/darkgrey/blue/g' < .conkyrc
+
+# reverse a string and change it from decimal-encoded ascii to 
+# straight-up text
+echo '065076100' | perl -lne '$new_string = ""; for($i = length($_) -3; $i >= 0; $i-=3) {$new_string .= chr(substr($_, $i, 3)); } print $new_string;'
+
+# super-hax version of the above
+# s/something/code/e replaces something with the _perl code_ in e
+# that's really handy!  I can't call reverse on $_ explicitly because
+# it's not an array?!
+echo '065076100' | perl -lne 's/(\d{3})/chr($1)/eg; print reverse(split("",$_));'
+
+# reverse of the above
+echo 'brains' | perl -ne 'chomp($_); $_ = reverse(split("")); s/(.)/ord($1)/ge; print $_."\n";'
+
+
+# I wanted all the songs from songs.html
+# he does something funny and he doesn't let you download it.
+# but he has an obscured link to it on his website.
+# this reads the file, unobscures the link, and dls all the files
+# I should make something to do this from stdin
+perl -e '$fff = `cat songs`; $fff =~ s/\x0D\x0A//g; while ($fff =~ m/http(.){0,110}\.mp3/g) { print "Getting " . $&. "...\n"; system("wget " . "\"" . $& . "\""); }'
+
+
+# shuffle lines of input on stdin
+# this is pretty haxin
+perl -e 'use List::Util 'shuffle'; while(<>) {push(@a, $_)}; print $_ foreach shuffle(@a)'
+
+
+# read programs from world file and then look at them in eix
+while read prog; do eix $prog; done < world
+
+
+# write command line arguements using `perl` to record the
+# same file many times using cdrecord
+cdrecord -v -useinfo -pad driveropts=noforcespeed,burnfree speed=48 dev=1,0,0 -audio bananaPhone.wav bananaPhone.wav `perl -e 'print "bananaPhone.wav " x 50;'`
+
+
+# use nc6 to connect flood a connection
+for i in `seq 1 5` ; do
+  echo 'exit' | nc 192.168.1.1 22 ;
+done
+
+# get the value of variables in the kernel
+getconf GNU_LIBPTHREAD_VERSION
+
+# log into various machines using ssh and run a command
+# on all of them
+for ((i=3; i<19; i+=1)); do ssh user@169.182.83.$i "echo >> who.txt; echo 169.182.83.$i >> who.txt; /sbin/ifconfig eth0 >> who.txt"; done
+
+for ((i=3; i<19; i+=1)); do ssh user@169.182.83.$i "dmesg >> dmesg.169.182.83.$i"; done
+
+for ((i=3; i<19; i+=1)); do ssh user@169.182.83.$i "echo 169.182.83.$i; w; echo"; done
+
+# cat a file to another host
+$ cat ~/.ssh/id_dsa.pub | ssh you@other-host 'cat - >> ~/.ssh/authorized_keys'
+
+
+# forward X11 over ssh so it works well
+ssh -Y user@computer
+
+# run an exploit script many times with an increasing
+# address (it's in hex so it's cool)
+perl -e '$address = "0xbffff000"; for ($i = 0; $i < 4100; $i++) {print $i . "\n"; system("./exploit " . sprintf("%x", hex($address) + $i) .  " 20"); system("./stack")}'
+
+# graph all depends from equery output
+equery g xorg-server | perl -e 'while($a = <>) { $a =~ s/^\W*//; $a =~ s/\[(\W|\w)*\]//; $a =~ s/\((\W|\w)*\)//; print "=" . $a; }' 
+
+# wget a website.  This command can be run one more time
+# if it errors out the first time.  No files you already 
+# downloaded will be overwritten
+wget -r -l inf -nc htp://web.site.com
+
+# find all the people with a readable home directory and
+# search for a specific file in all of them...
+ls -l | grep -v drwx...--- | awk '{print $9;}' | while read WHAT; do ls -dl $WHAT/badfile; done
+
+# Find all files in this directory (.) modified in the 
+# last day (-mtime -1) that aren't directories (\! -type d) 
+# and execute the list function on them ls -l
+find . -mtime -1 \! -type d -exec ls -l {} \; 
+
+
+# find the version of GCC a binary was compiled with 
+objdump -s BINARY | grep -i gcc
+
+# within a screen session, this command executes a 
+# command on all open screen terminals.  cool!
+# (you have to press CTRL-a to enter screen commands)
+# stuff copies a string into the input buffer of the current window
+# COMMAND is the command you want to execute
+# \# tells it to do it on all screens
+:at \# stuff "COMMAND \012"
+
+# do floating point math with `bc`
+bc -l
+
+# within `bc`, the last variable holds the value of the last thing
+# printed to the screen
+
+# run a command on many hosts using ssh, and get the output to your screen
+perl -e '$command = "uname -a | grep -v FC5"; for ($i = 1; $i < 31; $i++) { print "cs" . $i . "--\n"; system ("ssh user\@cs" . $i . " " . $command); }'
+
+# get a list of webservers from a list of ip addresses
+sudo nmap -p 80 182.345.51.* | grep -B 2 open |  grep -P -o "\d+\.\d+\.\d+\.\d+"
+
+# then take those webservers and  request a page from them
+sudo nmap -p 80 49.134.51.* | grep -B 2 open | grep -P -o "\d+\.\d+\.\d+\.\d+" | while read i; do echo $i; lynx -dump $i;echo ; echo ; done
+
+# get a list of good file names with names
+du -s * 2>/dev/null | sort -n | cut -f2 | xargs du -sh
+
+# automate etc-update
+( echo "-3"; yes) | etc-update
+
+
+# get a list of files in increasing size
+du -s * 2>/dev/null | sort -n | cut -f2 | xargs -d '\n' du -sh
+
+# rename all files in a directory with a certain file extension
+for file in *; do mv "$file"  "$file".ogg; done
+
+# get all of the direct dependencies of a package
+equery g firefox | egrep --color  "^ \`" | cut -d" " -f3 | sort |uniq
+
+# create a password hash that can be used in /etc/shadow
+openssl passwd -1
+
+# make dumping of core files possible
+ulimit -c unlimited
+# run a program
+./some_program
+# while it is running, press C-\ and it will dump core
+
+
+# output the sequence of numbers 1-n
+# `seq n`
+# for example
+seq 200
+
+
+# to look at BIOS information: (as root...)
+dmidecode
+
+# to grep files for a string but diplay the whole file with the 
+# matching parts highlighted
+glark --no-filter -N --text-color "bold red" o ~/NOTES
+
+# to wget all mp3 files from a website
+# -r is recursive
+# -l3 is to only go down 3 levels
+# --no-parent is to ignore references to the parent directory
+wget -r -l3 --no-parent -A.mp3 http://beefyness.com/music/
+
+# to get a program's exit code type this into the
+# terminal after the program has exited
+echo $?
+
+# get a tree of the output of ps
+pstree
+
+# get all files that have the same file name but with 
+# two different extensions. Get all files that have
+# both a .mpg extension and a .mov extension.  you
+# can then delete the one with .mpg extension
+for file in *.mpg; do if [ -e ${file%.mpg}.mov ]; then rm ${file}; fi; done
+
+
+# convert every image (file) in a directory to 512xWHATEVER.
+# this is okay, but it's not good enough.  I'll have to use
+# the perl interface for image magick to make the bigger side
+# 512 instead of the top and bottom side.  This outputs correctly
+# though.  the files are called smaller-1.jpg, smaller-2.jpg, etc.
+convert * -resize 512 -quality 50 smaller.jpg
+
+# indent a c file from the command line
+indent -kr -ut -br -ts4 main.c

@@ -1,0 +1,55 @@
+# make iso from cd
+dd if=/dev/hdc of=cd.iso
+
+# created a 2 GB virtual disk
+$ qemu-img create -f vmdk Ubuntu.vmdk 2G
+
+http://www.ffnn.nl/pages/articles/linux/vmware-player-image-creation.php
+
+
+# create the configuration file
+$ cat > Ubuntu.vmx
+
+config.version = "8"
+virtualHW.version = "3"
+ide0:0.present = "TRUE"
+ide0:0.filename = "Ubuntu.vmdk"
+memsize = "256"
+MemAllowAutoScaleDown = "FALSE"
+ide1:0.present = "TRUE"
+
+#ide1:0.fileName = "auto detect"
+#ide1:0.deviceType = "cdrom-raw"
+
+ide1:0.fileName = "ubuntu-5.10-install-i386.iso"
+ide1:0.deviceType = "cdrom-image"
+
+ide1:0.autodetect = "TRUE"
+floppy0.present = "FALSE"
+ethernet0.present = "TRUE"
+usb.present = "TRUE"
+sound.present = "TRUE"
+sound.virtualDev = "es1371"
+displayName = "Ubuntu"
+guestOS = "Ubuntu"
+nvram = "Ubuntu.nvram"
+MemTrimRate = "-1"
+
+ide0:0.redo = ""
+ethernet0.addressType = "generated"
+uuid.location = "56 4d 5c cc 3d 4a 43 29-55 89 5c 28 1e 7e 06 58"
+uuid.bios = "56 4d 5c cc 3d 4a 43 29-55 89 5c 28 1e 7e 06 58"
+ethernet0.generatedAddress = "00:0c:29:7e:06:58"
+ethernet0.generatedAddressOffset = "0"
+
+tools.syncTime = "TRUE"
+ide1:0.startConnected = "TRUE"
+
+uuid.action = "create"
+
+checkpoint.vmState = ""
+
+$
+
+# start vmplayer
+$ vmplayer Ubuntu.vmx

@@ -1,0 +1,39 @@
+
+
+# This gives you permission to open windows on the X-server and use it. (if you opened 
+# it from the console (`X :1 &`)
+xauth add :0 . `mcookie`
+
+# you can open programs like so:
+xterm -display :1 &
+
+# a virtual X-server in an X-window
+# (this is pretty cool)
+Xnest :3 -scrns 2 &
+xauth add :3 . `mcookie`
+xterm -display :3.0 -bg red
+xterm -display :3.1 -bg blue
+
+# You can run the X-server on one machine and the connecting X-clients on another
+# On the first machine (192.168.0.1) start the X-server using “startx”, then ensure a window 
+# manager is running. In the “xterm” window enter the command:
+# ( you probably shouldn't use this because it's not really secure )
+xhost add 192.168.0.2
+
+# on the second machine, from a console, enter the command
+xterm -display 192.168.0.1:0 &
+
+
+# from http://www.debian-administration.org/articles/494
+
+$ xauth list $DISPLAY
+#You'll get something like
+
+#somehost.somedomain:10 mit-magic-cookie-1 4d22408a71a55b41ccd1657d377923ae
+
+#Then, after having done su, tell the new user what the cookie is:
+
+$ xauth add somehost.somedomain:10 MIT-MAGIC-COOKIE-1 4d22408a71a55b41ccd1657d377923ae
+
+# set up two screens
+xrandr --output LVDS --auto --output VGA --auto

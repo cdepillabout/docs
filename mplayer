@@ -1,0 +1,25 @@
+
+# dump subtitle files
+
+
+# play movie with japanese subtitles
+mplayer dvd://1 -slang ja -sid 1
+
+# rip movie 
+# might have to use -aid option if there is more than one audio track
+# -sid might also have to be changed if there is more than one subtitle language
+mencoder -o "メゾン・ド・ヒミコ.avi" dvd://1 -chapter 1-20 -slang ja -sid 1 -vf scale -zoom -xy 512  -oac copy -ovc lavc -lavcopts vcodec=mpeg4:keyint=25
+
+
+# rip movie with weird subtitles
+mencoder dvd://10 -o file.avi -oac copy -ovc lavc -lavcopts vcodec=mpeg4:vpass=1:keyint=25 -vobsubout subtitles -vobsuboutindex 0 -sid 2
+
+# play that subsequent file
+mplayer file.avi -vobsub subtitles
+
+# this will now play files (for some reason gmplayer does not work?)
+mplayer dvd:// -ni -nocache
+
+# this prints out information about _everything_ (including titles
+# and substitle information) on the DVD
+midentify dvd://

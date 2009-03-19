@@ -1,0 +1,189 @@
+
+# in assembler syntax, the output of gcc is AT&T style. (I think)
+# also, the andl, movl, pushl, all those calls have 'l' on the end.
+# The 'l' means that it is opperating on long integers!  There is
+# also a corresponding 'andw' (word), 'movb' (byte) calls.
+
+# syscall number can be found in /usr/include/sys/syscall.h
+# or in /usr/include/asm/unistd.h (acutally they might just
+# be here).
+
+
+# when making a syscall with less than 6 arguments,
+# the syscall number is placed in %eax,
+# and the args are placed in  %ebx, %ecx, %edx,
+# %esi, and %edi, in that order.
+
+# for syscalls with 6 or more arguments...?
+
+
+# General Purpose Registers (GPR):
+
+#   1. EAX : Accumulator register. Used in arithmetic operations.
+#   2. ECX : Counter register. Used in shift/rotate instructions.
+#   3. EDX : Data register. Used in arithmetic operations and I/O operations.
+#   4. EBX : Base register. Used as a pointer to data 
+#		(located in DS in segmented mode).
+#   5. ESP : Stack Pointer register. Pointer to the top of the stack.
+#   6. EBP : Stack Base Pointer register. Used to point to the 
+#		base of the stack.
+#   7. ESI : Source register. Used as a pointer to a 
+#		source in stream operations.
+#   8. EDI : Destination register. Used as a pointer to 
+#		a destination in stream operations.
+
+
+# The EIP register contains the address of the next instruction 
+# to be executed if no branching is done.
+# EIP can only be read through the stack after a call instruction.
+
+# A number's sign is changed by inverting all of the bits and adding one.
+# 0001 -> 1110 -> 1111
+# so 0001 is "one" and 1111 is "negative one"
+
+# when you call a function, the things in your registers might get
+# overwritten, so you need to push them on the stack first
+pushl 	$1,%eax
+pushl 	$2,%ebx
+call	do_stuff
+popl  	%ebx
+popl	%eax
+
+
+# explanation of the leal instruction:
+# http://www.astahost.com/info.php/leal-what-hell-instruction_t11602.html
+
+# when you make a function call, you have to call push %ebp onto the stack...?
+# then you have to mov %esp to %ebp?
+
+push %ebp
+movl %esp, %ebp
+
+# but after this, usually 'subl NUM, %esp' is called.
+# but NUM is different numbers.  In my case, it's $16.
+# In some guy online's case, it's $4.  In the tutorial
+# I am doing online, it's $8...?  FISHY!
+
+# if you compile a helloworld c program into assembly,
+# the first three lines of the main function are fishy,
+# then it goes into what I was describing above.
+# ...it does this even when main is blank
+# (even when main is of type void...)
+
+# but when I delete all that junk, it works fine...
+# also works in hello.s
+
+# :::  referring to the push %ebp; movl %esp, %ebp; subl NUM, %esp  :::
+# from wiki:
+# This sequence of instructions is typical at the start of a subroutine
+# to save space on the stack for local variables; EBP is used as the 
+# base register to reference the local variables, and a value is subtracted 
+# from ESP to reserve space on the stack (since the Intel stack grows 
+# from higher memory locations to lower ones).
+
+# apparently, the register %esp is increased/decreased only by 
+# pop/push.  So it's always pointing at the top of the stack? 
+# (where top == lowest memory address?)
+
+
+# when you have your shell code written in assembly,
+# compile it and run it in gdb.  then `disas main`.
+# Find the offset of the code you wrote. (e.g. main+16)
+# then run `x/bx main+OFFSET` (e.g. `x/bx main+16)
+
+
+
+# use gdb to get my shellcode so I can include it in a c file
+# outputs it in the form \x31\xc0\x31\xdb\x31\xd2\x50\x6a\x0a\x68 ...
+
+# file.out needs to have 'x/43bx main' (this outputs until the main+43)
+
+gdb -batch -x file.out a.out | cut -f 2 -d":" | LC_ALL=C tr '\t' '\n' | grep -v '^$' | grep '0x..' | sed -e 's/0x/x/' | xargs -I '{}' echo -nE '{}' | sed -e 's/x/\\x/g'
+
+
+# usually the last things in this are \xcd\x80\x90\x90\x90... the 90's aren't
+# important but the things before that are
+
+# here is what you have to do to get this to work:
+1. create the asm file (*.s) by hand.
+2. compile it under gcc
+3. use gdb and `disas main`
+4. find where YOUR code starts and run `x/50bx main+YOURCODE`
+   The 50 corresponds to about how long your code it.  It might be like 80 or so.
+5. run that long gdb command above to get the code.
+6. now you have your shell code.
+
+# I don't think you can have \x00 in your shell code.  It will just make it
+# be all baaaaad (trigger as end-of-string)
+
+
+# I think when you put something in (), you get the 
+# memory address stored at this location
+
+subl $4, %esp # This is used when calling a new function to pass args.
+	      # Subtract 4 from esp
+movl $1, (%esp) # store the function call argument 1 in that address.
+call foo # call the fucntion (with the argument 1).
+
+
+# Here are the steps in a function call:
+1) push the parameters on the stack (do this in the main function)
+2) push a return address for the code to actually go back to
+	( this is done with the `call` instruction)
+3) push the main() function's %ebp onto the stack
+4) then set %ebp to %esp (which will be pointing to the 
+	top of the stack at this time... e.g. below main()'s %ebp)
+5) now you're in your function...
+
+main:
+	subl    $4, %esp
+        movl    $1, (%esp)
+        call    func
+
+func:
+	pushl   %ebp
+        movl    %esp, %ebp
+
+here's your stack:
+
+-----------------------
+
+params
+
+-----------------------
+
+(THERE MIGHT BE A DUMMY int HERE...???)
+
+-----------------------
+
+return address for actual code (like 0x080483dc)
+
+----------------------
+
+main()'s %ebp (old %ebp)
+
+----------------------     <--- new %ebp points here
+
+local variables
+
+----------------------     <--- %esp points here
+
+
+
+# from within function:
+
+# to access variables from functions:
+movl 8(%ebp), %eax  # move arg to func() to %eax
+
+
+# leave from a function
+1) use `leave`, this actually calls
+	mov %ebp, %esp
+	pop %ebp # this reads in %ebp (with the old value)
+2) use `ret`, this actually calls
+	pop %eax
+	jmp %eax
+
+# when I change a variable being passed to a function,
+# the variable below the %ebp actually changes.
+# (a new variable is not created above %esp...)
