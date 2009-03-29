@@ -122,3 +122,7 @@ git remote add laptop duo2book.local:repos/m_project
 # then, to push a committed local change of the XYZ branch to the remote 
 # LAPTOP branch
 git push laptop xyz
+
+
+# show all changes to a file
+git log -p NOTES
