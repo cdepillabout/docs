@@ -101,15 +101,15 @@ git status
 
 
 # to create a new branch
-Git branch [name of your new branch]
+git branch [name of your new branch]
 
 # to push the new branch to a remote repository
-Git push origin [new-remote]
+git push origin [new-remote]
 
 # to pull a new branch from a remote repository
-Git fetch origin [remote-branch]:[new-local-branch]
+git fetch origin [remote-branch]:[new-local-branch]
 
-# Git-pull and git-fetch are different because git-pull does a git-fetch 
+# git-pull and git-fetch are different because git-pull does a git-fetch 
 # followed by a git-merge. You can do a "git fetch" at any time to update 
 # your local copy of a remote branch. This operation never changes any of 
 # your own branches and is safe to do without changing your working copy. 
@@ -121,4 +121,4 @@ Git fetch origin [remote-branch]:[new-local-branch]
 git remote add laptop duo2book.local:repos/m_project
 # then, to push a committed local change of the XYZ branch to the remote 
 # LAPTOP branch
-Git push laptop xyz
+git push laptop xyz
