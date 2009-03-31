@@ -126,3 +126,9 @@ git push laptop xyz
 
 # show all changes to a file
 git log -p NOTES
+
+# get some color output for some commands
+git config --global color.diff auto
+git config --global color.status auto
+git config --global color.branch auto
+

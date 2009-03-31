@@ -164,3 +164,9 @@ ctrl-w _
 # make all window equal size
 ctrl-w =
 
+
+# delete to end of page (everything visible on the screen)
+dL
+
+# chop off end of line and go into insert mode
+C
