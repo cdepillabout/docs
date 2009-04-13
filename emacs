@@ -3,6 +3,34 @@
 ; Undo
 ; C-x u
 
+
+;;; Windows and Buffers
+; To create a new buffer, just C-x b, and type the buffer name.
+; To Kill them, just C-x k.  To save them, just C-x C-w.
+; Split windows vertially: C-x 2
+; Split windows horizontally: C-x 3
+; Balance windows: C-x +
+; move to next window: C-x o
+; delete other windows: C-x 1
+; list buffers: C-x C-b.
+
+
+;;; HELP
+; show all keyboard shortcuts that are defined for current buffer:
+; M-x describe-bindings
+; Then, scroll down to the command and hit enter.  It will show you
+; help for that command.
+;
+; To find help for a particular key sequence,
+; M-x describe-key
+; Then, type the key sequence.
+;
+; If you are interested in finding a command, but not completely
+; sure about the name, do
+; M-x apropos
+; and type in a regular expression.
+
+
 ;;; Scheme.
 ;http://www.cs.huji.ac.il/~osigor/emacs/pllab.html#5.1
 ; in emacs, "M-x run-scheme" to run the scheme interpreter.  
@@ -27,11 +55,17 @@
 ;;; Indentation
 ; Indent several lines at once.
 ; Make all the lines to indent, then C-M-\
+;
+; fill-paragraph: M-p
+; intelligently line-wraps your text for you. 
 
 
 ;;; Search and replace
 ; To search for some examples of a string and replace them,
 ; do M-%.
+; To do incremental search forward, 
+; C-s.  Backward is C-r.
+
 
 ;;; Macros
 ; Start macro
