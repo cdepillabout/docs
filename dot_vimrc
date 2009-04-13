@@ -1,0 +1,68 @@
+filetype plugin on
+filetype indent on
+
+set fileencodings=utf-8
+set mouse=a
+set foldenable
+set background=dark
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+
+set viminfo='100,\"100   " Keep a .viminfo file.
+
+set wildmode=list:longest	" When autocompleting things, do it like the shell
+set scrolloff=3				" Scroll when the cursor is 3 lines from top or bottom
+set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set ruler					" know how far you are in a file
+set encoding=utf-8
+
+colorscheme darkblue
+"colorscheme default
+"colorscheme delek
+"colorscheme desert
+"colorscheme torte
+
+
+let java_highlight_java_lang_ids=1
+let java_highlight_all=1
+"let java_highlight_functions="style"
+"let java_allow_cpp_keywords=1
+
+" use F5 for turning off and on hlsearch,
+" in both input mode (imap?) and command mode (map?)
+map <F5> :set hlsearch!<CR>
+imap <F5> <ESC>:set hlsearch!<CR>a
+
+" use CTRL-s for saving
+" this doesn't work...
+"nmap <c-s> :w<CR>
+"imap <c-s> <Esc>:w<CR>a
+
+
+source ~/.vim/plugin/cscope_maps.vim
+source ~/.vim/syntax/javascript.vim
+
+" show when autocmds are called
+"set verbose=9
+
+
+""""""""" This uses the execute command to create an autocmd 
+""""""""" that sets the fold_method if the syntax matches.
+""""""""" You have to use execute so that the variables get
+""""""""" evaluated now instead of when the autocmd executes.
+
+function Add_auto_foldmethod(syntax_of_file, fold_method)
+	execute "autocmd Syntax * "
+		\ "if expand(\"<amatch>\") == \"" . a:syntax_of_file . "\" | "
+		\ "execute \"set foldmethod=" . a:fold_method . "\" | "
+		\ " endif "
+endfunction
+
+call Add_auto_foldmethod("c", "syntax")
+call Add_auto_foldmethod("cpp", "syntax")
+"call Add_auto_foldmethod('asm', 'indent')
+call Add_auto_foldmethod("java", "syntax")
+call Add_auto_foldmethod("python", "indent")
+

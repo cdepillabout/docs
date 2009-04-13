@@ -1,0 +1,113 @@
+
+;; use the gentoo configuration files
+(require 'site-gentoo)
+
+;; use utf-8
+(prefer-coding-system 'utf-8)
+
+;; make sure you have new-line at the end of a document
+(setq require-final-newline 'ask)
+
+;; use the X server clipboard
+(setq x-select-enable-clipboard t)
+
+;; getting scheme to work in emacs
+(setq scheme-program-name "scm")
+
+; save all backup files to a separate directory
+(setq make-backup-files t)
+(setq backup-directory-alist (quote ((".*" . "~/.emacs_backups/"))))
+(setq auto-save-visited-file-name t)
+
+; when you yank a line, make it yank the following new line.
+; To copy a whole line: C-a; C-k, C-y; C-y
+(setq kill-whole-line t)
+
+; superboosts C-x b
+(iswitchb-mode t)
+
+; scrolling -- only scroll one line of text at a time
+(setq scroll-conservatively 3)
+(setq scroll-margin 3)
+
+; set autoindent
+; Just use C-J to get a new line, not RET
+;(define-key global-map (kbd "RET") 'newline-and-indent)
+
+;; In Emacs, to set the mod-N indentation 
+;; used when you hit the TAB key, do this:
+;;(setq c-basic-offset 2)
+;;(setq c-basic-offset 4)
+
+;; To cause the TAB file-character to be interpreted as 
+;;mod-N indentation, do this:
+;;(setq tab-width 4)
+;;(setq tab-width 8)
+
+;; To cause TAB characters to not be used in the file for 
+;;compression, and for only spaces to be used, do this:
+;;(setq indent-tabs-mode nil)
+
+
+;; Make colors not appear in the shell
+(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+
+;; reverse colors
+;;(set-foreground-color "bisque")
+;;(set-background-color "black")
+
+;;; Display full path name if appropriate on mode line.
+;(add-hook 'find-file-hooks 
+;	  '(lambda ()
+;	     (setq mode-line-buffer-identification 'buffer-file-truename)))
+
+;; used for getting clisp working in SLIME
+;(setq inferior-lisp-program "/usr/bin/clisp -K full")  ; clisp
+;(setq inferior-lisp-program "/usr/bin/sbcl")			; sbcl
+(setq inferior-lisp-program "/usr/bin/lisp")			; cmucl
+;(add-to-list 'load-path "/usr/share/emacs/site-lisp/slime")
+;(require 'slime)
+;(slime-setup)
+
+;; make it open firefox when opening a URL
+(setq browse-url-netscape-program "firefox")
+
+;; remove the toolbar
+;(tool-bar-mode 0)
+(menu-bar-mode 0)
+
+;; no splash screen
+(setq inhibit-splash-screen t)
+
+;; format the title-bar to be the buffer name
+(setq frame-title-format "%b")
+
+;; Make emacs highlight bracket pairs:
+(show-paren-mode t)
+
+;; use y or n instead of yes or not
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Highlight marked region
+(transient-mark-mode t)
+
+;; syntax hilighting
+(cond ((fboundp 'global-font-lock-mode)
+       ;; Turn on font-lock in all modes that support it
+       (global-font-lock-mode t)
+       ;; Maximum colors
+       (setq font-lock-maximum-decoration t)))
+
+
+;; MY KEYS
+(global-set-key [f1] 'goto-next-buffer) 
+(global-set-key [f2] 'delete-other-windows) 
+(global-set-key [f3] 'delete-window) 
+
+(defun goto-next-buffer ()
+	(interactive)
+	(switch-to-buffer nil))	
+
+
