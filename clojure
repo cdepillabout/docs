@@ -1,0 +1,20 @@
+
+; (defn- ...) is to define private functions
+; (defn ...) defines public functions
+
+; (fn [x] (* x x)) creates anonymous functions.
+; Also, #( ) can be used in the same manner.
+; #(* 2 %).  In this form, %N refers to the Nth argument,
+; and %& means the rest of the arguments.
+
+; (inc x) increases x by 1,
+; (dec x) decreases x by 1.
+
+; built-in function (time (fn)) measures time of fn
+
+; #^Graphics says that the next variable is going to be of type graphics
+
+; (doc fun) will give documentation for the function fun.
+
+; In emacs-to load the whole file, just do C-c C-k.
+; To only load the last sexp, do C-x C-e

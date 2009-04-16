@@ -218,3 +218,6 @@ convert * -resize 512 -quality 50 smaller.jpg
 
 # indent a c file from the command line
 indent -kr -ut -br -ts4 main.c
+
+# create a compressed tar file genetic.tar.gz from the folder genetic/
+tar czf genetic.tar.gz genetic/
