@@ -221,3 +221,11 @@ indent -kr -ut -br -ts4 main.c
 
 # create a compressed tar file genetic.tar.gz from the folder genetic/
 tar czf genetic.tar.gz genetic/
+
+
+# save a failing hard drive
+dd if=/dev/hda of=/dev/hda bs=512
+# or
+cat /dev/urandom > /dev/hdb
+cat /dev/zero > /dev/hdb
+

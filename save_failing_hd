@@ -1,6 +1,0 @@
-dd if=/dev/hda of=/dev/hda bs=512
-
-# or
-
-cat /dev/urandom > /dev/hdb
-cat /dev/zero > /dev/hdb
