@@ -1,0 +1,59 @@
+
+
+# Append '--no-defaults' flag to these commands if you don't want
+# to use the my.cnf from /etc...
+
+# after 'make && make install'ing mysql, actually install the databases
+$ mysql_install_db
+
+# remove test user account and set root password
+$ mysql_secure_installation
+
+# start mysql server
+$ mysqld_safe
+
+# connect to mysql server with user root and ask
+# for a password.
+$ mysql -u root -p 
+
+# shutdown mysql server
+$ mysqladmin -u root shutdown
+
+
+# MYSQL COMMANDS
+
+# show all the databases
+mysql> show databases;
+
+# use the mysql database
+mysql> use mysql;
+
+# show all the tables in the database we are using
+mysql> show tables;
+
+# show the current user
+mysql> select user();
+
+# create a new database
+mysql> CREATE DATABASE gentoo;
+
+# create a new table where that has 3 fields of variable length text
+mysql> CREATE TABLE developers ( name VARCHAR(128), email VARCHAR(128), job VARCHAR(128));
+
+# describe the fields in a table
+mysql> DESCRIBE developers;
+
+# insert data into the table
+mysql> INSERT INTO developers VALUES('Joe Smith', 'joesmith@gentoo.org', 'toolchain');
+mysql> INSERT INTO developers (job, name) VALUES('outsourced', 'Jane Doe');
+
+# see data in the tables.
+# All entries in a table
+mysql> SELECT * FROM table;
+# specific entries in the table
+mysql> SELECT * FROM table WHERE field=value;
+# specific fields in the table
+mysql> SELECT field1,field2,field3 FROM table;
+
+
+
