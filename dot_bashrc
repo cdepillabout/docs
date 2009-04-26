@@ -1,0 +1,82 @@
+# /etc/skel/.bashrc:
+#
+# This file is sourced by all *interactive* bash shells on startup,
+# including some apparently interactive shells such as scp and rcp
+# that can't tolerate any output.  So make sure this doesn't display
+# anything or bad things will happen !
+
+
+# Test for an interactive shell.  There is no need to set anything
+# past this point for scp and rcp, and it's important to refrain from
+# outputting anything in those cases.
+if [[ $- != *i* ]] ; then
+	# Shell is non-interactive.  Be done now!
+	return
+fi
+
+# Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
+if [[ -f ~/.dir_colors ]]; then
+	eval `dircolors -b ~/.dir_colors`
+else
+	eval `dircolors -b /etc/DIR_COLORS`
+fi
+alias ls="ls --color=auto"
+
+# Change the window title of X terminals 
+case $TERM in
+	xterm*|rxvt*|Eterm)
+		PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\007"'
+		;;
+	screen)
+		PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\033\\"'
+		;;
+esac
+
+
+
+# put the git branch in our prompt
+git_prompt()
+{
+	git_branch=`git branch 2>/dev/null | grep "\*" | sed -e "s/^\* //"`
+
+	if [ -n "${git_branch}" ]
+	then
+		echo -n "${git_branch} "
+	fi
+}
+
+export PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \[\033[01;33m\]$(git_prompt)\[\033[01;34m\]\$\[\033[00m\] '
+
+# Normal PS1
+#export PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] '
+
+
+# set my locale for man
+alias man='LC_ALL="C" LANG="C" man'
+
+# make emacs always open in non-graphical mode
+alias emacs='emacs -nw '
+
+# make vim open with the servername as "vimserver"
+#alias vim='vim --servername "vimserver" '
+
+# make command for opening files on an already open vim browser
+#alias rvim='vim --servername "vimserver" --remote-tab-silent '
+
+alias highlight='glark --no-filter -N --text-color "bold red" '
+
+# make sure java runs in server mode and with assertions enabled
+alias java='java -server -ea '
+
+# add my program directory
+export PATH="$PATH:/home/illabout/programming/bin" PAGER="/usr/bin/jless -I"
+
+# add classpath for java
+export CLASSPATH="$CLASSPATH:..:/usr/share/junit-4/lib/junit.jar"
+export CLASSPATH="$CLASSPATH:/usr/share/hamcrest-core/lib/hamcrest-core.jar"
+
+
+# add default browser
+export BROWSER="/usr/bin/firefox"
+
+export EDITOR="/usr/bin/vim"

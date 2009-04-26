@@ -229,3 +229,7 @@ dd if=/dev/hda of=/dev/hda bs=512
 cat /dev/urandom > /dev/hdb
 cat /dev/zero > /dev/hdb
 
+
+# change all instances of 'package genetic' to 'package midi' 
+# in a group of java files 
+sed -i -e 's/package genetic/package midi/' *.java
