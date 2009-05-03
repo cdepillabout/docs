@@ -53,6 +53,12 @@ git push origin <branch_name>
 git push origin :somebranch
 
 
+# On github, there is a public clone url and your own clone url.
+# The public clone url looks like git://github.com/...
+# but your own clone url looks like git@github.com/...
+# Cloning either one is the same, but if it's the public url, you
+# can't push to it.
+
 # clone or copy a repository from github (after you've forked it to your account --
 # that's why the name is cdepillabout)
 git clone git@github.com:cdepillabout/merb-core.git
