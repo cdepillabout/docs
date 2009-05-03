@@ -18,6 +18,9 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set ruler					" know how far you are in a file
 set encoding=utf-8
 
+" try to always use a syntax
+syntax on
+
 colorscheme darkblue
 "colorscheme default
 "colorscheme delek
@@ -66,3 +69,5 @@ call Add_auto_foldmethod("cpp", "syntax")
 call Add_auto_foldmethod("java", "syntax")
 call Add_auto_foldmethod("python", "indent")
 
+" Make sure I can get spell checking when the file I am editing does not have
+" a syntax associated with it.
