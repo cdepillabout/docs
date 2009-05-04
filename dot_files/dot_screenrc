@@ -1,0 +1,11 @@
+
+
+
+
+termcapinfo xterm|xterms|xs|rxvt ti@:te@
+
+hardstatus string "[screen %n%?: %t%?] %h"
+
+screen 2
+screen 1
+
