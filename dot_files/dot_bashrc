@@ -68,6 +68,12 @@ alias highlight='glark --no-filter -N --text-color "bold red" '
 # make sure java runs in server mode and with assertions enabled
 alias java='java -server -ea '
 
+# git aliases
+alias gcm='git commit -a -m '
+alias gps='git push '
+alias gpsh='gps '
+alias gst='git status '
+
 # add my program directory
 export PATH="$PATH:/home/illabout/programming/bin" PAGER="/usr/bin/jless -I"
 
