@@ -138,3 +138,12 @@ git config --global color.diff auto
 git config --global color.status auto
 git config --global color.branch auto
 
+
+# view changes to file vim since revision fa5e02cde11
+git diff fa5e vim
+
+# show a file vim from an old revision 1c730e9fca281
+git show 1c730e:vim
+
+# use a pager to display git output
+GIT_PAGER='less' git diff

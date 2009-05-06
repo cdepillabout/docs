@@ -75,6 +75,9 @@ alias gph='git push '
 alias gpsh='git push '
 alias gst='git status '
 
+# I don't want a git pager
+export GIT_PAGER=''
+
 # add my program directory
 export PATH="$PATH:/home/illabout/programming/bin" PAGER="/usr/bin/jless -I"
 
@@ -87,3 +90,4 @@ export CLASSPATH="$CLASSPATH:/usr/share/hamcrest-core/lib/hamcrest-core.jar"
 export BROWSER="/usr/bin/firefox"
 
 export EDITOR="/usr/bin/vim"
+
