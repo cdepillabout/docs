@@ -71,7 +71,8 @@ alias java='java -server -ea '
 # git aliases
 alias gcm='git commit -a -m '
 alias gps='git push '
-alias gpsh='gps '
+alias gph='git push '
+alias gpsh='git push '
 alias gst='git status '
 
 # add my program directory

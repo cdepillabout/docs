@@ -170,3 +170,13 @@ dL
 
 # chop off end of line and go into insert mode
 C
+
+
+
+# view the registers
+:reg
+
+# put the 6th register item
+"6p
+
+
