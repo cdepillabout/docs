@@ -147,3 +147,5 @@ git show 1c730e:vim
 
 # use a pager to display git output
 GIT_PAGER='less' git diff
+
+# test test test
