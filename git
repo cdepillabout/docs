@@ -151,3 +151,16 @@ GIT_PAGER='less' git diff
 # make sure that our repository on github is used for pulls
 git config branch.master.remote origin
 git config branch.master.merge master
+
+# show the differences between two revisions
+git diff c798e6f2cf6d..2f26c3c807
+
+# show the differences between revision and HEAD
+git diff c798e6f2cf6d..HEAD
+
+# pull from the fishes branch of the remote URL, store in mybranch,
+# and merge into the current branch
+git pull git://example.com/project.git fishes:mybranch
+
+# format a patch for each commit in HEAD but not in origin
+git format-patch origin..HEAD
