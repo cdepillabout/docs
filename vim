@@ -179,6 +179,3 @@ C
 # put the 6th register item
 "6p
 
-
-# what what what
-# test test test
