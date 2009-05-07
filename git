@@ -148,3 +148,6 @@ git show 1c730e:vim
 # use a pager to display git output
 GIT_PAGER='less' git diff
 
+# make sure that our repository on github is used for pulls
+git config branch.master.remote origin
+git config branch.master.merge master
