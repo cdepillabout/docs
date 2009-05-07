@@ -63,6 +63,9 @@ alias emacs='emacs -nw '
 # make command for opening files on an already open vim browser
 #alias rvim='vim --servername "vimserver" --remote-tab-silent '
 
+# make sure vim opens up tabs for multiple files
+alias vim='vim -p '
+
 alias highlight='glark --no-filter -N --text-color "bold red" '
 
 # make sure java runs in server mode and with assertions enabled

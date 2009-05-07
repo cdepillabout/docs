@@ -21,11 +21,19 @@ set encoding=utf-8
 " try to always use a syntax
 syntax on
 
+" always show a tabline
+set showtabline=2
+
 colorscheme darkblue
 "colorscheme default
 "colorscheme delek
 "colorscheme desert
 "colorscheme torte
+
+" highlight tab line differently
+hi TabLine term=bold,reverse cterm=bold ctermfg=white ctermbg=white
+hi TabLineFill term=bold,reverse cterm=bold ctermfg=white ctermbg=white
+hi TabLineSel term=reverse ctermfg=white ctermbg=lightblue
 
 
 let java_highlight_java_lang_ids=1
