@@ -164,3 +164,7 @@ git pull git://example.com/project.git fishes:mybranch
 
 # format a patch for each commit in HEAD but not in origin
 git format-patch origin..HEAD
+
+# show what changed between each commit
+# (with -p it gives a diff for each commit)
+git what-changed -p
