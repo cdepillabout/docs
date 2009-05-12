@@ -16,10 +16,11 @@ set scrolloff=3				" Scroll when the cursor is 3 lines from top or bottom
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set ruler					" know how far you are in a file
-set encoding=utf-8
+set enc=utf-8
+set fenc=utf-8
+set fencs=iso-2022-jp,euc-jp,cp932
 
-" try to always use a syntax
-syntax on
+
 
 " always show a tabline
 set showtabline=2
@@ -53,7 +54,7 @@ imap <F5> <ESC>:set hlsearch!<CR>a
 
 
 source ~/.vim/plugin/cscope_maps.vim
-source ~/.vim/syntax/javascript.vim
+" source ~/.vim/syntax/javascript.vim
 
 " show when autocmds are called
 "set verbose=9
@@ -79,3 +80,6 @@ call Add_auto_foldmethod("python", "indent")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
+
+" try to always use a syntax
+syntax on

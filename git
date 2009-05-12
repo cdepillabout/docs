@@ -168,3 +168,10 @@ git format-patch origin..HEAD
 # show what changed between each commit
 # (with -p it gives a diff for each commit)
 git what-changed -p
+
+# force an overwrite of your local changes when you are pulling
+# from a remote repository (the +master:master means that we
+# are updating origin/master [the first 'master'] onto our master
+# [the second 'master'], the plus indicates that it will be updated
+# even if it doesn't fast forward).
+git pull origin +master:master
