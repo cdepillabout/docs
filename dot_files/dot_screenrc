@@ -11,5 +11,5 @@ hardstatus string "%{= kG}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
 startup_message off
 
 screen -t bash2 2
-screen -t bash3 1
+screen -t bash1 1
 
