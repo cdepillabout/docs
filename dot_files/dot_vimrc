@@ -20,7 +20,8 @@ set enc=utf-8
 set fenc=utf-8
 set fencs=iso-2022-jp,euc-jp,cp932
 
-
+" try to always use a syntax
+syntax on
 
 " always show a tabline
 set showtabline=2
@@ -80,6 +81,3 @@ call Add_auto_foldmethod("python", "indent")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
-
-" try to always use a syntax
-syntax on
