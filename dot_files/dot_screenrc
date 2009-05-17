@@ -4,8 +4,12 @@
 
 termcapinfo xterm|xterms|xs|rxvt ti@:te@
 
-hardstatus string "[screen %n%?: %t%?] %h"
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%{= kG}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
 
-screen 2
-screen 1
+startup_message off
+
+screen -t bash2 2
+screen -t bash3 1
 
