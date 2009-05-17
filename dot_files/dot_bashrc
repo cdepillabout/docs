@@ -79,6 +79,8 @@ alias gpsh='git push '
 alias gst='git status '
 alias gdff='git diff '
 alias gdiff='git diff '
+alias glog='git log '
+alias glg='git log '
 
 # I don't want a git pager
 export GIT_PAGER=''
