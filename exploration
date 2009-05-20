@@ -1,0 +1,38 @@
+# Here are some tips for what to look for when exploring a new system.
+
+# machine name and kernel type
+uname -a
+hostname
+
+# memory information
+vmstat
+free -m
+
+# running processes
+ps auwx
+
+# open ports
+netstat -lanp
+
+# machine uptime
+uptime
+
+# who is logged on
+who
+
+# internet devices
+ifconfig
+
+# firewall
+iptables -L
+ip6tables -L
+
+# modules
+lsmod
+
+# memory and processor
+cat /proc/meminfo
+cat /proc/cpuinfo
+
+# disk info
+df -h
