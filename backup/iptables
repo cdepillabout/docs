@@ -1,0 +1,147 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          iptables
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      0 6
+# Short-Description: Brings up tables settings.
+# Description:       This script brings up iptables and saves the rules when shutting down.
+### END INIT INFO
+
+# IPtables init script for Debian.
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+DESC="IPTables firewall"
+
+PATH=/sbin
+
+IPTABLES_NAME=iptables
+IPTABLES_SAVE_NAME=iptables-save
+IPTABLES_RESTORE_NAME=iptables-restore
+
+IPTABLES_DAEMON=${PATH}/${IPTABLES_NAME}
+IPTABLES_SAVE_DAEMON=${PATH}/${IPTABLES_SAVE_NAME}
+IPTABLES_RESTORE_DAEMON=${PATH}/${IPTABLES_RESTORE_NAME}
+
+IPTABLES_DAEMON_ARGS=""
+IPTABLES_SAVE_DAEMON_ARGS="-c "
+IPTABLES_RESTORE_DAEMON_ARGS="-c "
+
+SCRIPTNAME=/etc/init.d/$IPTABLES_NAME
+
+# Exit if the package is not installed
+[ -x "$IPTABLES_DAEMON" ] || exit 0
+[ -x "$IPTABLES_SAVE_DAEMON" ] || exit 0
+[ -x "$IPTABLES_RESTORE_DAEMON" ] || exit 0
+
+# Read configuration variable file if it is present
+[ -r /etc/default/$IPTABLES_NAME ] && . /etc/default/$IPTABLES_NAME
+
+# Load the VERBOSE setting and other rcS variables
+#. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. /lib/lsb/init-functions
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+	$IPTABLES_RESTORE_DAEMON $IPTABLES_RESTORE_DAEMON_ARGS < $IPTABLES_SAVE_RESTORE_FILE
+}
+
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
+	$IPTABLES_SAVE_DAEMON $IPTABLES_SAVE_DAEMON_ARGS > $IPTABLES_SAVE_RESTORE_FILE
+}
+
+#
+# Function that sends a SIGHUP to the daemon/service
+#
+do_reload() {
+	$IPTABLES_SAVE_DAEMON $IPTABLES_SAVE_DAEMON_ARGS > $IPTABLES_SAVE_RESTORE_FILE
+	$IPTABLES_RESTORE_DAEMON $IPTABLES_RESTORE_DAEMON_ARGS < $IPTABLES_SAVE_RESTORE_FILE
+}
+
+#
+# Function that resets the bandwidth counters
+#
+do_reset()
+{
+	$IPTABLES_SAVE_DAEMON > $IPTABLES_SAVE_RESTORE_FILE
+	$IPTABLES_RESTORE_DAEMON < $IPTABLES_SAVE_RESTORE_FILE
+
+
+}
+
+
+case "$1" in
+  start)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$IPTABLES_NAME"
+	do_start
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+  stop)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$IPTABLES_NAME"
+	do_stop
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+  reset)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Resetting $DESC bandwidth counter" "$IPTABLES_NAME"
+	do_reset
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+  #reload|force-reload)
+	#
+	# If do_reload() is not implemented then leave this commented out
+	# and leave 'force-reload' as an alias for 'restart'.
+	#
+	#log_daemon_msg "Reloading $DESC" "$IPTABLES_NAME"
+	#do_reload
+	#log_end_msg $?
+	#;;
+  restart|force-reload)
+	#
+	# If the "reload" option is implemented then remove the
+	# 'force-reload' alias
+	#
+	log_daemon_msg "Restarting $DESC" "$IPTABLES_NAME"
+	do_stop
+	case "$?" in
+	  0|1)
+		do_start
+		case "$?" in
+			0) log_end_msg 0 ;;
+			1) log_end_msg 1 ;; # Old process is still running
+			*) log_end_msg 1 ;; # Failed to start
+		esac
+		;;
+	  *)
+	  	# Failed to stop
+		log_end_msg 1
+		;;
+	esac
+	;;
+  *)
+	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	exit 3
+	;;
+esac
+
+:
