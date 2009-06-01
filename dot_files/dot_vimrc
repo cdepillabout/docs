@@ -41,6 +41,9 @@ hi TabLineSel term=reverse ctermfg=white ctermbg=lightblue
 " highlight the popup menu a little differently
 hi PmenuSel ctermbg=lightblue
 
+" make sure the normal background is black
+hi Normal guibg=black
+
 
 let java_highlight_java_lang_ids=1
 let java_highlight_all=1
