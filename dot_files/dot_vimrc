@@ -19,6 +19,7 @@ set ruler					" know how far you are in a file
 set enc=utf-8
 set fenc=utf-8
 set fencs=iso-2022-jp,euc-jp,cp932
+set backspace=indent,eol,start	" make sure backspace works correctly
 
 " try to always use a syntax
 syntax on

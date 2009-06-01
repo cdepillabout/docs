@@ -21,7 +21,8 @@ uptime
 who
 
 # internet devices
-ifconfig
+ifconfig -a
+iwconfig -a
 
 # firewall
 iptables -L
