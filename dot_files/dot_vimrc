@@ -37,16 +37,38 @@ hi TabLine term=bold,reverse cterm=bold ctermfg=white ctermbg=white
 hi TabLineFill term=bold,reverse cterm=bold ctermfg=white ctermbg=white
 hi TabLineSel term=reverse ctermfg=white ctermbg=lightblue
 
+" highlight the popup menu a little differently
+hi PmenuSel ctermbg=lightblue
+
 
 let java_highlight_java_lang_ids=1
 let java_highlight_all=1
 "let java_highlight_functions="style"
 "let java_allow_cpp_keywords=1
 
+" Minibufexplorer plugin settings
+"let g:miniBufExplMapWindowNavVim = 1	" Let C-h, C-j, C-k, C-l move your 
+										" current active buffer window
+"let g:miniBufExplMapCTabSwitchBufs = 1	" Let C-TAB move to the next buffer and
+										" C-SHIFT-TAB move to the previous
+										" buffer
+"let g:miniBufExplModSelTarget = 1		" Force minibufferexplorer to put
+										" buffers in windows with 
+										" non-modifiable buffers
+
+
 " use F5 for turning off and on hlsearch,
 " in both input mode (imap?) and command mode (map?)
 map <F5> :set hlsearch!<CR>
 imap <F5> <ESC>:set hlsearch!<CR>a
+
+" use <C-h> and <C-l> to go forward and backward in tabs
+" nnoremap just makes a normal mode mapping
+nnoremap <C-h> gT
+nnoremap <C-l> gt
+
+" F2 for turning on and off tag list
+nnoremap <F2> :TlistToggle<CR>
 
 " use CTRL-s for saving
 " this doesn't work...
@@ -54,7 +76,7 @@ imap <F5> <ESC>:set hlsearch!<CR>a
 "imap <c-s> <Esc>:w<CR>a
 
 
-source ~/.vim/plugin/cscope_maps.vim
+" source ~/.vim/plugin/cscope_maps.vim
 " source ~/.vim/syntax/javascript.vim
 
 " show when autocmds are called
