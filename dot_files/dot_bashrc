@@ -15,10 +15,14 @@ if [[ $- != *i* ]] ; then
 fi
 
 # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
+if [ -x /usr/bin/dircolors ]; then
+	eval "`dircolors -b`"
+fi
+if [[ -f /etc/DIR_COLORS ]]; then
+	eval `dircolors -b /etc/DIR_COLORS`
+fi
 if [[ -f ~/.dir_colors ]]; then
 	eval `dircolors -b ~/.dir_colors`
-else
-	eval `dircolors -b /etc/DIR_COLORS`
 fi
 alias ls="ls --color=auto"
 
@@ -86,7 +90,8 @@ alias glg='git log '
 export GIT_PAGER=''
 
 # add my program directory
-export PATH="$PATH:/home/illabout/programming/bin" PAGER="/usr/bin/jless -I"
+export PATH="$PATH:/home/illabout/programming/bin" 
+#export PAGER="/usr/bin/jless -I"
 
 # add classpath for java
 export CLASSPATH="$CLASSPATH:..:/usr/share/junit-4/lib/junit.jar"
