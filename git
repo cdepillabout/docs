@@ -175,3 +175,8 @@ git what-changed -p
 # [the second 'master'], the plus indicates that it will be updated
 # even if it doesn't fast forward).
 git pull origin +master:master
+
+
+# create a branch from the previous commit
+git branch oldstuff HEAD^
+
