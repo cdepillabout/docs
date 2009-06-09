@@ -2,4 +2,6 @@
 # Here are some commands to use in Debian
 ################
 
+# configure which things init starts
+sysv-rc-conf
 

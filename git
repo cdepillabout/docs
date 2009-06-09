@@ -184,3 +184,9 @@ git branch oldstuff HEAD^
 # check out man git-clone for info on different url types
 # that can be used
 git clone ssh://server/repository
+
+# create branch 'test' on remote repository 'origin'
+git push origin test
+
+# delete a branch 'test' from remote repository 'origin'
+git push origin :test

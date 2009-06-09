@@ -59,6 +59,20 @@ route del -net 192.168.1.0/24 dev eth0
 
 
 
+############### TCPDUMP ###############
+
+# don't convert addresses to names
+tcpdump -n
+
+# cature on eth0
+tcpdump -i eht0
+
+# capture all packets that are not arp and not coming from or
+# going to port 22
+tcpdump -i eth0 -n -v 'not port 22 and not arp'
+
+
+
 ############### OTHER #################
 
 # connect to schools private internet using vpnc
@@ -67,3 +81,5 @@ vpnc
 
 # disconnect
 vpnc-disconnect
+
+
