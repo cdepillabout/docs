@@ -6,10 +6,33 @@ termcapinfo xterm|xterms|xs|rxvt ti@:te@
 
 hardstatus on
 hardstatus alwayslastline
-hardstatus string "%{= kG}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
+hardstatus string "%{= wb}%-w%{.yb}%n %t%{-}%+w %=%{b r} %H  %{..b}[%l] %{..K} %m/%d %C%a "
+
+#caption always "%{kB}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kB}%?%+Lw%?"
 
 startup_message off
 
-screen -t bash2 2
-screen -t bash1 1
+# turn off visual bell
+vbell off
+
+# Autodetach session on hangup instead of terminating screen completely
+autodetach on 
+
+# Instead of Control-a, make the escape/command character be Control-b
+#escape ^Zz 
+
+
+# turn on alternate screen support
+altscreen on
+
+
+# bash will be replaced by the running command
+shelltitle " $ |bash"
+
+# bash will get the running command added after it
+#shelltitle "$ |bash:"
+
+
+screen 2
+screen 1
 
