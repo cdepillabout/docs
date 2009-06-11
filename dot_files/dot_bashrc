@@ -25,6 +25,7 @@ if [[ -f ~/.dir_colors ]]; then
 	eval `dircolors -b ~/.dir_colors`
 fi
 alias ls="ls --color=auto"
+alias grep="grep --color=auto"
 
 # Change the window title of X terminals 
 case $TERM in
