@@ -38,6 +38,9 @@ case $TERM in
 esac
 
 
+# strict umask
+umask 0077
+
 
 # put the git branch in our prompt
 git_prompt()
@@ -89,11 +92,17 @@ alias gcm='git commit -a -m '
 alias gps='git push '
 alias gph='git push '
 alias gpsh='git push '
+alias gpush='git push '
 alias gst='git status '
 alias gdff='git diff '
 alias gdiff='git diff '
 alias glog='git log '
 alias glg='git log '
+alias gb='git branch '
+alias gba='git branch -a '
+alias gco='git checkout '
+alias gmrg='git merge '
+alias gmg='git merge '
 
 # I don't want a git pager
 export GIT_PAGER=''

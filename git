@@ -1,4 +1,7 @@
 
+# also check out http://github.com/guides/git-cheat-sheet
+# also http://wiki.sourcemage.org/Git_Guide
+
 # create an empty git repository
 git init
 
@@ -190,3 +193,11 @@ git push origin test
 
 # delete a branch 'test' from remote repository 'origin'
 git push origin :test
+
+# get rid of all local changes and go back to the previous commit
+# (HEAD can be omitted)
+git reset --hard HEAD
+# to do this with a whole branch
+git checkout -f
+# also to just discard some changes, try
+git checkout some/path

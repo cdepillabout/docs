@@ -5,3 +5,5 @@
 # configure which things init starts
 sysv-rc-conf
 
+
+# have to use vim-addon-manager to enable vim addons?
