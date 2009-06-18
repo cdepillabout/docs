@@ -233,3 +233,14 @@ cat /dev/zero > /dev/hdb
 # change all instances of 'package genetic' to 'package midi' 
 # in a group of java files 
 sed -i -e 's/package genetic/package midi/' *.java
+
+# encrypt a file using gpg (outputs file.txt.gpg)
+gpg -c file.txt
+# decrypt it and output it to the console
+gpg -d file.txt.gpg
+# decrypt it and output it to file.txt
+gpg file.txt.gpg
+
+
+# try to preserve permissions when copying a file
+cp -p file newfile
