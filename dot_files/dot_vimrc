@@ -67,6 +67,10 @@ let java_highlight_all=1
 map <F5> :set hlsearch!<CR>
 imap <F5> <ESC>:set hlsearch!<CR>a
 
+" use F6 for turning on and off paste mode
+map <F5> :set paste!<CR>
+imap <F5> <ESC>:set paste!<CR>a
+
 " use <C-h> and <C-l> to go forward and backward in tabs
 " nnoremap just makes a normal mode mapping
 nnoremap <C-h> gT

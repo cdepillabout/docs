@@ -1,0 +1,18 @@
+#
+# Interesting options to put in sysctl.conf
+#
+
+# Reboot a minute after an Oops
+kernel.panic = 60
+
+# Syncookies make SYN flood attacks ineffective
+net.ipv4.tcp_syncookies = 1
+
+# Ignore bad ICMP
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+net.ipv4.icmp_ignore_bogus_error_responses = 1
+
+# Reply to ARPs only from correct interface (required for DSR load-balancers)
+net.ipv4.conf.all.arp_announce = 2
+net.ipv4.conf.all.arp_ignore = 1
+

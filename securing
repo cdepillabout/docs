@@ -1,0 +1,23 @@
+#################### 
+# Securing a server.
+####################
+
+#
+# GENERAL
+# 
+
+# find all setuid/setgid programs
+find / -xdev -type f -perm +04000
+find / -xdev -type f -perm +02000
+
+# run nessus against the machine
+
+#
+# SSH 
+# 
+
+# run ssh as a non root user
+
+# ensure sshv1 is turned off
+
+# ensure PermitRootLogin is 'no'

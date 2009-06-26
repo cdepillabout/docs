@@ -106,6 +106,9 @@ alias gco='git checkout '
 alias gmrg='git merge '
 alias gmg='git merge '
 
+# screen automatically connects to a running session
+alias screen='screen -R '
+
 # I don't want a git pager
 export GIT_PAGER=''
 

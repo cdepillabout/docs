@@ -33,6 +33,7 @@ shelltitle " $ |bash"
 #shelltitle "$ |bash:"
 
 
+screen 6
 screen 5
 screen 4
 screen 3
