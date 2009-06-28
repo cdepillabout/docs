@@ -79,6 +79,9 @@ nnoremap <C-l> gt
 " F2 for turning on and off tag list
 nnoremap <F2> :TlistToggle<CR>
 
+" this is needed for running taglist in screen:
+let Tlist_Inc_Winwidth = 0
+
 " use CTRL-s for saving
 " this doesn't work...
 "nmap <c-s> :w<CR>

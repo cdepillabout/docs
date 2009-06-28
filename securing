@@ -21,3 +21,17 @@ find / -xdev -type f -perm +02000
 # ensure sshv1 is turned off
 
 # ensure PermitRootLogin is 'no'
+
+#
+# NMAP
+# 
+
+# -O   -- os scan
+# -T5  -- fastest timing
+# -sS  -- syn scan
+# -sV  -- scan version of programs on open ports
+# -vv  -- verbose
+nmap -O -T5 -sS -sV -vv 192.168.1.111
+
+# -PN  -- no ping
+
