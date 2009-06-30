@@ -140,6 +140,8 @@ git log -p NOTES
 git config --global color.diff auto
 git config --global color.status auto
 git config --global color.branch auto
+# this does it for all commands
+git config --global color.ui auto
 
 
 # view changes to file vim since revision fa5e02cde11
