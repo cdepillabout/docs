@@ -6,7 +6,7 @@ termcapinfo xterm|xterms|xs|rxvt ti@:te@
 
 hardstatus on
 hardstatus alwayslastline
-hardstatus string "%{= wb}%-w%{.yb}%n %t%{-}%+w %=%{b r} %H  %{..b}[%l] %{..K} %m/%d %C%a "
+hardstatus string "%{= wb}%-w%{.yb}%n %t%{-}%+w %=%{b r} %H %{..b}[%l] %{..K}%C%a "
 
 #caption always "%{kB}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kB}%?%+Lw%?"
 
@@ -33,6 +33,7 @@ shelltitle " $ |bash"
 #shelltitle "$ |bash:"
 
 
+screen 7
 screen 6
 screen 5
 screen 4
