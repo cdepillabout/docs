@@ -111,6 +111,10 @@ alias gst='git status '
 # screen automatically connects to a running session
 alias screen='screen -R '
 
+# don't record duplicate items in history or 
+# lines starting with a space ('$  ls -la')
+export HISTCONTROL='ignoreboth'
+
 # I don't want a git pager
 export GIT_PAGER=''
 
