@@ -43,3 +43,5 @@ $EDITOR ${temp_file} ||
 echo $password | gpg --passphrase-fd 0 -c -o ${file_name} ${temp_file} || 
 	die "ERROR! Could not reencrypt ${temp_file} to ${file_name}."
 
+# delete the tempfile
+rm ${temp_file}
