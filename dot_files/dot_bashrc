@@ -119,7 +119,7 @@ export HISTCONTROL='ignoreboth'
 export GIT_PAGER=''
 
 # add my program directory
-export PATH="$PATH:/home/illabout/programming/bin" 
+export PATH="$PATH:$HOME/docs/code/bin:/home/illabout/programming/bin" 
 #export PAGER="/usr/bin/jless -I"
 
 # add classpath for java

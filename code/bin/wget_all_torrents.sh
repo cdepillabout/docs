@@ -1,0 +1,1 @@
+../wget_all_torrents.sh

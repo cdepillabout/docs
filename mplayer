@@ -23,3 +23,8 @@ mplayer dvd:// -ni -nocache
 # this prints out information about _everything_ (including titles
 # and substitle information) on the DVD
 midentify dvd://
+
+
+# speed up mplayer
+mplayer -lavdopts skiploopfilter=all:fast=1
+mplayer -lavdopts skipframe=nonref:skiploopfilter=all:fast=1

@@ -9,7 +9,7 @@
 # $ screens_run_command.sh 4 ls \"hello world\"
 
 
-source ~/docs/backup/library.sh
+source ~/docs/code/lib/library.sh
 
 
 # print usage

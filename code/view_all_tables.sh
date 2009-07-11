@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is designed to list all the items from every table in an sqlite3 database.
 
-source ~/docs/backup/library.sh
+source ~/docs/code/lib/library.sh
 
 # color output 
 TXT_BOLD='\E[01m'
