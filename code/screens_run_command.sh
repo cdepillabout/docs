@@ -40,7 +40,7 @@ do
 	argument=${argument//\"/\\\"}
 	my_args+="\"$argument\" "
 done
-echo "my_string: $my_args"
+#echo "my_string: $my_args"
 #eval $my_string
 
 for num in `seq $starting_window $final_window`
