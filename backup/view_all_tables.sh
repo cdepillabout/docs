@@ -1,6 +1,8 @@
 #!/bin/sh
 # This is designed to list all the items from every table in an sqlite3 database.
 
+source ~/docs/backup/library.sh
+
 # color output 
 TXT_BOLD='\E[01m'
 
@@ -22,13 +24,6 @@ function usage {
 	echo "Usage: $0 [-column|-csv|-line|-list] [-header|-noheader] [databasename]"
 }
 
-# exit after printing first argument to this function
-function die {
-	# echo the first argument
-	echo $1
-
-	exit 1
-}
 
 database_name="sqlite3.db"
 listing_method="-column"
