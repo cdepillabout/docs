@@ -203,3 +203,9 @@ git reset --hard HEAD
 git checkout -f
 # also to just discard some changes, try
 git checkout some/path
+
+
+# tell git your username and email address
+git config --global user.name '(cdep) illabout' 
+git config --global user.email 'cdep.illabout@gmail.com'
+

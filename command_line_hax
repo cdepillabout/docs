@@ -249,3 +249,14 @@ cp -p file newfile
 find / -xdev -type f -perm +04000
 find / -xdev -type f -perm +02000
 
+
+# this isn't really a hack, but a way to make firefox the 
+# default url opener for gnome applications
+gconftool-2 -t string --set /desktop/gnome/url-handlers/http/command "firefox-bin %s"
+# this get's the current value
+gconftool-2 --get /desktop/gnome/url-handlers/http/command
+
+
+# search for a string only in the dot files
+# (I think there is a shorter way of doing this)
+ls -a | grep "^\." | grep -v "^\.\.\?\$" | xargs grep -r "firefox-bin "

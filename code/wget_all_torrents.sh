@@ -34,13 +34,22 @@ function wget_url {
 
 wget_url ${example_url} 'ep${formatted_num}'
 wget_url ${example_url} 'ep${formatted_num}%20finale'
+wget_url ${example_url} 'ep${formatted_num}%20Finale'
+wget_url ${example_url} 'ep${formatted_num}%20final'
+wget_url ${example_url} 'ep${formatted_num}%20Final'
 
 wget_url ${example_url} 'Ep${formatted_num}'
 wget_url ${example_url} 'Ep${formatted_num}%20finale'
+wget_url ${example_url} 'Ep${formatted_num}%20Finale'
+wget_url ${example_url} 'Ep${formatted_num}%20final'
+wget_url ${example_url} 'Ep${formatted_num}%20Final'
 
 #wget_url ${example_url} 'eP${formatted_num}'
 #wget_url ${example_url} 'eP${formatted_num}%20finale'
 
 wget_url ${example_url} 'EP${formatted_num}'
 wget_url ${example_url} 'EP${formatted_num}%20finale'
+wget_url ${example_url} 'EP${formatted_num}%20Finale'
+wget_url ${example_url} 'EP${formatted_num}%20final'
+wget_url ${example_url} 'EP${formatted_num}%20Final'
 
