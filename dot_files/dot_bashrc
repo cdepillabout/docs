@@ -26,6 +26,9 @@ if [[ -f ~/.dir_colors ]]; then
 fi
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"
+# less interprets color escape sequences instead of
+# just printing them to the screen
+alias less="less -R"
 
 # Change the window title of X terminals 
 case $TERM in
