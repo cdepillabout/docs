@@ -9,6 +9,9 @@ set background=dark
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
+set shiftround			" Indent to nearest tab stop
+"set expandtab			" Tab key inserts spaces instead of tabs
+set autoindent			" carries over previous indent to the next line
 
 set viminfo='100,\"100   " Keep a .viminfo file.
 
