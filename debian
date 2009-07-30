@@ -7,3 +7,17 @@ sysv-rc-conf
 
 
 # have to use vim-addon-manager to enable vim addons?
+
+
+#######
+# Debconf
+#######
+
+# configure things that have been installed
+dpkg-reconfigure --frontend readline PACKAGENAME
+
+# list all packages that can be configured
+cat /var/cache/debconf/config.dat | grep Name: | cut -f1 -d/ | cut -f2 -d: | sort | uniq
+
+# show the settings for a package
+debconf-show PACKAGENAME
