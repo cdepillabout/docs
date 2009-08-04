@@ -1,0 +1,44 @@
+#!/bin/bash
+# mpg321all
+# Convert a whole list of mp3's to wav's.
+
+E_BADARGS=65
+
+if [ ! -n "$1" ]
+then 
+	echo "Usage: `basename $0` file1.mp3 file2.mp3 etc."
+	exit $E_BADARGS
+fi
+
+index=1
+
+for args in "$@"
+do
+	last_four=${args:(-4)}
+	
+	case "$last_four" in
+	
+		".mp3"	) 
+		
+			mpg321 -v --stereo -w "${args%%.mp3}.wav" "$args" 
+			;;
+			
+		".MP3"	) 
+		
+			mpg321 -v --stereo -w "${args%%.MP3}.wav" "$args" 
+			;;
+
+		".Mp3"	)
+			
+			mpg321 -v --stereo -w "${args%%.Mp3}.wav" "$args"
+			;;
+			
+		".mP3"	)
+			
+			mpg321 -v --stereo -w "${args%%.mP3}.wav" "$args"
+			;;
+	esac
+
+done
+
+exit 0

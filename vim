@@ -179,3 +179,6 @@ C
 # put the 6th register item
 "6p
 
+
+# line complete 
+ctrl-x ctrl-l

@@ -72,6 +72,15 @@ tcpdump -i eht0
 tcpdump -i eth0 -n -v 'not port 22 and not arp'
 
 
+############### DIG ###################
+
+# get a trace of all dns servers contacted when looking up
+# an address or reversing an address.
+dig -x 192.168.1.1 +trace
+
+# get all records associated with an address
+dig any example.com
+
 
 ############### OTHER #################
 
