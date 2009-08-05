@@ -182,5 +182,8 @@ export BROWSER="/usr/bin/firefox"
 export EDITOR="/usr/bin/vim"
 
 # add a python path for modules I have installed myself
-export PYTHONPATH="$PYTHONPATH:$HOME/python_modules/"
+if [ -d "$HOME/python_modules/" ]
+then
+	export PYTHONPATH="$PYTHONPATH:$HOME/python_modules/"
+fi
 
