@@ -6,11 +6,10 @@ set ttymouse=xterm2		" mouse scrolling in vim
 set mouse=a
 set foldenable
 set background=dark
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=4			" 4-space tab indent width
+set shiftwidth=4		" allows you to use < and > to indent/unindent blocks
+set softtabstop=4		" see multiple space characters as a tab
 set shiftround			" Indent to nearest tab stop
-"set expandtab			" Tab key inserts spaces instead of tabs
 set autoindent			" carries over previous indent to the next line
 
 set viminfo='100,\"100   " Keep a .viminfo file.
@@ -115,6 +114,13 @@ call Add_auto_foldmethod("cpp", "syntax")
 "call Add_auto_foldmethod('asm', 'indent')
 call Add_auto_foldmethod("java", "syntax")
 call Add_auto_foldmethod("python", "indent")
+call Add_auto_foldmethod("css", "indent")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
+
+" Python needs spaces instead of tabs.
+autocmd BufRead,BufNewFile *.py set expandtab
+" maybe this could also be done with
+"autocm FileType python set ...
+
