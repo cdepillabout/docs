@@ -187,3 +187,5 @@ then
 	export PYTHONPATH="$PYTHONPATH:$HOME/python_modules/"
 fi
 
+# source the local rc file with local commands
+source "${HOME}/.local-bashrc"
