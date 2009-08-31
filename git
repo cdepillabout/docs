@@ -209,3 +209,33 @@ git checkout some/path
 git config --global user.name '(cdep) illabout' 
 git config --global user.email 'cdep.illabout@gmail.com'
 
+
+# from github:
+
+Global setup:
+
+Download and install Git
+git config --global user.name "Your Name"
+git config --global user.email swoosh.news@gmail.com
+Add your public key
+
+
+Next steps:
+
+mkdir swoosh-news
+cd swoosh-news
+git init
+touch README
+git add README
+git commit -m 'first commit'
+git remote add origin git@github.com:swooshnews/swoosh-news.git
+git push origin master
+
+
+Existing Git Repo?
+
+cd existing_git_repo
+git remote add origin git@github.com:swooshnews/swoosh-news.git
+git push origin master
+			
+
