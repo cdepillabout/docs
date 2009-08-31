@@ -188,4 +188,7 @@ then
 fi
 
 # source the local rc file with local commands
-source "${HOME}/.local-bashrc"
+if [ -f "$HOME/.local-bashrc" ]
+then
+	source "${HOME}/.local-bashrc"
+fi
