@@ -177,7 +177,7 @@ export CLASSPATH="$CLASSPATH:/usr/share/hamcrest-core/lib/hamcrest-core.jar"
 
 
 # add default browser
-export BROWSER="/usr/bin/firefox"
+export BROWSER="/usr/bin/firefox-bin"
 
 export EDITOR="/usr/bin/vim"
 
