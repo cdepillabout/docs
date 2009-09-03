@@ -8,5 +8,5 @@
 # interactive, and if it is not, it just exits.  So we cannot simply do 
 # source ~/.bashrc, but we must run it under an interactive bash process.
 # Then we run the command passed in on the command line.
-bash -i -c "source ~/.bashrc; \"$@\""
+bash -i -c "source ~/.bashrc; $@ "
 
