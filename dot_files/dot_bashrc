@@ -177,13 +177,20 @@ export CLASSPATH="$CLASSPATH:/usr/share/hamcrest-core/lib/hamcrest-core.jar"
 
 
 # add default browser
-export BROWSER="/usr/bin/firefox-bin"
+export BROWSER=`get_correct_filename_from_choices "firefox-bin" "firefox"`
 
 export EDITOR="/usr/bin/vim"
 
 # XDG Base Directory Specification
-#export XDG_DATA_HOME="$HOME/.local/share"
-#export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+
+# add the filesystem from the home directory to the PATH
+if [ -d "$HOME/filesystem/bin" ]
+then
+	export PATH="$PATH:$HOME/filesystem/bin"
+fi
+
 
 # add a python path for modules I have installed myself
 if [ -d "$HOME/python_modules/" ]
