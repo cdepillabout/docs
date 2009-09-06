@@ -181,6 +181,10 @@ export BROWSER="/usr/bin/firefox-bin"
 
 export EDITOR="/usr/bin/vim"
 
+# XDG Base Directory Specification
+#export XDG_DATA_HOME="$HOME/.local/share"
+#export XDG_CONFIG_HOME="$HOME/.config"
+
 # add a python path for modules I have installed myself
 if [ -d "$HOME/python_modules/" ]
 then
