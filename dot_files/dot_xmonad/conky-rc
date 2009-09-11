@@ -15,5 +15,5 @@ update_interval 1
 #^fg(#ffffff)${cpu cpu1}% ^fg(#444444)| ^fg(#ffffff)$mem ^fg(#444444)| ^fg(#ffffff)${downspeed eth0} ^fg(green)^i(/home/rtalreja/dzen/icons/up.xbm) ^fg(#ffffff)${upspeed eth0} ^fg(#444444)| ^fg(white)${execi 1800 /home/rtalreja/.xmonad/scripts/dzenWeather/dzen_weather.pl} ^fg(#444444)| ^fg(green)${time %m-%d-%y %l:%M%p}
 
 TEXT
-${cpu cpu1}% | $mem | ${time %m-%d-%y %l:%M%p}
+cpu ${cpu cpu1}% | mem $mem | ${time %m-%d-%y %l:%M%p}
 
