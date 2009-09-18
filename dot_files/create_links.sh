@@ -34,6 +34,9 @@ make_directory $HOME/.xmonad
 super_link $HOME/docs/dot_files/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
 super_link $HOME/docs/dot_files/dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
 
+make_directory $HOME/.mplayer
+super_link $HOME/docs/dot_files/dot_mplayer/config $HOME/.mplayer/config
+
 #for dot_file in dot_* 
 #do
 #	ln -sf `pwd`/${dot_file} ~/.${dot_file#dot_}
