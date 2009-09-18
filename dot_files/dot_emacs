@@ -91,7 +91,12 @@
 ;; MY KEYS
 (global-set-key [f1] 'goto-next-buffer) 
 (global-set-key [f2] 'delete-other-windows) 
-(global-set-key [f3] 'delete-window) 
+(global-set-key [f3] 'delete-window)
+
+;; Disable going into anthy-mode
+;(global-set-key "\C-\\" 'anthy-mode)
+(global-unset-key "\C-\\")
+
 
 (defun goto-next-buffer ()
 	(interactive)
