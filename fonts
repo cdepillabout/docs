@@ -1,0 +1,29 @@
+
+# Fonts are a complex topic under Linux.  I will try to put together
+# little morsels of knowledge that I had a hard time accumulating.
+
+
+# list fonts seen by fontconfig
+fc-list
+
+# only show some options
+fc-list : file family
+
+# show most options
+fc-list : family familylang style stylelang fullname fullnamelang slant weight size width aspect pixelsize spacing foundry antialias hinting hintstyle verticallayout autohint globaladvance file index ftface rasterizer outline scalable scale dpi rgba lcdfilter minspace fontversion capability embolden 
+
+# rebuild font cache when adding or removing a font
+fc-cache
+
+
+#
+# Fonts under XeTeX.
+#
+
+# From my testing, it seems that XeTeX only takes fonts in OpenType (".otf"),
+# TrueType (".ttf"), or PostScript Type 1 font program data (".pfb") format.
+
+# Fonts in the PostScript Type 1 font text (".pfa") format can be converted into
+# the PostScript Type 1 font program data (".pfb") format.
+t1binary font-file.pfa font-file.pfb
+
