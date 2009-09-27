@@ -24,6 +24,8 @@ set fenc=utf-8
 set fencs=iso-2022-jp,euc-jp,cp932
 set backspace=indent,eol,start	" make sure backspace works correctly
 
+set guifont=Bitstream\ Vera\ Sans\ Mono\ 14 "font names to be used in gui
+
 " try to always use a syntax
 syntax on
 
@@ -45,7 +47,7 @@ hi TabLineSel term=reverse ctermfg=white ctermbg=lightblue
 hi PmenuSel ctermbg=lightblue
 
 " make sure the normal background is black
-" hi Normal guibg=black
+hi Normal guibg=black
 
 
 let java_highlight_java_lang_ids=1
