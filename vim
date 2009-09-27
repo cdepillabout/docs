@@ -182,3 +182,8 @@ C
 
 # line complete 
 ctrl-x ctrl-l
+
+
+# just like 'p', but it automatically adjusts the indent level of the 
+# pasted code to match that of the code you paste into.
+]p
