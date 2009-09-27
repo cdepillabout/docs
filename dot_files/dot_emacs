@@ -2,6 +2,15 @@
 ;; use the gentoo configuration files
 (require 'site-gentoo)
 
+;(set-default-font "Bitstream Vera Sans Mono-14")
+;(set-default-font "Fixed-18")
+;(set-face-attribute 'default nil
+;					:family "Inconsolata" :height 180)
+;(set-face-attribute 'default nil
+;					:family "Bitstream Vera Sans Mono" :height 140)
+;(set-face-attribute 'default nil
+;					:family "IPAGothic" :height 180)
+
 ;; use utf-8
 (prefer-coding-system 'utf-8)
 
@@ -12,6 +21,7 @@
 (setq x-select-enable-clipboard t)
 
 ;; getting scheme to work in emacs
+;(setq scheme-program-name "mzscheme")
 (setq scheme-program-name "scm")
 
 ; save all backup files to a separate directory
@@ -27,8 +37,12 @@
 (iswitchb-mode t)
 
 ; scrolling -- only scroll one line of text at a time
+; make scrolling smoother
+;(setq scroll-conservatively 10000)
 (setq scroll-conservatively 3)
 (setq scroll-margin 3)
+;(setq scroll-step 100)
+;(setq scroll-preserve-screen-position 1)
 
 ; set autoindent
 ; Just use C-J to get a new line, not RET
@@ -54,15 +68,12 @@
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 
-;; reverse colors
-;;(set-foreground-color "bisque")
-;;(set-background-color "black")
 
 ;; make it open firefox when opening a URL
-(setq browse-url-netscape-program "firefox")
+;(setq browse-url-netscape-program "firefox")
 
 ;; remove the toolbar
-;(tool-bar-mode 0)
+(tool-bar-mode 0)
 (menu-bar-mode 0)
 
 ;; no splash screen
@@ -79,6 +90,14 @@
 
 ;; Highlight marked region
 (transient-mark-mode t)
+
+(display-time-mode t)
+
+;; stop at the end of the file, not just add lines
+(setq next-line-add-newlines nil)
+
+(set-background-color "black")
+(set-foreground-color "bisque")
 
 ;; syntax hilighting
 (cond ((fboundp 'global-font-lock-mode)
@@ -115,6 +134,3 @@
 ;(setq inferior-lisp-program "/usr/bin/clojure") ; your Lisp system
 ;(require 'slime)
 ;(slime-setup)
-
-
-
