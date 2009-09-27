@@ -80,6 +80,18 @@ imap <F6> <ESC>:set paste!<CR>a
 nnoremap <C-h> gT
 nnoremap <C-l> gt
 
+" got to tab number (really only for gvim)
+nnoremap <A-1> 1gt
+nnoremap <A-2> 2gt
+nnoremap <A-3> 3gt
+nnoremap <A-4> 4gt
+nnoremap <A-5> 5gt
+nnoremap <A-6> 6gt
+nnoremap <A-7> 7gt
+nnoremap <A-8> 8gt
+nnoremap <A-9> 9gt
+nnoremap <A-0> 10gt
+
 " F2 for turning on and off tag list
 nnoremap <F2> :TlistToggle<CR>
 
