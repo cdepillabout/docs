@@ -103,6 +103,8 @@ let Tlist_Inc_Winwidth = 0
 "nmap <c-s> :w<CR>
 "imap <c-s> <Esc>:w<CR>a
 
+" in input mode, what about we try using jj as escape
+inoremap jj <Esc>
 
 " source ~/.vim/plugin/cscope_maps.vim
 " source ~/.vim/syntax/javascript.vim
