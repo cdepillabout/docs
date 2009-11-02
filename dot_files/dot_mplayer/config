@@ -29,7 +29,7 @@ sub-fuzziness=1
 subfont-encoding=unicode
 # Set subtitle file encoding.
 unicode=yes
-#utf8=yes
+utf8=yes
 # Resample the font alphamap. (10: bold black outline)
 ffactor=10
 # Set subtitle position. (100: as low as possible)
