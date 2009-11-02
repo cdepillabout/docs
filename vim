@@ -187,3 +187,10 @@ ctrl-x ctrl-l
 # just like 'p', but it automatically adjusts the indent level of the 
 # pasted code to match that of the code you paste into.
 ]p
+
+# EDIT A MACRO
+# I typically issue a :new to open a new window, move my cursor to that 
+# window and then "ap. The contents of the macro are printed to the window. 
+# From there, you can edit the macro as needed and then yank the macro back 
+# in to the desired register by executing something like 0"ay$. Once yanked, 
+# the new macro will execute as you would expect it would. 
