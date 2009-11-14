@@ -274,3 +274,8 @@ ps2pdf pdffile.ps newpdffile.pdf
 pdfcrack -f file.pdf
 
 # pdftk...
+
+# this can be used to get a graphical view of all the devices hal can see
+gnome-device-manager
+# here is non-graphical
+lshal
