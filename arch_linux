@@ -1,0 +1,49 @@
+
+# refresh package list
+pacman --sync --refresh # -Sy
+
+# search for package
+pacman --sync --search <regexp> # -Ss
+
+# display info about a package not installed
+pacman --sync --info <regexp> # -Si
+
+# install a package from a repository
+pacman --sync <foo> # -S
+
+# list installed packages
+pacman --query # -Q
+
+# list of files contained in package
+pacman --query --list <foo> # -Ql
+
+# find out which package a specific file belongs to
+pacman --query --owns /path/to/file # -Qo
+
+# remove programs but leave configuration files
+pacman --remove foo # -R
+
+# remove programs and configuration files
+pacman --remove --nosave foo
+
+# upgrade all packages that are out-of-date
+pacman --sync --sysupgrade # -Su
+
+# upgrade all packages that are out-of-date from a package update
+pacman --sync --refresh --sysupgrade # -Syu
+
+# check orphaned packages that were dependencies but are no longer needed
+pacman -Qdt
+
+# BUILDING FROM SOURCE  
+# use abs command (need to install from pacman)
+
+
+# EDITABLE files
+/etc/rc.local -- last minute commands you want run as the computer is
+		booting up
+
+
+# might need to edit /etc/hosts.allow to allow incoming connections to the
+# machine
+
