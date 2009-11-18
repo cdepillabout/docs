@@ -2,5 +2,12 @@
 # load the module
 modprobe vboxdrv
 
+# You must load vboxnetflt for Host Interface Networking:
+modprobe vboxnetflt
+
+# You must load vboxnetadp for Host-Only networking:
+modprobe vboxnetadp
+
+
 # start headless from the console
 VBoxManage startvm <vm name> -type vrdp
