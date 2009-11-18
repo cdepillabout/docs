@@ -47,3 +47,7 @@ pacman -Qdt
 # might need to edit /etc/hosts.allow to allow incoming connections to the
 # machine
 
+
+# to load modules automatically, add them to the MODULES variable
+# in rc.conf
+
