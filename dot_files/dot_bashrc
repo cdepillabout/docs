@@ -116,7 +116,7 @@ then
 	if [ -n "${SSH_CLIENT}" -a -n "${SSH_CONNECTION}" -a -n "${SSH_TTY}" ]
 	then
 		# give a different prompt if we are on a remote connection
-		export PS1='\[\033[01;32m\]\u@\[\033[01;31m\]\h\[\033[01;34m\] \w \[\033[01;33m\]$(git_prompt)\[\033[01;34m\]'${SCREEN_PS1_ESCAPE}'\$\[\033[00m\] '
+		export PS1='\[\033[01;32m\]\u@\[\033[01;35m\]\h\[\033[01;34m\] \w \[\033[01;33m\]$(git_prompt)\[\033[01;34m\]'${SCREEN_PS1_ESCAPE}'\$\[\033[00m\] '
 	else
 		export PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \[\033[01;33m\]$(git_prompt)\[\033[01;34m\]'${SCREEN_PS1_ESCAPE}'\$\[\033[00m\] '
 	fi
@@ -125,7 +125,7 @@ else
 	if [ -n "${SSH_CLIENT}" -a -n "${SSH_CONNECTION}" -a -n "${SSH_TTY}" ]
 	then
 		# give a different prompt if we are on a remote connection
-		export PS1='\[\033[01;31m\]\u@\[\033[01;31m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
+		export PS1='\[\033[01;31m\]\u@\[\033[01;35m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
 	else
 		export PS1='\[\033[01;31m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] '
 	fi
