@@ -56,4 +56,6 @@ mysql> SELECT * FROM table WHERE field=value;
 mysql> SELECT field1,field2,field3 FROM table;
 
 
-
+# explain information from the optimizer about the query execution plan
+mysql> EXPLAIN SELECT ...
+mysql> EXPLAIN EXTENDED SELECT ...
