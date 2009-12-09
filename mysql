@@ -31,8 +31,10 @@ mysql> use mysql;
 # show all the tables in the database we are using
 mysql> show tables;
 
+
 # show the current user
 mysql> select user();
+
 
 # create a new database
 mysql> CREATE DATABASE gentoo;
@@ -44,8 +46,10 @@ mysql> CREATE TABLE developers ( name VARCHAR(128), email VARCHAR(128), job VARC
 mysql> DESCRIBE developers;
 
 # insert data into the table
+#
 mysql> INSERT INTO developers VALUES('Joe Smith', 'joesmith@gentoo.org', 'toolchain');
 mysql> INSERT INTO developers (job, name) VALUES('outsourced', 'Jane Doe');
+
 
 # see data in the tables.
 # All entries in a table
@@ -57,5 +61,32 @@ mysql> SELECT field1,field2,field3 FROM table;
 
 
 # explain information from the optimizer about the query execution plan
-mysql> EXPLAIN SELECT ...
-mysql> EXPLAIN EXTENDED SELECT ...
+mysql> EXPLAIN SELECT ... ;
+mysql> EXPLAIN EXTENDED SELECT ... ;
+
+# show warnings shown to you with EXPLAIN
+mysql> SHOW WARNINGS;
+
+
+# clear the query cache (so a new query will take a long time)
+mysql> RESET QUERY CACHE;
+
+
+# create new user with all rights
+mysql> create user 'USERNAME'@'localhost' identified by 'users_password';
+mysql> create user 'USERNAME'@'%' identified by 'users_password';
+mysql> grant all privileges on *.* to 'USERNAME'@'localhost' with grant option;
+mysql> grant all privileges on *.* to 'USERNAME'@'%' with grant option;
+
+# only grant privileges on a specific database
+mysql> grant all privileges on dbname.* to 'USERNAME'@'%' with grant option;
+mysql> grant all privileges on dbname.* to 'USERNAME'@'localhost' with grant option;
+
+# make sure a user cannot grant options to other users
+mysql> grant all privileges on *.* to 'USERNAME'@'localhost';
+mysql> grant all privileges on *.* to 'USERNAME'@'%';
+
+# make sure a user can only connect from local network
+mysql> create user 'USERNAME'@'192.168.1.%' identified by 'users_password';
+mysql> grant all privileges on dbname.* to 'USERNAME'@'192.168.1.%';
+
