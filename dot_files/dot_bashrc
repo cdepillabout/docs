@@ -191,7 +191,6 @@ export GIT_PAGER=''
 
 # add my program directory
 export PATH="$PATH:$HOME/docs/code/bin:/home/illabout/programming/bin" 
-#export PAGER="/usr/bin/jless -I"
 
 # add classpath for java
 export CLASSPATH="$CLASSPATH:..:/usr/share/junit-4/lib/junit.jar"
