@@ -1,0 +1,6 @@
+
+# list shares from smb server 
+smbclient -L server-netbios-name -U username [-I ip-address]
+
+# do some operations with a share
+smbclient -U username //ipadress/sharename
