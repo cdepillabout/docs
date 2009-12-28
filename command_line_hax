@@ -279,3 +279,21 @@ pdfcrack -f file.pdf
 gnome-device-manager
 # here is non-graphical
 lshal
+
+
+# this is used to enumerate all the pam modules (and other included pam files) 
+# being used on a system and print what pam files they are being used in.
+cat /etc/pam.d/* | grep -v '^#' | grep -v '^$' | sed -e 's/\( \|\t\)\+/\t/g' | cut -f 3 | sort | uniq |  while read type; do echo; echo "\"$type\" in:"; grep "$type" /etc/pam.d/* ; done
+
+
+# Set and get extended filesystem attributes on file 'what'.
+# For this to work, you need to mount this filesystem with 
+# the user_xattr flag, and support for CONFIG_*_FS_XATTR
+# needs to be compiled into your kernel.
+setfattr -n user.KEY1 -v VALUE what 
+getfattr what 
+man 5 attr
+
+
+# get and set capabilities for binaries
+getcap /bin/ping
