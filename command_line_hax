@@ -295,8 +295,10 @@ getfattr what
 man 5 attr
 
 
-# get and set capabilities for binaries
+# get capabilities for binaries
 getcap /bin/ping
+# let /bin/ping send raw packets
+setcap cap_net_raw=ep /bin/ping
 
 
 # get acl for file
@@ -318,4 +320,13 @@ setfacl -b some_file
 # The default ACL is only applied to directories, and it defines the 
 # permissions that a newly created file or directory inherits from its parent directory.
 setfacl -d -m u::rwx,u:ice:rx,g::rx,o::- some_dir
+# The umask has no effect if a default ACL exists.
+# You can also modify and create default ACLs with another syntax, prefixing the u, g, or o entries with a "d" :
+setfacl -m d:u:ice:rwx,d:g:somegroup:rwx some_dir
+# The mv command will always preserve ACLs if it is possible. If it is not possible, 
+# it will issue a warning. The cp command will only preserve ACLs if used with the -p or -a options.
+
+# If you already have a file with a complex ACL, you can easily copy that ACL to other 
+# files by piping the output of a getfacl command into the setfacl command.
+getfacl bingo.txt | setfacl --set-file=- test*
 
