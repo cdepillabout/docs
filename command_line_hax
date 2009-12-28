@@ -297,3 +297,25 @@ man 5 attr
 
 # get and set capabilities for binaries
 getcap /bin/ping
+
+
+# get acl for file
+getfacl some_file
+# let user ice be able to read and write to file
+setfacl -m user:ice:rw- some_file
+setfacl -m u:ice:rw- some_file
+# let user tippy and people in group lensmen read our files
+setfacl -m u:tippy:r--,g:lensmen:r-- some_file
+# change mask so that even people with the ability to write to file can't
+setfacl -m mask::r-- some_file
+# remote acl for ice from some_file
+setfacl -x u:ice some_file
+# remove all acls from file
+setfacl -b some_file
+# if you just turn on execute for a directory and not read, then
+# the person can open the directory but not read any of the files.
+
+# The default ACL is only applied to directories, and it defines the 
+# permissions that a newly created file or directory inherits from its parent directory.
+setfacl -d -m u::rwx,u:ice:rx,g::rx,o::- some_dir
+
