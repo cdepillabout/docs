@@ -194,3 +194,10 @@ ctrl-x ctrl-l
 # From there, you can edit the macro as needed and then yank the macro back 
 # in to the desired register by executing something like 0"ay$. Once yanked, 
 # the new macro will execute as you would expect it would. 
+
+
+# open the file under the cursor in a new tab
+ctrl-w gf
+# or you can do a tab split and then gf
+:tab split
+gf
