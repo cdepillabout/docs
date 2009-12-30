@@ -330,3 +330,11 @@ setfacl -m d:u:ice:rwx,d:g:somegroup:rwx some_dir
 # files by piping the output of a getfacl command into the setfacl command.
 getfacl bingo.txt | setfacl --set-file=- test*
 
+
+# organize data in columns
+# (in this example, we are printing out how many files is in each directory in .)
+# Output will look like this:
+# dir1				2	files
+# dir2				10	files
+# verylongdirname	50	files
+for directory in *; do echo $directory `ls ${directory} | wc -l` "files"; done | column -t
