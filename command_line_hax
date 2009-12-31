@@ -338,3 +338,7 @@ getfacl bingo.txt | setfacl --set-file=- test*
 # dir2				10	files
 # verylongdirname	50	files
 for directory in *; do echo $directory `ls ${directory} | wc -l` "files"; done | column -t
+
+# pathname expansion that gets all files except . and ..
+# you need these three different things for it to work
+for f in   *  .[^.]*   ..?*  ; do echo $f; done
