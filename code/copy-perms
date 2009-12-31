@@ -1,0 +1,259 @@
+#!/bin/bash
+
+# Copy perms from one of user, group, or other, to one of
+# user, group, or other.
+# For instance, if the file's permissions are rwxr--r--,
+# you can run this file like this, to set the group permissions
+# equal to the user permission (so that the file becomes rwxrwxr--).
+# $ copy-perms --from u --to g SOME_FILE
+
+source ~/docs/code/lib/library.sh
+
+# print usage
+function usage {
+	echo "Usage: `basename $0` --from {u,g,o} --to {u,g,o} FILE..."
+	echo "Copy file's 'user' perms, 'group' perms, or 'other' perms to different permission set."
+	echo "Used, for example, when trying to set the group permissions equal to the user permissions."
+	echo "for a large number of files at once."
+	echo
+	echo -e "  -f, --from\t\t\tpermission we are copying from "
+	echo -e "  -t, --to\t\t\tpermission we are copying to (overwriting)"
+	echo
+	echo "Example:"
+	echo -e "  `basename $0` --from u --to g SOME_FILE\tSet group perms equal to the user perms"
+} 
+
+
+# make sure that the permission word is given correctly.
+# It should be either one of "u", "g", or "o", 
+# or one of "user", "group", or "other".
+function check_perm_word {
+	to_or_from="$1"
+	perm="$2"
+	
+	#echo "in check perm word, to_or_from is $to_or_from and perm is $perm" >&2
+
+	# this is just simple concatenation
+	case "$perm" in
+		u|user) 
+			echo "u"
+			return 0
+			;;
+		g|group) 
+			echo "g"
+			return 0
+			;;
+		o|other) 
+			echo "o"
+			return 0
+			;;
+		*) 
+			return 1
+			;;
+	esac
+}
+
+# recursively change file permissions on directory
+function recurse_on_dir {
+	from_option="$1"
+	to_option="$2"
+	recurse="$3"
+	filename="$4"
+
+	cd "$filename"
+
+	# this is a cool way of getting all the files in a directory,
+	# except for . and ..
+	for f in `ls -A $PWD`
+	do
+		change_perm_worker "$from_option" "$to_option" "$recurse" "$f"
+	done
+}
+
+# Get a specific perm from the output of `ls -l $file`.
+# For example, this method will probably return either
+# "r", "w", "x", or "-"
+# Returns 0 on error
+function ls_get_perm {
+	# name of file to get perm from
+	filename="$1"
+	# value we want (from 1 to 9, 1 being user read right, 9 being other execute right)
+	perm_value="$2"
+	
+	perm=$(ls -ld "$filename" | grep -o "^.[r-][w-][xsS-][r-][w-][xsS-][r-][w-][xtT-][+ ]" | \
+			perl -lne 'chomp $_; @b = split("",$_); print $b['${perm_value}']')
+	
+	if [[ "$perm" != "r" && "$perm" != "w" && "$perm" != "x" && "$perm" != "-" ]]
+	then
+		echo "Error! Cannot copy special permission \"$perm\" from file \"$filename\"" >&2
+		echo 0
+	else
+		echo "$perm"
+	fi
+}
+	
+# This gets all the perms from one set of permissions (user, group, or other).
+# This will return a string like 'rwx' or 'r-x' or '---'.
+# It returns a '0' on error.
+function get_from_perms {
+	from_option="$1"
+	filename="$2"
+
+	perms=""
+
+	# this is just simple concatenation
+	case "$from_option" in
+		u) 
+			perms="$(ls_get_perm ${filename} 1)$(ls_get_perm ${filename} 2)$(ls_get_perm ${filename} 3)"
+			;;
+		g) 
+			perms="$(ls_get_perm ${filename} 4)$(ls_get_perm ${filename} 5)$(ls_get_perm ${filename} 6)"
+			;;
+		o) 
+			perms="$(ls_get_perm ${filename} 7)$(ls_get_perm ${filename} 8)$(ls_get_perm ${filename} 9)"
+			;;
+		*) 
+			echo "Error! u, g, or o not specified"
+			usage
+			exit 1 
+			;;
+	esac
+
+	# make sure the perms var doesn't include a 0, because that is what is returned on error from ls_get_perms
+	if [[ -n "$(echo -n $perms | grep 0)" ]]
+	then
+		DEBUG echo "Error! (in get_from_perms()) Getting perms from ${filename}: $perms" >&2
+		echo "0"
+	else
+		echo $perms
+	fi
+
+}
+
+# This function will actually invoke chmod to change the permissions.
+function change_perm {
+	from_option="$1"
+	to_option="$2"
+	filename="$3"
+
+	perms=`get_from_perms "$from_option" "$filename"`
+
+	if [[ "$perms" == "0" ]]
+	then
+		echo "Error! Error in setting new perms for ${filename}: `ls -ld ${filename}`" >&2
+	else
+		DEBUG echo "old perms for ${filename}: `ls -ld ${filename}`"
+		chmod ${to_option}=${perms} "$filename"
+		DEBUG echo "new perms for ${filename}: `ls -ld ${filename}`"
+	fi
+}
+
+# loop through files and recurse on them if they are dirs
+function change_perm_worker {
+	# make sure we have the correct args passed in
+	if [[ "$#" != "4" ]] 
+	then
+		die "ERROR: change_perm_worker function did not get 4 arguments."
+	fi
+	from_option="$1"
+	to_option="$2"
+	recurse="$3"
+	filename="$4"
+
+
+	if [[ -d "$filename" ]]
+	then
+		# we change the directorys permissions and then recurse on it
+		change_perm "$from_option" "$to_option" "$filename"
+		if [[ "$recurse" == "yes" ]]
+		then
+			DEBUG echo "recursing on" "$PWD/$filename"
+			# this is a way to run something in a subcommand 
+			# (so that after it's finished, it comes back to this working directory)
+			# (this is pretty clever)
+			(recurse_on_dir "$from_option" "$to_option" "$recurse" "$filename")
+		fi
+	elif [[ -e "$filename" ]]
+	then
+		change_perm "$from_option" "$to_option" "$filename"
+	else
+		die "ERROR: \"$filename\" does not exist."
+	fi
+}
+	
+
+
+# use getopts to get all of our variables
+GETOPT_TEMP=`getopt -o f:t:Rh --long from:,to:,recursive,help \
+     -n $(basename $0) -- "$@"`
+
+# make sure there were no getopts errors
+if [ $? != 0 ]
+then 
+	usage
+	exit 1
+fi
+
+# I don't remember what this does but it might be important
+eval set -- "$GETOPT_TEMP"
+
+# the permission set we are copying from ("u", "g", or "o")
+FROM_OPTION=""
+# the permission set we are copying to ("u", "g", or "o")
+TO_OPTION=""
+# whether or not to recurse ("yes" or "no")
+RECURSIVE_OPTION="no"
+
+while true ; do
+	case "$1" in
+		-f|--from) 
+			FROM_OPTION="${2}"
+			shift 2
+			;;
+		-t|--to) 
+			TO_OPTION="${2}"
+			shift 2
+			;;
+		-R|--recursive) 
+			RECURSIVE_OPTION="yes"
+			shift
+			;;
+		-h|--help)
+			usage
+			exit 1
+			;;
+		--) 
+			shift
+			break 
+			;;
+		*) 
+			echo "Error!"
+			usage
+			exit 1 
+			;;
+	esac
+done
+
+DEBUG echo "from:" $FROM_OPTION
+DEBUG echo "to:" $TO_OPTION
+
+# check to make sure $FROM_OPTION is okay, and set it to the short version (u, g, or o)
+FROM_OPTION=`check_perm_word "from" "$FROM_OPTION"`
+[ $? != 0 ] && die "ERROR: Argument to \"--from\" must be one of \"u\", \"g\", or \"o\"."
+# do the same with $TO_OPTION
+TO_OPTION=`check_perm_word "from" "$TO_OPTION"`
+[ $? != 0 ] && die "ERROR: Argument to \"--to\" must be one of \"u\", \"g\", or \"o\"."
+
+
+# make sure we have some file names passed in
+if [[ -z "$@" || "$#" == "0" ]] 
+then
+	die "ERROR: Must pass in FILE."
+fi
+
+for arg # in "$@"
+do
+	DEBUG echo "changing perms copying from ${FROM_OPTION} to ${TO_OPTION} for \"$arg\""
+	change_perm_worker "$FROM_OPTION" "$TO_OPTION" "$RECURSIVE_OPTION" "$arg"
+done
+
