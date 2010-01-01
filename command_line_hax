@@ -279,3 +279,9 @@ pdfcrack -f file.pdf
 gnome-device-manager
 # here is non-graphical
 lshal
+
+
+# set up ssh tunnel
+# connect to localhost at port 58888, it tunnels to "other-computer" and connects to 
+# "other-computer"s localhost at port 54444
+ssh -vv -NL 127.0.0.1:58888:127.0.0.1:54444 other-computer
