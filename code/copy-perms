@@ -64,7 +64,7 @@ function recurse_on_dir {
 
 	# this is a cool way of getting all the files in a directory,
 	# except for . and ..
-	for f in `ls -A $PWD`
+	for f in `ls -A "$PWD"`
 	do
 		change_perm_worker "$from_option" "$to_option" "$recurse" "$f"
 	done
@@ -104,13 +104,13 @@ function get_from_perms {
 	# this is just simple concatenation
 	case "$from_option" in
 		u) 
-			perms="$(ls_get_perm ${filename} 1)$(ls_get_perm ${filename} 2)$(ls_get_perm ${filename} 3)"
+			perms="$(ls_get_perm "${filename}" 1)$(ls_get_perm "${filename}" 2)$(ls_get_perm "${filename}" 3)"
 			;;
 		g) 
-			perms="$(ls_get_perm ${filename} 4)$(ls_get_perm ${filename} 5)$(ls_get_perm ${filename} 6)"
+			perms="$(ls_get_perm "${filename}" 4)$(ls_get_perm "${filename}" 5)$(ls_get_perm "${filename}" 6)"
 			;;
 		o) 
-			perms="$(ls_get_perm ${filename} 7)$(ls_get_perm ${filename} 8)$(ls_get_perm ${filename} 9)"
+			perms="$(ls_get_perm "${filename}" 7)$(ls_get_perm "${filename}" 8)$(ls_get_perm "${filename}" 9)"
 			;;
 		*) 
 			echo "Error! u, g, or o not specified"
@@ -140,11 +140,11 @@ function change_perm {
 
 	if [[ "$perms" == "0" ]]
 	then
-		echo "Error! Error in setting new perms for ${filename}: `ls -ld ${filename}`" >&2
+		echo "Error! Error in setting new perms for ${filename}: `ls -ld "${filename}"`" >&2
 	else
-		DEBUG echo "old perms for ${filename}: `ls -ld ${filename}`"
+		DEBUG echo "old perms for ${filename}: `ls -ld "${filename}"`"
 		chmod ${to_option}=${perms} "$filename"
-		DEBUG echo "new perms for ${filename}: `ls -ld ${filename}`"
+		DEBUG echo "new perms for ${filename}: `ls -ld "${filename}"`"
 	fi
 }
 
