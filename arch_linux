@@ -11,6 +11,9 @@ pacman --sync --info <regexp> # -Si
 # install a package from a repository
 pacman --sync <foo> # -S
 
+# upgrade a file (maybe to an older version) from package
+pacman --upgrade file.pkg.tar.gz # -U
+
 # list installed packages
 pacman --query # -Q
 
@@ -50,4 +53,12 @@ pacman -Qdt
 
 # to load modules automatically, add them to the MODULES variable
 # in rc.conf
+
+
+# DOWNGRADING PACKAGES
+# find the package source on http://arm.konnichi.com/ with the date
+# you want to downgrade to, and then
+pacman --upgrade package.pkg.tar.gz
+# more useful information at this link:
+# http://wiki.archlinux.org/index.php/Downgrading_Packages
 

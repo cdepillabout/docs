@@ -1,0 +1,24 @@
+
+# connect with kerberos to active directory server
+kinit administrator@DOMAIN.COM
+
+# actually join the active directory domain
+net ads join -U administrator
+
+# list users with net command
+net ads user
+
+# list users with wbinfo
+wbinfo -u
+
+# try authenticating testuser with wbinfo
+wbinfo -a testuser%testpass
+
+# list shares from smb server 
+smbclient -L server-netbios-name -U username [-I ip-address]
+
+# do some operations with a share
+smbclient -U username //ipadress/sharename
+
+# mount a samba share somewhere locally
+mount.cifs //192.168.1.1/shareddir /mnt/mount_point/ -o user=administrator,pass=adminpass,dom=DOMAIN

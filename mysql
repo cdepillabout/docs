@@ -42,11 +42,33 @@ mysql> CREATE DATABASE gentoo;
 # create a new table where that has 3 fields of variable length text
 mysql> CREATE TABLE developers ( name VARCHAR(128), email VARCHAR(128), job VARCHAR(128));
 
+# create a new table with stuff from other table
+mysql> CREATE TABLE new_table SELECT * FROM old_table;
+
+# combine the previous two
+mysql> CREATE TABLE new_table (id3 INT) SELECT id1 FROM old_table;
+
+# create index
+mysql> CREATE INDEX id_index ON new_table (id3);
+
+# drop a column from a table
+mysql> ALTER TABLE TestTable3 DROP COLUMN id3;
+
+# change a column name for a table (must include type as well)
+# here we are changing 'id3' to 'id1' (and it stays an int)
+mysql> ALTER TABLE TestTable3 CHANGE id3 id1 int;
+
+
 # describe the fields in a table
 mysql> DESCRIBE developers;
 
+# view the indexes on the table
+mysql> SHOW INDEXES FROM testTable3;
+
+# delete an index
+mysql> drop index id1_index on TestTable3;
+
 # insert data into the table
-#
 mysql> INSERT INTO developers VALUES('Joe Smith', 'joesmith@gentoo.org', 'toolchain');
 mysql> INSERT INTO developers (job, name) VALUES('outsourced', 'Jane Doe');
 
@@ -89,4 +111,5 @@ mysql> grant all privileges on *.* to 'USERNAME'@'%';
 # make sure a user can only connect from local network
 mysql> create user 'USERNAME'@'192.168.1.%' identified by 'users_password';
 mysql> grant all privileges on dbname.* to 'USERNAME'@'192.168.1.%';
+
 

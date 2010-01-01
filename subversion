@@ -1,0 +1,33 @@
+
+# create a repository
+svnadmin create /var/svn/repo
+
+# do initial import of your files to the repo
+svn import mytree/ file:///var/svn/newrepos/some/project/trunk \
+             -m "Initial import"
+
+
+# list files in a repo on the local machine
+svn list file:///var/svn/repo/
+svn list file:///var/svn/repo/some/project/trunk
+
+# list files in repo on the remote machine
+svn list svn+ssh://192.168.1.100/var/svn/repo/
+svn list svn+ssh://192.168.1.100/var/svn/repo/some/project/trunk
+
+# delete a repo
+# (you can delete anything you can find with `svn list`)
+svn delete svn+ssh://192.168.1.100/var/svn/repo/some/project
+
+# check out the whole repo (creating the dir repo/ in your cwd)
+svn checkout svn+ssh://192.168.1.100/var/svn/repo/
+# check out the entire project stuff (creating the dir stuff/ in your cwd)
+svn checkout svn+ssh://192.168.1.100/var/svn/repo/stuff
+# check out the trunk of the project stuff (creating the dir trunk/ in your cwd)
+svn checkout svn+ssh://192.168.1.100/var/svn/repo/stuff/trunk
+# check out just one directory of the project stuff (creating the dir present/ in your cwd)
+svn checkout svn+ssh://192.168.1.100/var/svn/repo/stuff/trunk/present
+
+# check out the trunk, but name the local created directory "stuff"
+svn checkout svn+ssh://192.168.1.100/var/svn/repo/stuff/trunk "stuff"
+

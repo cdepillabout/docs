@@ -280,8 +280,70 @@ gnome-device-manager
 # here is non-graphical
 lshal
 
-
 # set up ssh tunnel
 # connect to localhost at port 58888, it tunnels to "other-computer" and connects to 
 # "other-computer"s localhost at port 54444
 ssh -vv -NL 127.0.0.1:58888:127.0.0.1:54444 other-computer
+
+
+# this is used to enumerate all the pam modules (and other included pam files) 
+# being used on a system and print what pam files they are being used in.
+cat /etc/pam.d/* | grep -v '^#' | grep -v '^$' | sed -e 's/\( \|\t\)\+/\t/g' | cut -f 3 | sort | uniq |  while read type; do echo; echo "\"$type\" in:"; grep "$type" /etc/pam.d/* ; done
+
+
+# Set and get extended filesystem attributes on file 'what'.
+# For this to work, you need to mount this filesystem with 
+# the user_xattr flag, and support for CONFIG_*_FS_XATTR
+# needs to be compiled into your kernel.
+setfattr -n user.KEY1 -v VALUE what 
+getfattr what 
+man 5 attr
+
+
+# get capabilities for binaries
+getcap /bin/ping
+# let /bin/ping send raw packets
+setcap cap_net_raw=ep /bin/ping
+
+
+# get acl for file
+getfacl some_file
+# let user ice be able to read and write to file
+setfacl -m user:ice:rw- some_file
+setfacl -m u:ice:rw- some_file
+# let user tippy and people in group lensmen read our files
+setfacl -m u:tippy:r--,g:lensmen:r-- some_file
+# change mask so that even people with the ability to write to file can't
+setfacl -m mask::r-- some_file
+# remote acl for ice from some_file
+setfacl -x u:ice some_file
+# remove all acls from file
+setfacl -b some_file
+# if you just turn on execute for a directory and not read, then
+# the person can open the directory but not read any of the files.
+
+# The default ACL is only applied to directories, and it defines the 
+# permissions that a newly created file or directory inherits from its parent directory.
+setfacl -d -m u::rwx,u:ice:rx,g::rx,o::- some_dir
+# The umask has no effect if a default ACL exists.
+# You can also modify and create default ACLs with another syntax, prefixing the u, g, or o entries with a "d" :
+setfacl -m d:u:ice:rwx,d:g:somegroup:rwx some_dir
+# The mv command will always preserve ACLs if it is possible. If it is not possible, 
+# it will issue a warning. The cp command will only preserve ACLs if used with the -p or -a options.
+
+# If you already have a file with a complex ACL, you can easily copy that ACL to other 
+# files by piping the output of a getfacl command into the setfacl command.
+getfacl bingo.txt | setfacl --set-file=- test*
+
+
+# organize data in columns
+# (in this example, we are printing out how many files is in each directory in .)
+# Output will look like this:
+# dir1				2	files
+# dir2				10	files
+# verylongdirname	50	files
+for directory in *; do echo $directory `ls ${directory} | wc -l` "files"; done | column -t
+
+# pathname expansion that gets all files except . and ..
+# you need these three different things for it to work
+for f in   *  .[^.]*   ..?*  ; do echo $f; done
