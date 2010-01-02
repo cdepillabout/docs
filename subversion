@@ -1,4 +1,7 @@
 
+# subversion guide for git user
+# http://git.or.cz/course/svn.html
+
 # create a repository
 svnadmin create /var/svn/repo
 
