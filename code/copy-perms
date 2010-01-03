@@ -60,7 +60,11 @@ function recurse_on_dir {
 	recurse="$3"
 	filename="$4"
 
+	DEBUG echo "before cd, cwd is $PWD"
+
 	cd "$filename"
+
+	DEBUG echo "after cd, cwd is $PWD"
 
 	# this is a cool way of getting all the files in a directory,
 	# except for . and ..
