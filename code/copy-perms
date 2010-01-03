@@ -70,9 +70,12 @@ function recurse_on_dir {
 
 	# this is a cool way of getting all the files in a directory,
 	# except for . and ..
-	# (this actually doesn't work...)
-	#for f in `ls -AQ .`
-	for f in *
+	# You need the `shopt -s nullglob` if one of these things doesn't
+	# actually expand to an existing filename, it will just expand to
+	# itself.  since there is no file with the name "..?*", it will throw
+	# an error.
+	shopt -s nullglob
+	for f in *   .[^.]*   ..?* 
 	do
 		DEBUG echo "in recurse_on_dir(), working on file $f"
 		change_perm_worker "$from_option" "$to_option" "$recurse" "$f"
