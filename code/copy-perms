@@ -72,7 +72,7 @@ function recurse_on_dir {
 	# except for . and ..
 	# (this actually doesn't work...)
 	#for f in `ls -AQ .`
-	for f in "*"
+	for f in *
 	do
 		DEBUG echo "in recurse_on_dir(), working on file $f"
 		change_perm_worker "$from_option" "$to_option" "$recurse" "$f"
