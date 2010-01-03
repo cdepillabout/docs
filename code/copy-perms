@@ -66,6 +66,8 @@ function recurse_on_dir {
 
 	DEBUG echo "after cd, cwd is $PWD"
 
+	DEBUG echo "ls of wd: `ls -AQ "$PWD"`"
+
 	# this is a cool way of getting all the files in a directory,
 	# except for . and ..
 	for f in `ls -AQ "$PWD"`
