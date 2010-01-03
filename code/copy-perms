@@ -164,6 +164,7 @@ function change_perm_worker {
 	recurse="$3"
 	filename="$4"
 
+	DEBUG echo "in change_perm_worker(), we are dealing with file $PWD/$filename"
 
 	if [[ -d "$filename" ]]
 	then
