@@ -68,7 +68,7 @@ function recurse_on_dir {
 
 	# this is a cool way of getting all the files in a directory,
 	# except for . and ..
-	for f in `ls -A "$PWD"`
+	for f in `ls -AQ "$PWD"`
 	do
 		change_perm_worker "$from_option" "$to_option" "$recurse" "$f"
 	done
