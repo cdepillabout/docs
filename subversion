@@ -31,3 +31,34 @@ svn checkout svn+ssh://192.168.1.100/var/svn/repo/stuff/trunk/present
 # check out the trunk, but name the local created directory "stuff"
 svn checkout svn+ssh://192.168.1.100/var/svn/repo/stuff/trunk "stuff"
 
+
+# update your local copy (cwd is the repo (some dir with .svn file...))
+svn update
+
+# schedule a new file to be added to the repo on your next commit
+svn add localrepo/newfile.c
+
+# delete a file
+svn delete localrepo/badfile.c
+
+# move a file
+svn move localrepo/oldname.c localrepo/newname.c
+
+# copy a file
+svn copy localrepo/file1.c localrepo/file2.c
+
+# make a new directory
+svn mkdir localrepo/newdir
+
+# see the status of the local repository (like what files have been modified but not committed)
+svn status
+
+# look at differences after you have made changes
+svn diff
+
+# undo changes
+svn revert
+
+# commit your differences
+svn commit
+
