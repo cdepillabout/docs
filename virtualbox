@@ -1,4 +1,11 @@
 
+# on arch linux:
+# - Run "vbox_build_module" as root every time your kernel is upgraded, to
+#   compile the module for the new kernel version.
+# - Add your user to the vboxusers group:
+#      gpasswd -a USERNAME vboxusers
+
+
 # load the module
 modprobe vboxdrv
 

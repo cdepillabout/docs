@@ -210,6 +210,10 @@ export XDG_CONFIG_HOME="$HOME/.config"
 if [ -d "$HOME/filesystem/bin" ]
 then
 	export PATH="$PATH:$HOME/filesystem/bin"
+
+	# if we have our filesystem, then make sure the python path
+	# is set correctly within it
+	export PYTHONPATH="$PYTHONPATH:$HOME/filesystem/lib/python2.6/site-packages/"
 fi
 
 
