@@ -24,5 +24,7 @@ VBoxManage startvm <vm name> -type vrdp
 VBoxManage internalcommands sethduuid <hard_drive_name.vdi>
 
 # another way to clone a hard drive (not sure how this works exactly)
+# both of these should be the same
 VBoxManage clonehd ....
+VBoxManage clonevdi SOURCE.vdi NEWCOPY.vdi
 
