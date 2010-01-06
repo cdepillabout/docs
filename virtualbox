@@ -18,3 +18,11 @@ modprobe vboxnetadp
 
 # start headless from the console
 VBoxManage startvm <vm name> -type vrdp
+
+# give a .vdi hard drive file a new UUID 
+# (used after cp'ing an existing .vdi file)
+VBoxManage internalcommands sethduuid <hard_drive_name.vdi>
+
+# another way to clone a hard drive (not sure how this works exactly)
+VBoxManage clonehd ....
+
