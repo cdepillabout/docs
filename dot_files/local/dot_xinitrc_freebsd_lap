@@ -27,6 +27,7 @@ fi
 
 #export LC_ALL="ja_JP.UTF8"
 #export LANG="ja_JP.UTF8"
+export LC_CTYPE="ja_JP.UTF8"
 export XMODIFIERS="@im=SCIM"
 export XMODIFIER="@im=SCIM"
 export GTK_IM_MODULE="scim"
