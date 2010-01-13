@@ -1,0 +1,42 @@
+
+# use portaudit to check for vulnerabilities
+portaudit -F -a
+
+
+
+# searching for ports
+whereis lsof
+echo /usr/ports/*/*lsof*
+cd /usr/ports; make search name=lsof
+
+# list packages currently installed
+pkg_info
+
+# show packages that need updating
+pkg_version -v
+
+# delete an installed package
+pkg_delete xchat-1.7.1
+# Note that pkg_delete requires the full package name and number
+# You can give it a wild card like so:
+pkg_delete xchat\*
+
+
+
+# PORTSNAP
+
+# getting updates for all the ports
+portsnap fetch
+
+# clobbering everything in /usr/ports with a new update
+portsnap extract
+
+# update a port tree that has already been extracted
+# with the above command
+portsnap update
+
+# these can be combined (so this should be used all the time,
+# after you have done portsnap extract at least once)
+portsnap fetch update
+
+
