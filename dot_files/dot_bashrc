@@ -17,14 +17,17 @@ fi
 # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
 if [ -x /usr/bin/dircolors ]; then
 	eval "`dircolors -b`"
-fi
-if [[ -f /etc/DIR_COLORS ]]; then
+	alias ls="ls --color=auto"
+elif [[ -f /etc/DIR_COLORS ]]; then
 	eval `dircolors -b /etc/DIR_COLORS`
-fi
-if [[ -f ~/.dir_colors ]]; then
+	alias ls="ls --color=auto"
+elif [[ -f ~/.dir_colors ]]; then
 	eval `dircolors -b ~/.dir_colors`
+	alias ls="ls --color=auto"
+elif [[ "$(uname)"="FreeBSD" ]]; then
+	# no dircolor
+	export CLICOLOR=1
 fi
-alias ls="ls --color=auto"
 alias lsr="ls -rt"
 alias grep="grep --color=auto"
 
