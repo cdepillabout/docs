@@ -12,6 +12,15 @@ cd /usr/ports; make search name=lsof
 # list packages currently installed
 pkg_info
 
+# show info about a certain installed package
+pkg_info foopackage-1.0.0
+
+# show all of the files installed by foopackage
+pkg_info -L foopackage-1.0.0
+ 
+# find out the version of a package
+pkg_info | grep -i foopackage
+
 # show packages that need updating
 pkg_version -v
 
@@ -40,3 +49,59 @@ portsnap update
 portsnap fetch update
 
 
+# PORTUPGRADE
+
+# fix database used by portupgrade (run before every upgrade)
+pkgdb -F
+# force update
+pkgdb -fu
+
+# upgrade all the packages on the system 
+# (-P means to prefer packages to ports)
+# (-i asks for confirmation)
+# (-c runs make config-conditional)
+portupgrade -P -a -v -i -c
+
+# upgrade just one package (-R first upgrade all packages required by this package)
+portupgrade -R firefox3
+
+# install a new package
+portupgrade -PNv firefox3
+
+# use -i and -n options to show what would be done
+portupgrade -aPRni
+
+
+# OTHER PORT MANAGERS
+# http://www.freebsd.org/doc/en/books/handbook/ports-using.html
+# PORTMANAGER -- /usr/ports/ports-mgmt/portmanager
+# PORTMASTER -- /usr/ports/ports-mgmt/portmaster
+
+
+
+# do a make clean in all of the packages directories
+portsclean -C
+
+#delete all the distfiles that are no longer referenced by any ports
+portsclean -D
+
+# Or to remove all distfiles not referenced by any port currently installed on your system
+portsclean -DD
+
+
+
+# load modules (this loads the linux module)
+kldload linux
+
+# show loaded modules (-v shows modules within the kernel)
+kldstat -v
+
+
+# NOTES
+#
+# /etc/ttys is like /etc/inittab on linux
+#
+# To make a module load on startup, add it to /etc/rc.conf
+# like this:
+# linux_enable="YES"
+# So, the module name, then '_enable="YES"'.
