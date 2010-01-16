@@ -62,3 +62,6 @@ pacman --upgrade package.pkg.tar.gz
 # more useful information at this link:
 # http://wiki.archlinux.org/index.php/Downgrading_Packages
 
+
+# burn cd on arch linux
+wodim -v dev=/dev/cdrw isoimage.iso

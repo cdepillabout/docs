@@ -31,3 +31,6 @@ cdrecord -v -useinfo -pad driveropts=noforcespeed,burnfree speed=48 dev=1,0,0 -a
 # banana_phone/ will not be on the cd, but everything
 # under it will
 mkisofs -R banana_phone/ | cdrecord driveropts=noforcespeed,burnfree speed=48 dev=1,0,0 -
+
+# this is how to do it on arch linux
+wodim -v dev=/dev/cdrw isoimage.iso
