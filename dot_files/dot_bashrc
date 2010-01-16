@@ -33,8 +33,8 @@ elif [[ "$(uname)" == "FreeBSD" ]]; then
 	alias grep="grep --color=auto"
 elif [[ "$(uname)" == "OpenBSD" ]]; then
 	# no dircolor
-	# just need something here like a pass statement
-	:
+	alias ls="gls --color=auto"
+	alias grep="ggrep --color=auto"
 fi
 alias lsr="ls -rt"
 
