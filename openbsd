@@ -1,0 +1,5 @@
+
+# set PKG_PATH before trying to pkg_add anything
+export PKG_PATH="ftp://mirror.rit.edu/pub/OpenBSD/4.6/packages/i386/"
+# for instance, add vim
+pkg_add vim
