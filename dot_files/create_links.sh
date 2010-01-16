@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Create the proper links from ~/ to my dot files.
 
 source $HOME/docs/code/lib/library.sh

@@ -18,18 +18,25 @@ fi
 if [ -x /usr/bin/dircolors ]; then
 	eval "`dircolors -b`"
 	alias ls="ls --color=auto"
+	alias grep="grep --color=auto"
 elif [[ -f /etc/DIR_COLORS ]]; then
 	eval `dircolors -b /etc/DIR_COLORS`
 	alias ls="ls --color=auto"
+	alias grep="grep --color=auto"
 elif [[ -f ~/.dir_colors ]]; then
 	eval `dircolors -b ~/.dir_colors`
 	alias ls="ls --color=auto"
-elif [[ "$(uname)"="FreeBSD" ]]; then
+	alias grep="grep --color=auto"
+elif [[ "$(uname)" == "FreeBSD" ]]; then
 	# no dircolor
 	export CLICOLOR=1
+	alias grep="grep --color=auto"
+elif [[ "$(uname)" == "OpenBSD" ]]; then
+	# no dircolor
+	# just need something here like a pass statement
+	:
 fi
 alias lsr="ls -rt"
-alias grep="grep --color=auto"
 
 # less interprets color escape sequences instead of
 # just printing them to the screen
@@ -203,7 +210,7 @@ export CLASSPATH="$CLASSPATH:/usr/share/hamcrest-core/lib/hamcrest-core.jar"
 # add default browser
 export BROWSER=`get_correct_filename_from_choices "firefox-bin" "firefox"`
 
-export EDITOR="/usr/bin/vim"
+export EDITOR=`get_correct_filename_from_choices "/usr/bin/vim" "/usr/local/bin/vim"`
 
 # XDG Base Directory Specification
 export XDG_DATA_HOME="$HOME/.local/share"
