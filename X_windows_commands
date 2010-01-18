@@ -37,3 +37,10 @@ $ xauth add somehost.somedomain:10 MIT-MAGIC-COOKIE-1 4d22408a71a55b41ccd1657d37
 
 # set up two screens
 xrandr --output LVDS --auto --output VGA --auto
+
+
+# display information about an X server
+xdpyinfo
+
+# check screen info
+xrandr
