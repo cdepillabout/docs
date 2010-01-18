@@ -32,9 +32,20 @@ elif [[ "$(uname)" == "FreeBSD" ]]; then
 	export CLICOLOR=1
 	alias grep="grep --color=auto"
 elif [[ "$(uname)" == "OpenBSD" ]]; then
-	# no dircolor
+	# we use the gnu versions of ls and grep
+	# so that we can get color
 	alias ls="gls --color=auto"
 	alias grep="ggrep --color=auto"
+
+	# this is so that root doesn't take all the bash
+	# settings from our user when su'ing
+	alias su="su -l"
+
+	# we want vim and other commands to use color
+	# when running under X
+	if [[ "$TERM" == xterm* ]]; then
+		export TERM="xterm-color"
+	fi
 fi
 alias lsr="ls -rt"
 
