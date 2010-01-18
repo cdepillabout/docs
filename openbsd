@@ -3,3 +3,25 @@
 export PKG_PATH="ftp://mirror.rit.edu/pub/OpenBSD/4.6/packages/i386/"
 # for instance, add vim
 pkg_add vim
+
+# kill a specific program
+pkill Xorg
+
+
+# get the ports tree for 4.6
+cd /usr && \
+	cvs -d anoncvs@openbsd.mirror.frontiernet.net:/cvs get -rOPENBSD_4_6 -P ports
+# or you could do something like this
+export CVSROOT="anoncvs@openbsd.mirror.frontiernet.net:/cvs"
+cd /usr && cvs get -rOPENBSD_4_6 -P ports
+# now, update the ports tree
+cd /usr/ports && cvs up -rOPENBSD_4_6 -Pd
+
+# get the ports tree for current
+cd /usr && \
+	cvs -d anoncvs@openbsd.mirror.frontiernet.net:/cvs get -P ports
+# or you could do something like this
+export CVSROOT="anoncvs@openbsd.mirror.frontiernet.net:/cvs"
+cd /usr && cvs get -P ports
+# now, update the ports tree
+cd /usr/ports && cvs up -Pd
