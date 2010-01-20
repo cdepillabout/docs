@@ -17,28 +17,28 @@ fi
 # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
 if [ -x /usr/bin/dircolors ]; then
 	eval "`dircolors -b`"
-	alias ls="ls --color=auto"
-	alias grep="grep --color=auto"
 elif [[ -f /etc/DIR_COLORS ]]; then
 	eval `dircolors -b /etc/DIR_COLORS`
-	alias ls="ls --color=auto"
-	alias grep="grep --color=auto"
 elif [[ -f ~/.dir_colors ]]; then
 	eval `dircolors -b ~/.dir_colors`
+fi
+
+if [[ "$(uname)" == "Linux" ]]; then
 	alias ls="ls --color=auto"
 	alias grep="grep --color=auto"
 elif [[ "$(uname)" == "FreeBSD" ]]; then
-	# no dircolor
 	export CLICOLOR=1
 	alias grep="grep --color=auto"
 elif [[ "$(uname)" == "OpenBSD" ]]; then
-	# we use the gnu versions of ls and grep
-	# so that we can get color
+	# We use the gnu versions of ls and grep
+	# so that we can get color.
+	# We must install these programs first.
 	alias ls="gls --color=auto"
 	alias grep="ggrep --color=auto"
 
-	# this is so that root doesn't take all the bash
-	# settings from our user when su'ing
+	# This is so that root doesn't take all the bash
+	# settings from our user when su'ing.
+	# Root uses ksh by default, not bash.
 	alias su="su -l"
 
 	# we want vim and other commands to use color
@@ -47,6 +47,7 @@ elif [[ "$(uname)" == "OpenBSD" ]]; then
 		export TERM="xterm-color"
 	fi
 fi
+
 alias lsr="ls -rt"
 
 # less interprets color escape sequences instead of
