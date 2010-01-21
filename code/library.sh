@@ -2,6 +2,9 @@
 #these are functions and vars for bash scripts
 
 
+# To use these colors, use a command like this:
+# echo -e "${BOLD_RED_TEXT}hello${RESET_TEXT}"
+
 # these are foreground colors
 BLACK_TEXT='\E[30m'
 RED_TEXT='\E[31m'
