@@ -29,6 +29,12 @@ set guifont=Bitstream\ Vera\ Sans\ Mono\ 14 "font names to be used in gui
 " try to always use a syntax
 syntax on
 
+" this combination works out well to only apply case to searches
+" if there is an uppercase letter in your search string
+set ignorecase
+set smartcase
+
+
 " always show a tabline
 set showtabline=2
 
