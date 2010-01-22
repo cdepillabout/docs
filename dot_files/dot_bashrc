@@ -16,6 +16,11 @@ if [[ $- != *i* ]] ; then
 	return
 fi
 
+# this gets us some functions and variables needed by various programs
+if [[ -e "${HOME}/docs/code/library.sh" ]] ; then
+	source "${HOME}/docs/code/library.sh"
+fi
+
 # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
 if [ -x /usr/bin/dircolors ]; then
 	eval "`dircolors -b`"

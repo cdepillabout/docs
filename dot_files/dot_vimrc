@@ -29,6 +29,12 @@ set guifont=Bitstream\ Vera\ Sans\ Mono\ 14 "font names to be used in gui
 " try to always use a syntax
 syntax on
 
+" this combination works out well to only apply case to searches
+" if there is an uppercase letter in your search string
+set ignorecase
+set smartcase
+
+
 " always show a tabline
 set showtabline=2
 
@@ -138,5 +144,9 @@ call Add_auto_foldmethod("css", "indent")
 " Python needs spaces instead of tabs.
 autocmd BufRead,BufNewFile *.py set expandtab
 " maybe this could also be done with
-"autocm FileType python set ...
+"autocmd FileType python set expandtab
 
+" special settings for sas files
+autocmd FileType sas set tabstop=3			" 3-space tab indent width
+autocmd FileType sas set shiftwidth=3		" allows you to use < and > to indent/unindent blocks
+autocmd FileType sas set softtabstop=3		" see multiple space characters as a tab
