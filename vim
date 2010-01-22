@@ -201,3 +201,18 @@ ctrl-w gf
 # or you can do a tab split and then gf
 :tab split
 gf
+
+
+# open all folds in a file
+zR
+
+# close all folds in a file
+zM
+
+# There are a couple different kinds of vim files.
+# The major ones are global plugins, filetype plugins, syntax files, and indentation files.
+# filetype plugins are loaded when files of a specific filetype are loaded.
+# This is an example of a line that could go into a filetype plugin file:
+#autocmd FileType sas set tabstop=3			" 3-space tab indent width
+# A filetype plugin is like a global plugin, except that it sets options defines mappings
+# for the current buffer only.
