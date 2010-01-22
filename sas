@@ -24,3 +24,4 @@ input shipment_number 5. +1 shipment_date mmddyy6. +1
 - @40 -- move to column 40
 - quantity 5. -- a five character numeric with no decimals
 
+# in an input statement, a "$" indicates it is a character value
