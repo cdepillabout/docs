@@ -81,14 +81,70 @@ dig -x 192.168.1.1 +trace
 # get all records associated with an address
 dig any example.com
 
+# perform zone transfer for example.com
+dig -t AXFR @ns1.example.com example.com
 
 ############### OTHER #################
 
-# connect to schools private internet using vpnc
-# with a virtual private network
+# connect to private intranet using vpnc
+# with a virtual private networkusing vpnc
+modprobe tun
 vpnc
-
+# ssh commands
+ssh private-computer
 # disconnect
 vpnc-disconnect
 
 
+
+# create access point with madwifi
+wlanconfig ath0 destroy
+wlanconfig ath0 create wlandev wifi0 wlanmode ap
+iwconfig ath0 essid test
+# wds 1 enables 4 address frames necessary for bridging to eth0
+iwpriv ath0 wds 1
+
+
+# create bridge
+ifconfig eth0 0.0.0.0 up
+ifconfig ath0 0.0.0.0 up
+brctl addbr br0
+brctl addif br0 eth0
+brctl addif br0 ath0
+ifconfig br0 192.168.0.101 netmask 255.255.255.0 up
+
+
+# NAT
+
+# set up lan
+ifconfig ath0 192.168.0.1 broadcast 192.168.0.255 netmask 255.255.255.0
+
+# create nat
+iptables -F
+iptables -t nat -F
+
+# Setup default policies to handle unmatched traffic
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD DROP
+
+# Copy and paste these examples ...
+export LAN=ath0
+export WAN=eth0
+
+# Finally we add the rules for NAT
+iptables -I FORWARD -i ${LAN} -d 192.168.0.0/255.255.0.0 -j DROP
+iptables -A FORWARD -i ${LAN} -s 192.168.0.0/255.255.0.0 -j ACCEPT
+iptables -A FORWARD -i ${WAN} -d 192.168.0.0/255.255.0.0 -j ACCEPT
+iptables -t nat -A POSTROUTING -o ${WAN} -j MASQUERADE
+
+# Tell the kernel that ip forwarding is OK
+echo 1 > /proc/sys/net/ipv4/ip_forward
+for f in /proc/sys/net/ipv4/conf/*/rp_filter ; do echo 1 > $f ; done
+
+
+
+# mount sshfs
+sshfs -p SSHPORT example.com: dir/to/mount/to
+# umount sshfs
+fusermount -u dir/to/mount/to
