@@ -45,7 +45,7 @@ colorscheme darkblue
 "colorscheme torte
 
 " highlight tab line differently
-hi TabLine term=bold,reverse cterm=bold ctermfg=white ctermbg=white
+hi TabLine term=bold,reverse cterm=bold ctermfg=black ctermbg=white
 hi TabLineFill term=bold,reverse cterm=bold ctermfg=white ctermbg=white
 hi TabLineSel term=reverse ctermfg=white ctermbg=lightblue
 
