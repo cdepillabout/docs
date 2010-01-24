@@ -1,4 +1,11 @@
 
+# help sheets from bitbucket
+http://bitbucket.org/help/UsingBitbucket
+http://bitbucket.org/help/getting-started
+# mercurial book
+http://hgbook.red-bean.com/
+
+
 # create a new repository in the current directory
 hg init
 
