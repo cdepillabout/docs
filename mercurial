@@ -1,0 +1,12 @@
+
+# create a new repository in the current directory
+hg init
+
+# You can edit .hg/hgrc in your repository to include 
+# the default path to Bitbucket
+$ cat .hg/hgrc
+[paths]
+default = ssh://hg@bitbucket.org/USERNAME/REPOSITORY/
+$
+# Now you can simply enter hg push and hg pull 
+# without having to specify the full URL.
