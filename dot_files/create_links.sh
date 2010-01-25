@@ -40,6 +40,11 @@ super_link $HOME/docs/dot_files/dot_mplayer/config $HOME/.mplayer/config
 make_directory $HOME/.fluxbox
 super_link $HOME/docs/dot_files/dot_fluxbox/keys $HOME/.fluxbox/keys
 
+make_directory $HOME/.vim
+make_directory $HOME/.vim/after
+make_directory $HOME/.vim/after/syntax
+super_link $HOME/docs/dot_files/dot_vim/after/syntax/sas.vim $HOME/.vim/after/syntax/sas.vim
+
 #for dot_file in dot_* 
 #do
 #	ln -sf `pwd`/${dot_file} ~/.${dot_file#dot_}
