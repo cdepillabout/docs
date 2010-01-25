@@ -24,7 +24,7 @@ file_name=$1
 [[ -f $file_name ]] || die "ERROR! $file_name is not a file."
 
 # get us a temp file
-temp_file=`tempfile`
+temp_file=`mktemp`
 
 # read in password
 

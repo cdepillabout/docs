@@ -1,0 +1,19 @@
+
+# help sheets from bitbucket
+http://bitbucket.org/help/UsingBitbucket
+http://bitbucket.org/help/getting-started
+# mercurial book
+http://hgbook.red-bean.com/
+
+
+# create a new repository in the current directory
+hg init
+
+# You can edit .hg/hgrc in your repository to include 
+# the default path to Bitbucket
+$ cat .hg/hgrc
+[paths]
+default = ssh://hg@bitbucket.org/USERNAME/REPOSITORY/
+$
+# Now you can simply enter hg push and hg pull 
+# without having to specify the full URL.

@@ -9,6 +9,8 @@
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from
 # outputting anything in those cases.
+# Here is another way to do this:
+# [ -z "$PS1" ] && return 
 if [[ $- != *i* ]] ; then
 	# Shell is non-interactive.  Be done now!
 	return
@@ -119,17 +121,6 @@ esac
 umask 0077
 
 
-# put the git branch in our prompt
-git_prompt()
-{
-	git_branch=`git branch 2>/dev/null | grep "\*" | sed -e "s/^\* //"`
-
-	if [ -n "${git_branch}" ]
-	then
-		echo -n "${git_branch} "
-	fi
-}
-
 # this escape sequence is used so that screen can set
 # the window title
 if [ "$TERM" == 'screen' ]; then
@@ -138,28 +129,81 @@ else
 	SCREEN_PS1_ESCAPE=''
 fi
 
-if [[ $EUID -ne 0 ]] 
-then
-	if [ -n "${SSH_CLIENT}" -a -n "${SSH_CONNECTION}" -a -n "${SSH_TTY}" ]
-	then
-		# give a different prompt if we are on a remote connection
-		export PS1='\[\033[01;32m\]\u\[\033[01;34m\]@\[\033[01;35m\]\h\[\033[01;34m\] \w \[\033[01;33m\]$(git_prompt)\[\033[01;34m\]'${SCREEN_PS1_ESCAPE}'\$\[\033[00m\] '
-	else
-		export PS1='\[\033[01;32m\]\u\[\033[01;34m\]@\[\033[01;32m\]\h\[\033[01;34m\] \w \[\033[01;33m\]$(git_prompt)\[\033[01;34m\]'${SCREEN_PS1_ESCAPE}'\$\[\033[00m\] '
+
+# colors for using in PS1
+PS1_black="\[\033[01;30m\]"
+PS1_red="\[\033[01;31m\]"
+PS1_green="\[\033[01;32m\]"
+PS1_yellow="\[\033[01;33m\]"
+PS1_blue="\[\033[01;34m\]"
+PS1_magenta="\[\033[01;35m\]"
+PS1_cyan="\[\033[01;36m\]"
+PS1_white="\[\033[01;37m\]"
+
+PS1_normal_text="\[\033[00m\]"
+
+PS1_git_branch_color="${PS1_yellow}"
+PS1_mercurial_branch_color="${PS1_magenta}"
+
+
+# put the git branch in our prompt
+get_git_or_hg_branch()
+{
+	# try to see if this is a git branch first
+	git_branch=`git branch 2>/dev/null | grep "\*" | sed -e "s/^\* //"`
+	if [ -n "${git_branch}" ] ; then
+		echo -n "${PS1_git_branch_color}${git_branch} "
+		return
 	fi
-# give a different prompt if we are root
-else
-	if [ -n "${SSH_CLIENT}" -a -n "${SSH_CONNECTION}" -a -n "${SSH_TTY}" ]
-	then
-		# give a different prompt if we are on a remote connection
-		export PS1='\[\033[01;31m\]\u\[\033[01;34m\]@\[\033[01;35m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
-	else
-		export PS1='\[\033[01;31m\]\u\[\033[01;34m\]@\[\033[01;32m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
+	
+	# now try to see if it is a mercurial branch
+	mercurial_branch=`hg branch 2>/dev/null`
+	if [ -n "${mercurial_branch}" ] ; then
+		echo -n "${PS1_mercurial_branch_color}${mercurial_branch} "
+		return
 	fi
+}
+
+
+PS1_username="${PS1_green}\u"
+PS1_at="${PS1_blue}@"
+PS1_hostname="${PS1_green}\h"
+PS1_workingdir="${PS1_blue}\w"
+# source code management dir
+PS1_scmdir=""
+# a '$' if we are a normal user and a '#' if we are root
+PS1_dollar_or_pound="${PS1_blue}\\\$"
+
+# we want a different color hostname if we 
+# are on a remote connection
+if [ -n "${SSH_CLIENT}" -a -n "${SSH_CONNECTION}" -a -n "${SSH_TTY}" ] ; then
+	PS1_hostname="${PS1_magenta}\h"
 fi
 
-# Normal PS1
-#export PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] '
+# this is the command we want to run before every
+# command prompt.  it sets our scmdir and colors for us.
+# this is for a normal user.
+bash_prompt_normal() {
+	export PS1="${PS1_username}${PS1_at}${PS1_hostname} ${PS1_workingdir} $(get_git_or_hg_branch)"${SCREEN_PS1_ESCAPE}"${PS1_dollar_or_pound} ${PS1_normal_text}"
+}
+# this is for the root user
+bash_prompt_root() {
+	export PS1="${PS1_username}${PS1_at}${PS1_hostname} ${PS1_workingdir} ${PS1_dollar_or_pound} ${PS1_normal_text}"
+}
+
+
+# we want a slightly different prompt if we are root
+if [[ $EUID -eq 0 ]] ; then
+	PS1_username="${PS1_red}\u"
+	PS1_dollar_or_pound="${PS1_red}\\\$"
+	export PROMPT_COMMAND=bash_prompt_root
+else
+	export PROMPT_COMMAND=bash_prompt_normal
+fi
+
+# run the prompt command once so we make sure PS1 is set
+$PROMT_COMMAND
+
 
 
 # set my locale for man

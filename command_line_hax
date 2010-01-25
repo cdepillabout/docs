@@ -347,3 +347,7 @@ for directory in *; do echo $directory `ls ${directory} | wc -l` "files"; done |
 # pathname expansion that gets all files except . and ..
 # you need these three different things for it to work
 for f in   *  .[^.]*   ..?*  ; do echo $f; done
+
+
+# when trying to redirect stderr to stdout and then redirect standard out somewhere else, you have to do them opposite.
+deluged -d 1>>/tmp/some/file  2>&1
