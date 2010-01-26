@@ -12,6 +12,18 @@
 syn clear sasStep
 syn clear sasProc
 
+" we want to fold datalines...
+syn clear sasStatement
+syn keyword sasStatement	ABORT ARRAY ATTRIB BY CALL CARDS CARDS4 CATNAME
+syn keyword sasStatement	CONTINUE DELETE DISPLAY
+syn keyword sasStatement	DM DROP ENDSAS ERROR FILE FILENAME FOOTNOTE
+syn keyword sasStatement	FORMAT GOTO INFILE INFORMAT INPUT KEEP
+syn keyword sasStatement	LABEL LEAVE LENGTH LIBNAME LINK LIST LOSTCARD
+syn keyword sasStatement	MERGE MISSING MODIFY OPTIONS OUTPUT PAGE
+syn keyword sasStatement	PUT REDIRECT REMOVE RENAME REPLACE RETAIN
+syn keyword sasStatement	RETURN SELECT SET SKIP STARTSAS STOP TITLE
+syn keyword sasStatement	UPDATE WAITSAS WHERE WINDOW X SYSTASK
+
 
 " Block comment
 "syn region sasComment	start="/\*"  end="\*/" contains=sasTodo fold
@@ -27,7 +39,11 @@ syn region sasComment start="^\s*\*" end=";" contains=sasTodo fold
 
 " matchgroup associates the matched part of the expression with the group
 " sasStartFoldStep.  We then can apply highlighting to this group.
-syn region sasFoldStep matchgroup=sasStartFoldStep start=/^\(PROC \w\+\|DATA\)/ end=/^\(RUN\|QUIT\)/ fold transparent
+"syn region sasFoldStep matchgroup=sasStartFoldStep start=/^\(PROC \w\+\|DATA\)/ end=/^\(RUN\|QUIT\)/ fold transparent
+syn region sasFoldStep matchgroup=sasStartFoldStep start=/^\(PROC \w\+\|DATA\s\)/ end=/^\(RUN\|QUIT\)/ fold transparent
+syn region sasFoldStep matchgroup=sasStartFoldStep start=/^\(PROC \w\+\|DATA\s\)/ end=/^DATALINES;/me=s-1 fold transparent
+" I don't know how to make the ; after datalines not be highlighted
+syn region sasFoldStep matchgroup=sasStartFoldStep start=/^DATALINES/rs=e+2,he=e-1 end=/;/ fold transparent
 hi def link sasStartFoldStep sProc
 
 " Syncronize from beginning to keep large blocks from losing
