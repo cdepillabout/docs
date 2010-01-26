@@ -37,3 +37,15 @@ sas -nodms
 4?   proc print; 
 5?	 run;
 6?   endsas;
+
+
+# for temporary datasets, SAS puts them in the "Work" lib, so
+# a dataset "Demographic" would become the Work.Demographic dataset.
+
+
+# SAS uses blanks to represent missing character values and
+# periods to represent missing numeric values.
+
+
+# The SAS term /observations/ is analogous to rows in a table.
+# The SAS term /variables/ is analogous to columns in a table.
