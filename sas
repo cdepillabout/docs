@@ -25,3 +25,15 @@ input shipment_number 5. +1 shipment_date mmddyy6. +1
 - quantity 5. -- a five character numeric with no decimals
 
 # in an input statement, a "$" indicates it is a character value
+
+
+
+# run sas interactively, but without the GUI
+sas -nodms
+
+1?   data; 
+2?		p=probnorm(3.25); 
+3?	 run;
+4?   proc print; 
+5?	 run;
+6?   endsas;
