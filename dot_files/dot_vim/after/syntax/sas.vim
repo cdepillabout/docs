@@ -39,11 +39,9 @@ syn region sasComment start="^\s*\*" end=";" contains=sasTodo fold
 
 " matchgroup associates the matched part of the expression with the group
 " sasStartFoldStep.  We then can apply highlighting to this group.
-"syn region sasFoldStep matchgroup=sasStartFoldStep start=/^\(PROC \w\+\|DATA\)/ end=/^\(RUN\|QUIT\)/ fold transparent
-syn region sasFoldStep matchgroup=sasStartFoldStep start=/^\(PROC \w\+\|DATA\s\)/ end=/^\(RUN\|QUIT\)/ fold transparent
-syn region sasFoldStep matchgroup=sasStartFoldStep start=/^\(PROC \w\+\|DATA\s\)/ end=/^DATALINES;/me=s-1 fold transparent
+syn region sasFoldStep matchgroup=sasStartFoldStep start=/^PROC \w\+/ start=/^DATA\s/ end=/^RUN/ end=/^QUIT/ end=/^DATALINES/me=s-1 fold transparent
 " I don't know how to make the ; after datalines not be highlighted
-syn region sasFoldStep matchgroup=sasStartFoldStep start=/^DATALINES/rs=e+2,he=e-1 end=/;/ fold transparent
+syn region sasFoldStep matchgroup=sasStartFoldStep start=/^DATALINES/rs=e+2,he=e-2 end=/;/ fold transparent
 hi def link sasStartFoldStep sProc
 
 " Syncronize from beginning to keep large blocks from losing
