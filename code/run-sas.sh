@@ -29,7 +29,7 @@ sas_file="$1"
 [[ ! -e "$SAS" ]] && die "ERROR! Could not find the SAS executable in ${SAS}"
 
 # try running sas on our file, and see if we get any errors
-${SAS} -nonews -pagesize 32767 "${sas_file}"
+${SAS} ${SASFLAGS} "${sas_file}"
 
 sas_return_code="$?"
 
