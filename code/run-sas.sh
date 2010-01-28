@@ -4,7 +4,7 @@
 # run-sas PROGRAM.sas
 
 SAS="/usr/local/SAS/SASFoundation/9.2/bin/sas_en"
-SASFLAGS="-nonews -pagesize 32767"
+SASFLAGS="-nonews -pagesize 32767 -nocenter -nonumber"
 
 # make sure we get the die function and color variables
 if [[ -e "${HOME}/docs/code/library.sh" ]] ; then
