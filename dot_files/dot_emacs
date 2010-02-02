@@ -1,6 +1,6 @@
 
 ;; use the gentoo configuration files
-(require 'site-gentoo)
+;(require 'site-gentoo)
 
 ;(set-default-font "Bitstream Vera Sans Mono-14")
 ;(set-default-font "Fixed-18")
@@ -26,7 +26,7 @@
 
 ; save all backup files to a separate directory
 (setq make-backup-files t)
-(setq backup-directory-alist (quote ((".*" . "~/.emacs_backups/"))))
+(setq backup-directory-alist (quote ((".*" . "~/.emacs-backups/"))))
 (setq auto-save-visited-file-name t)
 
 ; when you yank a line, make it yank the following new line.
