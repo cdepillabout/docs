@@ -64,8 +64,8 @@
 
 
 ;; Make colors not appear in the shell
-(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+;(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 
 
@@ -114,7 +114,7 @@
 
 ;; Disable going into anthy-mode
 ;(global-set-key "\C-\\" 'anthy-mode)
-(global-unset-key "\C-\\")
+;(global-unset-key "\C-\\")
 
 
 (defun goto-next-buffer ()
@@ -122,12 +122,15 @@
 	(switch-to-buffer nil))	
 
 
-;; CLOJURE
-(add-to-list 'load-path "~/.clojure/clojure-mode")
-(require 'clojure-mode)
+(setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
+(load "/usr/share/emacs/site-lisp/ess/ess-site")
 
-(setq clojure-src-root "/home/illabout/.clojure/")
-(eval-after-load 'clojure-mode '(clojure-slime-config))
+;; CLOJURE
+;(add-to-list 'load-path "~/.clojure/clojure-mode")
+;(require 'clojure-mode)
+
+;(setq clojure-src-root "/home/illabout/.clojure/")
+;(eval-after-load 'clojure-mode '(clojure-slime-config))
 
 
 ;(add-to-list 'load-path "~/.clojure/slime")
