@@ -129,15 +129,19 @@
   (progn (setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
 		 (load "/usr/share/emacs/site-lisp/ess/ess-site")))
 
-(if (file-exists-p (expand-file-name "~/filesystem/share/emacs/site-lisp/ess"))
-    (progn (setq load-path (cons (expand-file-name "~/filesystem/share/emacs/site-lisp/ess") load-path))
-				 (load (expand-file-name "~/filesystem/share/emacs/site-lisp/ess/ess-site"))))
+(if (file-exists-p "~/filesystem/share/emacs/site-lisp/ess")
+    (progn (setq load-path (cons "~/filesystem/share/emacs/site-lisp/ess" load-path))
+				 (load "~/filesystem/share/emacs/site-lisp/ess/ess-site")))
+
+; don't ask for the starting directory when starting a new process
+(setq ess-ask-for-ess-directory nil)
 
 ; Use TRAMP 
 (setq tramp-default-method "ssh")
 
 ; Use the ssh.el so that we can remote an SAS connection
-;(load "~/.emacs.d/ssh.el")
+(if (file-exists-p "~/.emacs.d/ssh.el")
+	(load "~/.emacs.d/ssh.el"))
 
 ;; CLOJURE
 ;(add-to-list 'load-path "~/.clojure/clojure-mode")
