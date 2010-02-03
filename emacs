@@ -75,3 +75,11 @@
 ; C-x )
 ; Execute most recent macro
 ; C-x e
+
+;;; ESS 
+; First, limited documentation about each ESS command can be
+; obtained by typing C-h f. For example, if you type C-h f
+; ess-eval-region, documentation for that command will appear in a
+; separate *Help* buffer. Second, a complete list of keybindings that
+; are available in each ESS mode and brief description of that mode is
+; available by typing C-h m within an ESS buffer.
