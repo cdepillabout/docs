@@ -127,7 +127,7 @@
 (load "/usr/share/emacs/site-lisp/ess/ess-site")
 
 ; Use TRAMP 
-(setq tramp-default-method "sshx")
+(setq tramp-default-method "ssh")
 
 ;; CLOJURE
 ;(add-to-list 'load-path "~/.clojure/clojure-mode")
