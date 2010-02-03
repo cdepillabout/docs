@@ -65,3 +65,8 @@ pacman --upgrade package.pkg.tar.gz
 
 # burn cd on arch linux
 wodim -v dev=/dev/cdrw isoimage.iso
+
+
+# search for just a package name
+pacman -Ssq PKGNAME | grep PKGNAME
+yaourt -Ss -q PKGNAME | grep PKGNAME | grep -v "^    "
