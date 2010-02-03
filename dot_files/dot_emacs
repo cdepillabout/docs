@@ -73,8 +73,10 @@
 ;(setq browse-url-netscape-program "firefox")
 
 ;; remove the toolbar
-(tool-bar-mode 0)
-(menu-bar-mode 0)
+(if (fboundp 'tool-bar-mode)
+  (tool-bar-mode 0))
+(if (fboundp 'menu-bar-mode)
+  (menu-bar-mode 0))
 
 ;; no splash screen
 (setq inhibit-splash-screen t)
@@ -108,9 +110,9 @@
 
 
 ;; MY KEYS
-(global-set-key [f1] 'goto-next-buffer) 
-(global-set-key [f2] 'delete-other-windows) 
-(global-set-key [f3] 'delete-window)
+;(global-set-key [f1] 'goto-next-buffer) 
+;(global-set-key [f2] 'delete-other-windows) 
+;(global-set-key [f3] 'delete-window)
 
 ;; Disable going into anthy-mode
 ;(global-set-key "\C-\\" 'anthy-mode)
@@ -128,6 +130,9 @@
 
 ; Use TRAMP 
 (setq tramp-default-method "ssh")
+
+; Use the ssh.el so that we can remote an SAS connection
+;(load "~/.emacs.d/ssh.el")
 
 ;; CLOJURE
 ;(add-to-list 'load-path "~/.clojure/clojure-mode")
