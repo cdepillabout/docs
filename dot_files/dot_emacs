@@ -2,7 +2,7 @@
 ;; use the gentoo configuration files
 ;(require 'site-gentoo)
 
-;(set-default-font "Bitstream Vera Sans Mono-14")
+(set-default-font "Bitstream Vera Sans Mono-14")
 ;(set-default-font "Fixed-18")
 ;(set-face-attribute 'default nil
 ;					:family "Inconsolata" :height 180)

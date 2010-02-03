@@ -12,7 +12,7 @@
 
 # Here is another way to do this:
 # [ -z "$PS1" ] && return 
-if [[ $- != *i* -o "$TERM" == "dumb" ]] ; then
+if [[ $- != *i* || "$TERM" == "dumb" ]] ; then
 	# Shell is non-interactive.  Be done now!
 	return
 fi
