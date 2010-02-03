@@ -129,6 +129,10 @@
   (progn (setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
 		 (load "/usr/share/emacs/site-lisp/ess/ess-site")))
 
+(if (file-exists-p (expand-file-name "~/filesystem/share/emacs/site-lisp/ess"))
+    (progn (setq load-path (cons (expand-file-name "~/filesystem/share/emacs/site-lisp/ess") load-path))
+				 (load (expand-file-name "~/filesystem/share/emacs/site-lisp/ess/ess-site"))))
+
 ; Use TRAMP 
 (setq tramp-default-method "ssh")
 
