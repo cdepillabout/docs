@@ -125,8 +125,9 @@
 
 
 ; Use ESS (Emacs Speaks Statistics)
-(setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
-(load "/usr/share/emacs/site-lisp/ess/ess-site")
+(if (file-exists-p "/usr/share/emacs/site-lisp/ess")
+  (progn (setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
+		 (load "/usr/share/emacs/site-lisp/ess/ess-site")))
 
 ; Use TRAMP 
 (setq tramp-default-method "ssh")
