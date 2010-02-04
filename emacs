@@ -77,9 +77,21 @@
 ; C-x e
 
 ;;; ESS 
+; When running a remote SAS, using M-x ssh, you can run the sas
+; command like this:
+; /usr/local/SAS/SASFoundation/9.2/sas -nodms
+;
 ; First, limited documentation about each ESS command can be
 ; obtained by typing C-h f. For example, if you type C-h f
 ; ess-eval-region, documentation for that command will appear in a
 ; separate *Help* buffer. Second, a complete list of keybindings that
 ; are available in each ESS mode and brief description of that mode is
 ; available by typing C-h m within an ESS buffer.
+
+;; moving around in the shell buffer that holds the sas session
+; M-{ and M-}		move you back and forward through commands in the session.
+; C-x [ and C-x ]	move you back and forward through outputs from the session.
+; C-c C-e			move you to the end of the buffer.
+; 
+; When you are on an old command line, RET, C-c RET, and M-RET also have special meanings.
+; There are also commands like Bash's C-r.
