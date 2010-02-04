@@ -136,6 +136,17 @@
 ; don't ask for the starting directory when starting a new process
 (setq ess-ask-for-ess-directory nil)
 
+(setq-default ess-sas-submit-command "/usr/local/SAS/SASFoundation/9.2/sas")
+
+; use the special keys for SAS (the 'Fx' keys)
+(defun use-sas-keys ()
+	(interactive)
+	; use keys for all buffers
+	(ess-sas-global-unix-keys)
+	; use keys for only ESS[SAS] buffers
+	;(ess-sas-local-unix-keys)
+)
+
 ; Use TRAMP 
 (setq tramp-default-method "ssh")
 
