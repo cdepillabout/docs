@@ -12,8 +12,7 @@
 
 # Here is another way to do this:
 # [ -z "$PS1" ] && return 
-echo $0 > ~/output.out
-if [[ $- != *i* || "$TERM" == "dumb" || "$0" != "bash" ]] ; then
+if [[ $- != *i* || "$TERM" == "dumb" || "$0" != "*bash" ]] ; then
 	# Shell is non-interactive or shell is not bash.  Be done now!
 	return
 fi
