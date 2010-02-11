@@ -351,3 +351,11 @@ for f in   *  .[^.]*   ..?*  ; do echo $f; done
 
 # when trying to redirect stderr to stdout and then redirect standard out somewhere else, you have to do them opposite.
 deluged -d 1>>/tmp/some/file  2>&1
+
+
+# This is from /etc/sudoers
+# don't put up the big lecture when username is trying to use sudo
+Defaults:username	!lecture
+# don't ask for username's password when username is using sudo, 
+# ask for the target uesrs password instead (by default, root)
+Defaults:username	targetpw
