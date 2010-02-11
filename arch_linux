@@ -65,3 +65,6 @@ pacman --upgrade package.pkg.tar.gz
 
 # burn cd on arch linux
 wodim -v dev=/dev/cdrw isoimage.iso
+
+# when installing things from AUR, don't ask for any confirmation
+yaourt -S --noconfirm xterm-from-git
