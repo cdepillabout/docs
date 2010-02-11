@@ -7,7 +7,17 @@
 # equal to the user permission (so that the file becomes rwxrwxr--).
 # $ copy-perms --from u --to g SOME_FILE
 
-source ~/docs/code/lib/library.sh
+pos_lib_location1="$(dirname $(which "$0"))/library.sh"
+pos_lib_location2="$(dirname $(which "$0"))/../library.sh"
+if [ -f "$pos_lib_location1" ] ; then
+	source "$pos_lib_location1"
+elif [ -f "$pos_lib_location2" ] ; then
+	source "$pos_lib_location2"
+else
+	echo "ERROR! Could not file the library file at either"
+	echo "\"$pos_lib_location1\" or \"pos_lib_location2\"."
+	exit 1
+fi
 
 # print usage
 function usage {

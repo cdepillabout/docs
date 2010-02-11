@@ -25,23 +25,34 @@ function make_directory {
 }
 
 
+# bashrc files
 super_link $HOME/docs/dot_files/dot_bashrc $HOME/.bashrc
-super_link $HOME/docs/dot_files/dot_emacs $HOME/.emacs
-super_link $HOME/docs/dot_files/dot_screenrc $HOME/.screenrc
-super_link $HOME/docs/dot_files/dot_vimrc $HOME/.vimrc
 
+# screen files
+super_link $HOME/docs/dot_files/dot_screenrc $HOME/.screenrc
+
+# emacs files
+super_link $HOME/docs/dot_files/dot_emacs $HOME/.emacs
+make_directory $HOME/.emacs-backups/
+
+# xmonad files
 make_directory $HOME/.xmonad
 super_link $HOME/docs/dot_files/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
 super_link $HOME/docs/dot_files/dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
 
+# mplayer files
 make_directory $HOME/.mplayer
 super_link $HOME/docs/dot_files/dot_mplayer/config $HOME/.mplayer/config
 
+# fluxbox files
 make_directory $HOME/.fluxbox
 super_link $HOME/docs/dot_files/dot_fluxbox/keys $HOME/.fluxbox/keys
 
-#for dot_file in dot_* 
-#do
-#	ln -sf `pwd`/${dot_file} ~/.${dot_file#dot_}
-#done
+# vim files
+super_link $HOME/docs/dot_files/dot_vimrc $HOME/.vimrc
+make_directory $HOME/.vim-tmp
+make_directory $HOME/.vim
+make_directory $HOME/.vim/after
+make_directory $HOME/.vim/after/syntax
+super_link $HOME/docs/dot_files/dot_vim/after/syntax/sas.vim $HOME/.vim/after/syntax/sas.vim
 

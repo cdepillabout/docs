@@ -68,3 +68,7 @@ wodim -v dev=/dev/cdrw isoimage.iso
 
 # when installing things from AUR, don't ask for any confirmation
 yaourt -S --noconfirm xterm-from-git
+
+# search for just a package name
+pacman -Ssq PKGNAME | grep PKGNAME
+yaourt -Ss -q PKGNAME | grep PKGNAME | grep -v "^    "

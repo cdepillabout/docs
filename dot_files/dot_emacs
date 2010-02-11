@@ -1,8 +1,8 @@
 
 ;; use the gentoo configuration files
-(require 'site-gentoo)
+;(require 'site-gentoo)
 
-;(set-default-font "Bitstream Vera Sans Mono-14")
+(set-default-font "Bitstream Vera Sans Mono-14")
 ;(set-default-font "Fixed-18")
 ;(set-face-attribute 'default nil
 ;					:family "Inconsolata" :height 180)
@@ -26,7 +26,7 @@
 
 ; save all backup files to a separate directory
 (setq make-backup-files t)
-(setq backup-directory-alist (quote ((".*" . "~/.emacs_backups/"))))
+(setq backup-directory-alist (quote ((".*" . "~/.emacs-backups/"))))
 (setq auto-save-visited-file-name t)
 
 ; when you yank a line, make it yank the following new line.
@@ -64,8 +64,8 @@
 
 
 ;; Make colors not appear in the shell
-(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+;(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 
 
@@ -73,8 +73,10 @@
 ;(setq browse-url-netscape-program "firefox")
 
 ;; remove the toolbar
-(tool-bar-mode 0)
-(menu-bar-mode 0)
+(if (fboundp 'tool-bar-mode)
+  (tool-bar-mode 0))
+(if (fboundp 'menu-bar-mode)
+  (menu-bar-mode 0))
 
 ;; no splash screen
 (setq inhibit-splash-screen t)
@@ -108,13 +110,13 @@
 
 
 ;; MY KEYS
-(global-set-key [f1] 'goto-next-buffer) 
-(global-set-key [f2] 'delete-other-windows) 
-(global-set-key [f3] 'delete-window)
+;(global-set-key [f1] 'goto-next-buffer) 
+;(global-set-key [f2] 'delete-other-windows) 
+;(global-set-key [f3] 'delete-window)
 
 ;; Disable going into anthy-mode
 ;(global-set-key "\C-\\" 'anthy-mode)
-(global-unset-key "\C-\\")
+;(global-unset-key "\C-\\")
 
 
 (defun goto-next-buffer ()
@@ -122,12 +124,42 @@
 	(switch-to-buffer nil))	
 
 
-;; CLOJURE
-(add-to-list 'load-path "~/.clojure/clojure-mode")
-(require 'clojure-mode)
+; Use ESS (Emacs Speaks Statistics)
+(if (file-exists-p "/usr/share/emacs/site-lisp/ess")
+  (progn (setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
+		 (load "/usr/share/emacs/site-lisp/ess/ess-site")))
 
-(setq clojure-src-root "/home/illabout/.clojure/")
-(eval-after-load 'clojure-mode '(clojure-slime-config))
+(if (file-exists-p "~/filesystem/share/emacs/site-lisp/ess")
+    (progn (setq load-path (cons "~/filesystem/share/emacs/site-lisp/ess" load-path))
+				 (load "~/filesystem/share/emacs/site-lisp/ess/ess-site")))
+
+; don't ask for the starting directory when starting a new process
+(setq ess-ask-for-ess-directory nil)
+
+(setq-default ess-sas-submit-command "/usr/local/SAS/SASFoundation/9.2/sas")
+
+; use the special keys for SAS (the 'Fx' keys)
+(defun use-sas-keys ()
+	(interactive)
+	; use keys for all buffers
+	(ess-sas-global-unix-keys)
+	; use keys for only ESS[SAS] buffers
+	;(ess-sas-local-unix-keys)
+)
+
+; Use TRAMP 
+(setq tramp-default-method "ssh")
+
+; Use the ssh.el so that we can remote an SAS connection
+(if (file-exists-p "~/.emacs.d/ssh.el")
+	(load "~/.emacs.d/ssh.el"))
+
+;; CLOJURE
+;(add-to-list 'load-path "~/.clojure/clojure-mode")
+;(require 'clojure-mode)
+
+;(setq clojure-src-root "/home/illabout/.clojure/")
+;(eval-after-load 'clojure-mode '(clojure-slime-config))
 
 
 ;(add-to-list 'load-path "~/.clojure/slime")
