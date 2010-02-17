@@ -55,4 +55,5 @@ make_directory $HOME/.vim
 make_directory $HOME/.vim/after
 make_directory $HOME/.vim/after/syntax
 super_link $HOME/docs/dot_files/dot_vim/after/syntax/sas.vim $HOME/.vim/after/syntax/sas.vim
+super_link $HOME/docs/dot_files/dot_vim/after/syntax/java.vim $HOME/.vim/after/syntax/java.vim
 
