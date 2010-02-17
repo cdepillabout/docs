@@ -56,9 +56,11 @@ hi PmenuSel ctermbg=lightblue
 hi Normal guibg=black
 
 
+" settings specifically for java from 
+" http://vimdoc.sourceforge.net/htmldoc/syntax.html
 let java_highlight_java_lang_ids=1
 let java_highlight_all=1
-"let java_highlight_functions="style"
+let java_highlight_functions="style"
 "let java_allow_cpp_keywords=1
 
 " Minibufexplorer plugin settings
