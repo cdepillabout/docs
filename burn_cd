@@ -34,3 +34,6 @@ mkisofs -R banana_phone/ | cdrecord driveropts=noforcespeed,burnfree speed=48 de
 
 # this is how to do it on arch linux
 wodim -v dev=/dev/cdrw isoimage.iso
+
+# and this is how to burn wav files on arch
+wodim -v -pad speed=48 dev=/dev/cdrw -dao -swab *.wav

@@ -10,6 +10,8 @@ then
 	exit $E_BADARGS
 fi
 
+MPG_COMMAND="mpg123"
+
 index=1
 
 for args in "$@"
@@ -20,22 +22,22 @@ do
 	
 		".mp3"	) 
 		
-			mpg321 -v --stereo -w "${args%%.mp3}.wav" "$args" 
+			$MPG_COMMAND -v --stereo -w "${args%%.mp3}.wav" "$args" 
 			;;
 			
 		".MP3"	) 
 		
-			mpg321 -v --stereo -w "${args%%.MP3}.wav" "$args" 
+			$MPG_COMMAND -v --stereo -w "${args%%.MP3}.wav" "$args" 
 			;;
 
 		".Mp3"	)
 			
-			mpg321 -v --stereo -w "${args%%.Mp3}.wav" "$args"
+			$MPG_COMMAND -v --stereo -w "${args%%.Mp3}.wav" "$args"
 			;;
 			
 		".mP3"	)
 			
-			mpg321 -v --stereo -w "${args%%.mP3}.wav" "$args"
+			$MPG_COMMAND -v --stereo -w "${args%%.mP3}.wav" "$args"
 			;;
 	esac
 
