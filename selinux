@@ -1,0 +1,105 @@
+
+# the -Z switch can get the security contexts for many common progs
+ls -laZ
+id -Z
+ps auwx -Z
+
+# Users 
+# The SELinux user is not equivalent to a Linux user. One significant
+# difference between the SELinux users and Linux users is SELinux users do
+# not change during a user session, whereas a Linux user might change via
+# su or sudo. Typically many Linux users will use the same SELinux user,
+# but it is possible to have a 1:1 Linux user to SELinux user mapping,
+# such as the root Linux user and the root SELinux user. By convention,
+# SELinux users that are generic have the suffix "_u", such as user_u.
+
+# Roles 
+# A SELinux user may be allowed to take on one or more
+# roles. What a role means is defined by the policy, but examples of
+# roles are an unprivileged user, a web administrator, and a database
+# administrator. Objects typically have the role object_r. By convention,
+# roles have the suffix "_r", such as user_r.
+
+# Types 
+# This is the primary means of determining access (this will be
+# further discussed later). The type of a process is also referred to as
+# its domain. By convention, a type has the suffix "_t", such as user_t.
+
+
+# You can use the semanage program to get information about the system.
+
+# get the mapping of login names (actual users on your system) to 
+# SELinux users.
+semanage login -l
+
+# get the mapping of selinux users to selinux roles
+semanage user -l
+
+
+# SELinux has many object classes (categories of objects), such as dir for
+# directories and file for files. These are used in the policy and in access
+# decisions to more finely specify what access is allowed. Each object
+# class has a set of permissions which are the possible ways to access
+# these objects. For example, the file object class has the permissions
+# create, read, write, and unlink (delete), while the unix_stream_socket
+# object class (UNIX domain stream sockets) has the permissions create,
+# connect, and sendto.
+
+
+# The primary security mechanism of SELinux is type enforcement, meaning
+# that rules are specified using the type of the process and object:
+# 
+#	allow user_t user_home_t:file { create read write unlink };
+# 
+# This rule states that the user_t type is allowed to create, read, write,
+# and delete files with the user_home_t type. More information on adding
+# rules to the policy will be covered in other pages.
+
+
+
+# this changes the context of a file temporarily
+chcon -t user_home_t /tmp/myfile
+
+# this changes the context of a file persistently across reboots
+semanage fcontext -a -t user_home_t /var/cache/myfile 
+restorecon /var/cache/myfile 
+
+# this runs a new shell with a new context
+newrole -r system_r -t unconfined_t
+
+# change the context of a program when started
+# (this is only temporary)
+runcon system_u:system_r:crond_t /bin/bash
+
+# reset the context of a file
+restorecon /tmp/myfile
+
+
+# change the mode from permissive to enforcing
+echo 1 > /selinux/enforce
+# or
+setenforce 1
+
+# change the mode from enforcing to permissive
+echo 0 > /selinux/enforce
+# or
+setenforce 0
+
+
+# You can also add the kernel parameter "enforcing=0"
+# to put it into permissive mode or "enforcing=1" to put it
+# into enforcing mode.  You can use the kernel param "selinux=0"
+# to disable selinux or "selinux=1" to enable selinux.
+# Setting the mode at the command line overrides the modes
+# set in /etc/selinux/config
+
+
+# run_init can be used to start services in the same domain as they 
+# would have as if they were brought up as part of the normal bootup process.
+run_init /etc/init.d/sshd start
+
+
+# Install a new module
+semodule -i new_module.pp
+# check if that module is loaded
+semodule -l
