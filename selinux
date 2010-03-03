@@ -103,3 +103,6 @@ run_init /etc/init.d/sshd start
 semodule -i new_module.pp
 # check if that module is loaded
 semodule -l
+
+# get the status of selinux and common file and process contexts
+sestatus -v
