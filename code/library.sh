@@ -61,3 +61,44 @@ function DEBUG()
 	# I'm not sure why you need this?
 	[[ "$_DEBUG" == "on" || "$_DEBUG" == "yes" ]] &&  $@ || :
 }
+
+
+# this will get the location of $1 (from the $PATH)
+function get_location_of_file()
+{
+	tmp_filename=$1
+	tmp_fullpath=`which ${tmp_filename} 2>/dev/null`
+
+	if [ -n "${tmp_fullpath}" ]
+	then
+		echo ${tmp_fullpath}
+	fi
+}
+
+# this takes an argument list of filenames and outputs
+# the first one that can be found on $PATH.
+# It outputs a full path to the file.
+function get_correct_filename_from_choices()
+{
+	while ((1))
+	do
+		# break if there are no more arguments
+		if [ -z $1 ]
+		then
+			break
+		fi
+
+		# get the full path of the filename
+		tmp_filename=$1
+		shift
+		tmp_fullpath=`get_location_of_file ${tmp_filename}`
+
+		# if this program is on $PATH, echo it's full path
+		# and get out of this loop
+		if [ -n "${tmp_fullpath}" ]
+		then
+			echo ${tmp_fullpath}
+			break
+		fi
+	done
+}
