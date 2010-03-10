@@ -145,6 +145,7 @@ call Add_auto_foldmethod("python", "indent")
 call Add_auto_foldmethod("css", "indent")
 call Add_auto_foldmethod("sas", "syntax")
 call Add_auto_foldmethod("xml", "syntax")
+call Add_auto_foldmethod("ant", "syntax")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
