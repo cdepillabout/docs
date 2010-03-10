@@ -1,4 +1,7 @@
 
+# lots and lots of information on SELinux
+http://selinuxproject.org/page/Main_Page
+
 # the -Z switch can get the security contexts for many common progs
 ls -laZ
 id -Z
@@ -106,3 +109,42 @@ semodule -l
 
 # get the status of selinux and common file and process contexts
 sestatus -v
+
+
+# create a module that allows all of the avc denials from dmesg.
+# the module is called denied2.pp.
+audit2allow -l -d -M denied2
+
+
+# To make your own modules manually, cp the Makefile from
+# /usr/share/doc/selinux-base-policy-20061008/Makefile.example.gz 
+# into a temporary dir. If your .te file is called "local.te", you
+# can make your local.pp and load it by running this command:
+make && semodule -u local.pp && semodule -l
+# This page will show you how to make it the local.te:
+# http://www.gentoo.org/proj/en/hardened/selinux/selinux-handbook.xml?part=3&chap=5
+
+
+# When changing things with semanage, the changes are usually stored in a file in
+# /etc/selinux/<policy>/modules/active/
+
+# permanently change the context for files
+semanage fcontext
+
+# check the context of a file path and compares it to the default label for that path.
+matchpathcon -V /var/www/html/*
+
+# disable dontaudit rules, allowing all denials to be logged
+semodule -DB 
+# rebuild policy and enable dontaudit rules
+semodule -B 
+
+# print a full list of dontaudit rules
+sesearch --dontaudit
+
+# make just a single domain permissive, instead of the whole system
+# (this command makes the httpd_t domain permissive)
+semanage permissive -a httpd_t
+# view a list of domains you have made permissive
+semodule -l | grep permissive
+
