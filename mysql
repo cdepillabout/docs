@@ -113,3 +113,5 @@ mysql> create user 'USERNAME'@'192.168.1.%' identified by 'users_password';
 mysql> grant all privileges on dbname.* to 'USERNAME'@'192.168.1.%';
 
 
+# access a table or a column with spaces in it
+mysql> select * from `column with spaces`;
