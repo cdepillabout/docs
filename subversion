@@ -59,6 +59,9 @@ svn status
 # look at differences after you have made changes
 svn diff
 
+# look at differences between r37 and r36 
+svn diff -r37:36
+
 # undo changes
 svn revert
 
