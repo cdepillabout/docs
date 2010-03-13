@@ -72,6 +72,10 @@ let java_highlight_all=1
 "let g:miniBufExplModSelTarget = 1		" Force minibufferexplorer to put
 										" buffers in windows with 
 										" non-modifiable buffers
+										"
+
+" make sure xml files are folded
+let g:xml_syntax_folding=1
 
 
 " use F5 for turning off and on hlsearch,
@@ -140,6 +144,8 @@ call Add_auto_foldmethod("java", "syntax")
 call Add_auto_foldmethod("python", "indent")
 call Add_auto_foldmethod("css", "indent")
 call Add_auto_foldmethod("sas", "syntax")
+call Add_auto_foldmethod("xml", "syntax")
+call Add_auto_foldmethod("ant", "syntax")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.

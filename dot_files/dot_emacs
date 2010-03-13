@@ -166,3 +166,11 @@
 ;(setq inferior-lisp-program "/usr/bin/clojure") ; your Lisp system
 ;(require 'slime)
 ;(slime-setup)
+
+; slime with sbcl
+(if (file-exists-p "/usr/bin/sbcl")
+  (if (file-exists-p "/usr/share/emacs/site-lisp/slime/")
+	(progn (setq inferior-lisp-program "/usr/bin/sbcl")
+		   (add-to-list 'load-path "/usr/share/emacs/site-lisp/slime/")
+		   (require 'slime)
+		   (slime-setup))))
