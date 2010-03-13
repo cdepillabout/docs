@@ -75,18 +75,18 @@ Mod1 space :WindowMenu
 Control Mod1 Delete :Exit
 
 # change to a specific workspace
-Control F1 :Workspace 1
-Control F2 :Workspace 2
-Control F3 :Workspace 3
-Control F4 :Workspace 4
-Control F5 :Workspace 5
-Control F6 :Workspace 6
-Control F7 :Workspace 7
-Control F8 :Workspace 8
-Control F9 :Workspace 9
-Control F10 :Workspace 10
-Control F11 :Workspace 11
-Control F12 :Workspace 12
+#Control F1 :Workspace 1
+#Control F2 :Workspace 2
+#Control F3 :Workspace 3
+#Control F4 :Workspace 4
+#Control F5 :Workspace 5
+#Control F6 :Workspace 6
+#Control F7 :Workspace 7
+#Control F8 :Workspace 8
+#Control F9 :Workspace 9
+#Control F10 :Workspace 10
+#Control F11 :Workspace 11
+#Control F12 :Workspace 12
 
 # send the current window to a specific workspace
 Mod4 F1 :SendToWorkspace 1
