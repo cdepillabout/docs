@@ -77,6 +77,8 @@ let java_highlight_all=1
 " make sure xml files are folded
 let g:xml_syntax_folding=1
 
+" make sure javascript files are folded
+"let g:javaScript_fold=1
 
 " use F5 for turning off and on hlsearch,
 " in both input mode (imap?) and command mode (map?)
@@ -146,6 +148,7 @@ call Add_auto_foldmethod("css", "indent")
 call Add_auto_foldmethod("sas", "syntax")
 call Add_auto_foldmethod("xml", "syntax")
 call Add_auto_foldmethod("ant", "syntax")
+call Add_auto_foldmethod("javascript", "indent")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
