@@ -115,3 +115,7 @@ mysql> grant all privileges on dbname.* to 'USERNAME'@'192.168.1.%';
 
 # access a table or a column with spaces in it
 mysql> select * from `column with spaces`;
+
+# like clause is not case sensitive.
+# This query will match things that start with 'b' or 'B'
+mysql> select * from TABLE where COLUMN like 'B%';
