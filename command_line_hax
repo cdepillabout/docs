@@ -359,3 +359,11 @@ Defaults:username	!lecture
 # don't ask for username's password when username is using sudo, 
 # ask for the target uesrs password instead (by default, root)
 Defaults:username	targetpw
+
+
+# in a tab separated list, print the number of columns
+# for each row.  (this is useful for checking that each row 
+# has the same number of columns).
+cat acronym\ and\ abbreviation\ list.csv | perl -lne 'print scalar(split("\t"))'
+# here is another way to do it
+cat acronym\ and\ abbreviation\ list.csv | perl -F"\t" -lane 'print scalar(@F)'
