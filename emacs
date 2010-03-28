@@ -76,6 +76,7 @@
 ; Execute most recent macro
 ; C-x e
 
+
 ;;; ESS 
 ; When running a remote SAS, using M-x ssh, you can run the sas
 ; command like this:
@@ -88,6 +89,7 @@
 ; are available in each ESS mode and brief description of that mode is
 ; available by typing C-h m within an ESS buffer.
 
+
 ;; moving around in the shell buffer that holds the sas session
 ; M-{ and M-}		move you back and forward through commands in the session.
 ; C-x [ and C-x ]	move you back and forward through outputs from the session.
@@ -95,3 +97,34 @@
 ; 
 ; When you are on an old command line, RET, C-c RET, and M-RET also have special meanings.
 ; There are also commands like Bash's C-r.
+
+
+; Use this to get a real shell
+; M-x ansi-term
+; You can probably also use this:
+; M-x multi-term
+
+
+; Ctrl-x 2:  split-window-vertically -- splits your current window into two 
+;  	     			     	equal-height windows showing the same 
+;					buffer (until you change one of them to show something else.)
+; Ctrl-x 3:  split-window-horizontally -- most people don't use this as often, but it's occasionally 
+;  	     			       	  useful. Splits the window into a left-side and a right-side.
+; Ctrl-x +:  balance-windows -- makes all visible windows approximately equal height. 
+; 	     		     	This is useful if you've just done Ctrl-x 2 twice in a row, 
+;				because you'll have two 1/4-height windows and one 1/2-height window.
+;				Ctrl-x + makes them all the same height.
+; Ctrl-x o:   other-window -- moves the cursor into the next window in the window list,
+; 	      		      which usually means moving it to the window below the current one,
+;			      or wrapping back up to the top.
+; Ctrl-x 1:  delete-other-windows -- makes the currently focused window fill the entire frame; 
+; 	     			     the others go away. Note that the buffers they were visiting stay 
+;				     around in the buffer-list, so it's always perfectly safe to execute this command.
+; Ctrl-x Ctrl-b: list-buffers -- shows a list of all the buffers you have open, in a nicely formatted 
+; 	 	 	      	 buffer called "*Buffer List*". This buffer's mode has many convenience
+;				 keys for manipulating the buffer list. For instance, typing "d" while 
+;				 the cursor is on one of the entries will flag that buffer for deletion, 
+;				 "x" will kill the buffer, and so on. Use M-x describe-bindings to view
+;				 all the Buffer-menu key bindings. 
+
+; Test
