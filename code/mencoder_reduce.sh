@@ -37,6 +37,6 @@ new_file_name="$(echo "$input_movie" | sed -e 's/[0-9]\{3,\}\([Xx]\)[0-9]\{3,\}/
 DEBUG echo "new file name is ${new_file_name}. starting encoding..."
 
 #mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts preset=standard -ovc lavc -lavcopts vcodec=mpeg4:vhq -vf scale -zoom -xy "$new_file_width" 
-mencoder "$input_movie" -o "$new_file_name" -oac copy -ovc lavc -lavcopts vcodec=mpeg4 -vf scale="$new_file_width":"$new_file_height"
+mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts preset=standard -ovc lavc -lavcopts vcodec=mpeg4 -vf scale="$new_file_width":"$new_file_height"
 
 #mencoder dvd://$TITLE -alang en -oac mp3lame -lameopts br=320:cbr -ovc lavc -lavcopts vcodec=mpeg4:vhq -vf scale -zoom -xy 800 -o $FILE.avi
