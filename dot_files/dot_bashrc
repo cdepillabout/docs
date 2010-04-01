@@ -1,10 +1,4 @@
-# /etc/skel/.bashrc:
-#
-# This file is sourced by all *interactive* bash shells on startup,
-# including some apparently interactive shells such as scp and rcp
-# that can't tolerate any output.  So make sure this doesn't display
-# anything or bad things will happen !
-
+#!/bin/bash 
 
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from
@@ -14,7 +8,8 @@
 # [ -z "$PS1" ] && return 
 if [[ $- != *i* || "$TERM" == "dumb" || "$0" != *bash ]] ; then
 	# Shell is non-interactive or shell is not bash.  Be done now!
-	return
+    PROMPT_COMMAND=''
+    return
 fi
 
 # this gets us some functions and variables needed by various programs
@@ -164,7 +159,7 @@ else
 fi
 
 # run the prompt command once so we make sure PS1 is set
-$PROMT_COMMAND
+$PROMPT_COMMAND
 
 
 
