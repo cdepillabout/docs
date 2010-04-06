@@ -34,6 +34,8 @@ super_link $HOME/docs/dot_files/dot_screenrc $HOME/.screenrc
 # emacs files
 super_link $HOME/docs/dot_files/dot_emacs $HOME/.emacs
 make_directory $HOME/.emacs-backups/
+make_directory $HOME/.emacs.d/
+super_link $HOME/docs/dot_files/dot_emacs.d/local.el $HOME/.emacs.d/local.el
 
 # xmonad files
 make_directory $HOME/.xmonad
