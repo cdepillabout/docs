@@ -43,6 +43,7 @@ super_link $HOME/docs/dot_files/dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
 # mplayer files
 make_directory $HOME/.mplayer
 super_link $HOME/docs/dot_files/dot_mplayer/config $HOME/.mplayer/config
+super_link $HOME/docs/dot_files/dot_mplayer/input.conf $HOME/.mplayer/input.conf
 
 # fluxbox files
 make_directory $HOME/.fluxbox
