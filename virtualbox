@@ -28,3 +28,23 @@ VBoxManage internalcommands sethduuid <hard_drive_name.vdi>
 VBoxManage clonehd ....
 VBoxManage clonevdi SOURCE.vdi NEWCOPY.vdi
 
+
+# Opening ports on the virtual machine when connnecting over NAT
+# This example shows how to open the ssh port.
+VBoxManage setextradata "Linux Guest" "VBoxInternal/Devices/pcnet/0/LUN#0/Config/guestssh/Protocol" TCP
+VBoxManage setextradata "Linux Guest" "VBoxInternal/Devices/pcnet/0/LUN#0/Config/guestssh/GuestPort" 22
+VBoxManage setextradata "Linux Guest" "VBoxInternal/Devices/pcnet/0/LUN#0/Config/guestssh/HostPort" 2222
+# The above example assumes a PCNet virtual network card; if you have
+# configured the guest to use the Intel PRO/1000, replace "pcnet" with
+# "e1000" in the above commands and use "virtio-net" if you configured the
+# guest to use the Paravirtualized Network device. Similarly, if you want
+# to configure a different interface instance replace the /0/ with the
+# appropriate index. pcnet, e1000 and virtio-net are counted separately
+# in this respect, and counting starts at 0 for these types.
+
+# The name guestssh is an arbitrary one chosen for this particular
+# forwarding configuration. With that configuration in place, all TCP
+# connections to port 2222 on the host will be forwarded to port 22
+# on the guest. Protocol can be either of TCP or UDP (these are case
+# insensitive). To remove a mapping again, use the same commands, but
+# leaving out the values (in this case TCP, 22 and 2222).

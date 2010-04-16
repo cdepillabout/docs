@@ -55,7 +55,8 @@
 
 ;; To cause the TAB file-character to be interpreted as 
 ;;mod-N indentation, do this:
-;;(setq tab-width 4)
+(setq tab-width 4)
+(setq-default tab-width 4)
 ;;(setq tab-width 8)
 
 ;; To cause TAB characters to not be used in the file for 
@@ -64,19 +65,36 @@
 
 
 ;; Make colors not appear in the shell
-;(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 
+(require 'ido)
+(ido-mode t)
+(setq ido-enable-flex-matching t)
+
+(global-set-key (kbd "C-z") 'hs-toggle-hiding)
+;(global-set-key (kbd "C-\\") 'toggle-selective-display)
+;(add-hook 'c-mode-common-hook   'hs-minor-mode)
+;(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+(add-hook 'java-mode-hook       'hs-minor-mode)
+;(add-hook 'lisp-mode-hook       'hs-minor-mode)
+;(add-hook 'perl-mode-hook       'hs-minor-mode)
+;(add-hook 'sh-mode-hook         'hs-minor-mode)		
+
+;; Save desktops across sessions
+(desktop-save-mode 1)
 
 ;; make it open firefox when opening a URL
 ;(setq browse-url-netscape-program "firefox")
 
 ;; remove the toolbar
 (if (fboundp 'tool-bar-mode)
-  (tool-bar-mode 0))
+    (tool-bar-mode 0))
 (if (fboundp 'menu-bar-mode)
-  (menu-bar-mode 0))
+    (menu-bar-mode 0))
+(if (fboundp 'scroll-bar-mode)
+    (scroll-bar-mode 0))
 
 ;; no splash screen
 (setq inhibit-splash-screen t)
@@ -102,12 +120,26 @@
 (set-foreground-color "bisque")
 
 ;; syntax hilighting
-(cond ((fboundp 'global-font-lock-mode)
+;(cond ((fboundp 'global-font-lock-mode)
        ;; Turn on font-lock in all modes that support it
-       (global-font-lock-mode t)
+;       (global-font-lock-mode t)
        ;; Maximum colors
-       (setq font-lock-maximum-decoration t)))
+;       (setq font-lock-maximum-decoration t)))
+(global-font-lock-mode 1)
+(setq font-lock-maximum-decoration t)
 
+
+;; makes line numbers and column numbers show up
+(line-number-mode 1)
+(column-number-mode 1)
+
+;; enables midnight mode.  by default this runs the
+;; clean-buffer-list command.  This command 
+;; kills buffers that haven’t been visited in 3 days, 
+;; or in the last hour in the case of special buffers that
+;; generally aren't needed (like *Help*, *Buffer List*...)
+(require 'midnight)
+(midnight-delay-set 'midnight-delay "4:30am")
 
 ;; MY KEYS
 ;(global-set-key [f1] 'goto-next-buffer) 
@@ -116,8 +148,34 @@
 
 ;; Disable going into anthy-mode
 ;(global-set-key "\C-\\" 'anthy-mode)
-;(global-unset-key "\C-\\")
+(global-unset-key "\C-\\")
 
+; make sure we can't accidentally close emacs
+; this gets assigned to a code folding function later
+;(global-unset-key "\C-z")
+
+; set help to be something more reasonable
+(global-set-key "\C-h" 'backward-delete-char)
+(global-set-key "\C-x\ ?" 'help)
+
+
+;(global-set-key [?\C-,] 'goto-next-buffer)
+;(global-set-key [?\C-,] 'goto-next-buffer)
+(global-set-key [(control ?;)] 'goto-next-buffer)
+
+;; Here are some random keys that are recommended on the emacs wiki:
+(global-set-key (kbd "<f2>") 'hippie-expand); complete
+(global-set-key (kbd "<f3>") 'comment-region); comment
+(global-set-key (kbd "<f4>") 'eval-last-sexp); eval
+(global-set-key (kbd "<f5>") 'set-mark-command); mark
+(global-set-key (kbd "<f6>") 'kill-ring-save); copy
+(global-set-key (kbd "<f7>") 'yank); paste
+(global-set-key (kbd "<f8>") 'kill-region); delete
+(global-set-key (kbd "<f9>") 'disk); save
+(global-set-key (kbd "<f10>") 'iswitchb-buffer); switch buffer
+(global-set-key (kbd "<f11>") 'dired); switch file
+(global-set-key (kbd "<f12>") 'my-kill); kill buffer
+(global-set-key (kbd "<print>") 'my-jump)		
 
 (defun goto-next-buffer ()
 	(interactive)
@@ -154,6 +212,9 @@
 (if (file-exists-p "~/.emacs.d/ssh.el")
 	(load "~/.emacs.d/ssh.el"))
 
+(if (file-exists-p "~/.emacs.d/local.el")
+	(load "~/.emacs.d/local.el"))
+
 ;; CLOJURE
 ;(add-to-list 'load-path "~/.clojure/clojure-mode")
 ;(require 'clojure-mode)
@@ -173,4 +234,16 @@
 	(progn (setq inferior-lisp-program "/usr/bin/sbcl")
 		   (add-to-list 'load-path "/usr/share/emacs/site-lisp/slime/")
 		   (require 'slime)
-		   (slime-setup))))
+		   ;; These two hooks make sure we go into slime mode when we are
+		   ;; editing lisp files or when we are going into inferior-lisp-mode.
+		   ;(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
+		   ;(add-hook 'inferior-lisp-mode-hook (lambda () (slime-mode t)))
+
+		   ;; Connect to your lisp automatically when you open a lisp file
+		   (defun cliki:start-slime ()
+		     (unless (slime-connected-p)
+		       (save-excursion (slime))))
+
+		   ;(add-hook 'slime-mode-hook 'cliki:start-slime)
+		   
+		   (slime-setup '(slime-repl)))))
