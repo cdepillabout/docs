@@ -56,4 +56,4 @@ $ vmplayer Ubuntu.vmx
 
 
 # Install the modules for VMWare 7.x
-vmware-modconfig --console --install-all
+umask 022 && vmware-modconfig --console --install-all
