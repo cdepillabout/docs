@@ -212,15 +212,15 @@ git config --global user.email 'cdep.illabout@gmail.com'
 
 # from github:
 
-Global setup:
+#Global setup:
 
-Download and install Git
+#Download and install Git
 git config --global user.name "Your Name"
 git config --global user.email swoosh.news@gmail.com
-Add your public key
+#Add your public key
 
 
-Next steps:
+# Next steps:
 
 mkdir swoosh-news
 cd swoosh-news
@@ -232,11 +232,16 @@ git remote add origin git@github.com:swooshnews/swoosh-news.git
 git push origin master
 
 
-Existing Git Repo?
+#Existing Git Repo?
 
 cd existing_git_repo
 git remote add origin git@github.com:swooshnews/swoosh-news.git
 git push origin master
 			
+
+
+# If you add some things to .gitignore, and you are wondering if it
+# masks files that are already in the repo, you can check with a command like this:
+git ls-files -i --exclude-standard
 
 
