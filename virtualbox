@@ -28,6 +28,37 @@ VBoxManage internalcommands sethduuid <hard_drive_name.vdi>
 VBoxManage clonehd ....
 VBoxManage clonevdi SOURCE.vdi NEWCOPY.vdi
 
+# This is not that simple.  This clones the base image, but does not get the
+# current state of the drive or any snapshot information.  Here is how to do that:
+#
+# To clonehd the Current State of a disk:
+#
+#  * Open the Virtual Media Manager (Menu: File>Virtual Media Manager).
+#  * Navigate to the hard disk you want to clone and fully expand the tree (use * key on numeric keypad).
+#  * Find the {hexUUID}.vdi file that is attached to the VM you want to clone the Current State of.
+#    It will be (one of) the leaf files at the end of a branch.
+#    When you select it, the 'Attached to:' text at the bottom of the window will say:
+#		'Attached to: <VMName>', without any (snaphot name) in brackets after it.
+#  * Click the filename to the right of the 'Location:' displayed at the bottom of the window.
+#  * Ctrl+C / Copy to copy the text to the clipboard, which will be something like:
+#		(path){b6441469-5ccb-418c-8fdd-73c5e1a17314}.vdi
+#  * Ctrl+V / Paste and extract the hexUUID value (removing the {} brackets) and run clonehd to clone it!
+VBoxManage clonehd b6441469-5ccb-418c-8fdd-73c5e1a17314 CloneDisk.vdi
+
+# To clonehd a snapshot of a disk:
+
+#  * Open the Virtual Media Manager (Menu: File>Virtual Media Manager).
+#  * Navigate to the hard disk you want to clone and fully expand the tree (use * key on numeric keypad).
+#  * Find the {hexUUID}.vdi file that is attached to the VM (and Snapshot) you want to clone.
+#    It will be one of the files along a branch.
+#    When you select it, the 'Attached to:' text at the bottom of the window will say:
+#		'Attached to: <VMName> (<SnapshotName>)', with (snaphot name) in brackets after it.
+#  * Click the filename to the right of the 'Location:' displayed at the bottom of the window.
+#  * Ctrl+C / Copy to copy the text to the clipboard, which will be something like:
+#		(path){75bd6ab1-ce25-4b56-aa39-7826c9ebcc93}.vdi
+#  * Ctrl+V / Paste and extract the hexUUID value (removing the {} brackets) and run clonehd to clone it!
+VBoxManage clonehd 75bd6ab1-ce25-4b56-aa39-7826c9ebcc93 CloneDisk.vdi
+
 
 # Opening ports on the virtual machine when connnecting over NAT
 # This example shows how to open the ssh port.
