@@ -57,3 +57,14 @@ $ vmplayer Ubuntu.vmx
 
 # Install the modules for VMWare 7.x
 umask 022 && vmware-modconfig --console --install-all
+# After installing, the modules will be loaded automatically.
+# After a reboot, you need to load these modules:
+# ACTUALLY THIS DOESN'T WORK
+modprobe vmmon
+modprobe vmnet
+modprobe vmblock
+modprobe vmci
+modprobe vsock
+
+# open up vmware workstation
+vmware
