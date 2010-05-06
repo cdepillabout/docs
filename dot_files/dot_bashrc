@@ -180,8 +180,6 @@ alias gvim='gvim -p '
 #alias rvim='vim --servername "vimserver" --remote-tab-silent '
 alias rgvim='gvim --remote-tab-silent '
 
-alias highlight='glark --no-filter -N --text-color "bold red" '
-
 # make sure java runs in server mode and with assertions enabled
 alias java='java -server -ea '
 
