@@ -29,6 +29,15 @@ BOLD_WHITE_TEXT= BOLD_TEXT + WHITE_TEXT
 # normal text
 RESET_TEXT= ESCAPE + '[00m'
 
+
+# global variables
+regex_flags = 0 # flags to pass to our regular expression compiler
+highlight_color = BOLD_RED_TEXT # default highlight color
+highlight_filenames = True # highlight_filenames by default
+stripe_filenames = True # stripe filenames with different colors
+from_grep = False # the input is coming from grep
+
+
 def usage():
     "Print program usage."
     return """Usage: %(command_name)s [OPTION]... PATTERN [FILE]...
@@ -40,9 +49,11 @@ Options:
     -c, --color=COLOR       Print matches in color. Valid colors are
                             "black", "red", "green", "yellow", "blue",
                             "magenta", "cyan", "white".
-    -i, --ignore-case       ignore case when searching for matches 
+    -g, --from-grep         input is coming from grep, so highlight filenames
     -h, --help              print this usage
+    -i, --ignore-case       ignore case when searching for matches 
     -k, --regular-filename  don't colorize filenames
+    -s, --no-stripe         don't stripe filenames with color
 """ % {'command_name': sys.argv[0]}
 
 def get_color(color_string):
@@ -71,9 +82,8 @@ def get_color(color_string):
         print usage()
         sys.exit(1)
 
-
 def try_to_shorten_filename(original_filename):
-    "Try to shorten the original_filename by replacing /home/user with just ~"
+    "Try to shorten the original_filename by replacing /home/username with just ~"
     if not os.environ.has_key("HOME"):
         return original_filename
     
@@ -83,32 +93,100 @@ def try_to_shorten_filename(original_filename):
 
     return original_filename
 
-
 def create_highlight_replace_func(color):
-    "This method gets passed into re.sub to replace part of a matching line."
+    "The returned method gets passed into re.sub to replace part of a matching line."
     return lambda matchobj: color + matchobj.group() + RESET_TEXT
 
-def highlight_lines(regex, highlight_replace_func, file=sys.stdin, line_prefix=''):
-    """Highlights all lines in file matching regex.
-    line_prefix is used to put something on the beginning of a line,
-    so for example, you can put the file name on the beginning of the line."""
-    for line in file:
-        try:
-            print line_prefix + re.sub(regex, highlight_replace_func, line),
-        except IOError:
-            pass
+def safety_print(string):
+    "Print a string without throwing any IOErrors"
+    try:
+        print string,
+    except IOError:
+        pass
+
+prev_file_name = ''
+cur_color = ''
+def get_grep_file_name(line):
+    "Higlights filenames we get as input from grep."
+    global prev_file_name
+    global cur_color
+
+    f, search_line = line.split(":", 1)
+    file_name = try_to_shorten_filename(f)
+
+    if prev_file_name != file_name:
+        cur_color = grep_rotate_current_color()
+        prev_file_name = file_name
+
+    if highlight_filenames:
+        file_name = cur_color + file_name + RESET_TEXT + \
+            BOLD_TEXT + ": " + RESET_TEXT
+    else:
+        file_name = file_name + ": "
+
+    return file_name, search_line
+
+def highlight_lines(regex, highlight_replace_func, files):
+    """Takes a compiled regex, function to highlight matches
+    in files for the regex, and a list of files to search through.
+    Just highlightes the matches on each line of files."""
+
+    if not files:
+        files.append(sys.stdin)
+
+    for f in files:
+        if hasattr(f, "readline"):
+            file = f
+        else:
+            try:
+                file = open(f, 'r')
+            except IOError:
+                print >>sys.stderr, sys.argv[0] + ": \"" + f + \
+                        "\": no such file or directory"
+                continue
+
+        if len(files) <= 1:
+            file_name = ""
+        else:
+            file_name = try_to_shorten_filename(f)
+            if highlight_filenames:
+                file_name = rotate_current_color() + file_name + RESET_TEXT + \
+                    BOLD_TEXT + ": " + RESET_TEXT
+            else:
+                file_name = file_name + ": "
+
+        for line in file:
+            if from_grep:
+                file_name, line = get_grep_file_name(line)
+            safety_print(file_name + re.sub(regex, highlight_replace_func, line))
+
+def rotate_current_color():
+    "This is used for highlighting filenames in stripes of different color."
+    global stripe_filenames
+    if not stripe_filenames:
+        while True:
+            yield MAGENTA_TEXT
+
+    possible_colors = [MAGENTA_TEXT, GREEN_TEXT, YELLOW_TEXT, CYAN_TEXT]
+    color_index = -1
+    while True:
+        color_index += 1
+        yield possible_colors[color_index % len(possible_colors)]
+grep_rotate_current_color = rotate_current_color().next
+rotate_current_color = rotate_current_color().next
 
 def main():
-
-
-    regex_flags = 0 # flags to pass to our regular expression compiler
-    color = BOLD_RED_TEXT # default color
-    highlight_filenames = True # highlight_filenames by default
+    global regex_flags 
+    global highlight_color 
+    global highlight_filenames 
+    global stripe_filenames 
+    global from_grep 
 
     # deal with flags
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "c:ghik", 
-                ["color=", "help", "ignore-case", "regular-filename"])
+        opts, args = getopt.getopt(sys.argv[1:], "c:ghiks", 
+                ["color=", "from-grep", "help", "ignore-case", 
+                    "regular-filename", "no-stripe"])
     except getopt.error, msg:
         print "ERROR! " + msg
         print "for help use --help"
@@ -120,7 +198,9 @@ def main():
                 print "ERROR! Must supply COLOR to --color.\n"
                 print usage()
                 sys.exit(1)
-            color = get_color(arg)
+            highlight_color = get_color(arg)
+        if opt in ("-g", "--from-grep"):
+            from_grep = True   
         if opt in ("-h", "--help"):
             print usage()
             sys.exit(0)
@@ -128,9 +208,11 @@ def main():
             regex_flags |= re.IGNORECASE
         if opt in ("-k", "--regular-filename"):
             highlight_filenames = False
+        if opt in ("-s", "--no-stripe"):
+            stripe_filenames = False
 
     # get the highlight_replace function
-    highlight_replace_func = create_highlight_replace_func(color)
+    highlight_replace_func = create_highlight_replace_func(highlight_color)
 
     # make sure that the regex is specified on the command line
     if not args:
@@ -139,50 +221,15 @@ def main():
         sys.exit(1)
 
     # our regular expression to match is the first argument after the flags
-    print "args = " + str(args)
     regex_string = args[0]
     regex = re.compile(regex_string, regex_flags)
 
     # The rest of the arguments are files to match.
     # If there are no files passed in, we default to searching sys.stdin
-    
     files = args[1:]
-    print "files = " + str(files)
 
+    highlight_lines(regex, highlight_replace_func, files)
 
-    if not files:
-        highlight_lines(regex, highlight_replace_func)
-    else:
-        # this allows for stripped, alternating color
-        def rotate_current_color():
-            color = MAGENTA_TEXT
-            while True:
-                if color == MAGENTA_TEXT:
-                    color = GREEN_TEXT
-                    yield GREEN_TEXT
-                if color == GREEN_TEXT:
-                    color = YELLOW_TEXT
-                    yield YELLOW_TEXT
-                if color == YELLOW_TEXT:
-                    color = CYAN_TEXT
-                    yield CYAN_TEXT
-                if color == CYAN_TEXT:
-                    color = MAGENTA_TEXT
-                    yield MAGENTA_TEXT
-
-        current_color = rotate_current_color().next
-
-        for f in files:
-            file = open(f, 'r')
-            file_name = try_to_shorten_filename(f)
-
-            if highlight_filenames:
-                file_name = current_color() + file_name + RESET_TEXT + BOLD_TEXT + ": " + RESET_TEXT
-            else:
-                file_name = file_name + ": "
-
-            highlight_lines(regex, highlight_replace_func, file, 
-                "" if len(files) == 1 else file_name)
             
 
     return 0
