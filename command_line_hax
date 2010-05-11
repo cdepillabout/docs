@@ -367,3 +367,12 @@ Defaults:username	targetpw
 cat acronym\ and\ abbreviation\ list.csv | perl -lne 'print scalar(split("\t"))'
 # here is another way to do it
 cat acronym\ and\ abbreviation\ list.csv | perl -F"\t" -lane 'print scalar(@F)'
+
+
+# Server files out of current directory (some/dir/) over http.
+cd some/dir/
+python -m SimpleHTTPServer
+# To serve it on a different port:
+python -m SimpleHTTPServer 8080
+# To only listen on localhost's port, you need to write a 
+# script using SimpleHTTPServer.
