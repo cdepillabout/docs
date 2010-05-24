@@ -167,7 +167,7 @@ $PROMPT_COMMAND
 alias man='LC_ALL="C" LANG="C" man'
 
 # make emacs always open in non-graphical mode
-alias emacs='emacs -nw '
+#alias emacs='emacs -nw '
 
 # make vim open with the servername as "vimserver"
 #alias vim='vim --servername "vimserver" '
