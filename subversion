@@ -61,6 +61,9 @@ svn diff
 
 # look at differences between r37 and r36 
 svn diff -r37:36
+#
+# look at differences between current and the previous version
+svn diff -rHEAD:PREV
 
 # undo changes
 svn revert
