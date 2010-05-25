@@ -245,3 +245,23 @@ git push origin master
 git ls-files -i --exclude-standard
 
 
+# To set up a remote git repository, you can do something like this:
+# (This will be the git repo on the server)
+mkdir example.git
+cd example.git
+# to share with the group...
+git init --bare --shared=group
+# or have the repo all to yourself (git uses permissions reported by umask)
+git init --bare 
+
+# Then we create our local repo and commit to the server
+mkdir example
+cd example
+git init
+touch README
+git add README
+git commit -m 'first commit'
+git remote add origin git@REMOTE_SERVER:example.git
+git push origin master
+
+
