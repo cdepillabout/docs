@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python -O
 
 """Mplayer Spot remembers the spot in which you last exited 
 mplayer and resumes from that spot the next time you start 
@@ -7,7 +7,7 @@ watching the same movie."""
 import sys
 import os
 import re
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STDOUT
 
 ### SOME config vars
 
@@ -17,8 +17,8 @@ spots_dir = os.path.join(mplayerspot_dot_dir, "spots")
 
 # Smallest length of movie to save position in seconds.
 # For instance, we will not save the position for files
-# under 30 minutes.
-minimum_save_length = 30 * 60 # 30 minutes
+# under 20 minutes.
+minimum_save_length = 20 * 60 # 30 minutes
 
 # Leftover length of movie to consider it fully watched in seconds.
 # For example, we will consider a movie fully watched even if 
@@ -50,10 +50,10 @@ class read_mplayer_line:
                 read_char = '\n'
 
             line += read_char
-            line = self._fix_cursor_moving_esc_seq(line)
+            #line = self._fix_cursor_moving_esc_seq(line)
 
             # we only continue to process if this is the end of a line
-            if line[-1] == '\n':
+            if line[-4:] == '\x1b[J\x0d' or line[-1] == '\n':
                 return line
 
     def _fix_cursor_moving_esc_seq(self, line):
@@ -104,6 +104,9 @@ def get_cur_pos(line):
 def write_out_spot_files(spots_dir, filename, length, ending_pos):
     """For each file in filename[], writes out a file in spots_dir 
     named file with the correct ending_pos (as long as it should be kept)."""
+    if (len(filename) != len(length) or len(length) != len(ending_pos)):
+        return
+
     for i in range(len(filename)):
         save_path = os.path.join(spots_dir, os.path.basename(filename[i].strip()))
 
@@ -147,7 +150,7 @@ def main():
 
 
     mplayer_process = Popen(["mplayer", "-identify", "-slave"] + sys.argv[1:], 
-            stdout=PIPE, stderr=PIPE, stdin=PIPE, bufsize=5)
+            stdout=PIPE, stderr=STDOUT, stdin=PIPE, bufsize=5)
 
     mplayer_stdout = mplayer_process.stdout
     mplayer_stderr = mplayer_process.stderr
@@ -158,27 +161,30 @@ def main():
     lengths = []
     ending_pos = []
 
-    for line in read_mplayer_line(mplayer_stdout):
-        #sys.stdout.write(line)
+    try:
+        for line in read_mplayer_line(mplayer_stdout):
+            sys.stdout.write(line)
 
-        # if we read in a new filename, then we can update our arrays
-        new_filename = get_filename(line)
-        if new_filename != None:
-            filenames.append(new_filename)
-            seek_to_correct_location(mplayer_stdin, spots_dir, new_filename)
-            lengths.append(None)
-            ending_pos.append(None)
-            cur_movie_index += 1
+            # if we read in a new filename, then we can update our arrays
+            new_filename = get_filename(line)
+            if new_filename != None:
+                filenames.append(new_filename)
+                seek_to_correct_location(mplayer_stdin, spots_dir, new_filename)
+                lengths.append(None)
+                ending_pos.append(None)
+                cur_movie_index += 1
 
-        if cur_movie_index < 0:
-            continue
+            if cur_movie_index < 0:
+                continue
 
-        if not lengths[cur_movie_index]:
-            lengths[cur_movie_index] = get_length(line)
+            if not lengths[cur_movie_index]:
+                lengths[cur_movie_index] = get_length(line)
 
-        tmp_cur_pos = get_cur_pos(line)
-        if tmp_cur_pos:
-            ending_pos[cur_movie_index] = tmp_cur_pos
+            tmp_cur_pos = get_cur_pos(line)
+            if tmp_cur_pos:
+                ending_pos[cur_movie_index] = tmp_cur_pos
+    except KeyboardInterrupt:
+        pass
 
 
     assert (len(filenames) == len(ending_pos) and len(ending_pos) == len(lengths))
