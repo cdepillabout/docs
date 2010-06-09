@@ -210,6 +210,11 @@ git config --global user.name '(cdep) illabout'
 git config --global user.email 'cdep.illabout@gmail.com'
 
 
+# Merges (to be discussed later), as well as operations such as git reset,
+# which change the currently checked-out commit, generally set ORIG_HEAD
+# to the value HEAD had before the current operation.
+
+
 # from github:
 
 #Global setup:
@@ -265,3 +270,226 @@ git remote add origin git@REMOTE_SERVER:example.git
 git push origin master
 
 
+# Git has a staging area for code before you commit.
+# The staging area is also referred to as the index.
+# This will add something that will be commited on the next commit.
+git add somefile.txt
+# Only add some changes in this file to the staging area.
+git add --patch somefile.txt
+# You can check the diffs of the files in the staging area.
+# (without the --cached, it will display the diffs of the unstaged
+#  or working copy of the files)
+git diff --cached
+# Then, commit the changes that have been staged.
+# By default git-commit stores the current contents of the index in a 
+# new commit along with the log message from the user.  (But if you 
+# give git-commit some files as arguments, commit will ignore the changes
+# staged in the index, and instead record the current contents of the listed
+# files.  Giving the -a switch will automatically "add" all changes from all 
+# known files.)
+git commit -m "Fix some bad stuff with the files that have been staged."
+
+# git-add actually does everything you could want with the staging area,
+# so a more powerful command to run is with --interactive.
+# git-add is your interface for modifing the staging area.
+git add --interactive
+
+
+# After a merge (initiated by git merge or git pull) stops because of conflicts, cleanly merged paths are
+# already staged to be committed for you, and paths that conflicted are left in unmerged state. You would
+# have to first check which paths are conflicting with git status and after fixing them manually in your
+# working tree, you would stage the result as usual with git add
+git status | grep unmerged
+# The output will be "unmerged: hello.c".
+# You need to edit this file to fix the conflicts.
+(edit hello.c)
+# Then you can add this file to your index and then commit it.
+git add hello.c
+# After resolving conflicts and staging the result, git ls-files -u would stop mentioning the conflicted
+# path. When you are done, run git commit to finally record the merge:
+git commit
+
+
+# Create a new branch from "some_other_branch" and check it out immediately.
+git checkout -b my_new_branch some_other_branch
+
+
+# If you make some changes in one branch, but you made a mistake, and actually
+# wanted to make those changes in another branch, you can  use this command to 
+# switch branches (to "some_other_branch") and carry over the changes in your 
+# working copy and in your index to the new branch.
+git checkout -m some_other_branch
+
+##########################
+# Examples using git-reset
+##########################
+
+#
+# 1) Undo a commit and redo
+#
+git commit ...
+# This is most often done when you remembered what you just committed is incomplete, or you
+# misspelled your commit message, or both. Leaves working tree as it was before "reset".
+# Doesn't mess with your working copy or with the index.
+git reset --soft HEAD^
+# edit some files...
+(edit some files...)
+# "reset" copies the old head to .git/ORIG_HEAD; redo the commit by starting with its log message.
+# If you do not need to edit the message further, you can give -C option instead.
+git commit -a -c ORIG_HEAD
+
+# Takes the changes staged in the index and squashes them into the previous
+# commit. This lets you fix a problem with the last commit, which is almost 
+# always where you see the technique prescribed, but it also opens up the 
+# option of a commit-heavy workflow where you continuously revise and annotate 
+# whatever it is you’re working on.
+# This is an easy way to do the previous resetting and committing.
+git commit --amend
+
+
+#
+# 2) Undo commits permanently
+#
+git commit ...
+# The last three commits (HEAD, HEAD^, and HEAD~2) were bad and you do not want to ever see them
+# again. Do not do this if you have already given these commits to somebody else.
+# With this, you lose your working copy and the index.
+git reset --hard HEAD~3
+
+
+#
+# 3) Undo a commit, making it a topic branch
+#
+# You have made some commits, but realize they were premature to be in the "master" branch. You
+# want to continue polishing them in a topic branch, so create "topic/wip" branch off of the current
+# HEAD.
+git branch topic/wip
+# Rewind the master branch to get rid of those three commits.
+git reset --hard HEAD~3
+# Switch to "topic/wip" branch and keep working.
+git checkout topic/wip
+
+
+#
+# 4) Undo add
+#
+# You edit some files and add them to the index to be committed. You
+# do not want to see them when you run "git diff", because you plan 
+# to work on other files and changes with these files are distracting.
+git add frotz.c filfre.c
+# Somebody asks you to pull, and the changes sounds worthy of merging.
+# However, you already dirtied the index (i.e. your index does not match 
+# the HEAD commit). But you know the pull you are going to make does not 
+# affect frotz.c nor filfre.c, so you revert the index changes for these 
+# two files. Your changes in working tree remain there.
+git reset
+# Now you can pull. Leaving the frotz.c and filfre.c changes still in the
+# working tree.
+git pull git://info.example.com/ nitfol
+
+
+#
+# 5) Undo a merge or pull
+#
+# A pull results in a lot of conflicts.
+$ git pull
+Auto-merging nitfol
+CONFLICT (content): Merge conflict in nitfol
+Automatic merge failed; fix conflicts and then commit the result.
+# You don't want to deal with it now, so you need to reset everything back
+# to the state in which you had it. "pull" has not made merge commit, 
+# so "git reset --hard" (which is a synonym for "git reset --hard HEAD") 
+# clears the mess from the index file and the working tree.
+$ git reset --hard
+
+
+#
+# 6) Undo a merge or pull
+#
+# Merge a topic branch into the current branch, 
+# which resulted in a fast-forward.
+$ git pull . topic/branch
+Updating from 41223... to 13134...
+Fast-forward
+# But you decided that the topic branch is not ready for public consumption 
+# yet. "pull" or "merge" always leaves the original tip of the current 
+# branch in ORIG_HEAD, so resetting hard to it brings your index file 
+# and the working tree back to that state, and resets the tip of the 
+# branch to that commit.
+$ git reset --hard ORIG_HEAD
+
+
+# 
+# 7) Interrupted workflow
+#
+# Suppose you are interrupted by an urgent fix request while you are in
+# the middle of a large change.  The files in your working tree are not in
+# any shape to be committed yet, but you need to get to the other branch
+# for a quick bugfix.
+$ git checkout feature ;# you were working in "feature" branch and
+$ work work work       ;# got interrupted
+# This is just like a snapshot that you will restore and then blow away later
+$ git commit -a -m "snapshot WIP"
+# Now go to master and fix the problem.
+$ git checkout master
+$ fix fix fix
+$ git commit ;# commit with real log
+# Now go back to feature for the stuff you were working on.
+$ git checkout feature
+# This removes the commit with the message "snapshot WIP",
+# and sets your working tree to the state just before you made
+# the snapshot.
+$ git reset --soft HEAD^ ;# go back to WIP state
+# At this point the index file still has all the WIP changes 
+# you committed as snapshot WIP. This updates the index to 
+# show your WIP files as uncommitted.
+$ git reset
+
+
+# This can also be done much easier with git-stash.
+# 
+$ (edit the files you were working on)
+# Stash the changes in those files away
+$ git stash
+# Edit a different set of files.
+$ (edit emergency fix)
+$ git commit -a -m "Fix in a hurry"
+# Now get those changes back that you had stashed.
+$ git stash pop
+
+
+#
+# 8) Reset a single file in the index
+# 
+# Suppose you have added a file to your index, but later decide you
+# do not want to add it to your commit. You can remove the file from the
+# index while keeping your changes with git reset.
+#
+# This removes the file from the index while keeping it 
+# in the working directory.
+git reset -- frotz.c
+# Commit all other changes in the index.
+git commit -m "Commit files in index"
+# Adds the file to the index again.
+git add frotz.c
+
+
+
+#
+# Simple stuff with stash -- Pulling into a dirty tree
+#
+# When you are in the middle of something, you learn that there are upstream
+# changes that are possibly relevant to what you are doing. When your local
+# changes do not conflict with the changes in the upstream, a simple git
+# pull will let you move forward.
+# 
+# However, there are cases in which your local changes do conflict with
+# the upstream changes, and git pull refuses to overwrite your changes. In
+# such a case, you can stash your changes away, perform a pull, and then
+# unstash, like this:
+$ git pull
+...
+file foobar not up to date, cannot merge.
+$ git stash
+$ git pull
+$ git stash pop
