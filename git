@@ -493,3 +493,10 @@ file foobar not up to date, cannot merge.
 $ git stash
 $ git pull
 $ git stash pop
+
+
+
+
+# Change some commits in the past. (This goes back 10 commits.)
+# You can delete, squash, edit, and reorder commits.
+git rebase --interactive HEAD~10
