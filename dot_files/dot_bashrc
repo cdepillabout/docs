@@ -29,6 +29,7 @@ fi
 if [[ "$(uname)" == "Linux" ]]; then
 	alias ls="ls --color=auto"
 	alias grep="grep --color=auto"
+	alias xgrep="xgrep --color=auto"
 elif [[ "$(uname)" == "FreeBSD" ]]; then
 	export CLICOLOR=1
 	alias grep="grep --color=auto"
