@@ -500,3 +500,11 @@ $ git stash pop
 # Change some commits in the past. (This goes back 10 commits.)
 # You can delete, squash, edit, and reorder commits.
 git rebase --interactive HEAD~10
+
+
+# Create a remote tracking branch.  When branches are created
+# using the --track option, they will be set up to linked to the remote
+# branch. From here you can git checkout the branch and work with it,
+# and since it’s tracking the remote branch, it will know where to
+# bring in changes from when you fetch or pull.
+git branch --track new_branch origin/some_branch
