@@ -148,3 +148,21 @@ for f in /proc/sys/net/ipv4/conf/*/rp_filter ; do echo 1 > $f ; done
 sshfs -p SSHPORT example.com: dir/to/mount/to
 # umount sshfs
 fusermount -u dir/to/mount/to
+
+
+# Add VPN connection. This should create the file 
+# /etc/ppp/peers/ConnectionName, and inside it, all the
+# information about your connection. It will also add
+# infomation about this connection to the file
+# /etc/ppp/chap-secrets. If you need any routes to be 
+# setup after this connection is created, add them to the file
+# /etc/ppp/ip-up.d/01-routes.sh.
+pptpsetup --create ConnectionName --server pptp-server.example.com --username myusername
+
+# initialize the vpn connection
+pon ConnectionName
+
+# stop the connection
+poff ConnectionName
+
+
