@@ -152,8 +152,12 @@ fusermount -u dir/to/mount/to
 
 # Add VPN connection. This should create the file 
 # /etc/ppp/peers/ConnectionName, and inside it, all the
-# information about your connection. It will also add
-# infomation about this connection to the file
+# information about your connection. It is possible to 
+# add options in this file that would otherwise be given to pppd.
+# For example, it might be desirable to add a line containing
+# "usepeerdns" in order to use the dns from the vpn connection.
+#
+# It will also add infomation about this connection to the file
 # /etc/ppp/chap-secrets. If you need any routes to be 
 # setup after this connection is created, add them to the file
 # /etc/ppp/ip-up.d/01-routes.sh.
