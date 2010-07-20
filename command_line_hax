@@ -376,3 +376,14 @@ python -m SimpleHTTPServer
 python -m SimpleHTTPServer 8080
 # To only listen on localhost's port, you need to write a 
 # script using SimpleHTTPServer.
+
+
+# Copy files from source_dir/ to dest_dir/ on other-machine.example.com.
+# -r			recursively copy files
+# -z			compress files
+# -t			preserve times
+# -l			preserve soft links
+# -p			preserve permissions
+# --delete		delete extraneous files from destination dirs
+# --force		force deletion of dirs even if not empty
+rsync -r -z -t -l -p -v --delete --force source_dir/ other-machine.example.com:dest_dir
