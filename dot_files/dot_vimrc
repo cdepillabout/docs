@@ -12,9 +12,16 @@ set softtabstop=4		" see multiple space characters as a tab
 set shiftround			" Indent to nearest tab stop
 set autoindent			" carries over previous indent to the next line
 
-set viminfo='100,\"100,:20,%,n~/.viminfo   " Keep a .viminfo file.
+" Tell vim to remember certain things when we exit
+"  '100 : marks will be remembered for up to 100 previously edited files
+"  "100 : will save up to 100 lines for each register
+"  :20 : up to 20 lines of command-line history will be remembered
+"  % : saves and restores the buffer list
+"  n... : where to save the viminfo files
+set viminfo='100,\"100,:20,%,n~/.viminfo
 
 set wildmode=list:longest	" When autocompleting things, do it like the shell
+set wildmenu				" Autocomplete things on the menu?
 set scrolloff=3				" Scroll when the cursor is 3 lines from top or bottom
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
