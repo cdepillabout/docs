@@ -387,3 +387,14 @@ python -m SimpleHTTPServer 8080
 # --delete		delete extraneous files from destination dirs
 # --force		force deletion of dirs even if not empty
 rsync -r -z -t -l -p -v --delete --force source_dir/ other-machine.example.com:dest_dir
+
+
+# link programs using ld on 64 bit arch linux.
+# ld is a strange beast.  The arguments have to be exactly right and they 
+# have to come in an exact order.  If you need additional arguments for your program,
+# they can go right next to -lc (-lc links in libc.so).
+ld -dynamic-linker /lib/ld-linux-x86-64.so.2 --verbose hello.o -o hello_ld \
+	/usr/lib/crt1.o /usr/lib/crti.o  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtbegin.o \
+	-lc  \
+	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtend.o /usr/lib/crtn.o
+# you can use nm to check which symbols an object file (for instance, crt1.o) exports.
