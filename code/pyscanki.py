@@ -6,6 +6,7 @@ into tab-delimited files. It tries to get all media.
 import sys
 import traceback
 import urllib2
+import os
 try:
     import argparse
 except:
@@ -149,7 +150,8 @@ def process_cue(cue_node):
     return {'character': character.encode('utf8'),
             'text': text.encode('utf8'),
             'part_of_speech': part_of_speech,
-            'sound': sound,
+            'remote_sound': sound,
+            'local_sound': "",
             'transliteration': transliteration.encode('utf8')}
 
 def process_response(responses_node):
@@ -173,18 +175,11 @@ def process_sentence(sentence_node):
             "./vocab:translations/vocab:sentence[@language='en']/vocab:text/text()",
             warn_if_no=True, must_exist=False)
 
-    """
-    print "\t\tsentence:"
-    print "\t\t\tsentence: " + sentence.encode('utf-8')
-    print "\t\t\timage: " + str(image)
-    print "\t\t\tsound: " + str(sound) 
-    print "\t\t\ttransliteration: " + transliteration.encode('utf-8')
-    print "\t\t\ttranslation: " + translation
-    """
-
     return {'sentence': sentence.encode('utf8'),
-            'image': str(image),
-            'sound': str(sound),
+            'remote_image': str(image),
+            'local_image': "",
+            'remote_sound': str(sound),
+            'local_sound': "",
             'transliteration': transliteration.encode('utf8'),
             'translation': translation}
 
@@ -228,14 +223,17 @@ def print_item(item):
     kanji (if it exists)
     kana
     part of speech (noun, verb, etc)
-    sound (url of sound)
+    remote sound url
+    local sound url
     transliteration (should be same as kana)
     english meaning
     # the rest will be multiple sentences
     # with this layout
     sentence in kanji
-    image url
-    sound url
+    remote image url
+    local image url
+    remote sound url
+    local sound url
     transliteration (sentence in kana)
     english translation
     """
@@ -243,47 +241,54 @@ def print_item(item):
     # word will become the kanji if it exists, or just the word if not
     word = ""
     if len(item['cue']['character']) == 0:
-        word = item['cue']['text'].encode('utf8')
+        word = item['cue']['text']
     else:
         word = item['cue']['character']
 
-    # the first parts are from cue
-    """
-    line = word + '\t' + \
-            item['cue']['character'].encode('utf8') + '\t' + \
-            item['cue']['text'].encode('utf8') + '\t' + \
-            item['cue']['part_of_speech'] + '\t' + \
-            item['cue']['sound'] + '\t' + \
-            item['cue']['transliteration'].encode('utf8') + '\t' + \
-            item['response'] + '\t'
-
-    for sentence in item['sentences']:
-        line += sentence['sentence'].encode('utf8') + '\t' + \
-                sentence['image'] + '\t' + \
-                sentence['sound'] + '\t' + \
-                sentence['transliteration'].encode('utf8') + '\t' + \
-                sentence['translation']
-    """
     line = word + '\t' + \
             item['cue']['character'] + '\t' + \
             item['cue']['text'] + '\t' + \
             item['cue']['part_of_speech'] + '\t' + \
-            item['cue']['sound'] + '\t' + \
+            item['cue']['remote_sound'] + '\t' + \
+            item['cue']['local_sound'] + '\t' + \
             item['cue']['transliteration'] + '\t' + \
             item['response'] + '\t'
 
     for sentence in item['sentences']:
         line += sentence['sentence'] + '\t' + \
-                sentence['image'] + '\t' + \
-                sentence['sound'] + '\t' + \
+                sentence['remote_image'] + '\t' + \
+                sentence['local_image'] + '\t' + \
+                sentence['remote_sound'] + '\t' + \
+                sentence['local_sound'] + '\t' + \
                 sentence['transliteration'] + '\t' + \
                 sentence['translation']
 
     print line
     print
 
+
+def wget(media_item, media_directory):
+
+    pass
+
             
 
+def download_media(item, media_directory):
+    """Gets the media associated with item."""
+
+    if item['cue']['remote_sound']:
+        item['cue']['local_sound'] = wget(item['cue']['remote_sound'], media_directory)
+
+    for sentence in item['sentences']:
+        if sentence['remote_sound']:
+            sentence['local_sound'] = wget(sentence['remote_sound'], media_directory)
+        if sentence['remote_image']:
+            sentence['local_image'] = wget(sentence['remote_image'], media_directory)
+
+    IPSHELL()
+    sys.exit()
+
+    return item
 
 
 
@@ -298,6 +303,10 @@ def main():
             default=False, help='turn on debugging (needs ipython)')
     argparser.add_argument('--version', action='version', 
             version=('%(prog)s-' + VERSION), help='print version')
+    argparser.add_argument('-m', '--media-directory', dest='media_directory',
+            default=None, help='directory to save media to')
+    argparser.add_argument('-g', '--get-media', dest='get_media',
+            action='store_true', default=False, help='download media')
     args = argparser.parse_args()
 
     DEBUG = args.debug
@@ -305,9 +314,28 @@ def main():
         from IPython.Shell import IPShellEmbed
         IPSHELL = IPShellEmbed([])
 
-    #vocab_list = 19053  # core2k
+    if args.media_directory is not None:
+        media_directory_specified = True
+    else:
+        media_directory_specified = False
+
+    if media_directory_specified:
+        if args.get_media and (not os.path.isdir(args.media_directory)):
+            print "ERROR! Media directory \"" + args.media_directory + "\" is not a directory."
+            sys.exit()
+        if not args.get_media:
+            print "WARNING! Media directory specified, but not downloading media (no -g flag)."
+    else:
+        if args.get_media:
+            print "ERROR! Trying to download media but no media directory is specified."
+            sys.exit()
+
+    media_directory = args.media_directory
+    get_media = args.get_media
+
+    vocab_list = 19053  # core2k
     #vocab_list = 24532   # core6k
-    vocab_list = 71776   # ko2001 
+    #vocab_list = 71776   # ko2001 
     url = "http://api.smart.fm/lists/" + str(vocab_list) + "/items.xml?per_page=20"
 
     tree = etree.parse(url)
@@ -319,7 +347,8 @@ def main():
     lala = None
     for item in items:
         item_result = process_item(item)
-        get_media(item_result)
+        if get_media:
+            download_media(item_result, media_directory)
         print_item(item_result)
 
 
