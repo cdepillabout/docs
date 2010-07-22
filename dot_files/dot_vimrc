@@ -12,9 +12,16 @@ set softtabstop=4		" see multiple space characters as a tab
 set shiftround			" Indent to nearest tab stop
 set autoindent			" carries over previous indent to the next line
 
-set viminfo='100,\"100   " Keep a .viminfo file.
+" Tell vim to remember certain things when we exit
+"  '100 : marks will be remembered for up to 100 previously edited files
+"  "100 : will save up to 100 lines for each register
+"  :20 : up to 20 lines of command-line history will be remembered
+"  % : saves and restores the buffer list
+"  n... : where to save the viminfo files
+set viminfo='100,\"100,:20,%,n~/.viminfo
 
 set wildmode=list:longest	" When autocompleting things, do it like the shell
+set wildmenu				" Autocomplete things on the menu?
 set scrolloff=3				" Scroll when the cursor is 3 lines from top or bottom
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -162,3 +169,32 @@ autocmd BufRead,BufNewFile *.py set expandtab
 autocmd FileType sas set tabstop=3			" 3-space tab indent width
 autocmd FileType sas set shiftwidth=3		" allows you to use < and > to indent/unindent blocks
 autocmd FileType sas set softtabstop=3		" see multiple space characters as a tab
+
+" Make vim jump to the last position that you were editing in the file.
+" When we reload, tell vim to restore the cursor to the saved position.
+" This long, ugly thing is needed because funny things happen when you 
+" use folding.
+augroup JumpCursorOnEdit
+ au!
+ autocmd BufReadPost *
+ \ if expand("<afile>:p:h") !=? $TEMP |
+ \ if line("'\"") > 1 && line("'\"") <= line("$") |
+ \ let JumpCursorOnEdit_foo = line("'\"") |
+ \ let b:doopenfold = 1 |
+ \ if (foldlevel(JumpCursorOnEdit_foo) > foldlevel(JumpCursorOnEdit_foo - 1)) |
+ \ let JumpCursorOnEdit_foo = JumpCursorOnEdit_foo - 1 |
+ \ let b:doopenfold = 2 |
+ \ endif |
+ \ exe JumpCursorOnEdit_foo |
+ \ endif |
+ \ endif
+ " Need to postpone using "zv" until after reading the modelines.
+ autocmd BufWinEnter *
+ \ if exists("b:doopenfold") |
+ \ exe "normal zv" |
+ \ if(b:doopenfold > 1) |
+ \ exe "+".1 |
+ \ endif |
+ \ unlet b:doopenfold |
+ \ endif
+augroup END

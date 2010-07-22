@@ -6,6 +6,7 @@ into tab-delimited files. It tries to get all media.
 import sys
 import traceback
 import urllib2
+import os
 try:
     import argparse
 except:
@@ -146,18 +147,21 @@ def process_cue(cue_node):
         print_stack()
         IPSHELL()
 
-    print "\tcue:"
-    print "\t\tcharacter: " + character.encode('utf-8')
-    print "\t\ttext: " + text.encode('utf-8')
-    print "\t\tpart_of_speech: " + part_of_speech
-    print "\t\tsound: " + sound 
-    print "\t\ttransliteration: " + transliteration.encode('utf-8')
+    return {'character': character.encode('utf8'),
+            'text': text.encode('utf8'),
+            'part_of_speech': part_of_speech,
+            'remote_sound': sound,
+            'local_sound': "",
+            'transliteration': transliteration.encode('utf8')}
 
 def process_response(responses_node):
     english_meaning = xpath_one_node(responses_node, 
             "vocab:response[@type='meaning'][@language='en']/vocab:text/text()")
+    """
     print "\tresponses: "
     print "\t\tresponse: " + english_meaning 
+    """
+    return english_meaning 
 
 def process_sentence(sentence_node):
     check_japanese_attr(sentence_node)
@@ -171,12 +175,13 @@ def process_sentence(sentence_node):
             "./vocab:translations/vocab:sentence[@language='en']/vocab:text/text()",
             warn_if_no=True, must_exist=False)
 
-    print "\t\tsentence:"
-    print "\t\t\tsentence: " + sentence.encode('utf-8')
-    print "\t\t\timage: " + str(image)
-    print "\t\t\tsound: " + str(sound) 
-    print "\t\t\ttransliteration: " + transliteration.encode('utf-8')
-    print "\t\t\ttranslation: " + translation
+    return {'sentence': sentence.encode('utf8'),
+            'remote_image': str(image),
+            'local_image': "",
+            'remote_sound': str(sound),
+            'local_sound': "",
+            'transliteration': transliteration.encode('utf8'),
+            'translation': translation}
 
 def process_sentences(sentences_node):
     sentences = xpath(sentences_node, "./vocab:sentence")
@@ -187,21 +192,105 @@ def process_sentences(sentences_node):
         print_stack()
         IPSHELL()
 
-    print "\tsentenses:"
+    sentence_list = []
     for sentence in sentences:
-        process_sentence(sentence)
+        sentence_list.append(process_sentence(sentence))
+
+    return sentence_list
 
 def process_item(item_node):
     """ Processes one item.  This should make two flash cards, 
     assuming there are two sentences."""
     check_japanese_attr(item_node)
 
-    print "item:"
-    process_cue(xpath_one_node(item_node, "vocab:cue"))
-    process_response(xpath_one_node(item_node, "vocab:responses"))
-    process_sentences(xpath_one_node(item_node, "vocab:sentences"))
+    cue = process_cue(xpath_one_node(item_node, "vocab:cue"))
+    response = process_response(xpath_one_node(item_node, "vocab:responses"))
+    sentence_list = process_sentences(xpath_one_node(item_node, "vocab:sentences"))
 
+    return {'cue': cue,
+            'response': response,
+            'sentences': sentence_list}
+
+
+def print_item(item):
+    """Prints a item made with process_item().
+    The format of the resulting line will be the following,
+    separated by tabs (if something doesn't exist, the space
+    will still be left for it):
+        
+    # this is just for the word
+    word (kanji if it exists, otherwise just kana)
+    kanji (if it exists)
+    kana
+    part of speech (noun, verb, etc)
+    remote sound url
+    local sound url
+    transliteration (should be same as kana)
+    english meaning
+    # the rest will be multiple sentences
+    # with this layout
+    sentence in kanji
+    remote image url
+    local image url
+    remote sound url
+    local sound url
+    transliteration (sentence in kana)
+    english translation
+    """
+
+    # word will become the kanji if it exists, or just the word if not
+    word = ""
+    if len(item['cue']['character']) == 0:
+        word = item['cue']['text']
+    else:
+        word = item['cue']['character']
+
+    line = word + '\t' + \
+            item['cue']['character'] + '\t' + \
+            item['cue']['text'] + '\t' + \
+            item['cue']['part_of_speech'] + '\t' + \
+            item['cue']['remote_sound'] + '\t' + \
+            item['cue']['local_sound'] + '\t' + \
+            item['cue']['transliteration'] + '\t' + \
+            item['response'] + '\t'
+
+    for sentence in item['sentences']:
+        line += sentence['sentence'] + '\t' + \
+                sentence['remote_image'] + '\t' + \
+                sentence['local_image'] + '\t' + \
+                sentence['remote_sound'] + '\t' + \
+                sentence['local_sound'] + '\t' + \
+                sentence['transliteration'] + '\t' + \
+                sentence['translation']
+
+    print line
     print
+
+
+def wget(media_item, media_directory):
+
+    pass
+
+            
+
+def download_media(item, media_directory):
+    """Gets the media associated with item."""
+
+    if item['cue']['remote_sound']:
+        item['cue']['local_sound'] = wget(item['cue']['remote_sound'], media_directory)
+
+    for sentence in item['sentences']:
+        if sentence['remote_sound']:
+            sentence['local_sound'] = wget(sentence['remote_sound'], media_directory)
+        if sentence['remote_image']:
+            sentence['local_image'] = wget(sentence['remote_image'], media_directory)
+
+    IPSHELL()
+    sys.exit()
+
+    return item
+
+
 
 def main():
     global VOCAB_NAMESPACE
@@ -214,6 +303,10 @@ def main():
             default=False, help='turn on debugging (needs ipython)')
     argparser.add_argument('--version', action='version', 
             version=('%(prog)s-' + VERSION), help='print version')
+    argparser.add_argument('-m', '--media-directory', dest='media_directory',
+            default=None, help='directory to save media to')
+    argparser.add_argument('-g', '--get-media', dest='get_media',
+            action='store_true', default=False, help='download media')
     args = argparser.parse_args()
 
     DEBUG = args.debug
@@ -221,22 +314,42 @@ def main():
         from IPython.Shell import IPShellEmbed
         IPSHELL = IPShellEmbed([])
 
-    #list = 19053  # core2k
-    #list = 24532   # core6k
-    list = 71776   # ko2001 
-    url = "http://api.smart.fm/lists/" + str(list) + "/items.xml?per_page=20"
+    if args.media_directory is not None:
+        media_directory_specified = True
+    else:
+        media_directory_specified = False
+
+    if media_directory_specified:
+        if args.get_media and (not os.path.isdir(args.media_directory)):
+            print "ERROR! Media directory \"" + args.media_directory + "\" is not a directory."
+            sys.exit()
+        if not args.get_media:
+            print "WARNING! Media directory specified, but not downloading media (no -g flag)."
+    else:
+        if args.get_media:
+            print "ERROR! Trying to download media but no media directory is specified."
+            sys.exit()
+
+    media_directory = args.media_directory
+    get_media = args.get_media
+
+    vocab_list = 19053  # core2k
+    #vocab_list = 24532   # core6k
+    #vocab_list = 71776   # ko2001 
+    url = "http://api.smart.fm/lists/" + str(vocab_list) + "/items.xml?per_page=20"
 
     tree = etree.parse(url)
     root = tree.getroot()
 
-    #print etree.tostring(root, pretty_print=True, method='xml', encoding="UTF-8")
-    #print etree.tostring(tree, pretty_print=True, method='text', encoding="UTF-8")
-
     VOCAB_NAMESPACE = root.nsmap[None]
     items = xpath(tree, "/vocab:vocabulary/vocab:items/vocab:item") 
 
+    lala = None
     for item in items:
-        process_item(item)
+        item_result = process_item(item)
+        if get_media:
+            download_media(item_result, media_directory)
+        print_item(item_result)
 
 
 if __name__ == '__main__':
