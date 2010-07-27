@@ -508,3 +508,8 @@ git rebase --interactive HEAD~10
 # and since it’s tracking the remote branch, it will know where to
 # bring in changes from when you fetch or pull.
 git branch --track new_branch origin/some_branch
+
+# show where things get pushed to and pulled from per remote.
+git remote -v show REMOTE_NAME
+# so this should normally be something like this:
+git remote -v show origin
