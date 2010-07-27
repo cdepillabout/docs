@@ -430,3 +430,26 @@ nm /usr/lib/crt1.o
 #					the value of the symbol is determined in a system-specific 
 #					manner without error.  On some systems, uppercase indicates 
 #					that a default value has been specified.
+
+
+# Statically link the file.
+# "--start-group ... --end-group":
+#	The specified archives are searched repeatedly until no new undefined references are created.
+#	Normally, an archive is searched only once in the order that it is specified on the command line.
+#	If a symbol in that archive is needed to resolve an undefined symbol referred to by an object in an
+#	archive that appears later on the command line, the linker would not be able to resolve that
+#	reference.  By grouping the archives, they all be searched repeatedly until all possible references
+#	are resolved.
+ld -verbose -static -o hello_ld_static \
+	/usr/lib/crt1.o /usr/lib/crti.o \
+	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtbeginT.o \
+	-L/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0 hello.o \
+	--start-group  -lgcc_eh -lgcc -lc --end-group \
+	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtend.o \
+	/usr/lib/crtn.o 
+
+
+# Extract object files from a .a library
+ar vx /usr/lib/libcurl.a
+# You can also just use nm to list the files on the archive.
+nm -s /usr/lib/libcurl.a
