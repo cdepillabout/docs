@@ -169,4 +169,18 @@ pon ConnectionName
 # stop the connection
 poff ConnectionName
 
+# Here is a sample /etc/ppp/ip-up.d/01-routes.sh:
+$ cat /etc/ppp/ip-up.d/01-routes.sh
+#!/bin/bash
 
+INTERFACE="$1"
+CONNECTION="$6"
+
+# if we are being called as part of the tunnel startup
+if [ "${CONNECTION}" = "ConnectionName" ] 
+then
+	/sbin/route add -net 10.1.0.0 netmask 255.255.0.0 dev ${INTERFACE}
+	/sbin/route add -net exchange.server.example.com netmask 255.255.255.255 dev ${INTERFACE}
+fi
+
+$
