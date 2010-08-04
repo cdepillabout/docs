@@ -198,3 +198,8 @@ augroup JumpCursorOnEdit
  \ unlet b:doopenfold |
  \ endif
 augroup END
+
+
+" turn these on if you want to use vim over a slow link
+"set lazyredraw
+"set nottyfast
