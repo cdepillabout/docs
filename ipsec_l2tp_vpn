@@ -3,27 +3,35 @@
 vim /etc/ipsec.conf /etc/ipsec.secrets
 
 
+# disable /proc/sys/net/ipv4/conf/*/{send_redirects,accept_redirects}
+# or NETKEY will send/accept bogus ICMP redirects!
+# Need to do this in both server and client.
+for f in /proc/sys/net/ipv4/conf/* ; do echo 0 > ${f}/send_redirects ; echo 0 > ${f}/accept_redirects ; done
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+
 # start ipsec
+# Need to do this in both server and client.
 /etc/rc.d/openswan start 
 # or
 /etc/rc.d/ipsec start
 
 
-# verify that everything is working right
+# Verify that everything is working right.
+# This can be run in both server and client.
 ipsec verify
 
 
-# Please disable /proc/sys/net/ipv4/conf/*/{send_redirects,accept_redirects}
-# or NETKEY will send/accept bogus ICMP redirects!
-for f in /proc/sys/net/ipv4/conf/* ; do echo 0 > ${f}/send_redirects ; echo 0 > ${f}/accept_redirects ; done
-
-
-# open connection from client ("L2TP-CONNECTION-NAME" is defined in /etc/ipsec.conf on the client)
+# Open connection from client ("L2TP-CONNECTION-NAME" is defined in /etc/ipsec.conf on the client).
 ipsec auto --up "L2TP-CONNECTION-NAME"
 
 
-# show status of connections (server or client)
+# Show status of connections (server or client)
 ipsec autho --status
+
+
+# Retrieves the current status of pluto, the IKE daemon. (server or client)
+ipsec whack --status 
 
 
 # leftprotoport and rightprotoport describes the ports and ip types that will be encrypted.
@@ -32,3 +40,18 @@ ipsec autho --status
 
 
 # logging output comes to /var/log/{auth,daemon}.log
+
+
+
+/etc/rc.d/xl2tpd start
+
+
+# show IPsec security associations
+setkey -D
+setkey -DP
+
+# You can use this iptables rule to drop all packets to tcp port 55444 
+# that are not associated with an IPsec policy.  That is to say, 
+# that are not using IPsec.
+iptables -A INPUT -m policy --pol none --dir in -p tcp --dport 55444 -j DROP
+
