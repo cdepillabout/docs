@@ -1,4 +1,28 @@
 
+#####################################################################
+#####################################################################
+#####################################################################
+This specifies setting up a direct IPsec/L2TP VPN, where the two points
+connect directly, there is no NAT involved. This is using openswan for
+the IPsec stuff, and xl2tpd for the L2TP stuff.  There are also iptables
+rules at the bottom to deny all connections to the L2TP daemon that do
+not come over IPsec.
+#####################################################################
+#####################################################################
+#####################################################################
+
+
+
+#######################
+####### IPsec #########
+#######################
+
+# This is using openswan, so make sure you install it.
+# We are using Openswan 2.6.28, with kernel 2.6.34 using NETKEY.
+# Need to do this in both server and client.
+yaourt -S openswan
+
+
 # server and client configuration in /etc/ipsec.conf and /etc/ipsec.secrets.
 vim /etc/ipsec.conf /etc/ipsec.secrets
 
@@ -7,6 +31,7 @@ vim /etc/ipsec.conf /etc/ipsec.secrets
 # or NETKEY will send/accept bogus ICMP redirects!
 # Need to do this in both server and client.
 for f in /proc/sys/net/ipv4/conf/* ; do echo 0 > ${f}/send_redirects ; echo 0 > ${f}/accept_redirects ; done
+# enable IP forward.
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
 
@@ -21,17 +46,30 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 # This can be run in both server and client.
 ipsec verify
 
-
 # Open connection from client ("L2TP-CONNECTION-NAME" is defined in /etc/ipsec.conf on the client).
+# This should only be run from the client.
 ipsec auto --up "L2TP-CONNECTION-NAME"
-
 
 # Show status of connections (server or client)
 ipsec autho --status
 
-
 # Retrieves the current status of pluto, the IKE daemon. (server or client)
 ipsec whack --status 
+
+# show IPsec security associations.
+# This can be run on server or client.
+setkey -D
+setkey -DP
+
+# logging output comes to /var/log/{auth,daemon}.log for both server and client.
+tail -f /var/log/{auth,daemon}.log
+
+
+
+########################
+##### L2TP server ######
+########################
+
 
 
 # leftprotoport and rightprotoport describes the ports and ip types that will be encrypted.
@@ -39,19 +77,37 @@ ipsec whack --status
 # will be encrypted!!!!
 
 
-# logging output comes to /var/log/{auth,daemon}.log
+# edit xl2tpd config files on server
+vim /etc/ppp/options.l2tp /etc/ppp/chap.secrets /etc/xl2tpd/xl2tpd.conf
+# edit xl2tpd config files on client
+vim /etc/ppp/peers/options.l2tp.client /etc/ppp/chap.secrets /etc/xl2tpd/xl2tpd.conf
 
 
-
+# start the l2tp daemon.  This needs to be done on both server and client.
 /etc/rc.d/xl2tpd start
 
 
-# show IPsec security associations
-setkey -D
-setkey -DP
+########################
+##### IPTABLES #########
+########################
 
+
+# These iptables rules only need to be added on the server.
 # You can use this iptables rule to drop all packets to tcp port 55444 
 # that are not associated with an IPsec policy.  That is to say, 
-# that are not using IPsec.
-iptables -A INPUT -m policy --pol none --dir in -p tcp --dport 55444 -j DROP
-
+# that are not using IPsec. This is useful if you don't want to 
+# allow a connection unless it is using IPsec.
+# (This following example does no allow ssh connections unless it is using IPsec).
+iptables -A INPUT -m policy --pol none --dir in -p tcp --dport 22 -j DROP
+# You can use this to disallow connections to the l2tp daemon that are not
+# using IPsec. This is what you want.
+iptables -A INPUT -m policy --pol none --dir in -p udp --dport 1701 -j DROP
+# Now to test this, run nc on the server...
+nc -v -l -p 55444
+# ...we have nc listening on 0.0.0.0:55444 on the server, so we
+# don't want anyone to be able to connect over eth0, only the ppp+ interfaces
+iptables -A INPUT -p tcp --dport 55444 -j DROP -i eth0
+# If your default is to drop, then this is an acceptable allow rule
+iptables -A INPUT -p tcp --dport 55444 -j ACCEPT -i ppp+
+# So in conclusion, you will not be able to connect to netcat directly, only over
+# the ppp+ interface. 
