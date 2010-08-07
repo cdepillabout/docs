@@ -97,7 +97,7 @@ vim /etc/ppp/peers/options.l2tp.client /etc/ppp/chap.secrets /etc/xl2tpd/xl2tpd.
 # that are not associated with an IPsec policy.  That is to say, 
 # that are not using IPsec. This is useful if you don't want to 
 # allow a connection unless it is using IPsec.
-# (This following example does no allow ssh connections unless it is using IPsec).
+# (This following example does not allow ssh connections unless it is using IPsec).
 iptables -A INPUT -m policy --pol none --dir in -p tcp --dport 22 -j DROP
 # You can use this to disallow connections to the l2tp daemon that are not
 # using IPsec. This is what you want.
@@ -111,3 +111,8 @@ iptables -A INPUT -p tcp --dport 55444 -j DROP -i eth0
 iptables -A INPUT -p tcp --dport 55444 -j ACCEPT -i ppp+
 # So in conclusion, you will not be able to connect to netcat directly, only over
 # the ppp+ interface. 
+
+
+
+
+### TODO: for some reason, android loses VPN connectivity when the screen goes blank....

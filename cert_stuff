@@ -1,0 +1,148 @@
+
+
+###################################
+############## NSS ################
+###################################
+
+
+# NSS stores it's certificates and private keys in a security database
+# unlike OpenSSL which references it's certificates and keys via file
+# pathnames. This means unless you already have an NSS Certificate Database
+# (CertDB) the first order of business will be to create one. When a NSS
+# application initializes itself it will need to specify the path to the
+# CertDB (see "Things All NSS programs must do").
+# 
+# The CertDB is created and manipulated by the command line utilities
+# certutil and modutil. Both of these programs are part of the
+# nss-tools RPM. Documentation for these tools can be found here:
+# http://www.mozilla.org/projects/security/pki/nss/tools
+# 
+# Here is an example of creating a CertDB and populating it. In the example
+# the CertDB will be created under the directory "./pki", the CA will be
+# called "myca", the database password will be "myca", and the server's
+# hostname will be "myhost.example.com".
+
+
+# Create the database.  This has to be done before everything else, if you 
+# don't already have a database.  "-N" means to create the database.
+certutil -N -d ./pki
+# This creates a new database under the directory ./pki
+
+
+# 2. Create a root CA certificate. "-S" means to make a certificate
+# and add it to the database. "-s" specifies the subject, "-n" 
+# specifies the nickname of the cert, "-x" means that is it self-signed
+# (it must be, since it is a Root CA and we are creating it ourselves), 
+# "-t" gives the trust arguments, and "-m" gives the serial number 
+# (I don't think the serial number is really needed, it specifies the
+# index this certificate is in the security database; it does not 
+# have any effect on the actual certificate, only on the database).
+certutil -d ./pki -S -s "CN=myca" -n myca -x -t "CTu,C,C" -m 1
+# This creates an individual certificate and adds it to the certificate
+# database with a subject of "CN=myca", a nickname of "myca", trust flags
+# indicating for SSL indicating it can issue server certificates (C),
+# can issue client certificates (T), and the certificate can be used for
+# authentication and signing (u). For email and object signing it's trusted
+# to create server certificates. The certificate serial number is set to 1.
+
+
+# 3. Create a server certificate and sign it. "-c" gives the nickname of 
+# the cert that will sign this new certificate.
+certutil -d pki -S -c myca -s "CN=myhost.example.com" -n myhost -t "C,C,C" -m 2
+# This creates an individual certificate issued by the CA "myca" and adds
+# it to the certificate database with a subject of "CN=myhost.example.com",
+# a nickname of "myhost". The certificate serial number is set to 2.
+
+
+# 4. Import public root CA's:
+modutil -add ca_certs -libfile /usr/lib/libnssckbi.so -dbdir ./pki
+# This is necessary to verify certificates presented by a SSL server a NSS
+# client might connect to. When verifying a certificate the NSS library will
+# "walk the certificate chain" back to a root CA which must be trusted. This
+# command imports the well known root CA's as a PKCS #11 module.
+
+
+# lots of good info
+# http://www.mozilla.org/projects/security/pki/nss/tools/certutil.html
+
+
+# show certs in cert database.  Database is located in current directory.
+certutil -L -d .
+
+# show keys in key database
+certutil -K -d .
+
+# list modules in secmod database
+modutil -list -dbdir .
+# SSL communicates with PKCS #11 modules through the PKCS #11
+# interface. Any PKCS #11 module that supports PKCS #11 can be used with
+# the NSS libraries. Netscape software uses a file called secmod.db to
+# keep track of the modules available. A PKCS #11 module always has one
+# or more slots, which may be implemented as physical hardware slots
+# in some form of physical reader (for example, for smart cards) or as
+# conceptual slots in software. Each slot for a PKCS #11 module can in turn
+# contain a token, which is the hardware or software device that actually
+# provides cryptographic services and optionally stores certificates and
+# keys. Netscape provides three built-in modules with NSS and with server
+# and client products:
+# The default Netscape Internal PKCS #11 Module comes with two built-in tokens:
+# 	- The Generic Crypto Services token performs all cryptographic
+# 	  operations, such as encryption, decryption, and hashing.
+# 	- The Communicator Certificate DB token handles all communication
+# 	  with the certificate and key database files (called certX.db and
+# 	  keyX.db, respectively, where X is a version number) that store
+# 	  certificates and keys.
+
+
+# Save a certificate in a .crt file in ascii encoding.
+certutil -L -d ./pki -n "myca" -a -o CA_db/rootca.crt
+
+
+# Create pk12 cert from nss database.
+# This can be used with openssl.
+pk12util -o staca.p12 -n STACA  -d ../certdb/
+
+
+
+
+#############################################
+################ OPENSSL ####################
+#############################################
+
+
+# Create .pem from pk12 cert. This is something that
+# can be used directly by openssl.
+openssl pkcs12 -in staca.p12 -out staca.pem
+
+# Create a file with just the public key.
+# This gets the public key from the certificate PEM.
+openssl rsa -inform PEM -outform PEM -in staca.pem -pubout -out staca-pub.pem
+
+
+
+
+###############################################
+############# JAVA KEYTOOL ####################
+###############################################
+
+
+# generate a self-signed certificate in the my_keystore file,
+# called "my_cert_name" and using RSA encryption. my_keystore file
+# will only be created if it doesn't exist, otherwise the 
+# cert will get added to it.  The key size is 4096 bits, and 
+# the dname is specified.  It is valid for 365 days.
+keytool -genkey -alias my_cert_name -keyalg RSA -keysize 4096 \
+	-dname "CN=what, OU=Company" -keystore my_keystore -validity 365
+# Generates a key pair (a public key and associated private key). 
+# Wraps the public key into an X.509 v3 self-signed certificate, 
+# which is stored as a single-element certificate chain. 
+# This certificate chain and the private key are stored in a 
+# new keystore entry identified by alias.
+
+
+# Print certificates in a keystore.  If you give -alias, it only prints
+# information about that specific certificate.
+keytool -list -keystore my_keystore -v [-alias my_cert_name]
+
+# Print out cert_file.
+keytool -printcert -v -file cert_file
