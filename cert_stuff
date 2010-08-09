@@ -110,15 +110,62 @@ pk12util -o staca.p12 -n STACA  -d ../certdb/
 #############################################
 
 
+# Generate public/private key pair. Store private key in 
+# file called 'my.key'.  '-des 2048' option specifies that
+# we want to encrypt the private key with the DES algorithm,
+# and use a key of length 2048.
+openssl genrsa -out my.key -des 2048
+
+
 # Create .pem from pk12 cert. This is something that
 # can be used directly by openssl.
 openssl pkcs12 -in staca.p12 -out staca.pem
 
-# Create a file with just the public key.
-# This gets the public key from the certificate PEM.
+
+# Convert PEM format certificate to a PKCS12 format certificate.
+openssl pkcs12 -export -in cert.pem -inkey key.pem -out cred.p12
+
+
+# Extract the public key from a certificate PEM.
 openssl rsa -inform PEM -outform PEM -in staca.pem -pubout -out staca-pub.pem
 
 
+# Create a CSR.  '-nodes' will leave your private key unencrypted.
+openssl req -new -newkey rsa:1024 -keyout hostkey.pem -nodes -out hostcsr.pem
+# Create a self-signed certificate from a CSR.
+openssl req -x509 -days 365 -in hostcsr.pem -key hostkey.pem -out hostcert.pem
+
+
+# Create a CA certificate.  This does the same thing as above, just in two lines.
+# 'req' will create a request, but the '-x509'
+# flag outputs a self-signed certificate instead of a request.  You can also
+# give the '-nodes' option, so that your private key is not encrypted.  
+openssl req -new -newkey rsa:1024 -x509 -days 3650 -keyout cakey.pem -out cacert.pem
+
+
+# Create sign a CSR and output the resulting certificate.  Each certificate
+# is assigned a serial number.  (This lets the CA know how many certificates
+# have been issued?? Normally, it is just increments by one every time.)
+# I think, if you already have the caserial.seq file, you don't need to 
+# give the '-CAcreateserial' option.  Instead of all these serial options,
+# you can also use the option '-set_serial 100' to set the serial number
+# to 100.  But you must make sure not to have the CA sign two different 
+# certificates with the same serial number.
+openssl x509 -req -in my_test_key.csr -CA openssl_temp_certs/cacert.pem \
+	-CAkey openssl_temp_certs/cakey.pem -CAcreateserial \
+	-CAserial openssl_temp_certs/caserial.seq -out my_test_key.crt -days 365
+
+
+# View contents of CSR.
+openssl req -text -noout -in hostcsr.pem
+
+
+# View contents of certificate.
+openssl x509 -text -noout -in hostcert.pem
+
+
+# View contents of a PKCS12 formatted file
+openssl pkcs12 -info -nodes -in cred.p12
 
 
 ###############################################
@@ -131,6 +178,9 @@ openssl rsa -inform PEM -outform PEM -in staca.pem -pubout -out staca-pub.pem
 # will only be created if it doesn't exist, otherwise the 
 # cert will get added to it.  The key size is 4096 bits, and 
 # the dname is specified.  It is valid for 365 days.
+# You could also use the options '-storepass my_jkspass -keypass my_keypass',
+# to specify the keystore password ("my_jkspass"), and the 
+# password on the key ("my_keypass").
 keytool -genkey -alias my_cert_name -keyalg RSA -keysize 4096 \
 	-dname "CN=what, OU=Company" -keystore my_keystore -validity 365
 # Generates a key pair (a public key and associated private key). 
@@ -144,5 +194,29 @@ keytool -genkey -alias my_cert_name -keyalg RSA -keysize 4096 \
 # information about that specific certificate.
 keytool -list -keystore my_keystore -v [-alias my_cert_name]
 
+
 # Print out cert_file.
 keytool -printcert -v -file cert_file
+
+
+# Create certificate signing request.  The resulting CSR is my_test_key.csr.
+keytool -certreq -keyalg RSA -alias my_test_key -file my_test_key.csr -keystore my_keystore
+
+
+# Import a Root CA certificate so that we can use certificates signed by it.
+# If we don't have this, then we will get an error when trying to import
+# the certificate created when the CA signed our CSR. 
+# (In later versions of keytool, "-import" has been renamed "-importcert".)
+keytool -import -alias root_ca  -file cacert.pem -keystore my_keystore
+
+
+# Import signed CSR.  
+# Now we can actually import the certificate generated from the CSR.  This is 
+# assuming we have an unsigned certificate created with '-genkey' called 
+# "my_test_key".
+keytool -import -alias my_test_key  -file my_test_key.crt -keystore my_keystore
+
+
+# Delete certificate from the keystore.  
+keytool -delete -alias some_bad_cert -keystore my_keystore
+
