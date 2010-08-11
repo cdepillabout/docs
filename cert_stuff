@@ -143,7 +143,7 @@ openssl req -x509 -days 365 -in hostcsr.pem -key hostkey.pem -out hostcert.pem
 openssl req -new -newkey rsa:1024 -x509 -days 3650 -keyout cakey.pem -out cacert.pem
 
 
-# Create sign a CSR and output the resulting certificate.  Each certificate
+# Sign a CSR and output the resulting certificate.  Each certificate
 # is assigned a serial number.  (This lets the CA know how many certificates
 # have been issued?? Normally, it is just increments by one every time.)
 # I think, if you already have the caserial.seq file, you don't need to 
@@ -204,7 +204,7 @@ keytool -certreq -keyalg RSA -alias my_test_key -file my_test_key.csr -keystore 
 
 
 # Import a Root CA certificate so that we can use certificates signed by it.
-# If we don't have this, then we will get an error when trying to import
+# If we don't have this root CA, then we will get an error when trying to import
 # the certificate created when the CA signed our CSR. 
 # (In later versions of keytool, "-import" has been renamed "-importcert".)
 keytool -import -alias root_ca  -file cacert.pem -keystore my_keystore
