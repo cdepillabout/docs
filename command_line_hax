@@ -13,7 +13,7 @@ $ ifconfig eth0
 bash: ifconfig: command not found
 $ /sbin/!!
 eth0 Link encap:Ethernet HWaddr 00:0C:29:95:AB:90
-     inet addr:192.168.127.129 Bcast:…
+     inet addr:192.168.127.129 
 
 # Use the command `history` to view your history and then select a 
 # command with !<n>, like !42.
@@ -138,7 +138,7 @@ objdump -s BINARY | grep -i gcc
 # do floating point math with `bc`
 bc -l
 
-# within `bc`, the last variable holds the value of the last thing
+# within `bc`, the 'last' variable holds the value of the last thing
 # printed to the screen
 
 # run a command on many hosts using ssh, and get the output to your screen
@@ -441,7 +441,7 @@ nm /usr/lib/crt1.o
 #	reference.  By grouping the archives, they all be searched repeatedly until all possible references
 #	are resolved.
 ld -verbose -static -o hello_ld_static \
-	/usr/lib/crt1.o /usr/lib/crti.o \
+	/usr/lib/crt1.o /usr/lib/crti.o 
 	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtbeginT.o \
 	-L/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0 hello.o \
 	--start-group  -lgcc_eh -lgcc -lc --end-group \
@@ -453,3 +453,10 @@ ld -verbose -static -o hello_ld_static \
 ar vx /usr/lib/libcurl.a
 # You can also just use nm to list the files on the archive.
 nm -s /usr/lib/libcurl.a
+
+# To create a library out of object files, you can use a command like this
+ar rcs my_library.a file1.o file2.o
+
+
+# show memory mapping of cat process.
+cat /proc/self/mem

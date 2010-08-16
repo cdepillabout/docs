@@ -136,7 +136,7 @@ openssl req -new -newkey rsa:1024 -keyout hostkey.pem -nodes -out hostcsr.pem
 openssl req -x509 -days 365 -in hostcsr.pem -key hostkey.pem -out hostcert.pem
 
 
-# Create a CA certificate.  This does the same thing as above, just in two lines.
+# Create a CA certificate.  This does the same thing as above, just in one line.
 # 'req' will create a request, but the '-x509'
 # flag outputs a self-signed certificate instead of a request.  You can also
 # give the '-nodes' option, so that your private key is not encrypted.  

@@ -513,3 +513,10 @@ git branch --track new_branch origin/some_branch
 git remote -v show REMOTE_NAME
 # so this should normally be something like this:
 git remote -v show origin
+
+
+
+# get's changes from your remote
+git fetch 
+# show changes between your current stuff, and the stuff you will merge in.
+git log -p HEAD..FETCH_HEAD
