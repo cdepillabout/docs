@@ -4,6 +4,7 @@ map <C-h> gT
 map <C-l> gt
 map k 4<C-y>
 map j 4<C-e>
+map b <PageUp>
 set editor="roxterm --separate -e vim -f"
 set guioptions=mTBnrb
 set runtimepath=/home/illabout/.vimperator
