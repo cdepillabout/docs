@@ -460,3 +460,28 @@ ar rcs my_library.a file1.o file2.o
 
 # show memory mapping of cat process.
 cat /proc/self/mem
+
+
+# The `ln` command uses shared libraries. Shared libraries
+# often involve symbolic links between a generic name for the library
+# and a specific level of the library, so if the links are not present or
+# broken for some reason, then the `ln` command itself might be inoperative,
+# creating a circular problem. To protect against this possibility, some
+# Linux systems include a statically linked version of the `ln` program as
+# the `sln` program (/sbin/sln).
+
+
+# Show the shared libraries a binary is linked to.
+ldd /bin/cat
+# There's more than one way to skin a cat....
+/lib/ld-linux-x86-64.so.2 --list /bin/cat
+
+# process /etc/ld.so.conf (and probably /etc/ld.so.conf.d/*)
+# to create /etc/ld.so.cache. The dynamic loader (/lib/ld-linux-x86-64.so.2)
+# uses the cached information from ld.so.cache to locate files that are to be
+# dynamically loaded and linked.  If you change ld.so.cache, you must run
+# this command again.
+ldconfig
+
+# Display contents of /etc/ld.so.cache
+ldconfig -p
