@@ -13,9 +13,9 @@ not come over IPsec.
 
 
 
-#######################
-####### IPsec #########
-#######################
+################################
+####### Openswan IPsec #########
+################################
 
 # This is using openswan, so make sure you install it.
 # We are using Openswan 2.6.28, with kernel 2.6.34 using NETKEY.
@@ -24,8 +24,156 @@ yaourt -S openswan
 
 
 # server and client configuration in /etc/ipsec.conf and /etc/ipsec.secrets.
-vim /etc/ipsec.conf /etc/ipsec.secrets
+$ cat /etc/ipsec.conf 
+############# SERVER /etc/ipsec.conf ###############
 
+version	2.0	# conforms to second version of ipsec.conf specification
+
+# basic configuration
+config setup
+	# Do not set debug options to debug configuration issues!
+	# plutodebug / klipsdebug = "all", "none" or a combation from below:
+	# "raw crypt parsing emitting control klips pfkey natt x509 dpd private"
+	# eg:
+	# plutodebug="control parsing"
+	#
+	# enable to get logs per-peer
+	# plutoopts="--perpeerlog"
+	#
+	#interfaces="ipsec0=eth0"
+	# Again: only enable plutodebug or klipsdebug when asked by a developer
+	#
+	# NAT-TRAVERSAL support, see README.NAT-Traversal
+	nat_traversal=yes
+	# exclude networks used on server side by adding %v4:!a.b.c.0/24
+	#virtual_private=%v4:!10.0.0.0/8,%v4:192.168.0.0/16,%v4:172.16.0.0/12
+	virtual_private=%v4:10.0.0.0/8,%v4:192.168.0.0/16,%v4:172.16.0.0/12
+	# OE is now off by default. Uncomment and change to on, to enable.
+	oe=off
+	# which IPsec stack to use. auto will try netkey, then klips then mast
+	protostack=netkey
+	
+conn L2TP-PSK-noNAT
+	#
+	# Configuration for one user with any type of IPsec/L2TP client
+	# including the updated Windows 2000/XP (MS KB Q818043), but
+	# excluding the non-updated Windows 2000/XP.
+	#
+	#
+	# Use a Preshared Key. Disable Perfect Forward Secrecy.
+	#
+	
+	# PreSharedSecret needs to be specified in /etc/ipsec.secrets as
+	# YourIPAddress	 %any: "sharedsecret"
+	authby=secret
+	pfs=no
+	auto=add
+	keyingtries=3
+	# we cannot rekey for %any, let client rekey
+	rekey=no
+	# Set ikelifetime and keylife to same defaults windows has
+	ikelifetime=8h
+	keylife=1h
+	# l2tp-over-ipsec is transport mode
+	type=transport
+	#
+	left=10.1.13.191
+	#
+	# For updated Windows 2000/XP clients,
+	# to support old clients as well, use leftprotoport=17/%any
+	leftprotoport=17/1701
+	#
+	# The remote user.
+	#
+	right=%any
+	# Using the magic port of "0" means "any one single port". This is
+	# a work around required for Apple OSX clients that use a randomly
+	# high port, but propose "0" instead of their port. If this does
+	# not work, use 17/%any instead.
+	#rightprotoport=17/0
+	rightprotoport=17/%any
+
+####################################################
+$
+
+$ cat /etc/ipsec.secrets
+############# SERVER /etc/ipsec.secrets ###############
+
+# Sample /etc/ipsec.secrets file
+# The Openswan server has an IP address of 10.1.13.191
+#
+# Preshared Keys for two clients with fixed IP addresses:
+
+#10.1.13.191 10.1.13.189: PSK "keyforoneclient"
+#10.1.13.191 111.222.111.222: PSK "keyforanotherclient"
+
+# Preshared Key for clients connecting from any IP address:
+10.1.13.191 %any: PSK "keysharedbyallclients"
+# (Line above only works on recent versions of Openswan).
+
+# There is a subtle difference with the following
+# (see also 'man ipsec.secrets') which affects NATed
+# clients that use a PSK:
+# 123.123.123.123 : PSK "keysharedbyallclients"
+
+#######################################################
+$ 
+
+$ cat /etc/ipsec.conf
+############# CLIENT /etc/ipsec.conf ###############
+
+version	2.0	# conforms to second version of ipsec.conf specification
+
+# basic configuration
+config setup
+	# NAT-TRAVERSAL support, see README.NAT-Traversal
+	nat_traversal=yes
+	# exclude networks used on server side by adding %v4:!a.b.c.0/24
+	virtual_private=%v4:10.0.0.0/8,%v4:192.168.0.0/16,%v4:172.16.0.0/12
+	# OE is now off by default. Uncomment and change to on, to enable.
+	oe=off
+	# which IPsec stack to use. auto will try netkey, then klips then mast
+	protostack=netkey
+
+conn L2TP-PSK-CLIENT
+        # Use a Preshared Key. 
+        authby=secret
+		# disable perfect forward secrecy
+        pfs=no
+        # Initiate rekeying.
+        rekey=yes
+        keyingtries=3
+        # Connection type _must_ be Transport Mode.
+        type=transport
+        #
+        # The local Linux machine that connects as a client.
+        #
+        # The external network interface is used to connect to the server.
+        # If you want to use a different interface or if there is no
+        # defaultroute, you can use:   left=your.ip.addr.ess
+        left=10.1.13.189
+        #
+        leftprotoport=17/1701
+        #
+        # ----------------------------------------------------------
+        # The remote server.
+        #
+        # Connect to the server at this IP address.
+        right=10.1.13.191
+        rightprotoport=17/1701
+        # Automatically bring up this interface and try to connect when
+		# using this interface.
+        auto=start
+
+####################################################
+$
+
+
+$ cat /etc/ipsec.secrets
+############# CLIENT /etc/ipsec.secrets ###############
+%any 10.1.13.191: PSK "keysharedbyallclients"
+#######################################################
+$
 
 # disable /proc/sys/net/ipv4/conf/*/{send_redirects,accept_redirects}
 # or NETKEY will send/accept bogus ICMP redirects!
@@ -46,12 +194,12 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 # This can be run in both server and client.
 ipsec verify
 
-# Open connection from client ("L2TP-CONNECTION-NAME" is defined in /etc/ipsec.conf on the client).
+# Open connection from client ("L2TP-PSK-CLIENT" is defined in /etc/ipsec.conf on the client).
 # This should only be run from the client.
-ipsec auto --up "L2TP-CONNECTION-NAME"
+ipsec auto --up "L2TP-PSK-CLIENT"
 
 # Show status of connections (server or client)
-ipsec autho --status
+ipsec auto --status
 
 # Retrieves the current status of pluto, the IKE daemon. (server or client)
 ipsec whack --status 
@@ -71,19 +219,266 @@ tail -f /var/log/{auth,daemon}.log
 ########################
 
 
-
-# leftprotoport and rightprotoport describes the ports and ip types that will be encrypted.
-# if this isn't defined, it encrypts everything.  if it is defined, then only certain things 
-# will be encrypted!!!!
-
-
-# edit xl2tpd config files on server
-vim /etc/ppp/options.l2tp /etc/ppp/chap.secrets /etc/xl2tpd/xl2tpd.conf
 # edit xl2tpd config files on client
 vim /etc/ppp/peers/options.l2tp.client /etc/ppp/chap.secrets /etc/xl2tpd/xl2tpd.conf
 
 
-# start the l2tp daemon.  This needs to be done on both server and client.
+# edit xl2tpd config files on server
+$ cat /etc/xl2tpd/xl2tpd.conf
+;;;;;;;;;;;;; SERVER /etc/xl2tpd/xl2tpd.conf ;;;;;;;;;;;;;;
+
+[global]
+
+; if set to yes, only accept connections from peers 
+; specified in the 'lac' directive. 
+access control = no
+
+; Where to find the authentication file used to authenticate l2tp tunnels.
+; This deals with l2tp authentication.  Also look at the parameter 'challenge'.
+;auth file = /etc/ppp/chap-secrets
+
+; debug to syslog
+debug avp = yes
+debug network = yes
+debug packet = yes
+debug state = yes
+debug tunnel = yes
+
+; IP address on which the daemon listens
+listen-addr = 10.1.13.191
+
+[lns default]
+
+; require peer to be authenticated by CHAP for ppp authentication
+; ("require"s can always be replaced by "refuse")
+require chap = yes
+
+; require peer to be authenticated by PAP for ppp authentication
+require pap = no
+
+; require the remote peer to authenticate itself.  This is actually used for
+; PPP authentication, not L2TP authentication.
+require authentication = yes
+
+; this will enable debug for ppp
+ppp debug = yes
+
+; specify a file which contains configuration parameters to be used
+pppoptfile = /etc/ppp/options.l2tpd
+
+; xl2tpd will assign the client an ip address from the 
+; range defined by "ip range". It is only useful to set this 
+; to "no" if you have some other way of assigning addresses,
+; like the ppp-dhcp extension.
+assign ip = yes
+
+; This will be reported as the xl2tpd hostname in negotiation.
+;hostname = <hostname>
+
+; Range of IP addresses the LNS will assign to connecting LAC PPP tunnels.
+; These addresses will be allocated to remote users.
+ip range = 10.222.1.128-10.222.1.254
+
+; Use this ip as xl2tpd's own ip address.
+; This IP will be used by the Linux server on the 
+; pppX interfaces created by xl2tpd. You cannot use the address of 
+; 'listen-addr', nor can you use an address from 'ip range'.
+; This should be a free address on your LAN.
+local ip = 10.222.1.50
+
+; if set to 'yes', use challenge authentication to authenticate peer.
+; This is found in the 'auth file' directive above.
+; This acutally uses l2tp authentication, not CHAP or PAP or whatever.
+;challenge = no
+
+; Specify ip addresses of LACs that are allowed to connnect to xl2tp.
+; This is only used if 'access control' is set to 'yes'.
+; This apparently needs to be used all the time, regardless of 
+; whether you are using it or not. (Maybe not???)
+lac = 10.1.13.189
+
+; Length bit present in the l2tp packet payload will be used.
+; Connection may be unstable without this set to 'yes'.
+length bit = yes
+
+; this is only needed if the title of this section is "lns default", 
+; instead of "lns LinuxVPNserver".  That is to say, "LinuxVPNserver"
+; does not need to be specified twice.
+;name = LinuxVPNserver
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+$
+
+$ cat /etc/ppp/options.l2tp
+############# SERVER /etc/ppp/options.l2tp ###############
+
+# Do not escape control characters
+asyncmap 0
+
+# require peer to authenticate itself before allowing network packets to be sent or received.
+auth
+
+# something about hardware flow control
+crtscts
+
+# use lock file for serial device
+lock
+
+# Don't show the passwords when logging the contents of PAP packets.
+# This is the default.
+hide-password
+
+# Use modem control lines.
+modem
+
+# Add  an entry to this system's ARP [Address Resolution Protocol] table with the IP address of the
+# peer and the Ethernet address of this system.  This will have  the  effect  of  making  the  peer
+# appear to other systems to be on the local ethernet.
+proxyarp
+
+# set the name of the local system for authentication purposes.
+name mycoolname
+
+lcp-echo-interval 300
+lcp-echo-failure 40
+
+# Disable IPX and IPXCP protocols.
+noipx
+
+# With this option, pppd will accept the peer's idea of our local IP address, 
+# even if the local  IP address was specified in an option.
+ipcp-accept-local
+# With this option, pppd will accept the peer's idea of its (remote) 
+# IP address, even if the remote IP address was specified in an option.
+ipcp-accept-remote
+
+# Disable Compression Control Protocol negotiation.
+#noccp
+
+# Specifies that pppd should disconnect if idle for 1800 seconds.
+idle 1800
+
+# Maximum transmit and receive units.  Request that the peer only send and
+# receive packets no bigger than 1410 bytes.
+mtu 1410
+mru 1410
+
+# Refuse bsd compression.
+#nobsdcomp
+
+# No deflate compression.
+#nodeflate
+
+# Disable address control compression.
+#noaccomp
+
+# Disable protocol field compression for both sending and receiving.
+#nopcomp
+
+# Disable Van Jacobson style TCP/IP header compression.
+novj
+
+# With this option, pppd will attempt to initiate a connection; if no
+# reply is received from the peer, pppd will then just wait passively for a
+# valid LCP packet from the peer, instead of exiting, as it would without
+# this option.
+#passive
+
+debug
+
+##########################################################
+$
+
+# both server and client can have the same chap.secrets file
+$ cat /etc/ppp/chap.secrets 
+############# SERVER and CLIENT /etc/ppp/options.l2tp ###############
+
+# Secrets for authentication using CHAP
+# client	server	secret			IP addresses
+jacco		*		"mysecret"		10.222.1.128/25
+*			jacco	"mysecret"		10.222.1.128/25
+
+##########################################################
+$
+
+$ cat /etc/xl2tpd/xl2tpd.conf
+;;;;;;;;;;;;; CLIENT /etc/xl2tpd/xl2tpd.conf ;;;;;;;;;;;;;;;
+
+[global]
+
+; debug to syslog
+debug avp = yes
+debug network = yes
+debug packet = yes
+debug state = yes
+debug tunnel = yes
+
+
+[lac LinuxVPNclient]
+
+; require peer to be authenticated by CHAP for ppp authentication
+; ("require"s can always be replaced by "refuse")
+require chap = yes
+
+; require peer to be authenticated by PAP for ppp authentication
+require pap = yes
+
+; require the remote peer to authenticate itself.  This is actually used for
+; PPP authentication, not L2TP authentication.
+require authentication = yes
+
+; this will enable debug for ppp
+ppp debug = yes
+
+; specify a file which contains configuration parameters to be used
+pppoptfile = /etc/ppp/peers/options.l2tpd.client
+
+; Length bit present in the l2tp packet payload will be used.
+; Connection may be unstable without this set to 'yes'.
+length bit = yes
+
+; This is the name from /etc/ppp/chap-secrets
+name = jacco
+
+; We will connect to this LNS.
+lns = 10.1.13.191
+
+; If set to 'yes', attempt to redial if disconnected.
+redial = yes
+
+; Wait 'redial timeout' seconds before trying to redial.
+redial timeout = 5
+
+; TODO: Not sure what this is.
+autodial = yes
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+$
+
+$ cat /etc/ppp/peers/options.l2tp.client 
+############# CLIENT /etc/ppp/peers/options.l2tp.client ###############
+
+ipcp-accept-local
+ipcp-accept-remote
+refuse-eap
+noccp
+noauth
+crtscts
+idle 1800
+mtu 1410
+mru 1410
+defaultroute
+debug
+lock
+#proxyarp
+connect-delay 5000
+
+#######################################################################
+$ 
+
+
+# after adding the config files, we can finally start the l2tp daemon.  
+# This needs to be done on both server and client.
 /etc/rc.d/xl2tpd start
 
 
@@ -93,15 +488,12 @@ vim /etc/ppp/peers/options.l2tp.client /etc/ppp/chap.secrets /etc/xl2tpd/xl2tpd.
 
 
 # These iptables rules only need to be added on the server.
-# You can use this iptables rule to drop all packets to tcp port 55444 
+# You can use these iptables rules to drop all packets to, for instance, tcp port 55444
 # that are not associated with an IPsec policy.  That is to say, 
 # that are not using IPsec. This is useful if you don't want to 
 # allow a connection unless it is using IPsec.
 # (This following example does not allow ssh connections unless it is using IPsec).
-iptables -A INPUT -m policy --pol none --dir in -p tcp --dport 22 -j DROP
-# You can use this to disallow connections to the l2tp daemon that are not
-# using IPsec. This is what you want.
-iptables -A INPUT -m policy --pol none --dir in -p udp --dport 1701 -j DROP
+iptables -A INPUT -m policy --pol none --dir in -p tcp --dport 55444 -j DROP
 # Now to test this, run nc on the server...
 nc -v -l -p 55444
 # ...we have nc listening on 0.0.0.0:55444 on the server, so we
@@ -112,7 +504,10 @@ iptables -A INPUT -p tcp --dport 55444 -j ACCEPT -i ppp+
 # So in conclusion, you will not be able to connect to netcat directly, only over
 # the ppp+ interface. 
 
+# You can use this to disallow connections to the l2tp daemon that are not
+# using IPsec. This is what you want.
+iptables -A INPUT -m policy --pol none --dir in -p udp --dport 1701 -j DROP
+# To setup a webserver that can only be accessed over ipsec, you can use a rule
+# like this:
+iptables -A INPUT -p tcp --dport 80 -j DROP -i eth0
 
-
-
-### TODO: for some reason, android loses VPN connectivity when the screen goes blank....
