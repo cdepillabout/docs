@@ -413,6 +413,9 @@ nm /usr/lib/crt1.o
 #	by options (see below), or hexadecimal by default.
 #	- The second column contains the symbol type.  If lowercase, the symbol 
 #	is local; if uppercase, the symbol is global (external).
+#			- "A"
+#					The symbol's value is absolute and will not be changed by
+#					farther linking.
 #			- "D"
 #					The symbol is in the initialized data section.	
 #			- "R"
