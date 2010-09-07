@@ -3,15 +3,74 @@
 #####################################################################
 #####################################################################
 This specifies setting up a direct IPsec/L2TP VPN, where the two points
-connect directly, there is no NAT involved. This is using openswan for
-the IPsec stuff, and xl2tpd for the L2TP stuff.  There are also iptables
-rules at the bottom to deny all connections to the L2TP daemon that do
-not come over IPsec.
+connect directly, there is no NAT involved. For the IPSec stuff, we use
+either ipsec_tools, which includes racoon and setkey, or openswan
+For l2tp, we use xl2tpd.  There are also iptables rules at the bottom 
+to deny all connections to the L2TP daemon that do not come over IPsec.
+We also show how to forward traffic.
 #####################################################################
 #####################################################################
 #####################################################################
 
 
+################################
+######## Racoon IPsec ##########
+################################
+
+# This is for using the native ipsec tools on Linux, which includes
+# racoon and setkey.  We only show the server setup, we do not inclue
+# the client setup.
+$ yaourt -S ipsec-tools
+
+
+# File for pre-shared keys used for IKE authentication.
+# This will be the key used for IPSec stuff. there is no good 
+# way to do this and not have to specify the host name with PSK.  
+# It can only be done with certificate authentication.
+$ cat /etc/racoon/psk.txt
+################# SERVER /etc/racoon/psk.txt #############
+10.1.13.1		Key_Value01
+##########################################################
+$
+
+# This is the main config file for racoon.  
+# http://www.ipsec-howto.org/x304.html
+$ cat /etc/racoon/racoon.conf
+################ SERVER /etc/racoon/racoon.conf ##########
+path include "/etc/racoon";
+path pre_shared_key "/etc/racoon/psk.txt";
+path certificate "/etc/racoon/certs";
+
+remote anonymous
+{
+	exchange_mode aggressive, main;
+	my_identifier address;
+	generate_policy on;
+	passive on;
+	nat_traversal on;
+	proposal {
+		encryption_algorithm 3des;
+		hash_algorithm sha1;
+		authentication_method pre_shared_key;
+		dh_group 2;
+	}
+}
+sainfo anonymous
+{
+	#pfs_group 2;
+	lifetime time 8 hour ;
+	encryption_algorithm aes, 3des;
+	authentication_algorithm hmac_sha1, hmac_md5 ;
+	compression_algorithm deflate ;
+}
+##########################################################
+$
+
+
+# To start this up, just run racoon.
+$ /usr/sbin/racoon -f /etc/racoon/racoon.conf
+# Or, just the init script.
+$ /etc/init.d/racoon start
 
 ################################
 ####### Openswan IPsec #########
@@ -20,7 +79,7 @@ not come over IPsec.
 # This is using openswan, so make sure you install it.
 # We are using Openswan 2.6.28, with kernel 2.6.34 using NETKEY.
 # Need to do this in both server and client.
-yaourt -S openswan
+$ yaourt -S openswan
 
 
 # server and client configuration in /etc/ipsec.conf and /etc/ipsec.secrets.
@@ -178,39 +237,39 @@ $
 # disable /proc/sys/net/ipv4/conf/*/{send_redirects,accept_redirects}
 # or NETKEY will send/accept bogus ICMP redirects!
 # Need to do this in both server and client.
-for f in /proc/sys/net/ipv4/conf/* ; do echo 0 > ${f}/send_redirects ; echo 0 > ${f}/accept_redirects ; done
+$ for f in /proc/sys/net/ipv4/conf/* ; do echo 0 > ${f}/send_redirects ; echo 0 > ${f}/accept_redirects ; done
 # enable IP forward.
-echo 1 > /proc/sys/net/ipv4/ip_forward
+$ echo 1 > /proc/sys/net/ipv4/ip_forward
 
 
 # start ipsec
 # Need to do this in both server and client.
-/etc/rc.d/openswan start 
+$ /etc/rc.d/openswan start 
 # or
-/etc/rc.d/ipsec start
+$ /etc/rc.d/ipsec start
 
 
 # Verify that everything is working right.
 # This can be run in both server and client.
-ipsec verify
+$ ipsec verify
 
 # Open connection from client ("L2TP-PSK-CLIENT" is defined in /etc/ipsec.conf on the client).
 # This should only be run from the client.
-ipsec auto --up "L2TP-PSK-CLIENT"
+$ ipsec auto --up "L2TP-PSK-CLIENT"
 
 # Show status of connections (server or client)
-ipsec auto --status
+$ ipsec auto --status
 
 # Retrieves the current status of pluto, the IKE daemon. (server or client)
-ipsec whack --status 
+$ ipsec whack --status 
 
 # show IPsec security associations.
 # This can be run on server or client.
-setkey -D
-setkey -DP
+$ setkey -D
+$ setkey -DP
 
 # logging output comes to /var/log/{auth,daemon}.log for both server and client.
-tail -f /var/log/{auth,daemon}.log
+$ tail -f /var/log/{auth,daemon}.log
 
 
 
@@ -220,7 +279,7 @@ tail -f /var/log/{auth,daemon}.log
 
 
 # edit xl2tpd config files on client
-vim /etc/ppp/peers/options.l2tp.client /etc/ppp/chap.secrets /etc/xl2tpd/xl2tpd.conf
+$ vim /etc/ppp/peers/options.l2tp.client /etc/ppp/chap.secrets /etc/xl2tpd/xl2tpd.conf
 
 
 # edit xl2tpd config files on server
@@ -311,6 +370,10 @@ $
 
 $ cat /etc/ppp/options.l2tp
 ############# SERVER /etc/ppp/options.l2tp ###############
+
+# set dns for mobile device to use
+ms-dns 10.1.2.8
+ms-dns 10.1.2.5
 
 # Do not escape control characters
 asyncmap 0
@@ -493,21 +556,30 @@ $
 # that are not using IPsec. This is useful if you don't want to 
 # allow a connection unless it is using IPsec.
 # (This following example does not allow ssh connections unless it is using IPsec).
-iptables -A INPUT -m policy --pol none --dir in -p tcp --dport 55444 -j DROP
+$ iptables -A INPUT -m policy --pol none --dir in -p tcp --dport 55444 -j DROP
 # Now to test this, run nc on the server...
-nc -v -l -p 55444
+$ nc -v -l -p 55444
 # ...we have nc listening on 0.0.0.0:55444 on the server, so we
 # don't want anyone to be able to connect over eth0, only the ppp+ interfaces
-iptables -A INPUT -p tcp --dport 55444 -j DROP -i eth0
+$ iptables -A INPUT -p tcp --dport 55444 -j DROP -i eth0
 # If your default is to drop, then this is an acceptable allow rule
-iptables -A INPUT -p tcp --dport 55444 -j ACCEPT -i ppp+
+$ iptables -A INPUT -p tcp --dport 55444 -j ACCEPT -i ppp+
 # So in conclusion, you will not be able to connect to netcat directly, only over
 # the ppp+ interface. 
 
 # You can use this to disallow connections to the l2tp daemon that are not
 # using IPsec. This is what you want.
-iptables -A INPUT -m policy --pol none --dir in -p udp --dport 1701 -j DROP
+$ iptables -A INPUT -m policy --pol none --dir in -p udp --dport 1701 -j DROP
 # To setup a webserver that can only be accessed over ipsec, you can use a rule
 # like this:
-iptables -A INPUT -p tcp --dport 80 -j DROP -i eth0
+$ iptables -A INPUT -p tcp --dport 80 -j DROP -i eth0
 
+
+# These rules can be added to the server to foward traffic from the 
+# ppp+ interfaces to the eth0 interface.  This lets us browse the web
+# over the IPSec/L2TP connection.  Pretty cool.
+# (Of course, the routes have to be setup correctly on the client
+# so that all traffic is sent over the L2TP connection....)
+$ iptables --table nat --append POSTROUTING --out-interface eth0 -j MASQUERADE
+$ iptables -A FORWARD -o ppp+ -p all -j ACCEPT
+$ iptables -A FORWARD -i ppp+ -p all -j ACCEPT
