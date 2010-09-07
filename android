@@ -1,0 +1,336 @@
+
+###################
+# Building source #
+###################
+
+
+# install EPEL repo in order to get git
+0. rpm -Uvh http://download.fedora.redhat.com/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+
+1. install required RPMS
+	
+	# install git
+	- yum install git
+
+	# install gperf
+	- yum install gperf
+
+2. install jdk 1.5
+
+	- download and install jdk-1.5 rpm binary from oracle.com
+	http://www.oracle.com/technetwork/java/javase/downloads/index-jdk5-jsp-142662.html
+
+	# run the binary to extract the rpm
+	- ./jdk-1_5_0_22-linux-amd64-rpm.bin
+
+	# install jdk rpm
+	- rpm -Uvh jdk-1_5_0_22-linux-amd64.rpm
+
+	# add java enviroment variables to .bashrc
+	- cat << END_OF_FILE >> ~/.bashrc
+export J2REDIR="/usr/java/jdk1.5.0_22/jre"
+export J2SDKDIR="/usr/java/jdk1.5.0_22"
+export JAVA_HOME="/usr/java/jdk1.5.0_22"
+export ANDROID_JAVA_HOME="$JAVA_HOME"
+export PATH="$PATH:/usr/java/jdk1.5.0_22/bin"
+END_OF_FILE
+
+
+2. Set your git user name and email address.
+
+	- git config --global user.email "aproj@example.com"
+
+	- git config --global user.name "MyUsername"
+
+
+# get the repo tool to checkout the android source repository
+3. mkdir ~/bin && curl http://android.git.kernel.org/repo > ~/bin/repo && chmod a+x ~/bin/repo
+
+
+# create a directory to hold the android source code
+4. mkdir ~/android && cd ~/android
+
+
+# Setup the directory to hold the android repository.
+# "android-2.2_r1.1" is the latest tagged froyo release as of July 28th.
+# "-b android-2.2_r1.1" checks out the frf91 tagged Nexus One froyo release.
+# All the tags (and HEADs) can be found here:
+# http://android.git.kernel.org/?p=platform/build.git;a=summary
+5. repo init -u git://android.git.kernel.org/platform/manifest.git -b android-2.2_r1.1
+
+
+# Download the files form the repositories.
+# This will take awhile to complete (about an hour). When I did it it resulted in 4.5GB of downloaded data.
+6. repo sync
+
+
+# source the enviroment setup file
+7. source ~/android/build/envsetup.sh
+
+
+# build the adb binary
+8. make adb
+
+
+*************
+If you want to build an image for the stock Nexus One, you need
+some proprietary files from the phone.  Continue with the secion
+"Get required files from stock Nexus One phone" before continuing
+on to the next section.
+*************
+
+
+# Run lunch to select the build target. This sets a bunch of environment variables.
+# BUILD_TARGET can either be "full_passion-userdebug", "generic-eng", or "full-eng".
+# Do not use the "simulator" target.
+# These targets can be found by looking at the names of some of the .mk files in 
+# ~/android/build/target/product/ and ~/android/device/htc/passion/*/.
+#
+# 	- The "full_passion-userdebug" target is what we will need for installing
+# 	  on the Nexus One.  It is based on the "full" target.
+# 	- "generic-eng" is just a generic build.  
+# 	- "full-eng" is based on the "generic-eng", but includes more stuff.
+#
+# It is only possible to run the emulator after building either the "generic-eng" or
+# "full-eng" target, because "passion" builds use the ARMv7 instruction set, 
+# but the emulator only supports ARMv5 instructions. 
+9.  lunch <BUILD_TARGET>
+
+
+# Compile the source from the top of the build tree.
+10. cd ~/android && make 
+# If the build errors about at any point with an error about librpc
+# The try making librpc directly, and then just running make again.
+cd ~/android && make librpc && make
+
+
+**************
+If you want to run the emulator with the image you built,
+skip to the section "Running the emulator".
+**************
+
+
+**************
+If you want to install the image you built onto a phone,
+skip to the section "Installing onto phone".
+**************
+
+
+
+
+
+##################################################
+# Get required files from stock Nexus One phone. #
+##################################################
+
+
+# WARNING! You must first build adb before using these commands.
+#
+# This is only required to be run once.  It copies proprietary files from
+# The Nexus One device to your source tree (under vendor/).  These files
+# are never changed subsequently, but are used when running make with the
+# "full_passion-userdebug" target.
+
+
+# Make sure the phone is in USB debugging mode.
+1. From the main screen, click the options button, and click "Settings".
+   Click "Applications", then click "Development".  Make sure "USB debugging"
+   is checked.  
+
+
+# Use adb to make sure it can see your device.
+2. adb devices
+
+
+# copy the files you need from the Nexus One.
+# This creates some files under ~/android/vendor/
+3. cd ~/android/device/htc/passion && ./extract-files.sh
+
+
+
+
+#########################
+# Running the emulator. #
+#########################
+
+
+# WARNING! You must first build the source before you can run the emulator.
+# You can only run the emulator with the "generic-eng" target.
+
+
+# source the enviroment setup file
+1. source build/envsetup.sh
+
+
+# Run lunch to select the "generic-eng" or "full-eng" target.
+# This command does not have to be run if you are already using 
+# the "generic-eng" or "full-eng" target.
+#
+# BUILD_TARGET can either be "generic-eng" or "full-eng", not "full_passion-eng".
+# "passion" builds can't be run on the emulator, because "passion" builds
+# use the ARMv7 instruction set, but the emulator only supports ARMv5 
+# instructions. 
+2. lunch <BUILD_TARGET>
+
+
+# If you switched BUILD_TARGETs in the previous step,
+# then you might have to rerun make from the root build directory 
+# just to make sure all the files are built correctly.
+# The build system doesn't support switching between targets
+# without rebuilding some of the files.
+3. cd ~/android ; make installclean ; make
+
+
+# Run emulator.
+4. ./out/host/linux-x86/bin/emulator
+
+
+
+
+#########################
+# Installing onto phone #
+#########################
+
+
+# WARNING! You must first build the source for the "full_passion-eng" target
+# (not the "generic-eng" or "full-eng") before you can install it onto the nexus one.
+# (Is it possible to install "generic-eng" or "full-eng" onto the nexus one???)
+
+
+# source the enviroment setup file
+1. source build/envsetup.sh
+
+
+# Run lunch to select the "full_passion-eng" target.
+# This command does not have to be run if you are already using 
+# the "full_passion-eng" target.
+2. lunch "full_passion-eng"
+
+
+# If you switched BUILD_TARGETs in the previous step,
+# then you might have to rerun make from the root build directory 
+# just to make sure all the files are built correctly.
+# The build system doesn't support switching between targets
+# without rebuilding some of the files.
+3. cd ~/android ; make installclean ; make
+
+
+# Before you can install the image you made, your phone must be unlocked.
+# This can be done with the `fastboot` command.  Boot into recovery mode
+# by holding down the track ball on your phone. This command should show
+# your android device.
+4. fastboot devices
+
+
+# Now you can unlock your android. A screen will come up asking you if
+# you really want to unlock your phone and void your warranty.  Say yes.
+5. fastboot oem unlock 
+
+
+# This will erase everything on the phone, and flash all of the *.img
+# files from ~/android/out/target/product/passion/ onto the phone.
+6. fastboot -w flashall 
+# This may fail in the "erasing 'userdata'" step, so you may have to
+# do flash and erase everything by hand:
+cd ~/android/out/target/product/passion
+fastboot erase cache
+# Note, this may not work, but it shouldn't cause any problems.
+fastboot erase userdata
+fastboot flash userdata userdata.img
+fastboot flash boot boot.img
+fastboot flash system system.img
+fastboot flash recovery recovery.img
+fastboot reboot
+
+
+#############
+# Using adb #
+#############
+
+
+# adb is the android debug bridge.
+# Documentation can be found here:
+# http://developer.android.com/guide/developing/tools/adb.html
+# It lets you manage the state of an emulator instance or an Android-powered device.
+# It is client-server with three parts.
+# 	- a client, which is run from the command line on the development machine
+#	- a server, which runs as a background process on the development machine.
+#	  The server starts automatically the first time the client is run.
+#	- a daemon, which runs on the emulator or device, and communicates with the server.
+
+# Generate list of attached devices
+adb devices
+
+# To direct a command to a specific device or emulator you must
+# run adb with the -s switch to specify the serial number.
+# For an emulator, the serial number is something like "emulator-5556".
+# If there is only one emulator/device connected,  you don't need to specify
+# a serial number.
+adb -s <serialNumber> <command> 
+
+# Install an application
+adb install <path_to_apk>
+
+# Forwarding ports from host to emulator/device.
+# This forwards host port 6100 to device port 7100.
+adb forward tcp:6100 tcp:7100
+
+# Copy files FROM and emulator/device.
+# This is actually what the extract-files.sh shell script uses to get
+# the device specific files off of the Nexus One.
+adb pull <remote_file> <local_file>
+
+# Copy files TO an emulator/device
+adb push <local_file> <remote_file>
+
+# Drop into a shell on the emulator/device.
+adb shell
+
+# Get logging output from everything that is going on with the device/emulator.
+# There are a lot of options to this available on the webpage linked above.
+adb logcat
+
+
+####################
+# Additional Notes #
+####################
+
+
+# clean up all the binaries created for your current target.
+# The `m` command is defined in ~/android/build/envsetup.sh.
+# It runs a make command from the root build directory (~/android/),
+# regardless of where you are in your tree.
+m clean
+
+
+# Get rid of all the binaries for all targets.
+# This is equivalent to removing the ~/android/out/ directory
+# where all generated files are stored.
+m clobber
+
+
+# Enable ccache to speed up re-builds.
+# (Note: the ccache binaries are provided in ~/android/prebuilt/,
+#  and don't need to be specifically installed on your system.)
+export USE_CCACHE=1
+
+
+# installclean is sufficient when switching between targets.
+# It is faster than clean.
+make installclean
+
+
+# TODO: Figure out the differences between `m`, `mm`, and `mmm`.
+# If you make changes to the source code (for example, packages/apps/Browser/),
+# you can rebuild it like this:
+mmm packages/apps/Browser
+# Then you can see your changes in the emulator/device by doing this:
+# First,  remount the /system partition on the device read-write.
+adb remount 
+# If you made major changes, you may have to stop the emulator.
+adb shell stop
+# Copy the changed files files from the host to the device.
+adb sync
+# If you stoped the emulator above,  you need to restart it.
+adb shell start
+
