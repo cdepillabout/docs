@@ -1,7 +1,7 @@
 
-###################
-# Building source #
-###################
+################################
+# Building Android from source #
+################################
 
 
 # install EPEL repo in order to get git
@@ -231,7 +231,7 @@ skip to the section "Installing onto phone".
 # files from ~/android/out/target/product/passion/ onto the phone.
 6. fastboot -w flashall 
 # This may fail in the "erasing 'userdata'" step, so you may have to
-# do flash and erase everything by hand:
+# flash and erase everything by hand:
 cd ~/android/out/target/product/passion
 fastboot erase cache
 # Note, this may not work, but it shouldn't cause any problems.
