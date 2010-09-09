@@ -520,3 +520,7 @@ git remote -v show origin
 git fetch 
 # show changes between your current stuff, and the stuff you will merge in.
 git log -p HEAD..FETCH_HEAD
+
+
+# Ignore changes in files that are already committed to the repository
+git update-index --assume-unchanged FILENAME
