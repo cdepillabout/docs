@@ -233,6 +233,17 @@ export EDITOR=`get_correct_filename_from_choices "/usr/bin/vim" "/usr/local/bin/
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 
+# We xauth stuff to be set correctly if we are root.
+if [[ $EUID -eq 0 ]] ; then
+	if [ -f "/usr/bin/xauth" ] ; then
+		if [ "$(id -u -n)" != "$USER" ] ; then
+			if [ -f "/home/$USER/.Xauthority" ] ; then
+				export XAUTHORITY="/home/$USER/.Xauthority"
+			fi
+		fi
+	fi
+fi
+
 # add the filesystem from the home directory to the PATH
 if [ -d "$HOME/filesystem/bin" ]
 then
