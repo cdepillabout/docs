@@ -488,3 +488,12 @@ ldconfig
 
 # Display contents of /etc/ld.so.cache
 ldconfig -p
+
+
+
+# Use x11 forwarding over ssh after su'ing to root.
+# First, as your normal use, get the xauth connection.
+xauth list  # this is run as your normal user
+# Then after actually su'ing, add that xauth information.
+xauth add \ # this is run as root
+	somehost.somedomain:10 mit-magic-cookie-1 4d22408a71a55b41ccd1657d377923ae
