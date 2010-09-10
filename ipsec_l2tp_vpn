@@ -18,15 +18,15 @@ We also show how to forward traffic.
 ################################
 
 # This is for using the native ipsec tools on Linux, which includes
-# racoon and setkey.  We only show the server setup, we do not inclue
-# the client setup.
+# racoon and setkey.  
 $ yaourt -S ipsec-tools
 
 
 # File for pre-shared keys used for IKE authentication.
 # This will be the key used for IPSec stuff. there is no good 
 # way to do this and not have to specify the host name with PSK.  
-# It can only be done with certificate authentication.
+# Road warrior setups can really only be achieved  
+# with certificate authentication.
 $ cat /etc/racoon/psk.txt
 ################# SERVER /etc/racoon/psk.txt #############
 10.1.13.1		Key_Value01
@@ -69,8 +69,85 @@ $
 
 # To start this up, just run racoon.
 $ /usr/sbin/racoon -f /etc/racoon/racoon.conf
-# Or, just the init script.
+# Or the init script.
 $ /etc/init.d/racoon start
+
+
+# Now we need to setup for the client IPSec stuff.
+# This is the file for pre-shared keys used for IKE authentication.
+$ cat /etc/racoon/psk.txt
+################# CLIENT /etc/racoon/psk.txt #############
+10.1.13.171		Key_Value01
+##########################################################
+$
+
+# This is the main config file for client racoon.  
+# Note that it is very similar to the server racoon.conf,
+# except there is a remote host specified, and we use the 
+# command "support_proxy on".  That is VERY important.
+$ cat /etc/racoon/racoon.conf
+################ CLIENT /etc/racoon/racoon.conf ##########
+path include "/etc/racoon";
+path pre_shared_key "/etc/racoon/psk.txt";
+path certificate "/etc/racoon/certs";
+
+remote 10.1.13.171 
+{
+        exchange_mode aggressive, main;
+        my_identifier address;
+        passive off;
+        nat_traversal on;
+		# this is the secret option that must be used 
+		# in order to get the policy established correctly
+		support_proxy on;
+        proposal {
+                encryption_algorithm 3des;
+                hash_algorithm sha1;
+                authentication_method pre_shared_key;
+                dh_group 2;
+        }
+}
+
+sainfo anonymous
+{
+	#pfs_group 2;
+	lifetime time 8 hour ;
+	encryption_algorithm aes, 3des;
+	authentication_algorithm hmac_sha1, hmac_md5 ;
+	compression_algorithm deflate ;
+}
+##########################################################
+$
+
+# Since we cannot use "generate_policy on;" in our client
+# racoon.conf, we will need to specify the policy by using
+# setkey.
+$ cat /etc/racoon/setkey.conf
+################ CLIENT /etc/racoon/setkey.conf ##########
+#!/sbin/setkey -f
+flush;
+spdflush;
+
+# This computer is 10.1.13.141.
+# We are communicating with 10.1.13.171.
+
+spdadd 10.1.13.141[0] 10.1.13.171[0] any -P out ipsec
+	esp/transport//require;
+
+spdadd 10.1.13.171[0] 10.1.13.141[0] any -P in ipsec
+	esp/transport//require;
+
+##########################################################
+$
+
+
+# To bring up the connection we must setup the policies using
+# setkey, and then run racoon.
+$ setkey -f /etc/racoon/setkey.conf 
+$ /usr/sbin/racoon -f /etc/racoon/racoon.conf
+# Now, when you try to connect to the remote host, the ipsec
+# connection will be setup automatically.
+
 
 ################################
 ####### Openswan IPsec #########
