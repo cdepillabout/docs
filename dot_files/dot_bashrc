@@ -235,8 +235,12 @@ export XDG_CONFIG_HOME="$HOME/.config"
 
 # We xauth stuff to be set correctly if we are root.
 if [[ $EUID -eq 0 ]] ; then
+	# make sure we can actually access xauth functionality
 	if [ -f "/usr/bin/xauth" ] ; then
+		# make sure we didn't just log in as root
 		if [ "$(id -u -n)" != "$USER" ] ; then
+			# Make sure the user actually has an .Xauthority file setup
+			# that we can use.
 			if [ -f "/home/$USER/.Xauthority" ] ; then
 				export XAUTHORITY="/home/$USER/.Xauthority"
 			fi

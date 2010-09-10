@@ -497,3 +497,6 @@ xauth list  # this is run as your normal user
 # Then after actually su'ing, add that xauth information.
 xauth add \ # this is run as root
 	somehost.somedomain:10 mit-magic-cookie-1 4d22408a71a55b41ccd1657d377923ae
+#
+# Another way would be to use this command as root:
+xauth merge /home/$USER/.Xauthority
