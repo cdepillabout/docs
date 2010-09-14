@@ -500,3 +500,9 @@ xauth add \ # this is run as root
 #
 # Another way would be to use this command as root:
 xauth merge /home/$USER/.Xauthority
+
+
+# If a ssh connection is failing because packets are getting fragmented,
+# the mtu of all interfaces on both systems may need to be changed.
+# 576 is a good default value.
+# http://www.snailbook.com/faq/mtu-mismatch.auto.html
