@@ -524,3 +524,8 @@ git log -p HEAD..FETCH_HEAD
 
 # Ignore changes in files that are already committed to the repository
 git update-index --assume-unchanged FILENAME
+
+
+# Merge in changes from a branch, but just leave them as changes to be commited
+# in the next commit.
+git merge --squash someotherbranch
