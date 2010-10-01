@@ -334,3 +334,26 @@ adb sync
 # If you stoped the emulator above,  you need to restart it.
 adb shell start
 
+
+
+##########################3
+# Boot Image and Initramfs stuff
+##########################3
+
+# Pull out the kernel image from the compressed zImage.
+grep -F -a -b -o $'\x1f\x8b\x08' < zImage
+# This gives you places in the file where the gzip header
+# occurs.  You can try these places to pull out the 
+# uncompressed kernel image.
+dd if=zImage of=Image.gz bs=1 skip=NUM_FROM_ABOVE
+# Now gunzip this image.  Will probably give you a
+# warning about ignoring trailing garbage.
+gunzip Image.gz
+# Now, the initramfs will be cpio'd, and possibly gzipped again.
+# If it is gzipped, then you will have to repeat the previous
+# process, but if it is just cpio'd, then you can repeat the 
+# previous process but with the cpio header.
+grep -F -a -b -o $'07070' < Image
+dd if=Image of=initramfs.cpio bs=1 skip=NUM_FROM_ABOVE
+# Get the files out of the cpio
+cpio -i --no-absolute-filenames < initramfs.cpio
