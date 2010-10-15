@@ -357,3 +357,24 @@ grep -F -a -b -o $'07070' < Image
 dd if=Image of=initramfs.cpio bs=1 skip=NUM_FROM_ABOVE
 # Get the files out of the cpio
 cpio -i --no-absolute-filenames < initramfs.cpio
+
+
+
+################################
+# Other stuff
+################################
+
+# You can use `readelf` on the host system (not on android) to get
+# the same information a tool like `ldd` would tell you.
+# This gets the shared libraries used by racoon.
+readelf -d racoon
+
+
+# In order to use dynamic libraries on Android (like NSS), you must 
+# first compile your program against them as normal.  Then, 
+# create a directory on Android under /data/.  Something like
+# /data/myfolder/.  Then, throw both your binary and the shared
+# libraries into this directory, so you have something like
+# /data/myfolder/myprogram and /data/myfolder/libmyprogram.so.
+# The linker on Android knows to look in the same directory as the binary
+# for the files it's linking against.  This is convenient for us.
