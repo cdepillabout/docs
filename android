@@ -365,7 +365,7 @@ cpio -i --no-absolute-filenames < initramfs.cpio
 
 # You can use `readelf` on the host system (not on android) to get
 # the same information a tool like `ldd` would tell you.
-# This gets the shared libraries used by racoon.
+# This gets the shared libraries used by the racoon binary.
 readelf -d racoon
 
 
@@ -374,9 +374,16 @@ readelf -d racoon
 # create a directory on Android under /data/.  Something like
 # /data/myfolder/.  Then, throw both your binary and the shared
 # libraries into this directory, so you have something like
-# /data/myfolder/myprogram and /data/myfolder/libmyprogram.so.
+# /data/myfolder/myprogram and /data/myfolder/libmylibrary.so.
 # The linker on Android knows to look in the same directory as the binary
 # for the files it's linking against.  This is convenient for us.
+
+
+
+
+################################
+# Networking
+################################
 
 
 # To see information similar to ifconfig, use this netcfg command.
@@ -384,12 +391,18 @@ netcfg
 
 # To see routing tables, look at /proc/net/route
 cat /proc/net/route
+# Also can use ip
+ip route
 
 # Add a route.
 route add default gw 10.0.1.1 dev eth0
 
-# Delete a route
+# Delete the default route
 ip route del default
+
+# Delete the local route.  (The string after "ip route del" is just the output of the
+# normal `ip route` command.)
+ip route del 10.1.0.0/20 dev eth0  src 10.1.13.72
 
 # Get ip address of eth0
 ifconfig eth0
