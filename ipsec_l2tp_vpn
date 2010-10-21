@@ -662,3 +662,4 @@ $ iptables -A INPUT -p tcp --dport 80 -j DROP -i eth0
 $ iptables --table nat --append POSTROUTING --out-interface eth0 -j MASQUERADE
 $ iptables -A FORWARD -o ppp+ -p all -j ACCEPT
 $ iptables -A FORWARD -i ppp+ -p all -j ACCEPT
+$ iptables -P FORWARD DROP
