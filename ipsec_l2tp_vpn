@@ -17,9 +17,12 @@ We also show how to forward traffic.
 ######## Racoon IPsec ##########
 ################################
 
-# This is for using the native ipsec tools on Arch Linux, which includes
-# racoon and setkey.  
+# This is for using the native ipsec tools on Arch Linux, which includes racoon
+# and setkey.  This needs to be done on both the server and the client.
 $ yaourt -S ipsec-tools
+
+# On RHEL5, you would use a command like this:
+$ yum install ipsec-tools
 
 
 # File for pre-shared keys used for IKE authentication.
@@ -356,9 +359,12 @@ $ tail -f /var/log/{auth,daemon}.log
 ##### L2TP server ######
 ########################
 
+# First, install xl2tpd on Arch Linux.  This needs to be done on both the
+# server and the client.
+pacman -S xl2tpd
 
-# edit xl2tpd config files on client
-$ vim /etc/ppp/peers/options.l2tp.client /etc/ppp/chap.secrets /etc/xl2tpd/xl2tpd.conf
+# Or, you might want to install on RHEL5/Centos5.
+yum install xl2tpd
 
 
 # edit xl2tpd config files on server
@@ -543,6 +549,7 @@ jacco		*		"mysecret"		10.222.1.128/25
 ##########################################################
 $
 
+# Now edit those same files on the CLIENT.
 $ cat /etc/xl2tpd/xl2tpd.conf
 ;;;;;;;;;;;;; CLIENT /etc/xl2tpd/xl2tpd.conf ;;;;;;;;;;;;;;;
 
