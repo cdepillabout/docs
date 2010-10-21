@@ -216,3 +216,10 @@ zM
 #autocmd FileType sas set tabstop=3			" 3-space tab indent width
 # A filetype plugin is like a global plugin, except that it sets options defines mappings
 # for the current buffer only.
+
+
+# this sets up format options that may help you when writing txt files or emails
+:set formatoptions+=aw
+
+# use this command to format a paragraph
+gqip

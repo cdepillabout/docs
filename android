@@ -194,7 +194,6 @@ skip to the section "Installing onto phone".
 
 # WARNING! You must first build the source for the "full_passion-eng" target
 # (not the "generic-eng" or "full-eng") before you can install it onto the nexus one.
-# (Is it possible to install "generic-eng" or "full-eng" onto the nexus one???)
 
 
 # source the enviroment setup file
@@ -231,7 +230,7 @@ skip to the section "Installing onto phone".
 # files from ~/android/out/target/product/passion/ onto the phone.
 6. fastboot -w flashall 
 # This may fail in the "erasing 'userdata'" step, so you may have to
-# flash and erase everything by hand:
+# flash everything by hand:
 cd ~/android/out/target/product/passion
 fastboot erase cache
 # Note, this may not work, but it shouldn't cause any problems.
@@ -336,9 +335,9 @@ adb shell start
 
 
 
-##########################3
+###########################
 # Boot Image and Initramfs stuff
-##########################3
+###########################
 
 # Pull out the kernel image from the compressed zImage.
 grep -F -a -b -o $'\x1f\x8b\x08' < zImage
@@ -378,3 +377,19 @@ readelf -d racoon
 # /data/myfolder/myprogram and /data/myfolder/libmyprogram.so.
 # The linker on Android knows to look in the same directory as the binary
 # for the files it's linking against.  This is convenient for us.
+
+
+# To see information similar to ifconfig, use this netcfg command.
+netcfg
+
+# To see routing tables, look at /proc/net/route
+cat /proc/net/route
+
+# Add a route.
+route add default gw 10.0.1.1 dev eth0
+
+# Delete a route
+ip route del default
+
+# Get ip address of eth0
+ifconfig eth0

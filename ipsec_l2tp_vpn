@@ -17,7 +17,7 @@ We also show how to forward traffic.
 ######## Racoon IPsec ##########
 ################################
 
-# This is for using the native ipsec tools on Linux, which includes
+# This is for using the native ipsec tools on Arch Linux, which includes
 # racoon and setkey.  
 $ yaourt -S ipsec-tools
 
@@ -43,7 +43,7 @@ path certificate "/etc/racoon/certs";
 
 remote anonymous
 {
-	exchange_mode aggressive, main;
+	exchange_mode aggressive, main, base;
 	my_identifier address;
 	generate_policy on;
 	passive on;
@@ -85,6 +85,7 @@ $
 # Note that it is very similar to the server racoon.conf,
 # except there is a remote host specified, and we use the 
 # command "support_proxy on".  That is VERY important.
+# The 10.1.13.171 ip address is the address of the server.
 $ cat /etc/racoon/racoon.conf
 ################ CLIENT /etc/racoon/racoon.conf ##########
 path include "/etc/racoon";
@@ -93,7 +94,8 @@ path certificate "/etc/racoon/certs";
 
 remote 10.1.13.171 
 {
-        exchange_mode aggressive, main;
+        #exchange_mode aggressive, main;
+        exchange_mode main;
         my_identifier address;
         passive off;
         nat_traversal on;
@@ -381,7 +383,7 @@ debug state = yes
 debug tunnel = yes
 
 ; IP address on which the daemon listens
-listen-addr = 10.1.13.191
+listen-addr = 10.1.13.171
 
 [lns default]
 
@@ -431,7 +433,7 @@ local ip = 10.222.1.50
 ; This is only used if 'access control' is set to 'yes'.
 ; This apparently needs to be used all the time, regardless of 
 ; whether you are using it or not. (Maybe not???)
-lac = 10.1.13.189
+;lac = 10.1.13.189
 
 ; Length bit present in the l2tp packet payload will be used.
 ; Connection may be unstable without this set to 'yes'.
@@ -581,7 +583,7 @@ length bit = yes
 name = jacco
 
 ; We will connect to this LNS.
-lns = 10.1.13.191
+lns = 10.1.13.171
 
 ; If set to 'yes', attempt to redial if disconnected.
 redial = yes
@@ -637,7 +639,7 @@ $ iptables -A INPUT -m policy --pol none --dir in -p tcp --dport 55444 -j DROP
 # Now to test this, run nc on the server...
 $ nc -v -l -p 55444
 # ...we have nc listening on 0.0.0.0:55444 on the server, so we
-# don't want anyone to be able to connect over eth0, only the ppp+ interfaces
+# don't want anyone to be able to connect over eth0, only the l2tp ppp+ interfaces
 $ iptables -A INPUT -p tcp --dport 55444 -j DROP -i eth0
 # If your default is to drop, then this is an acceptable allow rule
 $ iptables -A INPUT -p tcp --dport 55444 -j ACCEPT -i ppp+
