@@ -1,4 +1,4 @@
-#!/usr/bin/python -O
+#!/usr/bin/python2 -O
 
 """Mplayer Spot remembers the spot in which you last exited 
 mplayer and resumes from that spot the next time you start 
