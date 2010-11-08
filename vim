@@ -223,3 +223,9 @@ zM
 
 # use this command to format a paragraph
 gqip
+
+
+# get a list of files to edit from the command line
+vim $(ls some_dir/*)
+# note that this doesn't work:
+ls some_dir/* | vim   # THIS DOESN'T WORK!!
