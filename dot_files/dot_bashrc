@@ -64,28 +64,29 @@ alias less="less -R"
 less_pipe_location=`get_correct_filename_from_choices "lesspipe" "lesspipe.sh"`
 export LESSOPEN="| ${less_pipe_location} %s"
 
-# Change the window title of X terminals 
-case $TERM in
-	xterm*|rxvt*|Eterm)
-		PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\007"'
-		;;
-	screen)
-		PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\033\\"'
-		;;
-esac
-
-
 # strict umask
 umask 0077
 
+# make bash check the window size after each command
+shopt -s checkwinsize
+
+# bash will automatically change directory if you just type the directory
+# on the command line
+shopt -s autocd
 
 # this escape sequence is used so that screen can set
 # the window title
-if [ "$TERM" == 'screen' ]; then
-	SCREEN_PS1_ESCAPE='\[\033k\033\\\]'
-else
-	SCREEN_PS1_ESCAPE=''
-fi
+case $TERM in
+	xterm*|rxvt*|Eterm)
+		SCREEN_OR_XTERM_PS1_ESCAPE='\[\033]0;${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\007\]'
+		;;
+	screen)
+		SCREEN_OR_XTERM_PS1_ESCAPE='\[\033k\033\\\]'
+		;;
+	*)
+		SCREEN_OR_XTERM_PS1_ESCAPE=''
+		;;
+esac
 
 
 # colors for using in PS1
@@ -142,7 +143,7 @@ fi
 # command prompt.  it sets our scmdir and colors for us.
 # this is for a normal user.
 bash_prompt_normal() {
-	export PS1="${PS1_username}${PS1_at}${PS1_hostname} ${PS1_workingdir} $(get_git_or_hg_branch)"${SCREEN_PS1_ESCAPE}"${PS1_dollar_or_pound} ${PS1_normal_text}"
+	export PS1="${PS1_username}${PS1_at}${PS1_hostname} ${PS1_workingdir} $(get_git_or_hg_branch)"${SCREEN_OR_XTERM_PS1_ESCAPE}"${PS1_dollar_or_pound} ${PS1_normal_text}"
 }
 # this is for the root user
 bash_prompt_root() {
