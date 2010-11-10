@@ -506,3 +506,8 @@ xauth merge /home/$USER/.Xauthority
 # the mtu of all interfaces on both systems may need to be changed.
 # 576 is a good default value.
 # http://www.snailbook.com/faq/mtu-mismatch.auto.html
+
+
+# Find all empty directories below the current directory.
+# -depth starts at the lowest level directory and works it's way back up.
+find . -depth -type d -empty
