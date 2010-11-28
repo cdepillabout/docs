@@ -71,8 +71,12 @@ umask 0077
 shopt -s checkwinsize
 
 # bash will automatically change directory if you just type the directory
-# on the command line
-shopt -s autocd
+# on the command line.  (We need to check if shopts supports autocd.  
+# I think this is only in bash4+).
+if [ -n "$(shopt -p | grep autocd)" ] ; 
+then
+	shopt -s autocd
+fi
 
 # this escape sequence is used so that screen can set
 # the window title
