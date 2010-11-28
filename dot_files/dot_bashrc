@@ -82,7 +82,11 @@ fi
 # the window title
 case $TERM in
 	xterm*|rxvt*|Eterm)
-		SCREEN_OR_XTERM_PS1_ESCAPE='\[\033]0;${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\007\]'
+		if [ -n "$ROXTERM_NUM" ] ; then
+			SCREEN_OR_XTERM_PS1_ESCAPE='\[\033]0;bash\007\]'
+		else
+			SCREEN_OR_XTERM_PS1_ESCAPE='\[\033]0;${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\007\]'
+		fi
 		;;
 	screen)
 		SCREEN_OR_XTERM_PS1_ESCAPE='\[\033k\033\\\]'
