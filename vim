@@ -229,3 +229,6 @@ gqip
 vim $(ls some_dir/*)
 # note that this doesn't work:
 ls some_dir/* | vim   # THIS DOESN'T WORK!!
+
+# start eclimd
+/usr/share/eclipse/eclimd
