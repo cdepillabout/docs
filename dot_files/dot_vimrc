@@ -219,6 +219,7 @@ call Add_auto_foldmethod("python", "indent")
 call Add_auto_foldmethod("css", "indent")
 call Add_auto_foldmethod("sas", "syntax")
 call Add_auto_foldmethod("xml", "syntax")
+call Add_auto_foldmethod("xsd", "syntax")
 call Add_auto_foldmethod("ant", "syntax")
 call Add_auto_foldmethod("javascript", "indent")
 
