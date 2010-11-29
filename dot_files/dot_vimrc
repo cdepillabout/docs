@@ -114,6 +114,8 @@ nnoremap <A-8> 8gt
 nnoremap <A-9> 9gt
 nnoremap <A-0> 10gt
 
+
+
 " F2 for turning on and off tag list
 nnoremap <F2> :TlistToggle<CR>
 
@@ -127,6 +129,68 @@ let Tlist_Inc_Winwidth = 0
 
 " in input mode, what about we try using jj as escape
 inoremap jj <Esc>
+
+function! Resize(dir)
+	" TODO: could also do something like this for horizontal split screen
+	let above = 0
+	let below = 0
+
+	let this = winnr()
+
+	if a:dir == 'C-J' || a:dir == 'C-K'
+		execute "normal \<c-w>k"
+		let up = winnr()
+		if up != this
+			execute "normal \<c-w>j"
+			let above = 1
+		endif
+
+		execute "normal \<c-w>j"
+		let down = winnr()
+		if down != this
+			execute "normal \<c-w>k"
+			let below = 1
+		endif
+
+	"elseif '>' == a:dir || '<' == a:dir
+	"	execute "normal \<c-w>h"
+	"	let left = winnr()
+	"	if left != this
+	"		execute "normal \<c-w>l"
+	"		let x = 'right'
+	"	else
+	"		let x = 'left'
+	"	endif
+	else
+		echo "oops. check your ~/.vimrc here."
+		return
+	endif
+
+	if ( ('C-J' == a:dir || 'C-K' == a:dir) && above == 0 && below == 0 )
+		" this is the only window on the screen
+		return 
+	elseif ('C-J' == a:dir && above == 1 && below == 0)
+		" there are no windows below this on the screen
+		return 
+	elseif ('C-K' == a:dir && above == 0 && below == 1)
+		" there are no windows above this on the screen
+		return 
+	elseif ( ('C-J' == a:dir && below == 1) || ('C-K' == a:dir && above == 1) )
+		" there are windows below this on the screen
+		execute "normal 3\<c-w>+"
+	else
+		echo "oops. check your ~/.vimrc"
+		return 
+	endif
+endfunction
+
+"nnoremap <C-J> :normal <c-r>=Resize('+')<CR><CR>
+"nnoremap <C-J> :normal <c-r>=Resize('-')<CR><CR>
+nnoremap <C-J> :call Resize('C-J')<CR>
+nnoremap <C-K> :call Resize('C-K')<CR>
+"nnoremap <S-Down> :normal <c-r>=Resize('-')<CR><CR>
+"nnoremap <S-Left> :normal <c-r>=Resize('<')<CR><CR>
+"nnoremap <S-Right> :normal <c-r>=Resize('>')<CR><CR>
 
 " source ~/.vim/plugin/cscope_maps.vim
 " source ~/.vim/syntax/javascript.vim
