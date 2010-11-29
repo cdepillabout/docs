@@ -406,3 +406,12 @@ ip route del 10.1.0.0/20 dev eth0  src 10.1.13.72
 
 # Get ip address of eth0
 ifconfig eth0
+
+
+
+# When trying to debug an Android application, you can throw a
+# Debug.waitForDebugger(); into the onCreate().  Then, run ddms
+# to find out what port should be listened on, then attach to the 
+# port like this:
+jdb -attach localhost:8700
+
