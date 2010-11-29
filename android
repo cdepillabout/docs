@@ -410,7 +410,9 @@ ifconfig eth0
 
 
 # When trying to debug an Android application, you can throw a
-# Debug.waitForDebugger(); into the onCreate().  Then, run ddms
+# Debug.waitForDebugger(); into the onCreate().  You also need
+# android:debuggable="true" attribute in the <application> element
+# in the AndroidManifest.xml file.  To actually debug it, run ddms
 # to find out what port should be listened on, then attach to the 
 # port like this:
 jdb -attach localhost:8700
