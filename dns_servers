@@ -2546,3 +2546,7 @@ travel.	172800	IN	NS	h.gtld.biz.
 
 ;end ICANN domain list
 
+
+google public dns:
+8.8.8.8
+8.8.4.4
