@@ -36,6 +36,7 @@ highlight_color = BOLD_RED_TEXT # default highlight color
 highlight_filenames = True # highlight_filenames by default
 stripe_filenames = True # stripe filenames with different colors
 from_grep = False # the input is coming from grep
+reverse_matches = False # stripe filenames with different colors
 
 
 def usage():
@@ -54,6 +55,7 @@ Options:
     -i, --ignore-case       ignore case when searching for matches 
     -k, --regular-filename  don't colorize filenames
     -s, --no-stripe         don't stripe filenames with color
+    -v, --reverse-matches   highlight lines that don't match pattern
 """ % {'command_name': sys.argv[0]}
 
 def get_color(color_string):
@@ -160,7 +162,17 @@ def highlight_lines(regex, highlight_replace_func, files):
         for line in file:
             if from_grep:
                 file_name, line = get_grep_file_name(line)
-            safety_print(file_name + re.sub(regex, highlight_replace_func, line))
+            if not reverse_matches:
+                # high light parts of lines that do match the regex
+                safety_print(file_name + re.sub(regex, highlight_replace_func, line))
+            else:
+                # highlight full lines that don't match the regex
+                if re.search(regex, line) is None:
+                    safety_print(file_name + highlight_color + line + RESET_TEXT)
+                else:
+                    safety_print(file_name + line)
+
+
 
 def rotate_current_color():
     "This is used for highlighting filenames in stripes of different color."
@@ -183,12 +195,13 @@ def main():
     global highlight_filenames 
     global stripe_filenames 
     global from_grep 
+    global reverse_matches
 
     # deal with flags
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "c:ghiks", 
+        opts, args = getopt.getopt(sys.argv[1:], "c:ghiksv", 
                 ["color=", "from-grep", "help", "ignore-case", 
-                    "regular-filename", "no-stripe"])
+                    "regular-filename", "no-stripe", "reverse-matches"])
     except getopt.error, msg:
         print "ERROR! " + msg
         print "for help use --help"
@@ -212,6 +225,8 @@ def main():
             highlight_filenames = False
         if opt in ("-s", "--no-stripe"):
             stripe_filenames = False
+        if opt in ("-v", "--reverse-matches"):
+            reverse_matches = True
 
     # get the highlight_replace function
     highlight_replace_func = create_highlight_replace_func(highlight_color)
