@@ -169,28 +169,43 @@ function! Resize(dir)
 	if ( ('C-J' == a:dir || 'C-K' == a:dir) && above == 0 && below == 0 )
 		" this is the only window on the screen
 		return 
+
 	elseif ('C-J' == a:dir && above == 1 && below == 0)
 		" there are no windows below this on the screen
-		return 
-	elseif ('C-K' == a:dir && above == 0 && below == 1)
-		" there are no windows above this on the screen
-		return 
-	elseif ( ('C-J' == a:dir && below == 1) || ('C-K' == a:dir && above == 1) )
-		" there are windows below this on the screen
+		execute "normal 3\<c-w>-"
+	elseif ('C-J' == a:dir && above == 0 && below == 1)
+		" there are no windows below this on the screen but we are on the top
 		execute "normal 3\<c-w>+"
+	elseif ('C-K' == a:dir && above == 0 && below == 1)
+		" there are no windows above this on the screen and we are on the top
+		execute "normal 3\<c-w>-"
+	elseif ('C-K' == a:dir && above == 1 && below == 0)
+		" there are windows above this on the screen, and we are on the bottom
+		execute "normal 3\<c-w>+"
+
+	elseif ('C-J' == a:dir && above == 1 && below == 1) 
+		" this is a middle window and we are trying to drop it down
+		execute "normal \<c-w>j3\<c-w>-\<c-w>p"
+	elseif ('C-K' == a:dir && above == 1 && below == 1)
+		" this is a middle window and we are trying to raise it up
+		execute "normal \<c-w>k3\<c-w>-\<c-w>p"
+
 	else
 		echo "oops. check your ~/.vimrc"
 		return 
 	endif
 endfunction
 
-"nnoremap <C-J> :normal <c-r>=Resize('+')<CR><CR>
-"nnoremap <C-J> :normal <c-r>=Resize('-')<CR><CR>
+" mappings for changing window size
 nnoremap <C-J> :call Resize('C-J')<CR>
 nnoremap <C-K> :call Resize('C-K')<CR>
-"nnoremap <S-Down> :normal <c-r>=Resize('-')<CR><CR>
-"nnoremap <S-Left> :normal <c-r>=Resize('<')<CR><CR>
-"nnoremap <S-Right> :normal <c-r>=Resize('>')<CR><CR>
+
+" mappings for increasing window size when working
+" with 3 or more splits
+nnoremap + <C-W>+
+nnoremap - <C-W>-
+
+
 
 " source ~/.vim/plugin/cscope_maps.vim
 " source ~/.vim/syntax/javascript.vim
