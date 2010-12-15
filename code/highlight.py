@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, re, os, getopt
+import sys, re, os, getopt, fcntl
 
 ESCAPE="\033"
 
@@ -136,6 +136,9 @@ def highlight_lines(regex, highlight_replace_func, files):
     Just highlightes the matches on each line of files."""
 
     if not files:
+        # we want stdin to be nonblocking
+        fl = fcntl.fcntl(sys.stdin, fcntl.F_GETFL)
+        fcntl.fcntl(sys.stdin, fcntl.F_SETFL, fl | os.O_NONBLOCK)
         files.append(sys.stdin)
 
     for f in files:
