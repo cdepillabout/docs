@@ -162,23 +162,34 @@ def highlight_lines(regex, highlight_replace_func, files):
             else:
                 file_name = file_name + ": "
 
-        for line in file:
-            if from_grep:
-                file_name, line = get_grep_file_name(line)
-            if not reverse_matches:
-                # high light parts of lines that do match the regex
-                safety_print(file_name + re.sub(regex, highlight_replace_func, line))
-            else:
-                # highlight full lines that don't match the regex
-                if re.search(regex, line) is None:
-                    # RESET_TEXT as appearing as a character at the beginning of 
-                    # the next line, so I had to do this here
-                    if line[-1] == "\n":
-                        safety_print(file_name + highlight_color + line[:-1] + RESET_TEXT + line[-1] )
+        # this has to be wrapped in while and try/except because we are 
+        # assuming it's nonblocking. I could probably pull this
+        # for loop out to another function.
+        while True:
+            try: 
+                for line in file:
+                    if from_grep:
+                        file_name, line = get_grep_file_name(line)
+                    if not reverse_matches:
+                        # high light parts of lines that do match the regex
+                        safety_print(file_name + re.sub(regex, highlight_replace_func, line))
                     else:
-                        safety_print(file_name + highlight_color + line + RESET_TEXT)
-                else:
-                    safety_print(file_name + line)
+                        # highlight full lines that don't match the regex
+                        if re.search(regex, line) is None:
+                            # RESET_TEXT as appearing as a character at the beginning of 
+                            # the next line, so I had to do this here
+                            if line[-1] == "\n":
+                                safety_print(file_name + highlight_color + line[:-1] + RESET_TEXT + line[-1] )
+                            else:
+                                safety_print(file_name + highlight_color + line + RESET_TEXT)
+                        else:
+                            safety_print(file_name + line)
+                # we need to break out of the while loop because we are done processing this file
+                break
+            except IOError, e:
+                # we have gotten an io error because we set stdin to non-blocking and there is
+                # nothing currently to read
+                pass
 
 
 
