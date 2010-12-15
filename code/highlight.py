@@ -237,4 +237,7 @@ def main():
     return 0
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
