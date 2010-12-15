@@ -48,7 +48,7 @@ Example: %(command_name)s -i 'hello' helloworld.c helloworld.h
 Options:
     -c, --color=COLOR       Print matches in color. Valid colors are
                             "black", "red", "green", "yellow", "blue",
-                            "magenta", "cyan", "white".
+                            "magenta", "cyan", "white", "bold".
     -g, --from-grep         input is coming from grep, so highlight filenames
     -h, --help              print this usage
     -i, --ignore-case       ignore case when searching for matches 
@@ -74,10 +74,12 @@ def get_color(color_string):
         return BOLD_CYAN_TEXT
     elif color_string.lower() == "white":
         return BOLD_WHITE_TEXT
+    elif color_string.lower() == "bold":
+        return BOLD_TEXT
     else:
         print "ERROR! Incorrect color string.  Valid color strings are:"
         print "\"black\", \"red\", \"green\", \"yellow\", \"blue\", \"magenta\", ",
-        print "\"cyan\", \"white\""
+        print "\"cyan\", \"white\", \"bold\""
         print
         print usage()
         sys.exit(1)
