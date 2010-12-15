@@ -168,7 +168,12 @@ def highlight_lines(regex, highlight_replace_func, files):
             else:
                 # highlight full lines that don't match the regex
                 if re.search(regex, line) is None:
-                    safety_print(file_name + highlight_color + line + RESET_TEXT)
+                    # RESET_TEXT as appearing as a character at the beginning of 
+                    # the next line, so I had to do this here
+                    if line[-1] == "\n":
+                        safety_print(file_name + highlight_color + line[:-1] + RESET_TEXT + line[-1] )
+                    else:
+                        safety_print(file_name + highlight_color + line + RESET_TEXT)
                 else:
                     safety_print(file_name + line)
 
