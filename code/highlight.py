@@ -141,6 +141,11 @@ def highlight_lines(regex, highlight_replace_func, files):
         fcntl.fcntl(sys.stdin, fcntl.F_SETFL, fl | os.O_NONBLOCK)
         files.append(sys.stdin)
 
+    # set stdout to nonblocking if
+    fl = fcntl.fcntl(sys.stdout, fcntl.F_GETFL)
+    fcntl.fcntl(sys.stdout, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+
+
     for f in files:
         if hasattr(f, "readline"):
             file = f
@@ -270,7 +275,59 @@ def main():
 
     return 0
 
+def interpret_fcntl_flags(flags):
+    ret = ""
+    if flags & os.O_APPEND:
+        ret += "O_APPEND "
+    if flags & os.O_DIRECT:
+        ret += "O_DIRECT"
+    if flags & os.O_EXCL:
+        ret += "O_EXCL"
+    if flags & os.O_NOATIME:
+        ret += "O_NOATIME"
+    if flags & os.O_NONBLOCK:
+        ret += "O_NONBLOCK"
+    if flags & os.O_RSYNC:
+        ret += "O_RSYNC"
+    if flags & os.O_WRONLY:
+        ret += "O_WRONLY"
+    if flags & os.O_ASYNC:
+        ret += "O_ASYNC"
+    if flags & os.O_DIRECTORY:
+        ret += "O_DIRECTORY"
+    if flags & os.O_LARGEFILE:
+        ret += "O_LARGEFILE"
+    if flags & os.O_NOCTTY:
+        ret += "O_NOCTTY"
+    if flags & os.O_RDONLY:
+        ret += "O_RDONLY"
+    if flags & os.O_SYNC:
+        ret += "O_SYNC"
+    if flags & os.O_CREAT:
+        ret += "O_CREAT"
+    if flags & os.O_DSYNC:
+        ret += "O_DSYNC"
+    if flags & os.O_NDELAY:
+        ret += "O_NDELAY"
+    if flags & os.O_NOFOLLOW:
+        ret += "O_NOFOLLOW"
+    if flags & os.O_RDWR:
+        ret += "O_RDWR"
+    if flags & os.O_TRUNC:
+        ret += "O_TRUNC"
+    return ret
+
 if __name__ == '__main__':
+    """
+    stdinflags = fcntl.fcntl(sys.stdin, fcntl.F_GETFL)
+    stdoutflags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL)
+    print ("stdin: " + str(sys.stdin) + ", is stdin a tty?: " + str(sys.stdin.isatty()) + 
+            ", flags = " + str(stdinflags) + ":")
+    print "\t" + interpret_fcntl_flags(stdinflags)
+    print ("stdout: " + str(sys.stdout) + ", is stdout a tty?: " + str(sys.stdout.isatty()) +
+            ", flags = " + str(stdoutflags) + ":")
+    print "\t" + interpret_fcntl_flags(stdoutflags)
+    """
     try:
         main()
     except KeyboardInterrupt:
