@@ -105,6 +105,7 @@ def safety_print(string):
     "Print a string without throwing any IOErrors"
     try:
         print string,
+        sys.stdout.flush()
     except IOError:
         pass
 
