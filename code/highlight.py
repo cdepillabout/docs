@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, re, os, getopt, fcntl
+import sys, re, os, getopt, fcntl, time
 
 ESCAPE="\033"
 
@@ -193,9 +193,10 @@ def highlight_lines(regex, highlight_replace_func, files):
                 # we need to break out of the while loop because we are done processing this file
                 break
             except IOError, e:
-                # we have gotten an io error because we set stdin to non-blocking and there is
-                # nothing currently to read
-                pass
+                # We have gotten an io error because we set stdin to non-blocking and there is
+                # nothing currently to read.  # We need to sleep here so we don't take up 
+                # all of the cpu time.
+                time.sleep(.02)
 
 
 
