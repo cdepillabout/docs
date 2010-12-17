@@ -205,6 +205,12 @@ nnoremap <C-K> :call Resize('C-K')<CR>
 nnoremap + <C-W>+
 nnoremap - <C-W>-
 
+" Execute the line under the cursor.
+"function! ExecuteLine()
+"	let thisline = getline('.')
+"	execute '!' . thisline
+"endfunction
+"nnoremap <C-R> :call ExecuteLine()<CR>
 
 
 " source ~/.vim/plugin/cscope_maps.vim
