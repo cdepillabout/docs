@@ -511,3 +511,10 @@ xauth merge /home/$USER/.Xauthority
 # Find all empty directories below the current directory.
 # -depth starts at the lowest level directory and works it's way back up.
 find . -depth -type d -empty
+
+
+# reverse lines of a file.
+tac FILE
+
+# reverse output from ls
+ls /some/dir | tac
