@@ -205,12 +205,55 @@ nnoremap <silent> <C-K> :call Resize('C-K')<CR>
 nnoremap + <C-W>+
 nnoremap - <C-W>-
 
+" I want to jump to the exact position in the line
+nnoremap '' ``
+
+" Open a bunch of tabs at once.  Also interpret globbing characters.
+function Tabopen_all_files(...)
+	let i = 1
+	let firstnewtab = 0
+	
+	" loop over arguments passed to this function, both file names, new tab
+	" names, and filename globs
+	while i <= a:0
+		let filelist = split(glob(a:{i}), "\n")
+
+		" loop over files in the glob, opening each one
+		let j = 0
+		while j < len(filelist)
+			execute "tabedit " . filelist[j]
+			" if this is the first new tab that we're opening,
+			" we have to save the tab number so we can come back here
+			" after we're done opening all the other tabs
+			if i == 1 && j == 0
+				let firstnewtab = tabpagenr()
+			endif
+			let j = j + 1
+		endwhile
+
+		let i = i + 1
+	endwhile
+
+	" if we opened any tabs, then we need to go back to 
+	" the first one we opened
+	if firstnewtab
+		execute "normal " . firstnewtab . "gt"
+	endif
+endfunction
+
+" create a command ":Tabopen" that will call our tab-opening function
+" and create an abbreviation for it with the name "tabo".  So, to use this
+" just type ":tabo " and it will get replaced with ":Tabopen ".
+command -nargs=+ -complete=file Tabopen call Tabopen_all_files(<f-args>)
+cabbrev tabo Tabopen
+
+
 " Execute the line under the cursor.
 "function! ExecuteLine()
 "	let thisline = getline('.')
 "	execute '!' . thisline
 "endfunction
-"nnoremap <C-R> :call ExecuteLine()<CR>
+"nnoremap <silent> <C-R> :call ExecuteLine()<CR>
 
 
 " source ~/.vim/plugin/cscope_maps.vim
