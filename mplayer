@@ -28,3 +28,7 @@ midentify dvd://
 # speed up mplayer
 mplayer -lavdopts skiploopfilter=all:fast=1
 mplayer -lavdopts skipframe=nonref:skiploopfilter=all:fast=1
+
+
+# encode video for use with cinelerra
+mencoder ./inputfile.avi -o ./outputfile.avi -ovc lavc -lavcopts vcodec=mpeg4:vhq:vbitrate=6000 -oac mp3lame -lameopts br=256:vol=1 -ffourcc DIVX 
