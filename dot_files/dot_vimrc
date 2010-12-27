@@ -197,8 +197,8 @@ function! Resize(dir)
 endfunction
 
 " mappings for changing window size
-nnoremap <C-J> :call Resize('C-J')<CR>
-nnoremap <C-K> :call Resize('C-K')<CR>
+nnoremap <silent> <C-J> :call Resize('C-J')<CR>
+nnoremap <silent> <C-K> :call Resize('C-K')<CR>
 
 " mappings for increasing window size when working
 " with 3 or more splits
