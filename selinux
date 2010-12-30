@@ -148,3 +148,6 @@ semanage permissive -a httpd_t
 # view a list of domains you have made permissive
 semodule -l | grep permissive
 
+
+# take out all dontaudits in monolithic non-mangaged policy:
+find admin/ apps/ kernel/ roles/ services/ system/ -name "*.if" | while read file ; do sed -i -e 's/\(^[ \t]\+dontaudit.*;$\)/#\1/' $file ; done
