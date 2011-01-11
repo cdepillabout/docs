@@ -193,8 +193,11 @@ alias rgvim='gvim --remote-tab-silent '
 # make sure java runs in server mode and with assertions enabled
 alias java='java -server -ea '
 
-# a good rsync command that will work as a `cp` replacemnt
-alias rsyncp='rsync -a -v '
+# a good rsync command that will work as a `cp` replacemnt.
+# When using rsync to copy directories, make sure not to put a
+# "/" after the SRC directory name, otherwise everything in
+# the directory will be copied, but not the directory itself.
+alias rsyncp='rsync -a -P '
 
 # git aliases
 alias gadd='git add '
