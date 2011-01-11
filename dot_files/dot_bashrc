@@ -193,6 +193,9 @@ alias rgvim='gvim --remote-tab-silent '
 # make sure java runs in server mode and with assertions enabled
 alias java='java -server -ea '
 
+# a good rsync command that will work as a `cp` replacemnt
+alias rsyncp='rsync -a -v '
+
 # git aliases
 alias gadd='git add '
 alias gb='git branch '
