@@ -42,6 +42,8 @@ syntax on
 set ignorecase
 set smartcase
 
+" autocomplete options
+set tags+=TAGS;/,tags;/
 
 " always show a tabline
 set showtabline=2
