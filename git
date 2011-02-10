@@ -529,3 +529,53 @@ git update-index --assume-unchanged FILENAME
 # Merge in changes from a branch, but just leave them as changes to be commited
 # in the next commit.
 git merge --squash someotherbranch
+
+
+################################
+### LOW LEVEL GIT OPERATIONS ###
+################################
+
+# NOTES
+# - the index refers to the set of newly created trees and blobs which you
+#	created by running `git add`. These new objects will soon get bound into a
+#	new tree for the purpose of committing to your repository, but until then,
+#	they are only referenced by the index.
+
+# In .git/objects/*, there are all the objects git knows about.
+# In order to get the type of an object, you can use a command like this
+git cat-file -t 7b06b409
+
+# If this is a commit, you can list the changelog message with a command like this
+git cat-file commit 7b06b409
+
+# if this object is a tree, or to list the tree from a commit, use this command
+git cat-file tree 49463b56
+
+# list the files in a tree
+git ls-tree 49463b56
+
+# cat a blob in a tree
+git cat-file blob 1ac1918
+
+# objects are added to .git/objects/* as soon as files are added to the index.
+# List files in the staging area (the index)
+git ls-files --stage
+
+# record the contents of the index in a tree
+git write-tree
+
+# create a new commit based on a tree in the index
+echo "Initial commit" | git commit-tree 49463b56
+
+# inform git that the branch name "master" should now refer to our recent commit.
+# Also be aware that the .git/HEAD gets created by `git init` pointing to the master
+# branch, so at this point we have a fully functional git repo with one commit, one tree,
+# one blob, and one branch.
+# (This is how you create a new branch...)
+echo 7b06b409f4fbb289832d32cfe6b951f245fe053a > .git/refs/heads/master
+# here is another much safer way to do this
+git update-ref refs/heads/master 7b06b409f
+
+# HEAD is by default associated with master, but we can do it manually like this.
+git symbolic-ref HEAD refs/heads/master
+
