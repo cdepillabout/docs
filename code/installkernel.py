@@ -1,0 +1,114 @@
+#!/usr/bin/env python2
+"""
+Install the current kernel, from anywhere in the kernel source tree.
+"""
+import os, sys, argparse, subprocess, tempfile, pwd, grp, shutil
+
+def goto_ksrc_root():
+    """
+    Change directory to the root of the kernel source.  We check all
+    directories above us for that root.
+    """
+    # these are files that should be in the root kernel directory.
+    # we look for these files to makes sure we are in the source root.
+    rootfiles = ["Kbuild", "Makefile", "COPYING", "README", "CREDITS", "MAINTAINERS", "REPORTING-BUGS"] 
+
+    for f in rootfiles:
+        if not os.path.exists(f):
+            os.chdir("..")
+            if os.getcwd() == '/':
+                sys.stderr.write(
+                        "ERROR: we couldn't find the root of the kernel sources in any directory above us.\n")
+                sys.exit(1)
+
+def debug_print_cur_ids():
+    "Print the current uids and gids. Create a temp file and show the owner of that file."
+    print("getegid() = %s, geteuid() = %s, getgid() = %s, getuid() = %s" %
+            (os.getegid(), os.geteuid(), os.getgid(), os.getuid()))
+    print("getresgid() = %s, getresuid() = %s" % (os.getresgid(), os.getresuid()))
+    print("getlogin() = %s" % (os.getlogin()))
+    fd, name = tempfile.mkstemp(dir="/tmp")
+    filestat = os.fstat(fd)
+    uname = pwd.getpwuid(filestat.st_uid).pw_name
+    gname = grp.getgrgid(filestat.st_gid).gr_name
+    print ("file stat: %s -- (%s, %s)\n" % (name, uname, gname))
+    os.close(fd)
+
+def main():
+    parser = argparse.ArgumentParser(description="Install the current kernel.")
+    parser.add_argument('--make', '-m', action='store_true', 
+            help="run `make` first")
+    args = parser.parse_args()
+
+    goto_ksrc_root()
+
+    if args.make:
+
+        pid = os.fork()
+        if not pid:
+            owner_uid = os.stat(".").st_uid     # owner of the kernel sources
+            original_uid = os.getuid()
+
+            if "SUDO_UID" in os.environ and "SUDO_GID" in os.environ and owner_uid != original_uid:
+                # we are being run in sudo, so we need to drop privs to run make
+                sudo_uid = int(os.environ["SUDO_UID"])
+                sudo_gid = int(os.environ["SUDO_GID"])
+                os.setgid(sudo_gid)
+                os.setuid(sudo_uid)
+
+            print "Running `make`..."
+            retcode = subprocess.call("make", shell=True, stdout=sys.stdout, stderr=sys.stderr)
+            if retcode < 0:
+                sys.stderr.write("ERROR: `make` was terminated by signal %s.\n" % -retcode)
+                sys.exit(1)
+            elif retcode > 0:
+                sys.stderr.write("ERROR: `make` failed.\n")
+                sys.exit(1)
+            print "Finished `make`.\n"
+            sys.exit(0)
+        else:
+            waitpid, exit_status = os.wait()
+            if exit_status != 0:
+                sys.exist(1)
+
+    # make sure you can write to boot
+    if not os.access("/boot", os.W_OK):
+        sys.stderr.write("ERROR: cannot write to /boot. Need to run this script with `sudo`?\n")
+        sys.exit(1)
+
+    # get version, patchlevel, and sublevel from makefile
+    makefile = open("Makefile")
+    lines = makefile.readlines(100)
+    version = lines[0].split()[2]
+    patchlevel = lines[1].split()[2]
+    sublevel = lines[2].split()[2]
+    makefile.close()
+
+    kernel_arch = subprocess.Popen(["uname", "-m"], stdout=subprocess.PIPE).communicate()[0].strip()
+
+    bzimage = "arch/%s/boot/bzImage" % kernel_arch
+    bzimage_install_path = "/boot/bzImage-%s.%s.%s" % (version, patchlevel, sublevel)
+
+    config = ".config"
+    config_install_path = "/boot/config-%s.%s.%s" % (version, patchlevel, sublevel)
+
+    systemmap = "System.map"
+    systemmap_install_path = "/boot/System.map-%s.%s.%s" % (version, patchlevel, sublevel)
+
+    def install_file(file_name, install_path):
+        "Install a file using shutil.copyfile() with file_name as first arg and install_path as second."
+        try:
+            print "Copying %s to %s" % (file_name, install_path)
+            shutil.copyfile(file_name, install_path)
+        except OSError, e:
+            sys.stderr.write("ERROR: error when trying to copy %s to %s: %s\n" %
+                    (file_name, install_path, e))
+            sys.exit(1)
+
+    install_file(bzimage, bzimage_install_path)
+    install_file(config, config_install_path)
+    install_file(systemmap, systemmap_install_path)
+
+
+if __name__ == '__main__':
+    main()
