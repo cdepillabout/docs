@@ -268,17 +268,25 @@ if [ -d "$HOME/filesystem/bin" ]
 then
 	export PATH="$PATH:$HOME/filesystem/bin"
 
-	# if we have our filesystem, then make sure the python path
-	# is set correctly within it
-	export PYTHONPATH="$PYTHONPATH:$HOME/filesystem/lib/python2.6/site-packages/"
 fi
 
-
-# add a python path for modules I have installed myself
-if [ -d "$HOME/python_modules/" ]
+# if we have our filesystem, then make sure the python path
+# is set correctly within it
+if [ -d "$HOME/filesystem/lib" ]
 then
-	export PYTHONPATH="$PYTHONPATH:$HOME/python_modules/"
+	for f in $HOME/filesystem/lib/python*
+	do
+		echo "adding ${f}..."
+		export PYTHONPATH="$PYTHONPATH:${f}/site-packages/"
+	done
 fi
+
+# I DON'T THINK I NEED THIS ANYMORE
+# add a python path for modules I have installed myself
+#if [ -d "$HOME/python_modules/" ]
+#then
+#	export PYTHONPATH="$PYTHONPATH:$HOME/python_modules/"
+#fi
 
 # source the local rc file with local commands
 if [ -f "$HOME/.local-bashrc" ]
