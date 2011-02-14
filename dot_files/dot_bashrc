@@ -235,8 +235,8 @@ export GIT_PAGER=''
 export PATH="$PATH:$HOME/docs/code/bin" 
 
 # add classpath for java
-add_to_classpath CLASSPATH "/usr/share/junit-4/lib/junit.jar"
-add_to_classpath CLASSPATH "/usr/share/hamcrest-core/lib/hamcrest-core.jar"
+add_to_path_nocheck CLASSPATH "/usr/share/junit-4/lib/junit.jar"
+add_to_path_nocheck CLASSPATH "/usr/share/hamcrest-core/lib/hamcrest-core.jar"
 
 
 # add default browser

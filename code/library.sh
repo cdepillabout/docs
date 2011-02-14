@@ -146,7 +146,7 @@ function add_to_path()
 	add_to_path_side "$1" "$2" "back" "yes"
 }
 
-function add_to_classpath()
+function add_to_path_nocheck()
 {
 	add_to_path_side "$1" "$2" "back" "no"
 }
@@ -156,7 +156,7 @@ function prepend_to_path()
 	add_to_path_side "$1" "$2" "front" "yes"
 }
 
-function prepend_to_classpath()
+function prepend_to_path_nocheck()
 {
 	add_to_path_side "$1" "$2" "front" "no"
 }
