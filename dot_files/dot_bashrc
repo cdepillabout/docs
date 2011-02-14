@@ -232,7 +232,7 @@ export HISTCONTROL='ignoreboth'
 export GIT_PAGER=''
 
 # add my program directory
-export PATH="$PATH:$HOME/docs/code/bin" 
+add_to_path PATH "$HOME/docs/code/bin" 
 
 # add classpath for java
 add_to_path_nocheck CLASSPATH "/usr/share/junit-4/lib/junit.jar"
