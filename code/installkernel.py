@@ -116,24 +116,22 @@ def main():
         sys.stderr.write("ERROR: cannot write to /boot. Need to run this script with `sudo`?\n")
         sys.exit(1)
 
-    # get version, patchlevel, and sublevel from makefile
-    makefile = open("Makefile")
-    lines = makefile.readlines(100)
-    version = lines[0].split()[2]
-    patchlevel = lines[1].split()[2]
-    sublevel = lines[2].split()[2]
-    makefile.close()
+    # get the kernel release (somethingl like 2.6.34-MY-KERNEL)
+    p = subprocess.Popen(["make", "kernelrelease"], stdout=subprocess.PIPE)
+    release = p.communicate()[0].strip()
 
-    kernel_arch = subprocess.Popen(["uname", "-m"], stdout=subprocess.PIPE).communicate()[0].strip()
+    # get the current arch
+    p = subprocess.Popen(["uname", "-m"], stdout=subprocess.PIPE)
+    arch = p.communicate()[0].strip()
 
-    bzimage = "arch/%s/boot/bzImage" % kernel_arch
-    bzimage_install_path = "/boot/bzImage-%s.%s.%s" % (version, patchlevel, sublevel)
+    bzimage = "arch/%s/boot/bzImage" % arch
+    bzimage_install_path = "/boot/bzImage-%s" % release
 
     config = ".config"
-    config_install_path = "/boot/config-%s.%s.%s" % (version, patchlevel, sublevel)
+    config_install_path = "/boot/config-%s" % release
 
     systemmap = "System.map"
-    systemmap_install_path = "/boot/System.map-%s.%s.%s" % (version, patchlevel, sublevel)
+    systemmap_install_path = "/boot/System.map-%s" % release
 
     def install_file(file_name, install_path):
         "Install a file using shutil.copyfile() with file_name as first arg and install_path as second."
