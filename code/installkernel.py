@@ -180,14 +180,19 @@ def main():
         sys.exit(1)
 
     # get the kernel release (somethingl like 2.6.34-MY-KERNEL)
-    p = subprocess.Popen(["make", "kernelrelease"], stdout=subprocess.PIPE)
+    if builddir:
+        p = subprocess.Popen(["make", "O=%s" % builddir, "kernelrelease"], 
+                stdout=subprocess.PIPE)
+    else:
+        p = subprocess.Popen(["make", "kernelrelease"], 
+                stdout=subprocess.PIPE)
     release = p.communicate()[0].strip()
 
     # get the current arch
     p = subprocess.Popen(["uname", "-m"], stdout=subprocess.PIPE)
     arch = p.communicate()[0].strip()
 
-    bzimage = os.path.join(builddir, "%s/arch/%s/boot/bzImage" % arch)
+    bzimage = os.path.join(builddir, "arch/%s/boot/bzImage" % arch)
     bzimage_install_path = "/boot/bzImage-%s" % release
 
     config = os.path.join(builddir, ".config")
