@@ -232,11 +232,11 @@ export HISTCONTROL='ignoreboth'
 export GIT_PAGER=''
 
 # add my program directory
-export PATH="$PATH:$HOME/docs/code/bin:/home/illabout/programming/bin" 
+export PATH="$PATH:$HOME/docs/code/bin" 
 
 # add classpath for java
-export CLASSPATH="$CLASSPATH:..:/usr/share/junit-4/lib/junit.jar"
-export CLASSPATH="$CLASSPATH:/usr/share/hamcrest-core/lib/hamcrest-core.jar"
+add_to_classpath CLASSPATH "/usr/share/junit-4/lib/junit.jar"
+add_to_classpath CLASSPATH "/usr/share/hamcrest-core/lib/hamcrest-core.jar"
 
 
 # add default browser
@@ -264,29 +264,15 @@ if [[ $EUID -eq 0 ]] ; then
 fi
 
 # add the filesystem from the home directory to the PATH
-if [ -d "$HOME/filesystem/bin" ]
-then
-	export PATH="$PATH:$HOME/filesystem/bin"
-
-fi
+add_to_path PATH "$HOME/filesystem/bin"
 
 # if we have our filesystem, then make sure the python path
 # is set correctly within it
-if [ -d "$HOME/filesystem/lib" ]
-then
-	for f in $HOME/filesystem/lib/python*
-	do
-		echo "adding ${f}..."
-		export PYTHONPATH="$PYTHONPATH:${f}/site-packages/"
-	done
-fi
+for f in $HOME/filesystem/lib/python*
+do
+	add_to_path PYTHONPATH "${f}/site-packages/"
+done
 
-# I DON'T THINK I NEED THIS ANYMORE
-# add a python path for modules I have installed myself
-#if [ -d "$HOME/python_modules/" ]
-#then
-#	export PYTHONPATH="$PYTHONPATH:$HOME/python_modules/"
-#fi
 
 # source the local rc file with local commands
 if [ -f "$HOME/.local-bashrc" ]

@@ -102,3 +102,61 @@ function get_correct_filename_from_choices()
 		fi
 	done
 }
+
+# Add a path to a $*PATH enviroment variable.  This works for $PATH,
+# $PYTHONPATH, $CLASSPATH, etc.  It only adds the path if it is not already
+# present.  Also, it checks to make sure this is a valid path before it
+# is added.
+#
+# $1 is the path enviroment variable to use, "PYTHONPATH", "PATH", etc.
+# $2 is the path to add.
+# $3 is "back" if you want to add this path to the end, and "front" if you want to
+#	 add this path to the beginning.
+# $4 whether or not to check if the directory exists
+function add_to_path_side()
+{
+	envvar="$1"
+	currentval="$(eval "echo $(echo '$'$envvar)")"
+	path="${2}"
+	side="$3"
+	checkifexists="$4"
+
+	# remove the trailing '/' from $path, if it exists.
+	path="${path%'/'}"
+
+	if [[ "$checkifexists" = "yes" && ! -d "$path" ]] ; then
+		#echo "not adding ${path} to "'$'"${envvar} because it is not a valid path" >&2
+		return
+	fi
+
+	if [[ ":${currentval}:" = *":${path}:"* ]] ; then
+		#echo "not adding ${path} to "'$'"${envvar} because it already is in "'$'"${envvar}" >&2
+		return
+	fi
+
+	if [[ "$side" = "front" || "$side" = "beginning" ]] ; then
+		export "$envvar"="${path}:${currentval}"
+	elif [[ "$side" = "back" || "$side" = "end" ]] ; then
+		export "$envvar"="${currentval}:${path}"
+	fi
+}
+
+function add_to_path()
+{
+	add_to_path_side "$1" "$2" "back" "yes"
+}
+
+function add_to_classpath()
+{
+	add_to_path_side "$1" "$2" "back" "no"
+}
+
+function prepend_to_path()
+{
+	add_to_path_side "$1" "$2" "front" "yes"
+}
+
+function prepend_to_classpath()
+{
+	add_to_path_side "$1" "$2" "front" "no"
+}
