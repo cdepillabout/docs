@@ -129,7 +129,8 @@ def main():
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--build-dir', '-b', action='store', 
-            help="use a separate build directory", default="./build")
+            help="use a separate build directory, defaults to \"build/\"", 
+            default="./build")
     group.add_argument('--no-build-dir', '-n', action='store_true', 
             help="don't use a separate build directory")
 
