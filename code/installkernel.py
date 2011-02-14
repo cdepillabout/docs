@@ -2,7 +2,15 @@
 """
 Install the current kernel, from anywhere in the kernel source tree.
 """
-import os, sys, argparse, subprocess, tempfile, pwd, grp, shutil
+import argparse
+import errno
+import grp
+import os
+import pwd
+import shutil
+import subprocess
+import sys
+import tempfile
 
 def goto_ksrc_root():
     """
@@ -35,12 +43,18 @@ def debug_print_cur_ids():
     os.close(fd)
     os.remove(name)
 
-def run_command(command, dropprivs=True, replaceusergroup=False):
+def run_command(command=None, function=None, dropprivs=True, 
+        replaceusergroup=False):
     """
-    Run `command`. Drop privs to user running sudo if dropprivs is True.
-    Replace strings SUDOUSER and SUDOGROUP with the user running sudo
-    if replaceusergroup is True.
+    Run `command` or python function. Drop privs to user running sudo if
+    dropprivs is True.  Replace strings SUDOUSER and SUDOGROUP with the user
+    running sudo if replaceusergroup is True.
     """
+    if command is None and function is None:
+        raise Exception("Either command or function must be passed.")
+    if not command is None and not function is None:
+        raise Exception("Either command or function must be passed.")
+
     pid = os.fork()
     if not pid:
         owner_uid = os.stat(".").st_uid     # owner of the kernel sources
@@ -75,22 +89,36 @@ def run_command(command, dropprivs=True, replaceusergroup=False):
         # need to get this 
         cur_user_name = pwd.getpwuid(os.getuid()).pw_name
 
-        print("Running `%s`..." % command)
-        retcode = subprocess.call(command, shell=True, stdout=sys.stdout, stderr=sys.stderr)
-        if retcode < 0:
-            sys.stderr.write("ERROR: `%s` was terminated by signal %s.\n" % 
-                    (command, -retcode))
-            sys.exit(1)
-        elif retcode > 0:
-            sys.stderr.write("ERROR: `%s` failed while "
-                    "running as user %s.\n" % (command, cur_user_name))
-            sys.exit(1)
-        print "Finished `%s`.\n" % command
-        sys.exit(0)
+        if command:
+            print("Running `%s`..." % command)
+            retcode = subprocess.call(command, shell=True, stdout=sys.stdout, stderr=sys.stderr)
+            if retcode < 0:
+                sys.stderr.write("ERROR: `%s` was terminated by signal %s.\n" % 
+                        (command, -retcode))
+                sys.exit(1)
+            elif retcode > 0:
+                sys.stderr.write("ERROR: `%s` failed while "
+                        "running as user %s.\n" % (command, cur_user_name))
+                sys.exit(1)
+            print "Finished `%s`.\n" % command
+            sys.exit(0)
+        else:
+            function()
+            sys.exit(0)
     else:
         waitpid, exit_status = os.wait()
         if exit_status != 0:
             sys.exit(1)
+
+def mkdir_no_error(directory):
+    """
+    Make sure the directory exists, but don't raise an exception if it does.
+    """
+    try:
+        os.makedirs(directory)
+    except OSError, e:
+        if e.errno != errno.EEXIST:
+            raise e
 
 def main():
     parser = argparse.ArgumentParser(description="Install the current kernel.")
@@ -98,16 +126,51 @@ def main():
             help="run `make` first")
     parser.add_argument('--make-install-modules', '-i', action='store_true', 
             help="run `make modules_install`")
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--build-dir', '-b', action='store', 
+            help="use a separate build directory", default="./build")
+    group.add_argument('--no-build-dir', '-n', action='store_true', 
+            help="don't use a separate build directory")
+
     args = parser.parse_args()
+
+    if args.no_build_dir:
+        builddir = ""
+    else:
+        builddir = args.build_dir
 
     goto_ksrc_root()
 
+    # make the builddir if it doesn't exist, make sure there is a 
+    # .config available, and finally run make
     if args.make:
-        run_command("make")
+        if builddir:
+            run_command(function=(lambda: mkdir_no_error(builddir)))
+
+            if not os.path.exists(os.path.join(builddir, ".config")):
+                sys.stderr.write("No kernel .config in build dir %s\n" %
+                        os.path.abspath(builddir))
+                sys.exit(1)
+
+            run_command(command="make O=%s" % builddir)
+
+        else:
+            if not os.path.exists(os.path.join(".", ".config")):
+                sys.stderr.write("No kernel .config in build dir %s\n" %
+                        os.path.abspath("."))
+                sys.exit(1)
+
+            run_command("make")
 
     if args.make_install_modules:
-        run_command("make modules_install", dropprivs=False)
-        run_command("chown -R SUDOUSER:SUDOGROUP .", dropprivs=False,
+        if builddir:
+            run_command(command="make O=%s modules_install" % builddir, 
+                    dropprivs=False)
+        else:
+            run_command(command="make modules_install", dropprivs=False)
+
+        run_command(command="chown -R SUDOUSER:SUDOGROUP .", dropprivs=False,
                 replaceusergroup=True)
 
 
@@ -124,13 +187,13 @@ def main():
     p = subprocess.Popen(["uname", "-m"], stdout=subprocess.PIPE)
     arch = p.communicate()[0].strip()
 
-    bzimage = "arch/%s/boot/bzImage" % arch
+    bzimage = os.path.join(builddir, "%s/arch/%s/boot/bzImage" % arch)
     bzimage_install_path = "/boot/bzImage-%s" % release
 
-    config = ".config"
+    config = os.path.join(builddir, ".config")
     config_install_path = "/boot/config-%s" % release
 
-    systemmap = "System.map"
+    systemmap = os.path.join(builddir, "System.map")
     systemmap_install_path = "/boot/System.map-%s" % release
 
     def install_file(file_name, install_path):
