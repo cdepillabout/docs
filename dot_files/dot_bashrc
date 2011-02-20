@@ -172,6 +172,12 @@ fi
 $PROMPT_COMMAND
 
 
+# get the autojump stuff in our prompt if it's available and we're not root
+if [[ $EUID -ne 0 ]] ; then
+	if [ -e "/etc/profile.d/autojump.bash" ] ;  then
+		source "/etc/profile.d/autojump.bash"
+	fi
+fi
 
 # set my locale for man
 alias man='LC_ALL="C" LANG="C" man'
@@ -223,6 +229,12 @@ alias gst='git status '
 
 # screen automatically connects to a running session
 alias screen='screen -R '
+
+# these are aliases for cd'ing and ls'ing at the same time
+function cd_and_ls(){ cd "$@" && ls; }
+function cd_and_lsl(){ cd "$@" && ls -l; }
+alias c='cd_and_ls '
+alias cl='cd_and_lsl '
 
 # don't record duplicate items in history or 
 # lines starting with a space ('$  ls -la')
