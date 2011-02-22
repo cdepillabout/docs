@@ -369,6 +369,8 @@ cpio -i --no-absolute-filenames < initramfs.cpio
 readelf -d racoon
 
 
+# **** BELOW IS WRONG.  YOU NEED TO PUT YOUR LIBRARIES IN /sys/lib OR 
+# **** SOMETHING LIKE THAT.
 # In order to use dynamic libraries on Android (like NSS), you must 
 # first compile your program against them as normal.  Then, 
 # create a directory on Android under /data/.  Something like
@@ -417,3 +419,8 @@ ifconfig eth0
 # port like this:
 jdb -attach localhost:8700
 
+# create break point
+jdb> stop in com.android.demo.notepad3.NoteEdit.onCreate
+
+# continue execution from break point
+jdb> cont
