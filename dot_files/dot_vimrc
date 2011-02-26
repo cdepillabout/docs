@@ -42,8 +42,10 @@ syntax on
 set ignorecase
 set smartcase
 
-" autocomplete options
-set tags+=TAGS;/,tags;/
+" this uses the tags file if it is found anywhere above this directory
+" in a file called tags.  If it can't find it, it then looks for a file
+" called build/tags in any directory above this one
+set tags+=tags;$HOME,build/tags;$HOME
 
 " always show a tabline
 set showtabline=2
