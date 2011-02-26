@@ -285,6 +285,26 @@ do
 	add_to_path PYTHONPATH "${f}/site-packages/"
 done
 
+# source local bashrc completion scripts if they are available
+local_bash_completion_dir="$HOME/filesystem/etc/bash_completion.d"
+if [ -d "$local_bash_completion_dir" ] ; then
+	if [ -f "/etc/bash_completion" ] ; then
+		# this have command gets unset at the end of /etc/bash_completion, 
+		#so we need to put it back in
+		have()
+		{
+			unset -v have
+			# Completions for system administrator commands are installed as well in
+			# case completion is attempted via `sudo command ...'.
+			PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin type $1 &>/dev/null &&
+			have="yes"
+		}
+
+		for f in $(LC_ALL=C command ls "$local_bash_completion_dir"); do
+			source "${local_bash_completion_dir}/${f}"
+		done
+	fi
+fi
 
 # source the local rc file with local commands
 if [ -f "$HOME/.local-bashrc" ]
