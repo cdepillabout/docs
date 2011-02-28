@@ -37,3 +37,17 @@ wodim -v dev=/dev/cdrw isoimage.iso
 
 # and this is how to burn wav files on arch
 wodim -v -pad speed=48 dev=/dev/cdrw -dao -swab *.wav
+
+
+# This is how to make a bootable iso image with mkisofs:
+# (Taken from http://syslinux.zytor.com/wiki/index.php/ISOLINUX)
+#
+# - The root of your cd will be called "CD_root".
+# - You need a directory under CD_root called "isolinux".
+# - You need a "isolinux.bin" under the isolinux directory.
+# - You need a "isolinux.cfg" uner the isolinux directory.
+# - You need directories "images" and "kernel" under CD_root.
+mkisofs -o output.iso -b isolinux/isolinux.bin -c isolinux/boot.cat \
+	-no-emul-boot -boot-load-size 4 -boot-info-table -J -R -U -l \
+	-joliet-long -iso-level=4 CD_root/
+
