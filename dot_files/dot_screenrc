@@ -21,6 +21,8 @@ autodetach on
 # Instead of Control-a, make the escape/command character be Control-b
 #escape ^Zz 
 
+# give more scroll back
+defscrollback 2000
 
 # turn on alternate screen support
 altscreen on
