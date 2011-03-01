@@ -118,6 +118,12 @@ nnoremap <A-8> 8gt
 nnoremap <A-9> 9gt
 nnoremap <A-0> 10gt
 
+" use <C-Enter> to jump to the tag under the cursor in a new tab.
+" Also check out "<C-w>T", it takes a split screen off to a new tab.
+" THIS DOESN'T WORK FOR SOME REASON:
+"nnoremap <C-{> <C-w><C-]><C-w>T
+" this can also be something like this:
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
 
 " F2 for turning on and off tag list
