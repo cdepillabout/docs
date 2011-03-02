@@ -258,6 +258,61 @@ command -nargs=+ -complete=file Tabopen call Tabopen_all_files(<f-args>)
 cabbrev tabo Tabopen
 
 
+" Convert all arguments to function from relative references to a file
+" based on the file currently being edited, so absolute references based 
+" on current working directory.
+"
+" For instance, if we are in /some/path/, and we are editing
+" /some/path/src/nice.c, then if we call this with :tabopen join.c,
+" the :tabopen function will get the argument src/join.c.
+function RelativeFunc(function, ...)
+	let file_basename = expand("%:p:h")
+	let relativefiles = copy(a:000)
+
+	let i = 0
+	while i < len(relativefiles)
+		"let relativefiles[i] = file_basename . "/" . relativefiles[i]
+		let relativefiles[i] = substitute(file_basename . "/" . relativefiles[i], getcwd() . "/", "", "")
+		let relativefiles[i] = simplify(relativefiles[i])
+		let i = i + 1
+	endwhile
+
+	call call(a:function, relativefiles)
+endfunction
+
+" A complete function for completing file names relative to the current
+" file being edited.  
+"
+" For instance, if we are in /some/path/, and we are editing
+" /some/path/src/nice.c, if we try to complete a path using this func, 
+" we will intially get a list of files in /some/path/src/, NOT /some/path/.
+function RelativeFilesComplete(ArgLead, CmdLine, CursorPos)
+	let file_basename = expand("%:p:h")
+	let path = file_basename . "/" . a:ArgLead
+
+	if isdirectory(path) && path[len(path) - 1] != "/"
+		let path = path . "/"
+	endif
+
+	let relativefiles = split(glob(path . "*"), "\n")
+
+	let index = 0
+	while index < len(relativefiles)
+		if isdirectory(relativefiles[index])
+			let relativefiles[index] .= "/"
+		endif
+		let relativefiles[index] = substitute(relativefiles[index], file_basename . "/" , "", "")
+		let index += 1
+	endwhile
+
+	return relativefiles
+endfunction
+
+
+command -nargs=+ -complete=customlist,RelativeFilesComplete 
+			\ RelativeTabopen call RelativeFunc(function('Tabopen_all_files'), <f-args>)
+cabbrev rt RelativeTabopen
+
 " Execute the line under the cursor.
 "function! ExecuteLine()
 "	let thisline = getline('.')
