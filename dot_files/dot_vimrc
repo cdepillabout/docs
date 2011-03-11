@@ -13,6 +13,8 @@ set softtabstop=4		" see multiple space characters as a tab
 set shiftround			" Indent to nearest tab stop
 set autoindent			" carries over previous indent to the next line
 
+set switchbuf=usetab,useopen,newtab
+
 " Tell vim to remember certain things when we exit
 "  '100 : marks will be remembered for up to 100 previously edited files
 "  "100 : will save up to 100 lines for each register
@@ -320,11 +322,17 @@ cabbrev rt RelativeTabopen
 "endfunction
 "nnoremap <silent> <C-R> :call ExecuteLine()<CR>
 
-" use command VGrep to list files in a vertical split
-command! -nargs=+ -bang Vgrep execute 'silent grep<bang> <args>' | vert copen 30
-command! -nargs=+ -bang Vlgrep execute 'silent lgrep<bang> <args>' | vert copen 30
-command! -nargs=+ -bang Grep execute 'silent grep<bang> <args>' | copen 10
-command! -nargs=+ -bang LGrep execute 'silent lgrep<bang> <args>' | copen 10
+" use command VGrep to list files in a vertical split. The '!' after grep
+" makes the command not jump to the first occurance that was found.
+command! -nargs=+ Vgrep execute 'silent grep! <args>' | vert copen 30
+command! -nargs=+ Vlgrep execute 'silent lgrep! <args>' | vert copen 30
+" use command Grep to list files in a new tab
+command! -nargs=+ Grep execute 'silent grep! <args>' | tab copen
+command! -nargs=+ LGrep execute 'silent lgrep! <args>' | tab copen
+
+" Autocommand to change what <CR> does on quickfix buffer.
+" (It changes <CR> to open the first result in a new tab).
+autocmd BufWinEnter * if &buflisted && &filetype == "qf" | noremap <buffer> <CR> <CR><C-W>T| endif
 
 " source ~/.vim/plugin/cscope_maps.vim
 " source ~/.vim/syntax/javascript.vim
