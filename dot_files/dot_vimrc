@@ -323,6 +323,8 @@ cabbrev rt RelativeTabopen
 " use command VGrep to list files in a vertical split
 command! -nargs=+ -bang Vgrep execute 'silent grep<bang> <args>' | vert copen 30
 command! -nargs=+ -bang Vlgrep execute 'silent lgrep<bang> <args>' | vert copen 30
+command! -nargs=+ -bang Grep execute 'silent grep<bang> <args>' | copen 10
+command! -nargs=+ -bang LGrep execute 'silent lgrep<bang> <args>' | copen 10
 
 " source ~/.vim/plugin/cscope_maps.vim
 " source ~/.vim/syntax/javascript.vim
