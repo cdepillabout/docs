@@ -79,3 +79,23 @@ VBoxManage setextradata "Linux Guest" "VBoxInternal/Devices/pcnet/0/LUN#0/Config
 # on the guest. Protocol can be either of TCP or UDP (these are case
 # insensitive). To remove a mapping again, use the same commands, but
 # leaving out the values (in this case TCP, 22 and 2222).
+
+
+#
+# Add a new network interface to our guest. 
+# (Since the GUI only allows us to configure 4 NICs, this
+# will allow us to add up to 8 NICs.)
+# (All of these were taken from the options listed on this page:
+# http://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)
+# 
+
+# Add a fifth NIC, make it bridged.
+# (eth0 is the interface on the host that it will bridge to)
+VBoxManage "Your VM Name" --nic5 bridged --bridgeadapter5 eth0
+
+# Add a sixth NIC, make it nat'd
+# (I haven't tested this, so I'm not exactly sure that it works.)
+VBoxManage "Your VM Name" --nic6 nat 
+
+# Disable the seventh NIC
+VBoxManage "Your VM Name" --nic7 none 
