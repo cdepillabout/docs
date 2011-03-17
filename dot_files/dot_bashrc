@@ -230,6 +230,31 @@ alias gst='git status '
 # screen automatically connects to a running session
 alias screen='screen -R '
 
+# SSH Get Auth Sock.
+# This is a command to automatically update the SSH_AUTH_SOCK env var.
+# (This is needed when connecting to a previously running
+# screen session, since the SSH_AUTH_SOCK variable will be the 
+# previous one we were using.  We need a new updated one
+# for this new connection.)
+function ssh-gas ()
+{
+	for arg in "$@" ; do
+		if [[ "$arg" == '-h' || "$arg" == "--help" ]] ; then
+			echo "Usage: ${FUNCNAME[0]} [-h]"
+			echo "Set SSH_AUTH_SOCK environment variable."
+			return
+		fi
+	done
+
+	_tmp_filename="`update-ssh-auth-sock`" 
+	if [[ -z "$_tmp_filename" ]] ; then
+		echo "ERROR: no auth sock available" 
+	else
+		source "$_tmp_filename" 
+		rm -rf "$_tmp_filename" 
+	fi
+}
+
 # these are aliases for cd'ing and ls'ing at the same time
 function cd_and_ls_func(){ 
 	cd "$@" && ls
