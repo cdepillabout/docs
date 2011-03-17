@@ -238,11 +238,15 @@ alias screen='screen -R '
 # for this new connection.)
 function ssh-gas ()
 {
+	local VERBOSE=""
+
 	for arg in "$@" ; do
 		if [[ "$arg" == '-h' || "$arg" == "--help" ]] ; then
-			echo "Usage: ${FUNCNAME[0]} [-h]"
+			echo "Usage: ${FUNCNAME[0]} [-h] [-v]"
 			echo "Set SSH_AUTH_SOCK environment variable."
 			return
+		elif [[ "$arg" == '-v' || "$arg" == "--verbose" ]] ; then
+			VERBOSE=1
 		fi
 	done
 
@@ -262,7 +266,9 @@ function ssh-gas ()
 	fi
 
 	# get the most recently added ssh auth sock
-	export SSH_AUTH_SOCK="$(echo "$agent_files" | tail -1)"
+	local auth_sock="$(echo "$agent_files" | tail -1)"
+	[ "$VERBOSE" ] && echo "using auth sock: $auth_sock"
+	export SSH_AUTH_SOCK="$auth_sock"
 }
 
 # these are aliases for cd'ing and ls'ing at the same time
