@@ -246,13 +246,23 @@ function ssh-gas ()
 		fi
 	done
 
-	_tmp_filename="`update-ssh-auth-sock`" 
-	if [[ -z "$_tmp_filename" ]] ; then
-		echo "ERROR: no auth sock available" 
-	else
-		source "$_tmp_filename" 
-		rm -rf "$_tmp_filename" 
+	# get all the existing agent files
+	shopt -q extglob
+	local SHOPT_PREV_VAL="$?"
+	shopt -s extglob
+	local agent_files="$(ls -rt /tmp/ssh-+([A-Za-z0-9 ])/agent.+([0-9]) 2>/dev/null)"
+	if  [ "$SHOPT_PREV_VAL" -eq "1" ] ; then
+		shopt -u extglob
 	fi
+
+	# make sure there actually are auth socks to get
+	if [ -z "$agent_files" ] ; then
+		echo "ERROR: no auth sock available" 
+		return
+	fi
+
+	# get the most recently added ssh auth sock
+	export SSH_AUTH_SOCK="$(echo "$agent_files" | tail -1)"
 }
 
 # these are aliases for cd'ing and ls'ing at the same time
