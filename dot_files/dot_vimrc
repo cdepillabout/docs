@@ -13,7 +13,11 @@ set softtabstop=4		" see multiple space characters as a tab
 set shiftround			" Indent to nearest tab stop
 set autoindent			" carries over previous indent to the next line
 
-set switchbuf=usetab,useopen,newtab
+if version <= 702
+	set switchbuf=usetab,useopen
+else
+	set switchbuf=usetab,useopen,newtab
+endif
 
 " Tell vim to remember certain things when we exit
 "  '100 : marks will be remembered for up to 100 previously edited files
