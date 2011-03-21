@@ -17,6 +17,11 @@ if [[ -e "${HOME}/docs/code/library.sh" ]] ; then
 	source "${HOME}/docs/code/library.sh"
 fi
 
+# source the global /etc/profile
+if [[ -f "/etc/profile" ]] ; then
+	source "/etc/profile"
+fi
+
 # Enable colors for ls, etc.
 if [ -x "`get_location_of_file dircolors`" ]; then
 	eval "`dircolors -b`"
