@@ -424,3 +424,32 @@ jdb> stop in com.android.demo.notepad3.NoteEdit.onCreate
 
 # continue execution from break point
 jdb> cont
+
+
+
+### 
+### Working with android projects from the command line.
+###
+
+# create a new android project
+android create project \
+	--target <target_ID> \				# use `android list targets` to get all the possible targets
+	--name <your_project_name> \		# this is used for .apk filename when building application
+	--path path/to/your/project \
+	--activity <your_activity_name> \
+	--package <your_package_namespace>
+
+# here is an example
+android create project \
+	--target 4 \
+	--name MyAndroidApp \
+	--path ./MyAndroidAppProject \
+	--activity MyAndroidAppActivity \
+	--package com.example.myandroid
+
+# update the target for a project
+android update project \
+	--name <your_project_name> \
+	--target <target_ID> \
+	--path path/to/your/project
+
