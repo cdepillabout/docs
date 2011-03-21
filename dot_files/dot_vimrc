@@ -234,18 +234,27 @@ function Tabopen_all_files(...)
 	while i <= a:0
 		let filelist = split(glob(a:{i}), "\n")
 
-		" loop over files in the glob, opening each one
-		let j = 0
-		while j < len(filelist)
-			execute "tabedit " . filelist[j]
-			" if this is the first new tab that we're opening,
-			" we have to save the tab number so we can come back here
-			" after we're done opening all the other tabs
-			if i == 1 && j == 0
+		if len(filelist) == 0
+			" if there are no files in the glob, then we just pass it to
+			" tabedit
+			execute "tabedit " . a:{i}
+			if i == 1
 				let firstnewtab = tabpagenr()
 			endif
-			let j = j + 1
-		endwhile
+		else
+			" loop over files in the glob, opening each one
+			let j = 0
+			while j < len(filelist)
+				execute "tabedit " . filelist[j]
+				" if this is the first new tab that we're opening,
+				" we have to save the tab number so we can come back here
+				" after we're done opening all the other tabs
+				if i == 1 && j == 0
+					let firstnewtab = tabpagenr()
+				endif
+				let j = j + 1
+			endwhile
+		endif
 
 		let i = i + 1
 	endwhile
