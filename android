@@ -58,6 +58,10 @@ END_OF_FILE
 # http://android.git.kernel.org/?p=platform/build.git;a=summary
 5. repo init -u git://android.git.kernel.org/platform/manifest.git -b android-2.2_r1.1
 
+# In order to switch a branch on an existing checkout, you can use the previous
+# command without with the -u parameter
+repo init -b gingerbread
+
 
 # Download the files form the repositories.
 # This will take awhile to complete (about an hour). When I did it it resulted in 4.5GB of downloaded data.
@@ -452,4 +456,5 @@ android update project \
 	--name <your_project_name> \
 	--target <target_ID> \
 	--path path/to/your/project
+
 
