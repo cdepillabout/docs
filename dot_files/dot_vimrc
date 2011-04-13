@@ -12,6 +12,7 @@ set shiftwidth=4		" allows you to use < and > to indent/unindent blocks
 set softtabstop=4		" see multiple space characters as a tab
 set shiftround			" Indent to nearest tab stop
 set autoindent			" carries over previous indent to the next line
+set smarttab			" A tab infront of a line inserts spaces or tabs according to expandtab
 
 if version <= 702
 	set switchbuf=usetab,useopen
