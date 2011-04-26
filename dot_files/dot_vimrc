@@ -108,6 +108,10 @@ imap <F5> <ESC>:set hlsearch!<CR>a
 map <F6> :set paste!<CR>
 imap <F6> <ESC>:set paste!<CR>a
 
+" use F7 for turning on and off list mode
+map <F7> :set list!<CR>
+imap <F7> <ESC>:set list!<CR>a
+
 " use <C-h> and <C-l> to go forward and backward in tabs
 " nnoremap just makes a normal mode mapping
 nnoremap <C-h> gT
