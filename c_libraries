@@ -12,6 +12,66 @@ ld -dynamic-linker /lib/ld-linux-x86-64.so.2 --verbose hello.o -o hello_ld \
 	-lc  \
 	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtend.o /usr/lib/crtn.o
 
+
+# Produce a dynamic library using just ld to link (not gcc)
+ld --verbose -shared -o libmy_special_library.so.2.0.0 \
+	/usr/lib/crti.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.2/crtbeginS.o \
+	-soname libmy_special_library.so.2 object_file1_pic.o object_file2_pic.o -lc \
+	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.2/crtendS.o /usr/lib/crtn.o
+
+# It's possibly to override void _init(void) and void _fini(void) functions
+# from your library.  These functions get called the first time a library is 
+# loaded.  The are defined in /usr/lib/crti.o, so in order to use them, you 
+# must not link against crti.o.
+ld --verbose -shared -o libmy_special_library.so.2.0.0 \
+	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.2/crtbeginS.o \
+	-soname libmy_special_library.so.2 object_file1_pic.o object_file2_pic.o -lc \
+	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.2/crtendS.o /usr/lib/crtn.o
+# Then, in your c code, you can do something like this. _init() gets called
+# when your library is loaded, and _fini gets called when your library is unloaded.
+# More info is gived on this page 
+# (http://hackerboss.com/overriding-system-functions-for-fun-and-profit/)
+# with emphasis on using this to override functions from other libraries (for instance,
+# how valgrind overrides malloc() and free()).
+void _init(void)
+{
+	printf("Inside _init()\n"); 
+} 
+
+void _fini()
+{
+	printf("Inside _fini()\n"); 
+}
+
+# But rather than doing the above, the _init() and _fini()-like functions 
+# are better off implemented using the code below.  This is specific to gcc.
+void __attribute__ ((constructor)) my_init(void)
+{
+	printf("Inside my_init()\n"); 
+}
+void __attribute__ ((destructor)) my_fini(void)
+{
+	printf("Inside my_fini()\n"); 
+}
+
+
+# Statically link the file.
+# "--start-group ... --end-group":
+#	The specified archives are searched repeatedly until no new undefined references are created.
+#	Normally, an archive is searched only once in the order that it is specified on the command line.
+#	If a symbol in that archive is needed to resolve an undefined symbol referred to by an object in an
+#	archive that appears later on the command line, the linker would not be able to resolve that
+#	reference.  By grouping the archives, they all be searched repeatedly until all possible references
+#	are resolved.
+ld -verbose -static -o hello_ld_static \
+	/usr/lib/crt1.o /usr/lib/crti.o 
+	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtbeginT.o \
+	-L/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0 hello.o \
+	--start-group  -lgcc_eh -lgcc -lc --end-group \
+	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtend.o \
+	/usr/lib/crtn.o 
+
+
 # you can use nm to check which symbols an object file (for instance, crt1.o) exports.
 nm /usr/lib/crt1.o
 # The output of this command is:
@@ -50,21 +110,6 @@ nm /usr/lib/crt1.o
 #					that a default value has been specified.
 
 
-# Statically link the file.
-# "--start-group ... --end-group":
-#	The specified archives are searched repeatedly until no new undefined references are created.
-#	Normally, an archive is searched only once in the order that it is specified on the command line.
-#	If a symbol in that archive is needed to resolve an undefined symbol referred to by an object in an
-#	archive that appears later on the command line, the linker would not be able to resolve that
-#	reference.  By grouping the archives, they all be searched repeatedly until all possible references
-#	are resolved.
-ld -verbose -static -o hello_ld_static \
-	/usr/lib/crt1.o /usr/lib/crti.o 
-	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtbeginT.o \
-	-L/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0 hello.o \
-	--start-group  -lgcc_eh -lgcc -lc --end-group \
-	/usr/lib/gcc/x86_64-unknown-linux-gnu/4.5.0/crtend.o \
-	/usr/lib/crtn.o 
 
 
 # Extract object files from a .a library
@@ -72,8 +117,89 @@ ar vx /usr/lib/libcurl.a
 # You can also just use nm to list the files on the archive.
 nm -s /usr/lib/libcurl.a
 
-# To create a library out of object files, you can use a command like this
-ar rcs my_library.a file1.o file2.o
+
+
+
+
+##########
+# Create sLD_LIBRARY_PATH="myspeciallibrary/" LD_DEBUG=files ./using_my_special_library_gcc_dynamic_dynamic_libtatic library out of object files and link
+# to that library.
+##########
+
+# To create a static library out of object files, you can use a command like this
+# (Note, the library must start with the three letters "lib".)
+ar rcs libmy_library.a file1.o file2.o
+
+# This is how you link against this static library
+gcc -static main.c -L library_directory -lmy_library -o main
+
+##########
+# Create dynamic library out of object files and link
+# to that library.
+##########
+
+# To create a shared library out of object files, the object files must first be
+# compiled with -fPIC (position independent code).
+gcc -c -fPIC file1.c -o file1.o
+
+# Then, a shared library can be created.
+# (When ld/gcc links in this library, it puts it at "libmy_library.so.1", so
+# you must have a softlink on you LD_LIBRARY_PATH from libmy_library.so.1 to
+# libmy_library.so.1.0.1.  In this example, the "soname" is "libmy_library.so.1",
+# and the "real name" is "libmy_library.so.1.0.1".)
+gcc -shared -fPIC -Wl,-soname,libmy_library.so.1 -o libmy_library.so.1.0.1 file1.o file2.o
+
+# You will need to create soft links to your library (so that libmy_library.so.1
+# is a softlink to libmy_library.so.1.0.1).  ldconfig will do this for you
+# automatically.
+ldconfig -v -n library_directory/
+
+# You also need to create a softlink for the linker. 
+ln -sf libmy_library.so.1 libmy_library.so
+
+# You can link against this library like this
+gcc main.c -o main -L library_directory -lmy_library
+
+# When running this program, libmy_library.so.1 must be on the LD_LIBRARY_PATH
+LD_LIBRARY_PATH="/path/to/library_directory" ./main
+
+# In order to get the linker to tell you what it's doing, you can use the
+# LD_DEBUG envvar.
+LD_LIBRARY_PATH="/path/to/library_directory" LD_DEBUG=files ./main
+# LD_DEBUG will also give help about possible options.
+LD_LIBRARY_PATH="/path/to/library_directory" LD_DEBUG=help ./main
+
+
+################
+# A note on shared library names.
+################
+
+# - There are three different names associated with a library, the "real name",
+# the "soname", and the "linker name".
+#
+# - The "soname" has the prefix "lib", the name of the library, and a version
+# number.  This is the name given to the gcc linking options.  In our previous
+# example, the soname is "libmy_library.so.1.
+#
+# - The "real name" is the actual name of the file on disk.  It adds to the
+# soname a minor number and a release number (the release number is optional).
+#
+# - (NOTE: ldconfig will create a soft link for you from the real name to the
+# soname.)
+#
+# - The "linker name" is the name that the compiler uses when requesting a
+# library.  In our previous example, this would be "libmy_library.so".
+# ldconfig will not create this link for you.  The reason is that you might
+# not want to run code using the latest version of a library, but might instead
+# want development to link against an old (possibly incompatible) library.
+# Therefore, ldconfig makes no assumptions about what you want programs to link
+# to, so installers must specifically modify symbolic links to update what the
+# linker will use for a library.
+
+
+
+# The GNU loader permits shared libraries to be text files using a specialized
+# scripting language instead of the usual library format.
 
 
 # show memory mapping of cat process.
@@ -90,6 +216,8 @@ cat /proc/self/mem
 
 
 # Show the shared libraries a binary is linked to.
+# (NOTE: do not run ldd on a program you don't trust. The program could
+# execute arbitrary code.)
 ldd /bin/cat
 # There's more than one way to skin a cat....
 /lib/ld-linux-x86-64.so.2 --list /bin/cat
