@@ -416,3 +416,21 @@ tac FILE
 
 # reverse output from ls
 ls /some/dir | tac
+
+
+### profiling
+#
+# use perf to record performance for 10 secs 
+# (this just runs the command sleep for 10s and records the
+# performance of the system during that time)
+perf record -a -g sleep 10
+# This displays an interactive report to look at
+$ perf report --sort comm,dso 
+#
+# use sysprof to record performance of the system 
+# (this is a GUI :-\)
+sysprof
+#
+# use atop to get really detailed performance of the system
+atop
+#
