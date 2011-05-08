@@ -1,0 +1,73 @@
+
+- electric field: the field created by charge particles which exerts a force on 
+  other charge particles.  Electric fields propogate through air, but travel 
+  even better through conductive materials.
+
+- magnetic field: the field created by moving charge particles or time-varying 
+  electric fields which exerts a force on other moving charge particles.
+
+- voltage: the difference in electrical potential between two locations, which 
+  is equal to the integral of the electric field and changing magnetic fields.
+
+  The voltage associated with a circuit element is the energy transferred per 
+  unit of charge that flows through the element. The units of voltage are volts 
+  (V), which are equivalent to joules per coulomb (J/C).  For example, consider 
+  the storage battery of an automobile.  The voltage across the terminals is 
+  12V.  This means that 12 J are transfered to or from the battery for each 
+  coulomb that flows through it.
+
+  Voltages are assigned polarities that indicate the direction of energy flow.  
+  If positive charge moves from the positive polarity through the element 
+  toward the negative polarity, the element absorbs energy that appears as 
+  heat, mechanical energy, stored chemical energy, or as some other form. If 
+  positive charge moves from the negative polarity toward the positive 
+  polarity, the element supplies energy.
+
+- current: the quantity of charge particles moving along a path, typically a 
+  wire.
+
+  Electrical current is the time rate of flow of electrical charge through a 
+  conductor or circuit element.  The units are amperes (A), which are 
+  equivalent to coulombs per second (C/s).
+
+  In equations, current is often denoted as an italic i.
+
+- power: the rate of energy transfer or consumption.
+  
+  Because the current (i) is the rate of flow of charge and the voltage (v) is 
+  a measure of the energy transferred per unit of charge, the product of the 
+  current and the voltage is the rate of energy transfer.  So, p = vi.
+
+  Power is denoted by W, for watts.
+  
+- electron: the subatomic negatively charged particle that usually creates a 
+  current.
+
+- capacitance
+
+- resistor
+
+- capacitor
+
+- inductor
+
+- diode
+
+- operational amplifier (op-amp, OP-amp, etc.)
+
+- Ohm’s Law (V = IR): The voltage (v) across an ideal resistor is proportional 
+  to the current (i) through the resistor.  The constant of this 
+  proportionality is the resistance (R).  The unit of resistance is V/A, or 
+  ohms.
+
+- Power (P = IV)
+
+- Kirchoff’s current law: the net entering a node is zero.  To compute the net 
+  current, we add the currents entering and subtract the currents leaving.
+
+- Resistors in series
+
+- Resistors in parallel
+
+- Laws of ideal op-amps
+
