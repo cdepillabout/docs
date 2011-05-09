@@ -45,15 +45,22 @@
 
 - capacitance
 
-- resistor
+- resistor: convert electrical energy into heat.  This resists the flow of 
+  current.
 
-- capacitor
+- capacitor: constructed by separating two sheets of conductor, which is 
+  usually metallic, by a thin layer of insulating material. This stores energy 
+  as an electric field.
 
-- inductor
+- inductor: constructed by coiling a wire around some type of form.  This 
+  stores energy as a magnetic field.
 
-- diode
+- diode: only allow current to flow in one direction. can convert ac to dc. all 
+  diodes emit radiation (usually infrared), but some light emitting diodes 
+  (LEDs) are designed to produce visible light.
 
-- operational amplifier (op-amp, OP-amp, etc.)
+- operational amplifier (op-amp, OP-amp, etc.): provide robust, stable 
+  amplification of an input signal.
 
 - Ohm’s Law (V = IR): The voltage (v) across an ideal resistor is proportional 
   to the current (i) through the resistor.  The constant of this 
@@ -65,9 +72,12 @@
 - Kirchoff’s current law: the net entering a node is zero.  To compute the net 
   current, we add the currents entering and subtract the currents leaving.
 
-- Resistors in series
+- Resistors in series: They have their resistance added together, to get an 
+  equivalent resistance.  So, Req = E(Ri)
 
-- Resistors in parallel
+- Resistors in parallel: Their equivalent resistance the inverse of the sum of 
+  the inverse of the resistances in parallel, so Req = 1 / (E(1/Ri)). Two 
+  resistors in parallel just become Req = (R1 * R2) / (R1 + R2).
 
 - Laws of ideal op-amps
 
