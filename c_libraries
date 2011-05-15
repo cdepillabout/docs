@@ -232,3 +232,7 @@ ldconfig
 # Display contents of /etc/ld.so.cache
 ldconfig -p
 
+
+# after installing a new glibc, this can be used to make gcc link to new glibc
+LD_LIBRARY_PATH="$HOME/filesystem/lib" gcc main.c -o main \
+	-Wl,--dynamic-linker=/path/to/new/lib/ld-linux-x86-64.so.2
