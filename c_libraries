@@ -235,4 +235,18 @@ ldconfig -p
 
 # after installing a new glibc, this can be used to make gcc link to new glibc
 LD_LIBRARY_PATH="$HOME/filesystem/lib" gcc main.c -o main \
-	-Wl,--dynamic-linker=/path/to/new/lib/ld-linux-x86-64.so.2
+	-Wl,--dynamic-linker=/path/to/new/lib/ld-linux-x86-64.so.2 \
+	-L /path/to/new/lib/
+
+# Due to the way code is generated on some architectures it is possible to
+# delay the processing of some relocations until the references in question are
+# actually used.  To perform all the relocations before using the object, set
+# the environment variable LD BIND NOW to a non-empty value. Lazy relocation
+# can be disabled for an individual object by adding the "-z now" option to the
+# linker command line. The linker will set the DF_BIND_NOW flag in the DT_FLAGS
+# entry of the dynamic section to mark the DSO. This setting cannot be undone
+# without relinking the DSOs or editing the binary, though, so this option
+# should only be used if it is really wanted.
+gcc main.c -o main -L /home/dgosnell/filesystem/lib/ \
+	-Wl,--dynamic-linker=$HOME/filesystem/lib/ld-linux-x86-64.so.2,-z,now 
+
