@@ -22,6 +22,12 @@ map b <PageUp>
 map x zi
 map c zo
 
+" this is a hack because the author thought to make the 
+" minimum width of tabs REALLY small.  He says he will
+" change it back, so this hack may not be needed in the future
+" (http://code.google.com/p/vimperator-labs/issues/detail?id=575)
+js styles.removeSheet(true, "mintabwidth", "", "", 0);
+
 set editor="roxterm --separate -e vim -f"
 set guioptions=mTBnrb
 set runtimepath=/home/illabout/.vimperator
