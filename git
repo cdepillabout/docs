@@ -590,3 +590,10 @@ git symbolic-ref HEAD refs/heads/master
 # reflog can show you what your head pointer to at many different times.
 # This can often save the day if you think you lost work.
 git reflog
+
+
+# Show unreachable objects
+git fsck --unreachable
+
+# Show all unreachable commits in gitk
+git fsck --unreachable | grep commit | cut -f3 -d' ' | xargs gitk --all
