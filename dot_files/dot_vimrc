@@ -75,6 +75,7 @@ hi PmenuSel ctermbg=lightblue
 hi Normal guibg=black
 
 
+
 " settings specifically for java from 
 " http://vimdoc.sourceforge.net/htmldoc/syntax.html
 let java_highlight_java_lang_ids=1
@@ -382,6 +383,39 @@ call Add_auto_foldmethod("xml", "syntax")
 call Add_auto_foldmethod("xsd", "syntax")
 call Add_auto_foldmethod("ant", "syntax")
 call Add_auto_foldmethod("javascript", "indent")
+
+" Kind of like above, add a method specifying whether or not we
+" want to highlight spaces at the end of a line
+function Add_eol_whitespace_highlighting(syntax_of_file)
+	" autocmd InsertEnter/Leave doesn't seem to work just by giving the group
+	" (like "c"), so we have to do this horrible, horrible thing.  In order to
+	" understand this, first run "autocmd Syntax", and then look at "autocmd
+	" InsertEnter" or "autocmd InsertLeave".  It should make a little more
+	" sense.
+	execute "autocmd Syntax * "
+		\ "if expand(\"<amatch>\") == \"" . a:syntax_of_file . "\" | "
+		\ "execute \"autocmd InsertEnter <buffer> "
+		\ " syn clear EOLWS | syn match EOLWS excludenl /\\\\s\\\\+\\\\%#\\\\@!$/\" | "
+		\ " endif "
+	execute "autocmd Syntax * "
+		\ "if expand(\"<amatch>\") == \"" . a:syntax_of_file . "\" | "
+		\ "execute \"autocmd InsertLeave <buffer> "
+		\ " syn clear EOLWS | syn match EOLWS excludenl /\\\\s\\\\+$/\" | "
+		\ " endif "
+	" create the highlight group we are using
+	execute "autocmd Syntax " . a:syntax_of_file . 
+		\ " highlight EOLWS ctermbg=white guibg=white"
+	" now just run the command to actually highlight spaces at the end of lines so 
+	" we see them as soon as we open the file
+	execute "autocmd Syntax " . a:syntax_of_file . 
+		\ " syn clear EOLWS | syn match EOLWS excludenl /\\s\\+$/"
+endfunction
+
+call Add_eol_whitespace_highlighting("c")
+call Add_eol_whitespace_highlighting("cpp")
+call Add_eol_whitespace_highlighting("java")
+" Actually, I don't know if these will work.  It might have to be "py" instead
+call Add_eol_whitespace_highlighting("python")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
