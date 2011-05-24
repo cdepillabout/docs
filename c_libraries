@@ -250,3 +250,10 @@ LD_LIBRARY_PATH="$HOME/filesystem/lib" gcc main.c -o main \
 gcc main.c -o main -L /home/dgosnell/filesystem/lib/ \
 	-Wl,--dynamic-linker=$HOME/filesystem/lib/ld-linux-x86-64.so.2,-z,now 
 
+
+# Run gcc without linking to the normal standard c libraries.
+# Other possible options are -nostartfiles and -nodefaultlibs
+gcc -g -c start.S -o start.o
+gcc -nostdlib start.o -o start
+# In one line
+gcc -nostdlib -g start.S -o start
