@@ -434,3 +434,8 @@ sysprof
 # use atop to get really detailed performance of the system
 atop
 #
+
+
+
+# when in bash, you can edit the current command line
+# in $EDITOR by using Ctrl-X Ctrl-E.
