@@ -72,16 +72,26 @@ export LESSOPEN="| ${less_pipe_location} %s"
 # strict umask
 umask 0077
 
-# make bash check the window size after each command
-shopt -s checkwinsize
+# have bash check if an option is supported and set it if it is.
+# There are many options (like globstar and autocd) that are only
+# available in bash 4+.
+shopt_check_and_set() {
+	option="$1"
+	if [ -n "$(shopt -p | grep "${option}")" ] ; 
+	then
+		shopt -s "${option}"
+	fi
 
-# bash will automatically change directory if you just type the directory
-# on the command line.  (We need to check if shopts supports autocd.  
-# I think this is only in bash4+).
-if [ -n "$(shopt -p | grep autocd)" ] ; 
-then
-	shopt -s autocd
-fi
+}
+
+# make bash check the window size after each command
+shopt_check_and_set "checkwinsize"
+
+# automatically change directory if you just type the directory on the command line.  
+shopt_check_and_set "autocd"
+
+# be able to use ** to match all subdirs
+shopt_check_and_set "globstar"
 
 # this escape sequence is used so that screen can set
 # the window title
