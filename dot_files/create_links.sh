@@ -67,3 +67,6 @@ super_link $HOME/docs/dot_files/dot_vimperatorrc $HOME/.vimperatorrc
 
 # eclim
 super_link $HOME/docs/dot_files/dot_eclimrc $HOME/.eclimrc
+
+# mercurial
+super_link $HOME/docs/dot_files/dot_hgrc $HOME/.hgrc
