@@ -4,6 +4,11 @@
 
 source ~/docs/code/library.sh
 
+RATIO_4_3="$(echo "4 / 3" | bc -l)"
+RATIO_16_9="$(echo "16 / 9" | bc -l)"
+
+# TODO: take list of files
+
 # takes two numbers as arguments and says whether they are close
 # or not (based on some allowed difference).  So a sample function
 # call could be `close_to 1.1 1.2 0.1`, which would return "yes"
@@ -27,9 +32,6 @@ function change_ratio
 {
 
 	local input_movie="$1"
-
-	local RATIO_4_3="$(echo "4 / 3" | bc -l)"
-	local RATIO_16_9="$(echo "16 / 9" | bc -l)"
 
 	# try to parse the filename to find the video size.
 	echo "$input_movie" | grep -P "\d{3,}(x|X)\d{3,}" 1>/dev/null 2>&1
@@ -102,6 +104,34 @@ function change_extension
 	echo "${extensionless_input_movie}.${new_extension}"
 }
 
+# this sets $new_file_width and $new_file_height using values from midentify
+# (this should only be used if the ratio can't be found in the file name)
+function change_ratio_using_midentify
+{
+	local identifyinfo=$(mplayer -vo null -ao null -frames 0 -identify "$@" 2>/dev/null |
+	sed -ne '/^ID_/ {
+	s/[]()|&;<>`'"'"'\\!$" []/\\&/g;p
+					}')
+
+	local input_movie_width="$(grep ID_VIDEO_WIDTH <<<"$identifyinfo" | sed -e 's/^.*=//')"
+	local input_movie_height="$(grep ID_VIDEO_HEIGHT <<<"$identifyinfo" | sed -e 's/^.*=//')"
+	local input_movie_ratio="$(echo "${input_movie_width} / ${input_movie_height}" | bc -l)"
+
+	# get the new reduced video ratio (based on the old one)
+	if [[ `close_to $input_movie_ratio $RATIO_4_3 0.1` ]] ; then
+		new_file_width="640"
+		new_file_height="480"
+	elif [[ `close_to $input_movie_ratio $RATIO_16_9 0.1` ]] ; then
+		new_file_width="704"
+		new_file_height="396"
+	else
+		DEBUG echo "movie ratio is ${input_movie_width}/${input_movie_height}:" \
+			" ${input_movie_ratio} " >&2
+		DEBUG echo "Error! Could not find the correct ratio for the input file $input_movie" >&2
+		exit 1
+	fi
+}
+
 # replace the ratio with the correct one
 new_file_name="$(change_ratio "$input_movie")"
 DEBUG echo "new file name after ratio change: $new_file_name"
@@ -123,15 +153,45 @@ fi
 
 DEBUG echo "final new file name is ${new_file_name}. starting encoding..."
 
+# if we couldn't find the width and height, then try to get it using mplayer
+if [[ -z "$new_file_width" || -z "$new_file_height" ]]; then
+	DEBUG echo "couldn't find width/height using filename, so searching using midentify..."
+	change_ratio_using_midentify "$input_movie"
+	DEBUG echo "final new file width is $new_file_width"
+	DEBUG echo "final new file height is $new_file_height"
+fi
+
+
 # TODO: rename subtitle file as well
 
+# TODO: what should the vbitrate be?  this seems to be the secret option that 
+# makes the video actually look good.
+# (here is a little information: http://www.mplayerhq.hu/DOCS/HTML/en/menc-feat-vcd-dvd.html)
+# (http://www.mplayerhq.hu/DOCS/HTML/en/menc-feat-dvd-mpeg4.html)
+# (http://personal.cscs.ch/~mvalle/mencoder/mencoder.html says the 
+# optimal bitrate is 50 * 25 * width * height / 256)
+
+# I'm going to kick the optimal bitrate up some just because I can
+optimal_bitrate="$((2 * 50 * 25 * $new_file_width * $new_file_height / 256))"
 
 #mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts preset=standard -ovc lavc -lavcopts vcodec=mpeg4:vhq -vf scale -zoom -xy "$new_file_width" 
 #mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts preset=standard -ovc lavc -lavcopts vcodec=mpeg4 -vf scale="$new_file_width":"$new_file_height" -ofps 25
 
 #mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts mode=2:cbr:br=128 -ovc lavc -lavcopts vcodec=mpeg4:vhq -vf scale="$new_file_width":"$new_file_height" -ofps 25
+
 # I was getting weird errors when I tried to use "-ofps 25"
-mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts mode=2:cbr:br=128 -ovc lavc -lavcopts vcodec=mpeg4:vhq -vf scale="$new_file_width":"$new_file_height" 
+#mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts mode=2:cbr:br=128 -ovc lavc -lavcopts vcodec=mpeg4:vhq -vf scale="$new_file_width":"$new_file_height" 
+
+# the vbitrate seems to be the magic option that makes everything look good
+# (1800 seems fine, but dvds go up to 9800)
+#mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts mode=2:cbr:br=128 -ovc lavc -lavcopts  vcodec=mpeg4:vhq:vbitrate=1800 -vf scale -zoom -xy "$new_file_width" 
+# basically infinite bitrate, so as good as it needs to be
+mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts mode=2:cbr:br=128 -ovc lavc -lavcopts  vcodec=mpeg4:vhq:vbitrate=9800 -vf scale -zoom -xy "$new_file_width" 
+
+# two pass recording
+# (be sure to delete the output divx2pass.log file before running these...)
+#mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts mode=2:cbr:br=128 -ovc lavc -lavcopts  vcodec=mpeg4:vhq:vpass=1 -vf scale -zoom -xy "$new_file_width" 
+#mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts mode=2:cbr:br=128 -ovc lavc -lavcopts  vcodec=mpeg4:vhq:vpass=2 -vf scale -zoom -xy "$new_file_width" 
 
 #mencoder "$input_movie" -o "$new_file_name" -oac mp3lame -lameopts mode=2:cbr:br=128 -ovc lavc -lavcopts vcodec=mpeg4:vhq -vf scale="$new_file_width":"$new_file_height" -ffourcc XVID
 
