@@ -65,6 +65,9 @@ super_link $HOME/docs/dot_files/dot_vim/after/indent/java.vim $HOME/.vim/after/i
 # vimperator
 super_link $HOME/docs/dot_files/dot_vimperatorrc $HOME/.vimperatorrc
 
+# pentadact
+super_link $HOME/docs/dot_files/dot_pentadactylrc $HOME/.pentadactylrc
+
 # eclim
 super_link $HOME/docs/dot_files/dot_eclimrc $HOME/.eclimrc
 

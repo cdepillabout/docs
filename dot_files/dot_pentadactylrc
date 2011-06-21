@@ -1,0 +1,38 @@
+"2.3.1 (created: 2010/04/07 18:56:53)
+
+" If you edit this, in order to reload it from a running
+" firefox session, you can use a command like this.
+" :source ~/.vimperatorrc
+
+" go across tabs like vim tabs
+map <C-h> gT
+map <C-l> gt
+
+" scroll up and down faster
+map k 4<C-y>
+map j 4<C-e>
+" these could also be done with something like this
+" :noremap j 3j
+" :noremap k 3k
+
+" give an easy way to scroll up
+map b <PageUp>
+
+" make zooming easier
+map x zi
+map c zo
+
+" this is a hack because the author thought to make the 
+" minimum width of tabs REALLY small.  He says he will
+" change it back, so this hack may not be needed in the future
+" (http://code.google.com/p/vimperator-labs/issues/detail?id=575)
+" js styles.removeSheet(true, "mintabwidth", "", "", 0);
+
+set editor="roxterm --separate -e vim -f"
+set guioptions=mTBnrb
+"set toolbars=all
+set runtimepath=/home/illabout/.vimperator
+source! /home/illabout/.vimperatorrc.local
+
+
+" vim: set ft=vimperator:
