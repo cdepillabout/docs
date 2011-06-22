@@ -26,7 +26,7 @@ spuaa=4
 # Find subtitle files. (1: load all subs containing movie name)
 sub-fuzziness=1
 # Set font.
-#font=/home/osmo/.fonts/microsoft-vista/calibri.ttf
+font="IPAGothic"
 # Set font encoding.
 subfont-encoding=unicode
 # Set subtitle file encoding.
