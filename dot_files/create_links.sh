@@ -71,5 +71,8 @@ super_link $HOME/docs/dot_files/dot_pentadactylrc $HOME/.pentadactylrc
 # eclim
 super_link $HOME/docs/dot_files/dot_eclimrc $HOME/.eclimrc
 
+# git
+super_link $HOME/docs/dot_files/dot_gitconfig $HOME/.gitconfig
+
 # mercurial
 super_link $HOME/docs/dot_files/dot_hgrc $HOME/.hgrc

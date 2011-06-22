@@ -1,0 +1,4 @@
+[color]
+	ui = auto
+[rerere]
+	enabled = 1
