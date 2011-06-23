@@ -29,7 +29,7 @@ map c zo
 " js styles.removeSheet(true, "mintabwidth", "", "", 0);
 
 set editor="roxterm --separate -e vim -f"
-set guioptions=mTBnrb
+set guioptions=mTBnrbs
 "set toolbars=all
 set runtimepath=/home/illabout/.vimperator
 source! /home/illabout/.vimperatorrc.local
