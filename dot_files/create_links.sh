@@ -76,3 +76,6 @@ super_link $HOME/docs/dot_files/dot_gitconfig $HOME/.gitconfig
 
 # mercurial
 super_link $HOME/docs/dot_files/dot_hgrc $HOME/.hgrc
+
+# Xmodmap
+super_link $HOME/docs/dot_files/dot_Xmodmap $HOME/.Xmodmap
