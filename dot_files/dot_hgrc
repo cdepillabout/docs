@@ -1,3 +1,7 @@
 
 [extensions]
 hgk=
+color=
+
+[ui]
+verbose = True
