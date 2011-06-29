@@ -425,6 +425,10 @@ autocmd BufRead,BufNewFile *.py set expandtab
 " maybe this could also be done with
 "autocmd FileType python set expandtab
 
+" SConscript and SConstruct files are python files
+autocmd BufRead,BufNewFile SConstruct set ft=python
+autocmd BufRead,BufNewFile SConscript set ft=python
+
 " special settings for sas files
 autocmd FileType sas set tabstop=3			" 3-space tab indent width
 autocmd FileType sas set shiftwidth=3		" allows you to use < and > to indent/unindent blocks
