@@ -243,6 +243,8 @@ alias gpl='git pull '
 alias gpll='git pull '
 alias gpull='git pull '
 alias gst='git status '
+alias gitka='gitk HEAD FETCH_HEAD ORIG_HEAD '
+alias gitkam='gitk HEAD FETCH_HEAD ORIG_HEAD origin/master '
 
 # screen automatically connects to a running session
 alias screen='screen -R '
