@@ -1,0 +1,18 @@
+
+# create a qemu image of qcow2 format, with size gigabytes
+qemu-img create -f qcow2 <image_name> <size>G
+
+# install iso to hard drive.
+# -boot d specifies that we want to boot from the cdrom
+# -m 2G specifies 2 gigs of memory
+# -ctrl-grab specifies that we will use right-ctrl to grab mouse
+qemu-system-x86_64 -enable-kvm -hda <image_name> -cdrom <iso> -boot d -vga std -m 2G -ctrl-grab
+
+# run installed system
+qemu-system-x86_64 -enable-kvm -hda <image_name> -vga std -m 2G
+
+# run with options
+# -boot c specifies we want to boot from the hard disk
+# -k en-us specifies that we want to use english keyboard layout
+#	(we need to use this so ctrl and capslock are swapped correctly)
+qemu-system-x86_64 -enable-kvm -hda <image_name> -boot c -vga std -m 2G -ctrl-grab -k en-us
