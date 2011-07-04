@@ -1,6 +1,6 @@
 
 # on arch linux:
-# - Run "vbox_build_module" as root every time your kernel is upgraded, to
+# - Run "/etc/rc.d/vboxdrv setup" as root every time your kernel is upgraded, to
 #   compile the module for the new kernel version.
 # - Add your user to the vboxusers group:
 #      gpasswd -a USERNAME vboxusers
@@ -99,3 +99,9 @@ VBoxManage "Your VM Name" --nic6 nat
 
 # Disable the seventh NIC
 VBoxManage "Your VM Name" --nic7 none 
+
+
+# convert a qemu image qcow image to a virtualbox image
+qemu-img convert -O raw test.qcow2 test.raw
+VBoxManage convertfromraw /full/path/to/test.raw /full/path/to/test.vdi
+VBoxManage modifyvdi /full/path/to/test.vdi compact
