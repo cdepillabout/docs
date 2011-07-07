@@ -118,6 +118,11 @@ imap <F7> <ESC>:set list!<CR>a
 nnoremap <C-h> gT
 nnoremap <C-l> gt
 
+
+map <silent> <C-u> :let b:new_tab_number = tabpagenr() \| exec ":tabm " . b:new_tab_number \| unlet b:new_tab_number<CR>
+map <silent> <C-y> :let b:new_tab_number = tabpagenr() - 2 \| if (b:new_tab_number < 0) \| let b:new_tab_number = 0 \| endif \| exec ":tabm " . b:new_tab_number \| unlet b:new_tab_number<CR>
+"nnoremap <C-S-h> :let b:current_tab_number = tabpagenr() 
+
 " got to tab number (really only for gvim)
 nnoremap <A-1> 1gt
 nnoremap <A-2> 2gt
