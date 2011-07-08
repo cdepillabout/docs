@@ -72,3 +72,8 @@ yaourt -S --noconfirm xterm-from-git
 # search for just a package name
 pacman -Ssq PKGNAME | grep PKGNAME
 yaourt -Ss -q PKGNAME | grep PKGNAME | grep -v "^    "
+
+# backup list of installed packages
+comm -23 <(pacman -Qeq) <(pacman -Qmq) > pkglist
+# install from backup list
+pacman -S $(< pkglist)
