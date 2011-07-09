@@ -16,12 +16,196 @@ class VM:
         assert(len(m.groups()) == 2)
         self.name = m.group(1)
         self.uuid = m.group(2)
+        self.info = None
 
     def __str__(self):
         return "VM(name: %s, uuid: %s)" % (self.name, self.uuid)
 
     def __repr__(self):
         return self.__str__()
+
+    def fillininfo(self):
+        stdout = Popen(["VBoxManage", "showvminfo", self.uuid, "--machinereadable"],
+                stdout=PIPE).communicate()[0]
+        stdout = stdout.decode('utf-8')
+        #print(stdout)
+        stdout = stdout.strip()
+        lines = stdout.split('\n')
+
+        def create_values(line):
+            def take_out_quotes(string):
+                if len(string) <= 2:
+                    return string
+                if string[0] == '"':
+                    string = string[1:]
+                if string[-1] == '"':
+                    string = string[:-1]
+                return string
+
+            key, value = line.strip().split('=')
+            return take_out_quotes(key), take_out_quotes(value)
+
+        self.info = {}
+        for line in lines:
+            key, value = create_values(line)
+
+            # this is a hack because the value of firmware ("BIOS") is
+            # capitalized when it should not be.
+            if key.lower() == "firmware":
+                value = value.lower()
+
+            self.info[key.lower()] = value
+
+    def __setoption(self, fromvm, option):
+        """
+        Set an option from another vm.  fromvm must have a dictionary
+        "info" that has its options and values.
+        
+        Returns True if option was set, and False if not.
+        """
+        if option in fromvm.info.keys():
+            stdout, stderr = Popen(["VBoxManage", "modifyvm", self.uuid,
+                "--%s" % option, "%s" % fromvm.info[option]],
+                stdout=PIPE, stderr=PIPE).communicate()
+            stdout = stdout.decode('utf-8')
+            stderr = stderr.decode('utf-8')
+
+            if stderr:
+                print("ERROR! Could not set vm option \"--%s\":\n%s" % (option, stderr))
+                sys.exit(1)
+
+            #print("Setting option --%s to \"%s\"" % (option, fromvm.info[option]))
+            return True
+        else:
+            #print("Not setting option --%s because other vm does not have it set." % option)
+            return False
+
+    def __setstoragecontrolleroption(self, fromvm, name, stype, bootable):
+        """
+        Set a storage option from another vm.  fromvm must have a dictionary
+        "info" that has its options and values.
+        
+        Returns True if option was set, and False if not.
+        """
+        vmoptions = fromvm.info.keys()
+        if name in vmoptions and stype in vmoptions:
+            cmdline = ["VBoxManage", "storagectl", self.uuid,
+                "--name", fromvm.info[name], "--controller", fromvm.info[stype]]
+
+            if bootable in vmoptions:
+                cmdline.append("--bootable")
+                cmdline.append(fromvm.info[bootable])
+
+            contype = fromvm.info[stype]
+            cmdline.append("--add")
+            if contype in ["PIIX4", "PIIX3", "ICH6"]:
+                cmdline.append("ide")
+            elif contype in ["I82078"]:
+                cmdline.append("floppy")
+            elif contype in ["IntelAhci"]:
+                cmdline.append("sata")
+            elif contype in ["LsiLogic", "BusLogic"]:
+                cmdline.append("scsi")
+            elif contype in ["LSILogicSAS", "BusLogic"]:
+                cmdline.append("sas")
+            elif contype in ["unknown"]:
+                print("Not setting storage controller because type is unknown.")
+                return False
+            else:
+                print("ERROR! Could not figure out controller type.")
+                sys.exit(1)
+
+
+            stdout, stderr = Popen(cmdline, stdout=PIPE, stderr=PIPE).communicate()
+            stdout = stdout.decode('utf-8')
+            stderr = stderr.decode('utf-8')
+
+            if stderr:
+                print("ERROR! Could not set storage controller:\n%s" % stderr)
+                sys.exit(1)
+
+            print("Setting storrage controller option.")
+            return True
+        else:
+            print("Not setting storage controller because other vm does not have it set.")
+            return False
+
+    def setinfofrom(self, fromvm):
+        "Copy the info from the other vm to this vm."
+        options_to_copy = [
+                "accelerate3d",
+                "acpi",
+                "audio",
+                "boot1",
+                "boot2",
+                "boot3",
+                "boot4",
+                "clipboard",
+                "cpus",
+                "firmware",
+                "guestmemoryballoon",
+                "hpet"
+                "hwvirtex",
+                "hwvirtexexl",
+                "ioacpi",
+                "largepages",
+                "memory",
+                "monitorcount",
+                "nextedpaging",
+                "pae",
+                "rtcseutc",
+                "usb",
+                "usbehci",
+                "vram",
+                "vrdeaddress",
+                "vrdeauthtype",
+                "vrdeauthtype",
+                "vrdemulticon",
+                "vrdeport",
+                "vrdereusecon",
+                "vrdevideochannel",
+                "vrdevideochannelquality",
+                "vtxvpid",
+                ]
+
+        sys.stdout.write("Setting options for new VM from old VM (this may take a while)... ")
+        sys.stdout.flush()
+
+        for option in options_to_copy:
+            self.__setoption(fromvm, option)
+
+        multi_options_to_copy = [
+                "nic",
+                "nictype",
+                "cableconnected",
+                "bridgeadapter",
+                "hostonlyadapter",
+                "intnet",
+                "vdenet",
+                ]
+
+        # continue trying to set options until we get to a round where no options are set
+        i = 1
+        while True:
+            did_set_list = []
+            for option in multi_options_to_copy:
+                did_set_list.append(self.__setoption(fromvm, "%s%d" % (option, i)))
+            if not any(did_set_list):
+                break
+            i += 1
+
+        i = 0
+        did_set_option = True
+        while did_set_option:
+            did_set_option = self.__setstoragecontrolleroption(fromvm,
+                    "storagecontrollername%d" %  i,
+                    "storagecontrollertype%d" %  i,
+                    "storagecontrollerbootable%d" %  i)
+            i += 1
+
+
+        print("Done.")
+
 
 
 class HDD:
@@ -146,6 +330,26 @@ class Forest:
         return [n for n in self.nodes.values() if n.parentuuid == parent_node_uuid]
 
 
+def createNewVM(name, ostype):
+    "Create a new VM with name and ostype.  Return new vm."
+
+    sys.stdout.write("Creating new vm... ")
+
+    stdout, stderr = Popen(["VBoxManage", "createvm", "--name", name, "--register",
+        "--ostype", ostype], stdout=PIPE, stderr=PIPE).communicate()
+    stdout = stdout.decode('utf-8')
+    stderr = stderr.decode('utf-8')
+
+    if stderr:
+        print("ERROR! Could not create vm \"%s\":\n%s" % (name, stderr))
+        sys.exit(1)
+
+    #print("new vm:\n%s" % stdout)
+
+    print("Done.")
+
+    return getVM(name)
+
 
 def checkWarning(stdout):
     """
@@ -190,9 +394,13 @@ def createHDDForest():
 
     return forest
 
-def getVMs():
+def getVM(vmname=None):
     """
-    Get a list of all VMs.  This does not include snapshots.
+    Get a vm, or a list of all vms.  If vmname is None, then we
+    just get a list of all VMs.  If vmname is specified, then 
+    we return just the named vm.
+    
+    This does not return snapshots.
     """
     stdout = Popen(["VBoxManage", "list", "vms"],
             stdout=PIPE).communicate()[0]
@@ -205,16 +413,26 @@ def getVMs():
 
     stdout = stdout.strip()
     lines = stdout.split('\n')
-    return [VM(l) for l in lines]
+    vms = [VM(l) for l in lines]
+    if not vmname:
+        return vms
+    named_vms = [vm for vm in vms if vm.name == vmname or vm.uuid == vmname]
+    assert(len(named_vms) == 1)
+    return named_vms[0]
 
 def hddsattachedto(vm, hddforest):
     "Return a list of all hdds attached to a vm with a uuid of vmuuid."
     return [hdd for hdd in hddforest.getends() if hdd.hdvm == vm or hdd.hdvmuuid == vm]
 
+def printVMs(vms):
+    "Print a list of existing VMs."
+    longest_vm = max([len(vm.name) for vm in vms])
+    for vm in vms:
+        print("%-*s  {%s}" % (longest_vm, vm.name,  vm.uuid))
 
 def main():
 
-    vms = getVMs()
+    vms = getVM()
     hddforest = createHDDForest()
 
     def checkvmtype(string):
@@ -228,6 +446,7 @@ def main():
     parser = argparse.ArgumentParser(description="Clone the current state of a VirtualBox VM.")
 
     parser.add_argument('VM', type=checkvmtype, nargs="?", help="VirtualBox VM name")
+    parser.add_argument('NEW_VM_NAME', type=str, nargs="?", help="VirtualBox VM name")
 
     parser.add_argument('--list-vms', action='store_true', help="list available vms")
     parser.add_argument('--list-hdds', action='store_true', help="list available vms")
@@ -235,9 +454,7 @@ def main():
     args = parser.parse_args()
 
     if args.list_vms:
-        longest_vm = max([len(vm.name) for vm in vms])
-        for vm in vms:
-            print("%-*s  {%s}" % (longest_vm, vm.name,  vm.uuid))
+        printVMs(vms)
         sys.exit(0)
 
     if args.list_hdds:
@@ -247,7 +464,19 @@ def main():
         sys.exit(0)
 
     if not args.VM:
-        print("ERROR! Must specify VM.")
+        print("ERROR! Must specify VM.\n")
+        parser.print_usage()
+        print()
+        printVMs(vms)
+        sys.exit(1)
+
+    if not args.NEW_VM_NAME:
+        print("ERROR! Must specify new VM name.\n")
+        parser.print_usage()
+        sys.exit(1)
+
+    if args.NEW_VM_NAME in [vm.name for vm in vms]:
+        print("ERROR! VM \"%s\" already exists.\n" % args.NEW_VM_NAME)
         parser.print_usage()
         sys.exit(1)
 
@@ -257,7 +486,16 @@ def main():
 
     hdds = hddsattachedto(args.VM, hddforest)
 
-    print("vm:\n%s\n\nhdds:\n%s" % (vm, hdds))
+    #print("vm:\n%s\n\nhdds:\n%s" % (vm, hdds))
+
+    vm.fillininfo()
+
+    # create new vm and fill in all applicable info from old vm
+    newvm = createNewVM(args.NEW_VM_NAME, vm.info["ostype"])
+    newvm.setinfofrom(vm)
+
+    print(vm)
+
 
 if __name__ == '__main__':
     main()
