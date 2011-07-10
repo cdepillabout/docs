@@ -110,7 +110,7 @@ class VM:
                 cmdline.append("sas")
             elif contype in ["unknown"]:
                 print("Not setting storage controller because type is unknown.")
-                return False
+                return True
             else:
                 print("ERROR! Could not figure out controller type.")
                 sys.exit(1)
@@ -129,6 +129,115 @@ class VM:
         else:
             print("Not setting storage controller because other vm does not have it set.")
             return False
+
+    def __setstoragedevices(self, fromvm):
+        """
+        Set the storage devices from the new vm from the old vm, 
+        cloning them if necessary.
+        """
+        # get all the storage controller name and type options
+        nameopts = [opt for opt in fromvm.info.keys() if opt.startswith("storagecontrollername")]
+        typeopts = [opt for opt in fromvm.info.keys() if opt.startswith("storagecontrollertype")]
+        nameopts.sort()
+        typeopts.sort()
+        allopts = zip(nameopts, typeopts)
+        print()
+        for nameopt, typeopt in allopts:
+            name = fromvm.info[nameopt]
+            taip = fromvm.info[typeopt]
+            if taip == "unknown":
+                # we don't know what do to with unknown devices
+                print("Skipping unknown device...")
+                continue
+            print("name: %s (%s), type: %s (%s)" % (name, nameopt, taip, typeopt))
+
+            #controlleropts = [opt for opt in fromvm.info.keys() if opt.startswith(name.lower())]
+            controlleropts = [opt for opt in fromvm.info.keys() if
+                    re.match(r'^%s-\d\d?-\d\d?$' % name.lower(), opt)]
+            for controlopt in controlleropts:
+                if fromvm.info[controlopt] == "none":
+                    # there is nothing here, just ignore it
+                    #print("\t(none)")
+                    continue
+
+                # try to figure out whether this has an imageuuid varaiable associated with it
+                m = re.match(r'^(.*?)-(\d\d?)-(\d\d?)$', controlopt)
+                assert(m)
+                tmpname = m.group(1)
+                port = m.group(2)
+                device = m.group(3)
+                imageuuidopt = "%s-imageuuid-%s-%s" % (tmpname, port, device)
+                imageuuid = None
+                if imageuuidopt in fromvm.info:
+                    imageuuid = fromvm.info[imageuuidopt]
+
+                if fromvm.info[controlopt] == "emptydrive":
+                    # attach empty drive
+                    print("\tAttaching empty device to %s... " % name)
+                    cmdline = ["VBoxManage", "storageattach", self.uuid,
+                        "--storagectl", name,
+                        "--port", port,
+                        "--device", device,
+                        "--medium", "emptydrive"]
+                    stdout, stderr = Popen(cmdline, stdout=PIPE, stderr=PIPE).communicate()
+                    stdout = stdout.decode('utf-8')
+                    stderr = stderr.decode('utf-8')
+
+                    if stderr:
+                        print("ERROR! Could not attach empty storage device to %s-%s-%s:\n%s" %
+                                (name, port, device, stderr))
+                        sys.exit(1)
+
+                    continue
+
+                print("\t%s: %s" % (controlopt, fromvm.info[controlopt]))
+                print("\timageuuid: %s" % imageuuid)
+                assert(imageuuid)
+
+                strgtype = storagetype(imageuuid)
+                print("\tstorage type: %s" % strgtype)
+                if strgtype in ["dvd", "floppy", "hostdvd", "hostfloppy"]:
+                    print("\tAttaching %s to %s... " % (strgtype, name))
+                    cmdline = ["VBoxManage", "storageattach", self.uuid,
+                        "--storagectl", name,
+                        "--port", port,
+                        "--device", device,]
+
+                    cmdline.append("--medium")
+                    if strgtype in ["hostdvd", "hostfloppy"]:
+                        cmdline.append("host:%s" % imageuuid)
+                    else:
+                        cmdline.append("%s" % imageuuid)
+
+                    cmdline.append("--type")
+                    if strgtype in ["dvd", "hostdvd"]:
+                        cmdline.append("dvddrive")
+                    if strgtype in ["floppy", "hostfloppy"]:
+                        cmdline.append("floppy")
+
+                    print("cmdline: %s" % cmdline)
+                    runcommand(cmdline)
+
+
+
+            """
+            if contype in ["PIIX4", "PIIX3", "ICH6"]:
+                cmdline.append("ide")
+            elif contype in ["I82078"]:
+                cmdline.append("floppy")
+            elif contype in ["IntelAhci"]:
+                cmdline.append("sata")
+            elif contype in ["LsiLogic", "BusLogic"]:
+                cmdline.append("scsi")
+            elif contype in ["LSILogicSAS", "BusLogic"]:
+                cmdline.append("sas")
+            elif contype in ["unknown"]:
+                print("Not setting storage controller because type is unknown.")
+                return True
+            else:
+                print("ERROR! Could not figure out controller type.")
+                sys.exit(1)
+            """
 
     def setinfofrom(self, fromvm):
         "Copy the info from the other vm to this vm."
@@ -174,6 +283,10 @@ class VM:
         for option in options_to_copy:
             self.__setoption(fromvm, option)
 
+        print("Done.")
+        sys.stdout.write("Setting network options for new VM from old VM... ")
+        sys.stdout.flush()
+
         multi_options_to_copy = [
                 "nic",
                 "nictype",
@@ -194,6 +307,10 @@ class VM:
                 break
             i += 1
 
+        print("Done.")
+        sys.stdout.write("Setting storage controller options for new VM from old VM... ")
+        sys.stdout.flush()
+
         i = 0
         did_set_option = True
         while did_set_option:
@@ -203,8 +320,60 @@ class VM:
                     "storagecontrollerbootable%d" %  i)
             i += 1
 
+        print("Done.")
+        sys.stdout.write("Setting storage devices for new VM from old VM... ")
+        sys.stdout.flush()
+
+        self.__setstoragedevices(fromvm)
 
         print("Done.")
+
+def storagetype(devuuid):
+    """
+    Return the storage type for the device with uuid devuuid.
+    If the storage type is a host dvd, return the string "hostdvd".
+    If the storage type is a host floppy, return the string "hostfloppy".
+    If the storage type is a floppy, return the string "floppy".
+    If the storage type is a dvd, return the string "dvd".
+    If the storage type is a hdd, return the string "hdd".
+    """
+    listcommands = [
+            ("hostdvds", "hostdvd"),
+            ("hostfloppies", "hostfloppy"),
+            ("floppies", "floppy"),
+            ("dvds", "dvd"),
+            ("hdds", "hdd"),
+            ]
+
+    for c, ret in listcommands:
+        stdout = runcommand(["VBoxManage", "list", c])
+        lines = stdout.strip().split('\n')
+        for l in lines:
+            m = re.match(r'^UUID:\s+%s$' % devuuid, l)
+            if m:
+                return ret
+            else:
+                continue
+
+    return None
+
+def runcommand(args):
+    """
+    Run a command and check stderr.  
+    If anything is found on stderr, exit.
+    Return stdout.
+    """
+    #stdout, stderr = Popen(["VBoxManage", "list", c], stdout=PIPE,
+    stdout, stderr = Popen(args, stdout=PIPE,
+            stderr=PIPE).communicate()
+    stdout = stdout.decode('utf-8')
+    stderr = stderr.decode('utf-8')
+
+    if stderr:
+        print("ERROR! Could not get list of %s:\n%s" % (c, stderr))
+        sys.exit(1)
+
+    return stdout
 
 
 
@@ -431,7 +600,6 @@ def printVMs(vms):
         print("%-*s  {%s}" % (longest_vm, vm.name,  vm.uuid))
 
 def main():
-
     vms = getVM()
     hddforest = createHDDForest()
 
@@ -466,7 +634,7 @@ def main():
     if not args.VM:
         print("ERROR! Must specify VM.\n")
         parser.print_usage()
-        print()
+        print("\nVMs:")
         printVMs(vms)
         sys.exit(1)
 
