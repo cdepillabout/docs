@@ -11,7 +11,9 @@ class VM:
     """
     An object that represents a VirtualBox VM.
     """
-    def __init__(self, line):
+    def __init__(self, line, hddforest):
+        self.hddforest = hddforest
+
         m = re.match(r'^"(.+?)" {([\w\d-]+)}$', line)
         assert(len(m.groups()) == 2)
         self.name = m.group(1)
@@ -135,6 +137,7 @@ class VM:
         Set the storage devices from the new vm from the old vm, 
         cloning them if necessary.
         """
+        cloned_hdds = 1
         # get all the storage controller name and type options
         nameopts = [opt for opt in fromvm.info.keys() if opt.startswith("storagecontrollername")]
         typeopts = [opt for opt in fromvm.info.keys() if opt.startswith("storagecontrollertype")]
@@ -173,21 +176,13 @@ class VM:
 
                 if fromvm.info[controlopt] == "emptydrive":
                     # attach empty drive
-                    print("\tAttaching empty device to %s... " % name)
+                    #print("\tAttaching empty device to %s... " % name)
                     cmdline = ["VBoxManage", "storageattach", self.uuid,
                         "--storagectl", name,
                         "--port", port,
                         "--device", device,
                         "--medium", "emptydrive"]
-                    stdout, stderr = Popen(cmdline, stdout=PIPE, stderr=PIPE).communicate()
-                    stdout = stdout.decode('utf-8')
-                    stderr = stderr.decode('utf-8')
-
-                    if stderr:
-                        print("ERROR! Could not attach empty storage device to %s-%s-%s:\n%s" %
-                                (name, port, device, stderr))
-                        sys.exit(1)
-
+                    runcommand(cmdline)
                     continue
 
                 print("\t%s: %s" % (controlopt, fromvm.info[controlopt]))
@@ -197,7 +192,7 @@ class VM:
                 strgtype = storagetype(imageuuid)
                 print("\tstorage type: %s" % strgtype)
                 if strgtype in ["dvd", "floppy", "hostdvd", "hostfloppy"]:
-                    print("\tAttaching %s to %s... " % (strgtype, name))
+                    #print("\tAttaching %s to %s... " % (strgtype, name))
                     cmdline = ["VBoxManage", "storageattach", self.uuid,
                         "--storagectl", name,
                         "--port", port,
@@ -215,29 +210,57 @@ class VM:
                     if strgtype in ["floppy", "hostfloppy"]:
                         cmdline.append("floppy")
 
-                    print("cmdline: %s" % cmdline)
                     runcommand(cmdline)
+                    continue
 
+                # it wasn't an empty drive, or a dvd/floppy drive, so it must be a hard drive
+                assert(strgtype == "hdd")
+                #print("fromvm: %s" % fromvm)
+                #print("hddforest: %s" % self.hddforest)
+                hdds = hddsattachedto(fromvm.uuid, self.hddforest)
+                #print("hdds: %s" % hdds)
 
+                # get the hdd whose uuid matches imageuuid
+                tmphdds = [hdd for hdd in hdds if hdd.uuid == imageuuid]
+                assert(len(tmphdds) == 1)
+                hdd = tmphdds[0]
+                #print("hdd: %s" % hdd)
+                self.fillininfo()
+                #print("self info: %s" % self.info)
+                # just look for the config file and assume we 
+                # can throw the hdd in the same dir
+                configfile = self.info["cfgfile"]
+                assert(os.path.isfile(configfile))
+                dirname = os.path.dirname(configfile)
 
-            """
-            if contype in ["PIIX4", "PIIX3", "ICH6"]:
-                cmdline.append("ide")
-            elif contype in ["I82078"]:
-                cmdline.append("floppy")
-            elif contype in ["IntelAhci"]:
-                cmdline.append("sata")
-            elif contype in ["LsiLogic", "BusLogic"]:
-                cmdline.append("scsi")
-            elif contype in ["LSILogicSAS", "BusLogic"]:
-                cmdline.append("sas")
-            elif contype in ["unknown"]:
-                print("Not setting storage controller because type is unknown.")
-                return True
-            else:
-                print("ERROR! Could not figure out controller type.")
-                sys.exit(1)
-            """
+                newlocation = os.path.join(dirname, "%s-%s.vdi" % (self.name, cloned_hdds))
+                cmdline = ["VBoxManage", "clonehd", hdd.uuid, newlocation]
+                #print("cmdline: %s" % cmdline)
+                stdout, stderr = Popen(cmdline, stdout=PIPE,
+                        stderr=PIPE).communicate()
+                stdout = stdout.decode('utf-8')
+                stderr = stderr.decode('utf-8')
+
+                if re.search("error", stderr, re.I):
+                    print("ERROR! Could not run command %s:\n%s" % (cmdline, stderr))
+                    sys.exit(1)
+
+                cloned_hdds += 1
+
+                newhddforest = createHDDForest()
+                tmphdds = [hdd for hdd in newhddforest.values() if hdd.hdlocation == newlocation]
+                assert(len(tmphdds) == 1)
+                newhdd = tmphdds[0]
+                #print("new hdd: %s" % [hdd for hdd in newhddforest.values() if hdd.hdlocation == newlocation])
+
+                print("Attaching new hard drive %s..." % newhdd.uuid)
+                cmdline = ["VBoxManage", "storageattach", self.uuid,
+                    "--storagectl", name,
+                    "--port", port,
+                    "--device", device,
+                    "--medium", newhdd.uuid,
+                    "--type", "hdd"]
+                runcommand(cmdline)
 
     def setinfofrom(self, fromvm):
         "Copy the info from the other vm to this vm."
@@ -328,55 +351,6 @@ class VM:
 
         print("Done.")
 
-def storagetype(devuuid):
-    """
-    Return the storage type for the device with uuid devuuid.
-    If the storage type is a host dvd, return the string "hostdvd".
-    If the storage type is a host floppy, return the string "hostfloppy".
-    If the storage type is a floppy, return the string "floppy".
-    If the storage type is a dvd, return the string "dvd".
-    If the storage type is a hdd, return the string "hdd".
-    """
-    listcommands = [
-            ("hostdvds", "hostdvd"),
-            ("hostfloppies", "hostfloppy"),
-            ("floppies", "floppy"),
-            ("dvds", "dvd"),
-            ("hdds", "hdd"),
-            ]
-
-    for c, ret in listcommands:
-        stdout = runcommand(["VBoxManage", "list", c])
-        lines = stdout.strip().split('\n')
-        for l in lines:
-            m = re.match(r'^UUID:\s+%s$' % devuuid, l)
-            if m:
-                return ret
-            else:
-                continue
-
-    return None
-
-def runcommand(args):
-    """
-    Run a command and check stderr.  
-    If anything is found on stderr, exit.
-    Return stdout.
-    """
-    #stdout, stderr = Popen(["VBoxManage", "list", c], stdout=PIPE,
-    stdout, stderr = Popen(args, stdout=PIPE,
-            stderr=PIPE).communicate()
-    stdout = stdout.decode('utf-8')
-    stderr = stderr.decode('utf-8')
-
-    if stderr:
-        print("ERROR! Could not get list of %s:\n%s" % (c, stderr))
-        sys.exit(1)
-
-    return stdout
-
-
-
 class HDD:
     """
     Create a vdi entry from the output of `VBoxManage list hdds`.
@@ -392,7 +366,7 @@ class HDD:
         self.uuid = re.sub(r'^UUID:\W+', '', lines[0])
         self.parentuuid = re.sub(r'^Parent UUID:\W+', '', lines[1])
         self.hdformat = re.sub(r'^Format:\W+', '', lines[2])
-        self.hdlocation = re.sub(r'^Location:\W+', '', lines[3])
+        self.hdlocation = re.sub(r'^Location:\s+', '', lines[3])
         self.hdstate = re.sub(r'^State:\W+', '', lines[4])
         self.hdtype = re.sub(r'^Type:\W+', '', lines[5])
 
@@ -498,8 +472,53 @@ class Forest:
         assert(type(parent_node_uuid) != type(HDD))
         return [n for n in self.nodes.values() if n.parentuuid == parent_node_uuid]
 
+def storagetype(devuuid):
+    """
+    Return the storage type for the device with uuid devuuid.
+    If the storage type is a host dvd, return the string "hostdvd".
+    If the storage type is a host floppy, return the string "hostfloppy".
+    If the storage type is a floppy, return the string "floppy".
+    If the storage type is a dvd, return the string "dvd".
+    If the storage type is a hdd, return the string "hdd".
+    """
+    listcommands = [
+            ("hostdvds", "hostdvd"),
+            ("hostfloppies", "hostfloppy"),
+            ("floppies", "floppy"),
+            ("dvds", "dvd"),
+            ("hdds", "hdd"),
+            ]
 
-def createNewVM(name, ostype):
+    for c, ret in listcommands:
+        stdout = runcommand(["VBoxManage", "list", c])
+        lines = stdout.strip().split('\n')
+        for l in lines:
+            m = re.match(r'^UUID:\s+%s$' % devuuid, l)
+            if m:
+                return ret
+            else:
+                continue
+
+    return None
+
+def runcommand(args):
+    """
+    Run a command and check stderr.  
+    If anything is found on stderr, exit.
+    Return stdout.
+    """
+    stdout, stderr = Popen(args, stdout=PIPE,
+            stderr=PIPE).communicate()
+    stdout = stdout.decode('utf-8')
+    stderr = stderr.decode('utf-8')
+
+    if stderr:
+        print("ERROR! Could not run command %s:\n%s" % (args, stderr))
+        sys.exit(1)
+
+    return stdout
+
+def createNewVM(name, ostype, hddforest):
     "Create a new VM with name and ostype.  Return new vm."
 
     sys.stdout.write("Creating new vm... ")
@@ -517,8 +536,7 @@ def createNewVM(name, ostype):
 
     print("Done.")
 
-    return getVM(name)
-
+    return getVM(hddforest, name)
 
 def checkWarning(stdout):
     """
@@ -563,7 +581,7 @@ def createHDDForest():
 
     return forest
 
-def getVM(vmname=None):
+def getVM(hddforest, vmname=None):
     """
     Get a vm, or a list of all vms.  If vmname is None, then we
     just get a list of all VMs.  If vmname is specified, then 
@@ -582,7 +600,7 @@ def getVM(vmname=None):
 
     stdout = stdout.strip()
     lines = stdout.split('\n')
-    vms = [VM(l) for l in lines]
+    vms = [VM(l, hddforest) for l in lines]
     if not vmname:
         return vms
     named_vms = [vm for vm in vms if vm.name == vmname or vm.uuid == vmname]
@@ -591,6 +609,7 @@ def getVM(vmname=None):
 
 def hddsattachedto(vm, hddforest):
     "Return a list of all hdds attached to a vm with a uuid of vmuuid."
+    assert(type(vm) == type(""))
     return [hdd for hdd in hddforest.getends() if hdd.hdvm == vm or hdd.hdvmuuid == vm]
 
 def printVMs(vms):
@@ -600,8 +619,8 @@ def printVMs(vms):
         print("%-*s  {%s}" % (longest_vm, vm.name,  vm.uuid))
 
 def main():
-    vms = getVM()
     hddforest = createHDDForest()
+    vms = getVM(hddforest)
 
     def checkvmtype(string):
         vms_with_this_name = [vm for vm in vms if vm.name == string or vm.uuid == string]
@@ -659,7 +678,7 @@ def main():
     vm.fillininfo()
 
     # create new vm and fill in all applicable info from old vm
-    newvm = createNewVM(args.NEW_VM_NAME, vm.info["ostype"])
+    newvm = createNewVM(args.NEW_VM_NAME, vm.info["ostype"], hddforest)
     newvm.setinfofrom(vm)
 
     print(vm)
