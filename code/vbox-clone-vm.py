@@ -27,12 +27,8 @@ class VM:
         return self.__str__()
 
     def fillininfo(self):
-        stdout = Popen(["VBoxManage", "showvminfo", self.uuid, "--machinereadable"],
-                stdout=PIPE).communicate()[0]
-        stdout = stdout.decode('utf-8')
-        #print(stdout)
-        stdout = stdout.strip()
-        lines = stdout.split('\n')
+        stdout = runcommand(["VBoxManage", "showvminfo", self.uuid, "--machinereadable"])
+        lines = stdout.strip().split('\n')
 
         def create_values(line):
             def take_out_quotes(string):
@@ -66,16 +62,8 @@ class VM:
         Returns True if option was set, and False if not.
         """
         if option in fromvm.info.keys():
-            stdout, stderr = Popen(["VBoxManage", "modifyvm", self.uuid,
-                "--%s" % option, "%s" % fromvm.info[option]],
-                stdout=PIPE, stderr=PIPE).communicate()
-            stdout = stdout.decode('utf-8')
-            stderr = stderr.decode('utf-8')
-
-            if stderr:
-                print("ERROR! Could not set vm option \"--%s\":\n%s" % (option, stderr))
-                sys.exit(1)
-
+            runcommand(["VBoxManage", "modifyvm", self.uuid,
+                "--%s" % option, "%s" % fromvm.info[option]])
             #print("Setting option --%s to \"%s\"" % (option, fromvm.info[option]))
             return True
         else:
@@ -111,25 +99,17 @@ class VM:
             elif contype in ["LSILogicSAS", "BusLogic"]:
                 cmdline.append("sas")
             elif contype in ["unknown"]:
-                print("Not setting storage controller because type is unknown.")
+                #print("Not setting storage controller because type is unknown.")
                 return True
             else:
                 print("ERROR! Could not figure out controller type.")
                 sys.exit(1)
 
-
-            stdout, stderr = Popen(cmdline, stdout=PIPE, stderr=PIPE).communicate()
-            stdout = stdout.decode('utf-8')
-            stderr = stderr.decode('utf-8')
-
-            if stderr:
-                print("ERROR! Could not set storage controller:\n%s" % stderr)
-                sys.exit(1)
-
-            print("Setting storrage controller option.")
+            runcommand(cmdline)
+            #print("Setting storrage controller option.")
             return True
         else:
-            print("Not setting storage controller because other vm does not have it set.")
+            #print("Not setting storage controller because other vm does not have it set.")
             return False
 
     def __setstoragedevices(self, fromvm):
@@ -144,7 +124,7 @@ class VM:
         nameopts.sort()
         typeopts.sort()
         allopts = zip(nameopts, typeopts)
-        print()
+        #print()
         for nameopt, typeopt in allopts:
             name = fromvm.info[nameopt]
             taip = fromvm.info[typeopt]
@@ -152,7 +132,7 @@ class VM:
                 # we don't know what do to with unknown devices
                 print("Skipping unknown device...")
                 continue
-            print("name: %s (%s), type: %s (%s)" % (name, nameopt, taip, typeopt))
+            #print("name: %s (%s), type: %s (%s)" % (name, nameopt, taip, typeopt))
 
             #controlleropts = [opt for opt in fromvm.info.keys() if opt.startswith(name.lower())]
             controlleropts = [opt for opt in fromvm.info.keys() if
@@ -185,12 +165,12 @@ class VM:
                     runcommand(cmdline)
                     continue
 
-                print("\t%s: %s" % (controlopt, fromvm.info[controlopt]))
-                print("\timageuuid: %s" % imageuuid)
+                #print("\t%s: %s" % (controlopt, fromvm.info[controlopt]))
+                #print("\timageuuid: %s" % imageuuid)
                 assert(imageuuid)
 
                 strgtype = storagetype(imageuuid)
-                print("\tstorage type: %s" % strgtype)
+                #print("\tstorage type: %s" % strgtype)
                 if strgtype in ["dvd", "floppy", "hostdvd", "hostfloppy"]:
                     #print("\tAttaching %s to %s... " % (strgtype, name))
                     cmdline = ["VBoxManage", "storageattach", self.uuid,
@@ -253,7 +233,7 @@ class VM:
                 newhdd = tmphdds[0]
                 #print("new hdd: %s" % [hdd for hdd in newhddforest.values() if hdd.hdlocation == newlocation])
 
-                print("Attaching new hard drive %s..." % newhdd.uuid)
+                #print("Attaching new hard drive %s..." % newhdd.uuid)
                 cmdline = ["VBoxManage", "storageattach", self.uuid,
                     "--storagectl", name,
                     "--port", port,
@@ -344,7 +324,7 @@ class VM:
             i += 1
 
         print("Done.")
-        sys.stdout.write("Setting storage devices for new VM from old VM... ")
+        sys.stdout.write("Copying storage devices for new VM from old VM (this may take a long time)... ")
         sys.stdout.flush()
 
         self.__setstoragedevices(fromvm)
@@ -507,13 +487,17 @@ def runcommand(args):
     If anything is found on stderr, exit.
     Return stdout.
     """
-    stdout, stderr = Popen(args, stdout=PIPE,
-            stderr=PIPE).communicate()
+    stdout, stderr = Popen(args, stdout=PIPE, stderr=PIPE).communicate()
     stdout = stdout.decode('utf-8')
     stderr = stderr.decode('utf-8')
 
     if stderr:
         print("ERROR! Could not run command %s:\n%s" % (args, stderr))
+        sys.exit(1)
+
+    warning = checkWarning(stdout)
+    if warning:
+        print(warning)
         sys.exit(1)
 
     return stdout
@@ -522,20 +506,8 @@ def createNewVM(name, ostype, hddforest):
     "Create a new VM with name and ostype.  Return new vm."
 
     sys.stdout.write("Creating new vm... ")
-
-    stdout, stderr = Popen(["VBoxManage", "createvm", "--name", name, "--register",
-        "--ostype", ostype], stdout=PIPE, stderr=PIPE).communicate()
-    stdout = stdout.decode('utf-8')
-    stderr = stderr.decode('utf-8')
-
-    if stderr:
-        print("ERROR! Could not create vm \"%s\":\n%s" % (name, stderr))
-        sys.exit(1)
-
-    #print("new vm:\n%s" % stdout)
-
+    runcommand(["VBoxManage", "createvm", "--name", name, "--register", "--ostype", ostype])
     print("Done.")
-
     return getVM(hddforest, name)
 
 def checkWarning(stdout):
@@ -558,15 +530,7 @@ def createHDDForest():
     Return a Forest() object of all hdds available.
     This does not include snapshots.
     """
-    stdout = Popen(["VBoxManage", "list", "hdds"],
-            stdout=PIPE).communicate()[0]
-    stdout = stdout.decode('utf-8')
-
-    warning = checkWarning(stdout)
-    if warning:
-        print(warning)
-        sys.exit(1)
-
+    stdout = runcommand(["VBoxManage", "list", "hdds"])
     stdout = stdout.strip()
     lines = stdout.split("\n\n")
 
@@ -589,15 +553,7 @@ def getVM(hddforest, vmname=None):
     
     This does not return snapshots.
     """
-    stdout = Popen(["VBoxManage", "list", "vms"],
-            stdout=PIPE).communicate()[0]
-    stdout = stdout.decode('utf-8')
-
-    warning = checkWarning(stdout)
-    if warning:
-        print(warning)
-        sys.exit(1)
-
+    stdout = runcommand(["VBoxManage", "list", "vms"])
     stdout = stdout.strip()
     lines = stdout.split('\n')
     vms = [VM(l, hddforest) for l in lines]
@@ -673,15 +629,13 @@ def main():
 
     hdds = hddsattachedto(args.VM, hddforest)
 
-    #print("vm:\n%s\n\nhdds:\n%s" % (vm, hdds))
-
     vm.fillininfo()
 
     # create new vm and fill in all applicable info from old vm
     newvm = createNewVM(args.NEW_VM_NAME, vm.info["ostype"], hddforest)
     newvm.setinfofrom(vm)
 
-    print(vm)
+    print("Created new vm: %s" % newvm)
 
 
 if __name__ == '__main__':
