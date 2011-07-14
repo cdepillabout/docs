@@ -428,7 +428,7 @@ call Add_eol_whitespace_highlighting("python")
 " Python needs spaces instead of tabs.
 autocmd BufRead,BufNewFile *.py set expandtab
 " maybe this could also be done with
-"autocmd FileType python set expandtab
+autocmd FileType python set expandtab
 
 " SConscript and SConstruct files are python files
 autocmd BufRead,BufNewFile SConstruct set ft=python
