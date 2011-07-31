@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # This will run a command on multiple windows in the current screen session.
 #
