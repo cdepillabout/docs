@@ -421,6 +421,7 @@ call Add_eol_whitespace_highlighting("cpp")
 call Add_eol_whitespace_highlighting("java")
 " Actually, I don't know if these will work.  It might have to be "py" instead
 call Add_eol_whitespace_highlighting("python")
+call Add_eol_whitespace_highlighting("php")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
