@@ -597,3 +597,5 @@ git fsck --unreachable
 
 # Show all unreachable commits in gitk
 git fsck --unreachable | grep commit | cut -f3 -d' ' | xargs gitk --all
+# this is actually a better method
+gitk --all $( git fsck --no-reflog | awk '/dangling commit/ {print $3}' )
