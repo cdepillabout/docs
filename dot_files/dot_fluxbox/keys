@@ -156,3 +156,13 @@ Mod4 b :Exec firefox
 
 # maximize
 Mod4 F10 :Maximize
+
+# exit fluxbox
+Mod4 Shift q :Exit
+
+# restart fluxbox (this does not kill an open applications)
+Mod4 q :Restart
+
+# close open window
+Mod4 k :Close
+Mod4 Shift k :Kill
