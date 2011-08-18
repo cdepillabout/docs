@@ -330,6 +330,38 @@ alias jd='autojump_func '
 alias j='autojump_and_ls_func '
 alias jl='autojump_and_lsl_func '
 
+
+# add a command for updating pacman mirror list
+function reflector-update-mirrorlist() {
+	if [[ $EUID -ne 0 ]] ; then
+		echo "ERROR! Cannot update the mirror list if you are not root." >&2
+		return 1
+	fi
+
+	mirrorlist="$(/usr/bin/reflector -l 10 --sort rate -c "United States")"
+
+	if [ -z "$mirrorlist" ] ; then
+		echo "ERROR! Could not get an updated mirrorlist." >&2
+		return 1
+	fi
+
+	if [ -f "/etc/pacman.d/mirrorlist" ] ; then
+		echo "Moving old mirrorlist to /etc/pacman.d/mirrorlist.bak..."
+		mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+	fi
+
+	# now move our new mirror list into place
+	echo "$mirrorlist" > /etc/pacman.d/mirrorlist
+
+	# output our new mirrorlist to the screen
+	echo "New mirrorlist:"
+	echo "---------------------------------------------"
+	echo "$mirrorlist" #> /etc/pacman.d/mirrorlist
+	echo "---------------------------------------------"
+	echo "Done."
+	return 0
+}
+
 # don't record duplicate items in history or 
 # lines starting with a space ('$  ls -la')
 export HISTCONTROL='ignoreboth'
