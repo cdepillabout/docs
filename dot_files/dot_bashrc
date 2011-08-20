@@ -353,6 +353,8 @@ function reflector-update-mirrorlist() {
 	# now move our new mirror list into place
 	echo "$mirrorlist" > /etc/pacman.d/mirrorlist
 
+	chmod 0644 /etc/pacman.d/mirrorlist
+
 	# output our new mirrorlist to the screen
 	echo "New mirrorlist:"
 	echo "---------------------------------------------"
