@@ -338,7 +338,7 @@ function reflector-update-mirrorlist() {
 		return 1
 	fi
 
-	mirrorlist="$(/usr/bin/reflector -l 10 --sort rate -c "United States")"
+	mirrorlist="$(/usr/bin/reflector -l 10 --sort rate -c "United States" -c "Japan" -c "Korea")"
 
 	if [ -z "$mirrorlist" ] ; then
 		echo "ERROR! Could not get an updated mirrorlist." >&2
@@ -392,6 +392,8 @@ export EDITOR=`get_correct_filename_from_choices "/usr/bin/vim" "/usr/local/bin/
 # XDG Base Directory Specification
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DESKTOP_DIR="$HOME"
+export XDG_DOWNLOAD_DIR="$HOME"
 
 # We xauth stuff to be set correctly if we are root.
 if [[ $EUID -eq 0 ]] ; then
