@@ -149,7 +149,7 @@ Control Mod4 F5 :TakeToWorkspace 5
 #Control Mod4 F12 :TakeToWorkspace 12
 
 # open terminal
-Mod4 m :Exec roxterm
+Mod4 m :Exec on-screen roxterm
 
 # open firefox
 Mod4 b :Exec firefox
