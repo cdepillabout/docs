@@ -232,3 +232,8 @@ ls some_dir/* | vim   # THIS DOESN'T WORK!!
 
 # start eclimd
 /usr/share/eclipse/eclimd
+
+
+# make vim write out a file using a different encoding
+# (in this case it is utf8)
+:set fileencoding=utf8
