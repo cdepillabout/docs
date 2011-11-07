@@ -184,3 +184,11 @@ then
 fi
 
 $
+
+
+
+
+# If ssh connections take a long time to occur, 
+# (especially if they are hanging after SSH2_MSG_SERVICE_ACCEPTED),
+# then you can disable DNS to speed things up.
+# Edit /etc/ssh/sshd_config and set 'UseDNS' to no.
