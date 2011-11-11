@@ -2,7 +2,7 @@ filetype plugin on
 filetype indent on
 
 set fileencodings=utf-8
-set fileencoding=utf-8
+setglobal fileencoding=utf-8
 set encoding=utf-8
 set ttymouse=xterm2		" mouse scrolling in vim
 set mouse=a
