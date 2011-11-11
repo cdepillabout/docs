@@ -237,3 +237,7 @@ ls some_dir/* | vim   # THIS DOESN'T WORK!!
 # make vim write out a file using a different encoding
 # (in this case it is utf8)
 :set fileencoding=utf8
+
+# make vim reload a file in a different encoding
+# (for example, if vim guesses wrong when opening the file)
+:e ++enc=utf8
