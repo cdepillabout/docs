@@ -166,3 +166,6 @@ Mod4 q :Restart
 # close open window
 Mod4 k :Close
 Mod4 Shift k :Kill
+
+# move a window to the lower right corner
+Mod4 F12 :MoveTo 0 0 BottomRight
