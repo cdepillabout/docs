@@ -9,11 +9,11 @@ map <C-h> gT
 map <C-l> gt
 
 " reorder tabs like vim
-map <C-y> :tabmove -1<CR>
+nnoremap <C-y> :tabmove -1<CR>
 map <C-u> :tabmove +1<CR>
 
 " scroll up and down faster
-map k 4<C-y>
+nnoremap k 4<C-y>
 map j 4<C-e>
 " these could also be done with something like this
 " :noremap j 3j
