@@ -46,3 +46,5 @@ mplayer dvdnav:// -dvd-device ./dvd1.iso -mouse-movements -vf yadif=3,hqdn3d=3:2
 # here is another one
 mplayer dvdnav:// -dvd-device ./dvd1.iso -mouse-movements -vf yadif=3:1,mcdeint=2:1:10
  
+# increase volume
+mplayer -af volume=+6  some_file.avi
