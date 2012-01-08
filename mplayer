@@ -31,7 +31,10 @@ mplayer -lavdopts skipframe=nonref:skiploopfilter=all:fast=1
 
 
 # encode video for use with cinelerra
-mencoder ./inputfile.avi -o ./outputfile.avi -ovc lavc -lavcopts vcodec=mpeg4:vhq:vbitrate=6000 -oac mp3lame -lameopts br=256:vol=1 -ffourcc DIVX 
+# (don't use this...)
+#mencoder ./inputfile.avi -o ./outputfile.avi -ovc lavc -lavcopts vcodec=mpeg4:vhq:vbitrate=6000 -vf harddup -oac mp3lame -lameopts br=256:vol=1 -ffourcc DIVX 
+# (use this:)
+mencoder ./inputfile.avi -o outputfile.avi -vf harddup -demuxer lavf -oac pcm -ovc lavc -lavcopts vcodec=mjpeg:vhq:vbitrate=6000 -mc 0 -ofps 25
 
 # Here is another way to do it with ffmpeg.
 # It is very important that the extension is .mov
