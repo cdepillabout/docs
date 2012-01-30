@@ -2,6 +2,7 @@
 [extensions]
 hgk=
 color=
+hgext.bookmarks=
 
 [ui]
 verbose = True
