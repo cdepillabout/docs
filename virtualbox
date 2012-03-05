@@ -105,3 +105,17 @@ VBoxManage "Your VM Name" --nic7 none
 qemu-img convert -O raw test.qcow2 test.raw
 VBoxManage convertfromraw /full/path/to/test.raw /full/path/to/test.vdi
 VBoxManage modifyvdi /full/path/to/test.vdi compact
+
+
+######
+# Detach a USB device from a host.
+######
+
+# first list the available devices
+VBoxManage list usbhost
+
+# now detach the desired device
+VBoxManage controlvm "Some VM" usbdetach c5e53dc3-29ae-4c2b-8042-7d042afa5062
+
+# now attach it to a different device
+VBoxManage controlvm "Other VM" usbattach c5e53dc3-29ae-4c2b-8042-7d042afa5062
