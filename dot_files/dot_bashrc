@@ -220,6 +220,9 @@ alias java='java -server -ea '
 # the directory will be copied, but not the directory itself.
 alias rsyncp='rsync -a -P '
 
+# this is a safe version of dd.  It doesn't overwrite the output file.
+alias dd='safe-dd '
+
 # git aliases
 alias gadd='git add '
 alias gba='git branch -a '
