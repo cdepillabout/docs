@@ -77,3 +77,15 @@ yaourt -Ss -q PKGNAME | grep PKGNAME | grep -v "^    "
 comm -23 <(pacman -Qeq) <(pacman -Qmq) > pkglist
 # install from backup list
 pacman -S $(< pkglist)
+
+
+
+# check AUR for orphaned packages that you are currently using
+aurphan -a
+
+
+# list services and their statuses
+rc.d list
+
+# start a service (for instance, apache)
+rc.d start httpd
