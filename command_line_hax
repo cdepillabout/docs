@@ -439,3 +439,13 @@ atop
 
 # when in bash, you can edit the current command line
 # in $EDITOR by using Ctrl-X Ctrl-E.
+
+
+# unzip cannot open a zip file with filenames in other languages.
+# You must use 7zip to do this.
+7z x contains_other_language_filenames.zip
+
+# this is an iconv-like program for converting the encoding of file names:
+convmv ...
+# a script like this can also be used:
+ENCDN=iso-8859-1 for x in *; do mv "$x" $(echo "$x" | iconv -f $ENCDN -t utf-8) ;  done
