@@ -449,3 +449,8 @@ atop
 convmv ...
 # a script like this can also be used:
 ENCDN=iso-8859-1 for x in *; do mv "$x" $(echo "$x" | iconv -f $ENCDN -t utf-8) ;  done
+
+
+
+# split an mp3 file based on silence
+mp3splt -s -p min=1,off=0.5 audio_file.mp3
