@@ -51,3 +51,11 @@ mplayer dvdnav:// -dvd-device ./dvd1.iso -mouse-movements -vf yadif=3:1,mcdeint=
  
 # increase volume
 mplayer -af volume=+6  some_file.avi
+
+
+# rip dvd and get japanese audio (don't get subtitles)
+mencoder -o movie.avi dvd://1 -dvd-device dvd.iso -alang en -oac mp3lame -lameopts br=128 -ovc lavc -lavcopts vcodec=mpeg4:vhq:vbitrate="6000":autoaspect=1  -nosub
+
+# rip two sets of subtitles (for instance, japanese and english)
+mencoder dvd://  -dvd-device dvd.iso -vobsubout subtitles_file -vobsuboutindex 1 -sid 1 -nosound -ovc copy -o /dev/null
+mencoder dvd://  -dvd-device dvd.iso -vobsubout subtitles_file -vobsuboutindex 0 -sid 0 -nosound -ovc copy -o /dev/null
