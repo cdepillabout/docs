@@ -54,8 +54,23 @@ mplayer -af volume=+6  some_file.avi
 
 
 # rip dvd and get japanese audio (don't get subtitles)
-mencoder -o movie.avi dvd://1 -dvd-device dvd.iso -alang en -oac mp3lame -lameopts br=128 -ovc lavc -lavcopts vcodec=mpeg4:vhq:vbitrate="6000":autoaspect=1  -nosub
+mencoder -o movie.avi dvd://1 -dvd-device dvd.iso -alang en -oac copy -ovc lavc -lavcopts vcodec=mpeg4:hq:vbitrate="6000":autoaspect=1  -nosub -ffourcc DX50
 
 # rip two sets of subtitles (for instance, japanese and english)
-mencoder dvd://  -dvd-device dvd.iso -vobsubout subtitles_file -vobsuboutindex 1 -sid 1 -nosound -ovc copy -o /dev/null
-mencoder dvd://  -dvd-device dvd.iso -vobsubout subtitles_file -vobsuboutindex 0 -sid 0 -nosound -ovc copy -o /dev/null
+mencoder dvd:// -dvd-device dvd.iso -vobsubout subtitles_file -vobsuboutindex 1 -sid 1 -nosound -ovc copy -o /dev/null
+mencoder dvd:// -dvd-device dvd.iso -vobsubout subtitles_file -vobsuboutindex 0 -sid 0 -nosound -ovc copy -o /dev/null
+
+# use crop detect to get rid of black borders (these just take up extra space)
+# This should output something like "[CROP] Crop area: X: 0..719  Y: 74..501  (-vf crop=720:416:0:80).0".
+# Use the command '-vf crop=720:416:0:80' when actually ripping your movie
+mplayer dvd://1 -dvd-device dvd.iso -chapter 3  -vf cropdetect
+
+# two pass (making use of crop)
+mencoder -o /dev/null dvd://1 -dvd-device dvd.iso -alang ja -oac copy -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell:autoaspect=1:vpass=1  -nosub -vf crop=720:416:0:80 -ffourcc DX50
+mencoder -o movie.avi dvd://1 -dvd-device dvd.iso -alang ja -oac copy -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell:autoaspect=1:vpass=2  -nosub -vf crop=720:416:0:80 -ffourcc DX50
+# one line:
+mencoder -o /dev/null dvd://1 -dvd-device dvd.iso -alang ja -oac copy -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell:autoaspect=1:vpass=1  -nosub -vf crop=720:416:0:80 -ffourcc DX50 && mencoder -o movie.avi dvd://1 -dvd-device dvd.iso -alang ja -oac copy -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell:autoaspect=1:vpass=2  -nosub -vf crop=720:416:0:80 -ffourcc DX50
+
+
+
+
