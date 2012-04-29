@@ -454,3 +454,13 @@ ENCDN=iso-8859-1 for x in *; do mv "$x" $(echo "$x" | iconv -f $ENCDN -t utf-8) 
 
 # split an mp3 file based on silence
 mp3splt -s -p min=1,off=0.5 audio_file.mp3
+
+
+# use mplayer to play a list of files from `find`, 
+# while having keyboard shortcuts work
+# (this uses temp file descriptors.  use commands like
+# `cat <(find .)` and `echo <(find .)` to see how this works.)
+# -playlist on the mplayer command just reads single lines in a
+# file to get the files to play.
+mplayer -playlist <(find $PWD -type f | sort -r)
+
