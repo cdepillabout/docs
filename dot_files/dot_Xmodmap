@@ -7,3 +7,60 @@ keysym Control_L = Caps_Lock
 keysym Caps_Lock = Control_L
 add Lock = Caps_Lock
 add Control = Control_L
+
+!
+! These are key codes for switching annoying Japanese layout with
+! Microsoft Natural keyboard.
+!
+
+! The modifier keys need to be removed before swapping them around
+! and then re-added at the end.
+remove Shift = Shift_R
+
+remove Mod1 = Alt_L
+remove Mod1 = Alt_R
+
+remove Mod1 = Meta_L
+
+remove Mod4 = Super_L
+remove Mod4 = Super_R
+
+! Make old right brace to enter
+keycode 51 = Return
+
+! Make old backslash to right shift
+keycode 97 = Shift_R
+
+! Make old yen key to backspace
+keycode 132 = BackSpace
+
+! Make old left muhenkan key to left alt
+keycode 102 = Alt_L
+
+! Make old left alt to left super windows key
+keycode 64 = Super_L
+
+! Make old left super windows key to left meta key
+keycode 133 = Meta_L
+
+! Make old henkan key to right alt
+keycode 100 = Alt_R
+
+! Make old katakana/hiragana key to right super windows key
+keycode 101 = Super_R
+
+! Make old right alt to backslash
+keycode 108 = backslash
+
+! Make old mouse right click menu key to vertical pipe
+keycode 135 = bar
+
+add Mod4 = Super_L
+add Mod4 = Super_R
+
+add Mod3 = Meta_L
+
+add Mod1 = Alt_R
+add Mod1 = Alt_L
+
+add Shift = Shift_R
