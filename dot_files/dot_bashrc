@@ -425,12 +425,17 @@ do
 	add_to_path PYTHONPATH "${f}/site-packages/"
 done
 
-# source local bashrc completion scripts if they are available and we are
-# not root
+
+# bash completions (only used if we are not root)
 if [[ $EUID -ne 0 ]] ; then
+	# load bash completions if we have them
+	filesystem_bash_completion_script="/usr/share/bash-completion/bash_completion"
+	[ -r "$filesystem_bash_completion_script" ] && . "$filesystem_bash_completion_script"
+
+	# load local bash completions
 	local_bash_completion_dir="$HOME/filesystem/etc/bash_completion.d"
 	if [ -d "$local_bash_completion_dir" ] ; then
-		if [ -f "/etc/bash_completion" ] ; then
+		if [ -f "$filesystem_bash_completion_script" ] ; then
 			# this have command gets unset at the end of /etc/bash_completion, 
 			#so we need to put it back in
 			have()
