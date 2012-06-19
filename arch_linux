@@ -89,3 +89,24 @@ rc.d list
 
 # start a service (for instance, apache)
 rc.d start httpd
+
+
+
+#################
+# Add your own key to the pacman key database so you can sign local packages.
+#################
+
+# first generate your own key
+gpg --gen-key
+
+# export your private key (you@example.com should be the email address you used when
+# creating your key in the previous step)
+gpg --export --armor you@example.com > you@example.com.asc
+
+# add this public key to your system keyring
+pacman-key -a you@example.com.asc
+
+# sign the public key
+pacman-key --lsign-key you@example.com
+
+# Also make sure you have "sign" enabled in /etc/makepkg.conf.
