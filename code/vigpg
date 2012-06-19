@@ -1,15 +1,16 @@
 #!/bin/bash
 # Edit a file that has been encoded with gpg.
 
+# this gets us some functions and variables needed by various programs
+if [[ -e "${HOME}/docs/code/library.sh" ]] ; then
+	source "${HOME}/docs/code/library.sh"
+fi
+
 function usage {
 	echo "Usage: $0 FILE"
 }
 
-function die {
-	echo $1
-
-	exit 1
-}
+GPG=`get_correct_filename_from_choices "gpg1" "gpg"`
 
 # make sure there is only one argument
 if [ "$#" != "1" ]
@@ -32,7 +33,7 @@ read -s -p "Password: " password
 echo 
 
 # unencrypt the file and put it's output in tempfile
-echo $password | gpg --passphrase-fd 0 -d ${file_name} > ${temp_file} || 
+echo $password | $GPG --passphrase-fd 0 -d ${file_name} > ${temp_file} || 
 	die "ERROR! Could not decrypt $file_name"
 
 # edit the tempfile
@@ -40,7 +41,7 @@ $EDITOR ${temp_file} ||
 	die "ERROR! Could not edit the decrypted file ${temp_file}"
 
 # reencrypt the tempfile
-echo $password | gpg --passphrase-fd 0 -c -o ${file_name} ${temp_file} || 
+echo $password | $GPG --passphrase-fd 0 -c -o ${file_name} ${temp_file} || 
 	die "ERROR! Could not reencrypt ${temp_file} to ${file_name}."
 
 # delete the tempfile
