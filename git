@@ -599,3 +599,13 @@ git fsck --unreachable
 git fsck --unreachable | grep commit | cut -f3 -d' ' | xargs gitk --all
 # this is actually a better method
 gitk --all $( git fsck --no-reflog | awk '/dangling commit/ {print $3}' )
+
+
+
+# Add a tag.
+# '-a' means that this is an unsigned tag, that is, not signed by a GPG key.
+# '-m' is a message to use for this tag.
+git tag -a v1.0.0 -m "Creating the first official version."
+
+# push that tag
+git push --tags
