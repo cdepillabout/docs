@@ -616,3 +616,7 @@ git tag
 
 # list only certain tags starting with 'v1.4.2.'
 git tag -l v1.4.2.*
+
+
+# make git not quote unicode filenames
+git config core.quotepath false
