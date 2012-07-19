@@ -241,3 +241,7 @@ ls some_dir/* | vim   # THIS DOESN'T WORK!!
 # make vim reload a file in a different encoding
 # (for example, if vim guesses wrong when opening the file)
 :e ++enc=utf8
+
+
+# htmlizle a vim buffer.  This optputs html that can be used to represent the current tab.
+:TOhtml
