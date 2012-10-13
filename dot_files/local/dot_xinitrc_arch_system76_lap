@@ -9,14 +9,14 @@ if [ -f $userresources ]; then
 fi
 
 # swap ctrl and caps
-swap_caps_ctrl_xmodmap=$HOME/.Xmodmap
+swap_caps_ctrl_xmodmap="$HOME/.Xmodmap_swap_ctrl_caps"
 
 if [ -f "$swap_caps_ctrl_xmodmap" ]; then
     xmodmap "$swap_caps_ctrl_xmodmap"
 fi
 
 # change keys on Japanese keyboard if we are using a Japanese keyboard
-japanese_keyboard_xmodmap=$HOME/.Xmodmap
+japanese_keyboard_xmodmap="$HOME/.Xmodmap_japanese_keyboard"
 
 if [ -f "$swap_caps_ctrl_xmodmap" ]; then
 	grep_output=$(lsusb | grep '045e:00dc Microsoft Corp.')
