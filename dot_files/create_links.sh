@@ -77,5 +77,6 @@ super_link $HOME/docs/dot_files/dot_gitconfig $HOME/.gitconfig
 # mercurial
 super_link $HOME/docs/dot_files/dot_hgrc $HOME/.hgrc
 
-# Xmodmap
-super_link $HOME/docs/dot_files/dot_Xmodmap $HOME/.Xmodmap
+# Xmodmaps
+super_link $HOME/docs/dot_files/dot_Xmodmap_japanese_keyboard $HOME/.Xmodmap_japanese_keyboard
+super_link $HOME/docs/dot_files/dot_Xmodmap_swap_ctrl_caps $HOME/.Xmodmap_swap_ctrl_caps
