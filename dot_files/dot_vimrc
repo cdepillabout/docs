@@ -37,7 +37,6 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set ruler					" know how far you are in a file
 set enc=utf-8
 set fenc=utf-8
-set fencs=iso-2022-jp,euc-jp,cp932
 set backspace=indent,eol,start	" make sure backspace works correctly
 
 set guifont=Bitstream\ Vera\ Sans\ Mono\ 14 "font names to be used in gui
@@ -240,7 +239,7 @@ nnoremap - <C-W>-
 nnoremap '' ``
 
 " Open a bunch of tabs at once.  Also interpret globbing characters.
-function Tabopen_all_files(...)
+function! Tabopen_all_files(...)
 	let i = 1
 	let firstnewtab = 0
 	
@@ -393,6 +392,7 @@ call Add_auto_foldmethod("xsd", "syntax")
 call Add_auto_foldmethod("ant", "syntax")
 call Add_auto_foldmethod("javascript", "indent")
 call Add_auto_foldmethod("php", "syntax")
+call Add_auto_foldmethod("objc", "syntax")
 
 " Kind of like above, add a method specifying whether or not we
 " want to highlight spaces at the end of a line
