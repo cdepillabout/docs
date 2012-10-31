@@ -1,0 +1,16 @@
+
+
+[[ -s ~/filesystem/etc/profile.d/autojump.bash ]] && source ~/filesystem/etc/profile.d/autojump.bash
+
+
+# in order to use this, we need to run the command for the X server:
+# `X -multiwindow &`
+# http://en.wikibooks.org/wiki/Cygwin
+export DISPLAY=127.0.0.1:0.0
+
+# start the X server if it does not already exist
+xwin=$(ps auwx | grep "XWin")
+if [ -z "$xwin" ] ; then 
+	echo "Starting X server..."
+	X -multiwindow & 
+fi
