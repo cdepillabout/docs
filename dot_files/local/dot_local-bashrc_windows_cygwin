@@ -2,6 +2,15 @@
 
 [[ -s ~/filesystem/etc/profile.d/autojump.bash ]] && source ~/filesystem/etc/profile.d/autojump.bash
 
+# start ssh-agent
+# TODO: this currently only works if you only have open one command line...
+# i.e. only one cygwin terminal (which you can of course run screen in)
+sshagent=$(ps auwx | grep "ssh-agent")
+if [ -z "$sshagent" ] ; then 
+	echo "Starting ssh-agent..."
+	eval `ssh-agent`
+	ssh-add
+fi
 
 # in order to use this, we need to run the command for the X server:
 # `X -multiwindow &`
@@ -12,5 +21,5 @@ export DISPLAY=127.0.0.1:0.0
 xwin=$(ps auwx | grep "XWin")
 if [ -z "$xwin" ] ; then 
 	echo "Starting X server..."
-	X -multiwindow & 
+	X -multiwindow 1>/dev/null 2>&1 & 
 fi
