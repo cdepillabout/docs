@@ -42,6 +42,9 @@ ibus-daemon -x &
 eval `ssh-agent`
 xterm -e ssh-add &
 
+# this is minidlna for serving files over the network to sony bravia tv
+$HOME/.minidlna/run.sh start &
+
 # set both screens
 #xrandr --output LVDS1 --auto --primary --output VGA1 --left-of LVDS1 --rate 75 --size 1024x768
 if [ "$(xrandr | grep -o "DVI-I-1 connected")" == "DVI-I-1 connected" ] 
