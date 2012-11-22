@@ -33,10 +33,10 @@ cdrecord -v -useinfo -pad driveropts=noforcespeed,burnfree speed=48 dev=1,0,0 -a
 mkisofs -R banana_phone/ | cdrecord driveropts=noforcespeed,burnfree speed=48 dev=1,0,0 -
 
 # this is how to do it on arch linux
-wodim -v dev=/dev/cdrw isoimage.iso
+wodim -v dev=/dev/sr0 isoimage.iso
 
 # and this is how to burn wav files on arch
-wodim -v -pad speed=48 dev=/dev/cdrw -dao -swab *.wav
+wodim -v -pad speed=48 dev=/dev/sr0 -dao -swab *.wav
 
 
 # This is how to make a bootable iso image with mkisofs:
