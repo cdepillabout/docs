@@ -620,3 +620,56 @@ git tag -l v1.4.2.*
 
 # make git not quote unicode filenames
 git config core.quotepath false
+
+#############################
+# USING GIT WITH SUBVERSION #
+#############################
+
+# Warning: Running `git merge` or `git pull` is NOT recommended on a branch you
+# plan to dcommit from because Subversion users cannot see any merges you've
+# made.  If you merge or pull from a git branch that is a mirror of a SVN
+# branch, dcommit may commit the wrong branch.
+
+# fetch commits on subversion repo
+git svn fetch [--all]
+
+# rebase on top of new commits on subversion repo
+git svn rebase
+
+# push to subversion repo
+git svn dcommit
+
+# check to make sure that dcommit will be committing in the correct place.
+# dcommit will try to commit on top of the commit named in this command.  You
+# must therefore ensure that the most recent commit of the branch you want to
+# dcommmit to is the _first_ parent of the merge.
+git log --grep=^git-svn-id: --first-parent -1
+
+# rebase local series of commits and compress to one commit
+# to push to subversion repo
+# (this is assuming that the remote branch is called git-svn)
+git svn rebase -i git-svn
+
+# clone the trunk of a subversion repo
+# (This gives you a remote branch named 'git-svn' and a local branch named
+# 'master' that basically tracks the remote git-svn branch.  Keep in mind it
+# does not set up any remotes--so you don't have an 'origin'.)
+git svn clone http://example.com/path/to/trunk/ myprojectrunk
+
+# You can mess with branches and tags in the .git/config file.  For example,
+# you could do something like this to track two separate branches as the main
+# files you wanted to work on, instead of using trunk/, for instance:
+[svn-remote "svn"]
+	url = http://example.com/path/to/repo  # under this you have the folders project1/ and project2/
+										   # under both project1/ and project2/ you have trunk/,
+										   # tags/, and branches/.
+										   
+	#fetch = :refs/remotes/git-svn         # This has been commented out because we don't want to 
+										   # worry about tracking the entire svn repo.
+										   
+	fetch = project1/trunk:refs/remotes/project1-trunk # This sets up a remote branch that tracks
+													   # the trunk/ dir for project1.
+
+	fetch = project2/trunk:refs/remotes/project2-trunk # This sets up a remote branch that tracks
+													   # the trunk/ dir for project2.
+
