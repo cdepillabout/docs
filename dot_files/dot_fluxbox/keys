@@ -169,3 +169,5 @@ Mod4 Shift k :Kill
 
 # move a window to the lower right corner
 Mod4 F12 :MoveTo 0 0 BottomRight
+
+Mod4 F6 :Exec xrandr-setup-screens
