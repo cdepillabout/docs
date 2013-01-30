@@ -243,7 +243,7 @@ alias glg='git log '
 alias glog='git log '
 alias gpo='git push origin '
 alias gpoh='git push origin HEAD '
-alias gpsh='git pushi '
+alias gpsh='git push '
 alias gst='git status '
 
 # screen automatically connects to a running session
