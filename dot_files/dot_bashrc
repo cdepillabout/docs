@@ -122,7 +122,7 @@ PS1_magenta="\[\033[01;35m\]"
 PS1_cyan="\[\033[01;36m\]"
 PS1_white="\[\033[01;37m\]"
 
-PS1_normal_text="\[\033[00m\]"
+PS1_normal_text="\[\033[00;00m\]"
 
 PS1_git_branch_color="${PS1_yellow}"
 PS1_mercurial_branch_color="${PS1_magenta}"
