@@ -249,6 +249,10 @@ alias gst='git status '
 # screen automatically connects to a running session
 alias screen='screen -R '
 
+# make sure Anki 2 uses the ~/.anki2/ directory to store the decks and its config files
+# instead of the default (which is ~/Anki/).
+alias anki="anki --base=\"${HOME}/.anki2\""
+
 # SSH Get Auth Sock.
 # This is a command to automatically update the SSH_AUTH_SOCK env var.
 # (This is needed when connecting to a previously running
