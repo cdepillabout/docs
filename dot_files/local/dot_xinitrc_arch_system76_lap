@@ -9,21 +9,15 @@ if [ -f $userresources ]; then
 fi
 
 # swap ctrl and caps
-swap_caps_ctrl_xmodmap="$HOME/.Xmodmap_swap_ctrl_caps"
+#swap_caps_ctrl_xmodmap="$HOME/.Xmodmap_swap_ctrl_caps"
 
-if [ -f "$swap_caps_ctrl_xmodmap" ]; then
-	( sleep 3 && xmodmap "$swap_caps_ctrl_xmodmap" ) &
-fi
+#if [ -f "$swap_caps_ctrl_xmodmap" ]; then
+#	( sleep 3 && xmodmap "$swap_caps_ctrl_xmodmap" ) &
+#fi
 
-# change keys on Japanese keyboard if we are using a Japanese keyboard
-japanese_keyboard_xmodmap="$HOME/.Xmodmap_japanese_keyboard"
+#setxkbmap -option ctrl:swapcaps     # Swap Left Control and Caps Lock
+setxkbmap -option ctrl:nocaps       # Make Caps Lock a Control key
 
-if [ -f "$swap_caps_ctrl_xmodmap" ]; then
-	grep_output=$(lsusb | grep '045e:00dc Microsoft Corp.')
-	if [ -n "$grep_output" ] ; then
-		( sleep 3 && xmodmap "$japanese_keyboard_xmodmap" ) &
-	fi
-fi
 
 export TERM="xterm-256color"
 export LC_ALL="ja_JP.UTF-8"
@@ -66,5 +60,20 @@ xrandr-setup-screens --startup &
 	#xrandr --output LVDS-1 --auto --primary --pos 0x600 --output DVI-I-1 --rotate left --pos 1920x0 --mode "1920x1080"
 #fi
 
-exec fluxbox
+fluxbox &
+fluxboxpid=$!
 
+sleep 5 
+{
+	# change keys on Japanese keyboard if we are using a Japanese keyboard
+	japanese_keyboard_xmodmap="$HOME/.Xmodmap_japanese_keyboard"
+
+	if [ -f "$japanese_keyboard_xmodmap" ]; then
+		grep_output=$(lsusb | grep '045e:00dc Microsoft Corp.')
+		if [ -n "$grep_output" ] ; then
+			xmodmap "$japanese_keyboard_xmodmap"
+		fi
+	fi
+} &
+
+wait $fluxboxpid
