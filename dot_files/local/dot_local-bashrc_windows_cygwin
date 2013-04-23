@@ -1,5 +1,5 @@
 
-
+# cygwin settings for autojump if it is installed to ~/filesystem
 [[ -s ~/filesystem/etc/profile.d/autojump.bash ]] && source ~/filesystem/etc/profile.d/autojump.bash
 
 # start ssh-agent
@@ -26,3 +26,13 @@ fi
 
 # java doesn't have server option
 unalias java
+
+# this is important for git?
+umask 022
+
+# since we are using msysGit, we need to set ssh to be cygwin's ssh
+export GIT_SSH="C:/Users/$USER/cygwin/bin/ssh.exe"
+# Also need to set up gitk for use with msysGit.
+alias gitk='PATH="/cygdrive/c/Program Files (x86)/Git/cmd:/cygdrive/c/Program Files (x86)/Git/bin:$PATH" "C:/Program Files (x86)/Git/bin/gitk"'
+# Also need to make sure git's editor is set up correctly
+export GIT_EDITOR="C:/Users/$USER/cygwin/bin/vim-nox.exe"
