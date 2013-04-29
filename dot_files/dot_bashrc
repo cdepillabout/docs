@@ -253,6 +253,10 @@ alias screen='screen -R '
 # instead of the default (which is ~/Anki/).
 alias anki="anki --base=\"${HOME}/.anki2\""
 
+# I hate when systemd uses a pager
+alias systemctl="systemctl --no-pager "
+alias journalctl="journalctl --no-pager "
+
 # SSH Get Auth Sock.
 # This is a command to automatically update the SSH_AUTH_SOCK env var.
 # (This is needed when connecting to a previously running
