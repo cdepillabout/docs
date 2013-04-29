@@ -1,0 +1,32 @@
+
+# mask units that are not being used so they don't show up as failed in systemctl --all
+systemctl mask auditd.service
+systemctl mask display-manager.service plymouth-quit-wait.service plymouth-start.service
+
+# list all current targets
+systemctl list-units --type=target
+
+# Change the default target 
+# (this is like changing the default runlevel.  By default, systemd goes into the
+#  graphical target, but we may want it to use the multi-user instead.)
+systemctl enable multi-user.target
+
+
+
+
+
+
+# show all journal entries since the last boot
+journalctl -b
+
+# show all journal entries from previous boot
+journalctl --since=today | tac | sed -n '/-- Reboot --/{n;:r;/-- Reboot --/q;p;n;b r}' | tac
+
+# Show all messages by a specific executable:
+journalctl /usr/lib/systemd/systemd
+
+# Show all messages by a specific process:
+journalctl _PID=1
+
+# Show all messages by a specific unit:
+journalctl -u netcfg
