@@ -1,0 +1,113 @@
+
+###################
+###### BTRFS ######
+###################
+
+### TODO: The below is a work in progress while taking notes from 
+###    http://blog.fabio.mancinelli.me/2012/12/28/Arch_Linux_on_BTRFS.html
+### There are also good resources on the Arch Linux website
+###    https://wiki.archlinux.org/index.php/Btrfs
+### Here is some more from the btrfs site itself
+###    https://btrfs.wiki.kernel.org/index.php/Getting_started
+### Here is another intro page
+###    http://www.funtoo.org/wiki/BTRFS_Fun
+
+# A BTRFS-formatted partition contains by default a single subvolume where
+# users can store files. A subvolume can be thought as an independent
+# filesystem that is attached to some parent (another subvolume).
+
+# The interesting thing is that subvolumes can be mounted as root filesystems.
+# When this is the case, users can only “see” what is inside the subvolume and
+# not what is contained in the parent subvolume. Only by mounting the toplevel
+# subvolume you can have access to all the data stored in a BTRFS filesystem.
+
+# Subvolumes appear as directories in the filesystem hierarchy. You can
+# distinguish between them and "vanilla" directories by using the 
+# `btrfs subvolume list` command.
+
+# Another interesting thing about subvolumes is that they can be snapshotted. A
+# snapshot is an exact copy of a subvolume that has an independent life. A
+# snapshot uses a copy-on-write policy which makes snapshots quite
+# space-efficient. The initial snapshot, in fact, doesn’t take any additional
+# space. Only what is modified is then copied and starts to occupy actual disk
+# space.  Snapshots can be writable and are actually subvolumes that can be
+# used as such.
+
+# Snapshots and subvolumes can be renamed and moved using the standard mv
+# command. They can also be deleted using the rm -rf command (like if they were
+# standard directories), but a more efficient way to do it is by using the
+# btrfs subvolume delete command.
+
+# When mounting a subvolume, all the child-subvolumes are recursively mounted
+# as well. However snapshotting is not recursive. So when you take a snapshot
+# of a subvolume X that has a child Y, only X is snapshotted.
+
+# create btrfs partition
+mkfs.btrfs -L "My Partition Label" /dev/sda1
+
+# Mount btrfs partition and create default subvolume, in which we will create
+# the directories __snapshot/ and __current/.  In current/ we will create subvolumes
+# for the root filesystem, along with /home, /opt, and /var.
+#
+# The __snapshot and __current directories are created in the top-level
+# subvolume of the BTRFS partition, and are used to distinguish between the
+# subvolumes that are snapshots and those that are currently used as active
+# subvolumes.
+mount /dev/sda1 /mnt/mybtrfs
+mkdir -p /mnt/btrfs/__snapshot # this is where our snapshots will get held
+mkdir -p /mnt/btrfs/__current # this is where we will actually hold root, home, opt, var.
+btrfs subvolume create /mnt/btrfs-root/__current/ROOT
+btrfs subvolume create /mnt/btrfs-root/__current/home
+btrfs subvolume create /mnt/btrfs-root/__current/opt
+btrfs subvolume create /mnt/btrfs-root/__current/var
+
+# list the subvolumes
+btrfs subvolume list -p /mnt/btrfs-root/
+
+# show the space taken up by files on the volume
+btrfs filesystem df /mnt/btrfs-root
+
+# mount root
+mount -o defaults,relatimessd,nodev,subvol=__current/ROOT /dev/sda1 /mnt/btrfs-current
+
+# Make a snapshot of root (this won't backup home, opt, and var, even if they are
+# mounted underneath ROOT, because making snapshots of subvolumes is not recursive).
+btrfs subvolume snapshot -r btrfs-root/__current/ROOT btrfs-root/__snapshot/ROOT@SOMEDATE
+
+# This is how to roll back to an old snapshot.  First we get rid of our current root,
+# then we use the snapshot command again to copy the snapshot back to ROOT, and finally
+# we reboot. After rebooting we could even delete the ROOT.old folder.
+mv btrfs-root/__current/ROOT btrfs-root/__current/ROOT.old
+btrfs subvolume snapshot btrf-root/__snapshot/ROOT@SOMEDATE btrfs-root/__current/ROOT
+reboot
+
+# CoW comes with some advantages, but can negatively affect performance with
+# large files that have small random writes. It is recommended to disable CoW
+# for database files and virtual machine images. You can disable CoW for the
+# entire block device by mounting it with "nodatacow" option. However, this
+# will disable CoW for the entire file system.To disable CoW for single
+# files/directories do:
+chattr +C /path/to/some/file
+
+# Likewise, to save space by forcing CoW when copying files use:
+cp --reflink source dest 
+
+
+# There are also a lot of options that you can play with to use multiple
+# devices with btrfs.
+# https://btrfs.wiki.kernel.org/index.php/Using_Btrfs_with_Multiple_Devices
+
+# Create a filesystem across four drives (metadata mirrored, data striped)
+mkfs.btrfs /dev/sdb /dev/sdc /dev/sdd /dev/sde
+# Stripe the metadata without mirroring
+mkfs.btrfs -m raid0 /dev/sdb /dev/sdc
+# Use raid10 for both data and metadata
+mkfs.btrfs -m raid10 -d raid10 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+# Don't duplicate metadata on a single drive
+mkfs.btrfs -m single /dev/sdb
+# Once you create a multi-device filesystem, you can use any device in the FS
+# for the mount command:
+mkfs.btrfs /dev/sdb /dev/sdc /dev/sde
+mount /dev/sde /mnt
+# There are also commands to add devices to currently mounted filesystems in order
+# to increase space, do RAIDing, etc.
