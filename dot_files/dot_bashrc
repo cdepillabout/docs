@@ -401,6 +401,9 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DESKTOP_DIR="$HOME"
 export XDG_DOWNLOAD_DIR="$HOME"
 
+# Set colors for GCC (Only works on >=4.9)
+export GCC_COLORS="error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
+
 # We xauth stuff to be set correctly if we are root.
 if [[ $EUID -eq 0 ]] ; then
 	# make sure we can actually access xauth functionality
