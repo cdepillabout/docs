@@ -111,3 +111,118 @@ mkfs.btrfs /dev/sdb /dev/sdc /dev/sde
 mount /dev/sde /mnt
 # There are also commands to add devices to currently mounted filesystems in order
 # to increase space, do RAIDing, etc.
+
+
+
+##############################
+########### LVM ##############
+##############################
+
+# The basic building blocks of LVM.
+#
+#   Physical volume (PV): Partition on hard disk (or even hard disk itself or
+#                         loopback file) on which you can have volume groups.
+#                         It has a special header and is divided into physical
+#                         extents. Think of physical volumes as big building
+#                         blocks which can be used to build your hard drive.
+#                         This would be something like an actual /dev/sda2 
+#                         device.
+#
+#   Volume group (VG): Group of physical volumes that are used as storage
+#                      volume (as one disk). They contain logical volumes.
+#                      Think of volume groups as virtual hard drives.
+#
+#   Logical volume (LV): A "virtual/logical partition" that resides in a volume
+#                        group and is composed of physical extents. Think of
+#                        logical volumes as virtual partitions.
+#
+#   Physical extent (PE): A small part of a disk (usually 4MB) that can be
+#						  assigned to a logical Volume. Think of physical
+#						  extents as parts of disks that can be allocated to
+#						  any partition. 
+
+# Create the partion where your pv will reside.  Set the partion type to 'Linux LVM'.
+cfdisk /dev/sda
+
+
+##### Physical volumes
+
+# Create a physical volume on the disks you want to use. If you have one disk
+# it is best to just create one PV in one large partition. If you have multiple
+# disks you can create partitions on each of them and create a PV on each
+# partition. 
+pvcreate /dev/sda2
+pvcreate /dev/sdb
+
+# Show physical volumes.
+pvdisplay
+
+# List all physical volumes on the system.
+pvscan
+
+
+##### Volume Groups
+
+# Create a volume group on a physical volume.  First you need to create a
+# volume group on one of the new partitions and then add to it all other
+# physical volumes you want to have in it.  You can create more than 
+# one volume group if you want to, but you will not have all your storage
+# presented as one disk.
+vgcreate VolGroup00 /dev/sda2
+vgextend VolGroup00 /dev/sdb
+
+# Show volume groups.
+vgdisplay
+
+# List all volume groups on the system. This may be needed after running 
+# lvcreate if the devices don't automatically show up in /dev.
+vgscan
+
+# This will automatically activate everything.
+vgchange --activate y
+
+
+#### Logical Volumes
+
+# Create the logical volumes on this volume group. These lvcreate commands
+# are what will actually create /dev/VolGroup00 and /dev/mapper/* and /dev/dm-*.
+lvcreate --size 10G --name lvolhome VolGroup00
+
+# This creates a swap device. --contiguous means that this swap device will
+# not get partitioned over one or more disks.
+lvcreate --contiguous yes --size 10G --name lvolswap VolGroup00
+
+# This fills all the remaining free space on the volume group.
+lvcreate --extents +100%FREE --name lvolmedia VolGroup00
+
+# Show created logical volumes.
+lvdisplay
+
+# List logical volumes.
+lvscan
+
+# Now you can create filesystems on your logical volumes.
+mkfs.ext4 /dev/mapper/VolGroup00-lvolhome
+mkfs.ext4 /dev/mapper/VolGroup00-lvolmedia
+
+
+############################
+#### LOOPBACK DEVICE #######
+############################
+
+# check which loop devices are already being used
+losetup -a
+
+# make a file accessible from a loop device
+# (--find will find the first available loop device, and if you pass in a 
+# file name after it, it will automatically make that file into a loop device
+# for you)
+dd if=/dev/zero of=~/file.img bs=1MiB count=10
+losetup --find --show ~/file.img
+
+# now you can use it like a normal device
+mkfs -t ext2 /dev/loop0
+mount /dev/loop0 /mnt
+umount /dev/loop0
+losetup --detach /dev/loop0
+
