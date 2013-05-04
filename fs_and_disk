@@ -297,6 +297,10 @@ losetup --detach /dev/loop0
 #										   and your data will be permanently
 #										   lost. 
 
+# Show defaults for luks commands.
+cryptsetup --help
+
+
 ###### Setup Disk
 
 # When setting up a device for use with LUKS & dm-crypt, it should first be
@@ -314,6 +318,12 @@ cryptsetup luksFormat --use-random /dev/sdb2
 
 # Create a LUKS container using aes-xts-plain64 with 512 bit key using sha512 hash
 cryptsetup luksFormat --cipher aes-xts-plain64 --key-size 512 --hash sha512 /dev/sdb2
+
+# iter-time is the number of milliseconds to spend with pbkdf2 passphrase
+# processsing.  Using a hash stronger than sha1 results in less iterations if
+# iter-time is not increased.
+cryptsetup luksFormat --cipher aes-xts-plain64 --key-size 512 --hash sha512 \
+	--iter-time 5000 /dev/sdb2
 
 
 ###### Open Container and map it
@@ -334,6 +344,13 @@ cryptsetup luksDump /dev/sdb2
 
 # Reports status for mapping (this can only be run after luksOpen).
 cryptsetup status /dev/mapper/c1
+
+
+##### Add Additional Key
+
+# Add an additional key (Your current key will be asked first).
+cryptsetup luksAddKey /dev/sdb2
+
 
 
 #########################
