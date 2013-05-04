@@ -177,7 +177,6 @@ vgdisplay
 # List all volume groups on the system. This may be needed after running 
 # lvcreate if the devices don't automatically show up in /dev.
 vgscan
-
 # This will automatically activate everything.
 vgchange --activate y
 
@@ -201,9 +200,41 @@ lvdisplay
 # List logical volumes.
 lvscan
 
+# Another command to list logical volumes.
+lvs
+
 # Now you can create filesystems on your logical volumes.
 mkfs.ext4 /dev/mapper/VolGroup00-lvolhome
 mkfs.ext4 /dev/mapper/VolGroup00-lvolmedia
+
+# To grow a logical volume you first need to grow the logical volume and then
+# the filesystem to use the newly created free space. 
+lvextend --size 20G /dev/mapper/VolGroup00-lvhome
+resize2fs /dev/mapper/VolGroup00-lvhome
+
+# You can use this command to fill all free space on a volume group.
+lvextend -l +100%FREE /dev/mapper/VolGroup00/lvolhome
+
+# In order to shrink a logical volume, you first need to shrink the filesystem
+# first and then shrink the logical volume. We shrink the filesystem more than
+# needed so that when we shrink the logical volume we do not accidentally cut
+# off the end of the filesystem. After that we grow the filesystem to fill all
+# free space left on logical volume. 
+resize2fs /dev/mapper/VolGroup00-lvolhome 4G
+lvreduce --size 5G /dev/mapper/VolGroup00-lvolhome
+resize2fs /dev/mapper/VolGroup00-lvolhome
+
+# Make a snapshot of /home. Snapshots
+# provide a 'frozen image' of the contents of the origin while the origin can
+# still be updated. They enable  consistent  backups  and  online recovery of
+# removed/overwritten data/files. The snapshot with the specified size
+# does not need the same amount of storage the  origin  has.  In a typical
+# scenario, 15-20% might be enough.  In case the snapshot runs out of storage,
+# use lvextend(8) to grow it. Shrinking a snapshot  is  supported  by
+# lvreduce(8)  as  well. Run lvdisplay(8) on the snapshot in order to check how
+# much data is allocated to it.
+lvcreate --size 2G --name homesnapshot --snapshot /dev/mapper/VolGroup00-lvolhome
+
 
 
 ############################
@@ -226,3 +257,95 @@ mount /dev/loop0 /mnt
 umount /dev/loop0
 losetup --detach /dev/loop0
 
+
+
+################################
+####### dm-crypt and LUKS ######
+################################
+
+# Things to keep in mind:
+#
+#   ATTENTION: By far the most questions on the cryptsetup mailing list are
+#              from people that managed to damage the start of their LUKS
+#              partitions, i.e. the LUKS header. In most cases, there is
+#              nothing that can be done to help these poor souls recover their
+#              data. Make sure you understand the problem and limitations
+#              imposed by the LUKS security model BEFORE you face such a
+#              disaster! In particular, make sure you have a current header
+#              backup before doing any potentially dangerous operations.
+#
+#   CLONING/IMAGING: If you clone or image a LUKS container, you make a copy of
+#                    the LUKS header and the master key will stay the same!
+#                    That means that if you distribute an image to several
+#                    machines, the same master key will be used on all of them,
+#                    regardless of whether you change the passphrases. Do NOT
+#                    do this! If you do, a root-user on any of the machines
+#                    with a mapped (decrypted) container or a passphrase on
+#                    that machine can decrypt all other copies, breaking
+#                    security
+
+#   LUKS PASSPHRASE IS NOT THE MASTER KEY: The LUKS passphrase is not used in
+#										   deriving the master key. It is used
+#										   in decrypting a master key that is
+#										   randomly selected on header
+#										   creation. This means that if you
+#										   create a new LUKS header on top of
+#										   an old one with exactly the same
+#										   parameters and exactly the same
+#										   passphrase as the old one, it will
+#										   still have a different master key
+#										   and your data will be permanently
+#										   lost. 
+
+###### Setup Disk
+
+# When setting up a device for use with LUKS & dm-crypt, it should first be
+# wiped of previous data.
+cat /dev/zero > /dev/sdb2
+
+
+###### Create LUKS container
+
+# Create LUKS container.
+cryptsetup luksFormat /dev/sdb2
+
+# Create LUKS container reading from /dev/random (not urandom).
+cryptsetup luksFormat --use-random /dev/sdb2
+
+# Create a LUKS container using aes-xts-plain64 with 512 bit key using sha512 hash
+cryptsetup luksFormat --cipher aes-xts-plain64 --key-size 512 --hash sha512 /dev/sdb2
+
+
+###### Open Container and map it
+
+# Map the container.  It will be mapped to /dev/mapper/c1.
+cryptsetup luksOpen /dev/sdb2 c1
+
+# Now you need to wipe the container, make the filesystem, and mount it.
+cat /dev/zero > /dev/mapper/c1
+mke2fs /dev/mapper/c1
+mount /dev/mapper/c1 /mnt
+
+
+###### Inspect container
+
+# Inspect container (this can be run any time after luksFormat).
+cryptsetup luksDump /dev/sdb2
+
+# Reports status for mapping (this can only be run after luksOpen).
+cryptsetup status /dev/mapper/c1
+
+
+#########################
+######## OTHER ##########
+#########################
+
+# Here is summary of commands you will need to use to mount your root
+# filesystem from a recovery CD, assuming your are running lvm on a luks
+# partition.
+modprobe dm-crypt
+cryptsetup luksOpen /dev/sda3 mylvm
+vgscan
+vgchange --activate y
+mkdir /mnt/oldroot
+mount /dev/mapper/VolGroup00-volroot /mnt/oldroot
