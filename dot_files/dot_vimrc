@@ -395,6 +395,7 @@ call Add_auto_foldmethod('ant', 'syntax')
 call Add_auto_foldmethod('javascript', 'indent')
 call Add_auto_foldmethod('php', 'syntax')
 call Add_auto_foldmethod('objc', 'syntax')
+call Add_auto_foldmethod('haskell', 'syntax')
 au FileType xml set foldmethod=syntax
 
 " Kind of like above, add a method specifying whether or not we
@@ -430,6 +431,7 @@ call Add_eol_whitespace_highlighting("java")
 " Actually, I don't know if these will work.  It might have to be "py" instead
 call Add_eol_whitespace_highlighting("python")
 call Add_eol_whitespace_highlighting("php")
+call Add_eol_whitespace_highlighting("haskell")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
@@ -438,6 +440,12 @@ call Add_eol_whitespace_highlighting("php")
 autocmd BufRead,BufNewFile *.py set expandtab
 " maybe this could also be done with
 autocmd FileType python set expandtab
+
+" Haskell also needs spaces instead of tabs.
+autocmd BufRead,BufNewFile *.hs set expandtab
+autocmd BufRead,BufNewFile *.lhs set expandtab
+" maybe this could also be done with
+autocmd FileType haskell set expandtab
 
 " SConscript and SConstruct files are python files
 autocmd BufRead,BufNewFile SConstruct set ft=python
