@@ -180,6 +180,9 @@ vgscan
 # This will automatically activate everything.
 vgchange --activate y
 
+# Deactivate volume group
+vgchange --activate n VolGroup00
+
 
 #### Logical Volumes
 
@@ -351,6 +354,12 @@ cryptsetup status /dev/mapper/c1
 # Add an additional key (Your current key will be asked first).
 cryptsetup luksAddKey /dev/sdb2
 
+
+##### Close a luks container
+
+# Close a container.  (Before doing this you may need to do 
+# `vgchange --activate n VolGroup00` on your volume group.)
+cryptsetup luksClose c1
 
 
 #########################
