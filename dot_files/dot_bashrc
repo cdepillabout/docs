@@ -93,6 +93,9 @@ shopt_check_and_set "autocd"
 # be able to use ** to match all subdirs
 shopt_check_and_set "globstar"
 
+# append to the history file, don't overwrite it
+shopt_check_and_set "histappend"
+
 # this escape sequence is used so that screen can set
 # the window title
 case $TERM in
