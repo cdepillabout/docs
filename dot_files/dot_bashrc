@@ -31,7 +31,7 @@ elif [[ -f ~/.dir_colors ]]; then
 	eval `dircolors -b ~/.dir_colors`
 fi
 
-if [[ "$(uname)" == "Linux" || "$(uname -o)" == "Cygwin" ]]; then
+if [[ "$(uname)" == "Linux" || "$(uname)" == CYGWIN* ]]; then
 	alias ls="ls --color=auto"
 	alias grep="grep --color=auto"
 	alias xgrep="xgrep --color=auto"
@@ -55,6 +55,9 @@ elif [[ "$(uname)" == "OpenBSD" ]]; then
 	if [[ "$TERM" == xterm* ]]; then
 		export TERM="xterm-color"
 	fi
+elif [[ "$(uname)" == "Darwin" ]]; then
+	export CLICOLOR=1
+	#export LSCOLORS=DxGxcxdxCxegedabagacad
 fi
 
 alias lsr="ls -rt"
