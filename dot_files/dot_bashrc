@@ -468,6 +468,15 @@ if [[ $EUID -ne 0 ]] ; then
 			done
 		fi
 	fi
+
+	function completion_for_alias ()
+	{
+		if [ "$(func_exists $2)" = "yes" ]; then
+			complete -o bashdefault -o default -F "$2" "$1" 2>/dev/null
+		fi
+	}
+
+	completion_for_alias "glg" "__git_complete_revlist"
 fi
 
 # source the local rc file with local commands

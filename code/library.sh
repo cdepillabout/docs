@@ -160,3 +160,13 @@ function prepend_to_path_nocheck()
 {
 	add_to_path_side "$1" "$2" "front" "no"
 }
+
+function func_exists()
+{
+	declare -f -F "$1" > /dev/null
+	if [ "$?" = "0" ] ; then
+		echo "yes"
+	else
+		echo "no"
+	fi
+}
