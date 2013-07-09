@@ -469,6 +469,16 @@ if [[ $EUID -ne 0 ]] ; then
 		fi
 	fi
 
+	# This doesn't work...
+	#if [ "$(func_exists __gitcomp_nl)" = "yes" ]; then
+	#	function _git_remotes_helper_function ()
+	#	{
+	#		local cur_="$cur" cmd="${words[1]}"
+	#		local i c=2 remote="" pfx="" lhs=1 no_complete_refspec=0
+	#		__gitcomp_nl "$(__git_remotes)" "$pfx" "$cur_"
+	#	}
+	#fi
+
 	function completion_for_alias ()
 	{
 		if [ "$(func_exists $2)" = "yes" ]; then
@@ -478,6 +488,8 @@ if [[ $EUID -ne 0 ]] ; then
 
 	completion_for_alias "glg" "__git_complete_revlist"
 	completion_for_alias "gco" "__git_complete_revlist"
+	# This doesn't work...
+	#completion_for_alias "gfp" "_git_remotes_helper_function"
 fi
 
 # source the local rc file with local commands
