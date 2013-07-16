@@ -145,6 +145,8 @@ nnoremap <A-0> 10gt
 " this can also be something like this:
 map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
+" Allow saving of files as sudo when I forgot to start vim using sudo.
+cmap sudow w !sudo tee > /dev/null %
 
 " F2 for turning on and off tag list
 nnoremap <F2> :TlistToggle<CR>
