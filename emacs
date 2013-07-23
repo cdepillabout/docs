@@ -165,3 +165,10 @@
 ; M-1 C-x $
 ; To expand all
 ; C-x $
+
+
+; Turn on line wrapping. (This also works for org-mode.)
+M-x global-visual-line-mode
+
+; Turn on clean view for org-mode
+M-x org-indent-mode
