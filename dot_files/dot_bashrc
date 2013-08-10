@@ -342,11 +342,11 @@ function autojump_and_lsl_func(){
 		ls -l
 	fi 
 }
-alias c='cd_and_ls_func '
-alias cl='cd_and_lsl_func '
-alias jd='autojump_func '
-alias j='autojump_and_ls_func '
-alias jl='autojump_and_lsl_func '
+alias c='cd_and_ls_func'
+alias cl='cd_and_lsl_func'
+alias jd='autojump_func'
+alias j='autojump_and_ls_func'
+alias jl='autojump_and_lsl_func'
 
 
 # add a command for updating pacman mirror list
