@@ -202,6 +202,8 @@ $PROMPT_COMMAND
 if [[ $EUID -ne 0 ]] ; then
 	if [ -e "/etc/profile.d/autojump.bash" ] ;  then
 		source "/etc/profile.d/autojump.bash"
+	elif [ -e "/usr/share/autojump/autojump.bash" ] ;  then
+		source "/usr/share/autojump/autojump.bash"
 	fi
 fi
 
