@@ -434,6 +434,7 @@ call Add_eol_whitespace_highlighting("java")
 call Add_eol_whitespace_highlighting("python")
 call Add_eol_whitespace_highlighting("php")
 call Add_eol_whitespace_highlighting("haskell")
+call Add_eol_whitespace_highlighting("ruby")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
@@ -459,11 +460,18 @@ autocmd FileType sas set shiftwidth=3		" allows you to use < and > to indent/uni
 autocmd FileType sas set softtabstop=3		" see multiple space characters as a tab
 
 " settings for c#
-au FileType cs set omnifunc=syntaxcomplete#Complete
-au FileType cs set foldmethod=marker
-au FileType cs set foldmarker={,}
-au FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
-au FileType cs set foldlevelstart=2 
+autocmd FileType cs set omnifunc=syntaxcomplete#Complete
+autocmd FileType cs set foldmethod=marker
+autocmd FileType cs set foldmarker={,}
+autocmd FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
+autocmd FileType cs set foldlevelstart=2
+
+" settings for ruby
+autocmd FileType ruby set tabstop=2
+autocmd FileType ruby set shiftwidth=2
+autocmd FileType ruby set softtabstop=2
+autocmd FileType ruby set expandtab
+autocmd FileType ruby set foldmethod=syntax
 
 " Make vim jump to the last position that you were editing in the file.
 " When we reload, tell vim to restore the cursor to the saved position.
