@@ -14,6 +14,7 @@ set softtabstop=4		" see multiple space characters as a tab
 set shiftround			" Indent to nearest tab stop
 set autoindent			" carries over previous indent to the next line
 set smarttab			" A tab infront of a line inserts spaces or tabs according to expandtab
+set autoread			" when file detected changed outside of Vim, automatically read it again
 
 if version <= 702
 	set switchbuf=usetab,useopen
@@ -56,6 +57,11 @@ set tags+=tags;$HOME,build/tags;$HOME
 
 " always show a tabline
 set showtabline=2
+
+" set the maximum number of files you can open in tabs
+if &tabpagemax < 50
+	  set tabpagemax=50
+endif
 
 colorscheme darkblue
 "colorscheme default
