@@ -506,8 +506,14 @@ if [[ $EUID -ne 0 ]] ; then
 	#completion_for_alias "gfp" "_git_remotes_helper_function"
 fi
 
-# source the local rc file with local commands
+# start moving to using ~/.bashrc-local instead of ~/.local-bashrc
 if [ -f "$HOME/.local-bashrc" ]
 then
+	echo "I see that ~/.local-bashrc exists, but you should be using ~/.bashrc-local"
 	source "${HOME}/.local-bashrc"
+fi
+# source the local rc file with local commands
+if [ -f "$HOME/.bashrc-local" ]
+then
+	source "${HOME}/.bashrc-local"
 fi

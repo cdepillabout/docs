@@ -82,7 +82,7 @@ hi Normal guibg=black
 
 
 
-" settings specifically for java from 
+" settings specifically for java from
 " http://vimdoc.sourceforge.net/htmldoc/syntax.html
 let java_highlight_java_lang_ids=1
 let java_highlight_all=1
@@ -90,13 +90,13 @@ let java_highlight_all=1
 "let java_allow_cpp_keywords=1
 
 " Minibufexplorer plugin settings
-"let g:miniBufExplMapWindowNavVim = 1	" Let C-h, C-j, C-k, C-l move your 
+"let g:miniBufExplMapWindowNavVim = 1	" Let C-h, C-j, C-k, C-l move your
 										" current active buffer window
 "let g:miniBufExplMapCTabSwitchBufs = 1	" Let C-TAB move to the next buffer and
 										" C-SHIFT-TAB move to the previous
 										" buffer
 "let g:miniBufExplModSelTarget = 1		" Force minibufferexplorer to put
-										" buffers in windows with 
+										" buffers in windows with
 										" non-modifiable buffers
 										"
 
@@ -130,7 +130,7 @@ nnoremap <C-l> gt
 
 map <silent> <C-u> :let b:new_tab_number = tabpagenr() \| exec ":tabm " . b:new_tab_number \| unlet b:new_tab_number<CR>
 map <silent> <C-y> :let b:new_tab_number = tabpagenr() - 2 \| if (b:new_tab_number < 0) \| let b:new_tab_number = 0 \| endif \| exec ":tabm " . b:new_tab_number \| unlet b:new_tab_number<CR>
-"nnoremap <C-S-h> :let b:current_tab_number = tabpagenr() 
+"nnoremap <C-S-h> :let b:current_tab_number = tabpagenr()
 
 " got to tab number (really only for gvim)
 nnoremap <A-1> 1gt
@@ -206,7 +206,7 @@ function! Resize(dir)
 
 	if ( ('C-J' == a:dir || 'C-K' == a:dir) && above == 0 && below == 0 )
 		" this is the only window on the screen
-		return 
+		return
 
 	elseif ('C-J' == a:dir && above == 1 && below == 0)
 		" there are no windows below this on the screen
@@ -221,7 +221,7 @@ function! Resize(dir)
 		" there are windows above this on the screen, and we are on the bottom
 		execute "normal 3\<c-w>+"
 
-	elseif ('C-J' == a:dir && above == 1 && below == 1) 
+	elseif ('C-J' == a:dir && above == 1 && below == 1)
 		" this is a middle window and we are trying to drop it down
 		execute "normal \<c-w>j3\<c-w>-\<c-w>p"
 	elseif ('C-K' == a:dir && above == 1 && below == 1)
@@ -230,7 +230,7 @@ function! Resize(dir)
 
 	else
 		echo "oops. check your ~/.vimrc"
-		return 
+		return
 	endif
 endfunction
 
@@ -250,7 +250,7 @@ nnoremap '' ``
 function! Tabopen_all_files(...)
 	let i = 1
 	let firstnewtab = 0
-	
+
 	" loop over arguments passed to this function, both file names, new tab
 	" names, and filename globs
 	while i <= a:0
@@ -281,7 +281,7 @@ function! Tabopen_all_files(...)
 		let i = i + 1
 	endwhile
 
-	" if we opened any tabs, then we need to go back to 
+	" if we opened any tabs, then we need to go back to
 	" the first one we opened
 	if firstnewtab
 		execute "normal " . firstnewtab . "gt"
@@ -296,7 +296,7 @@ cabbrev tabo Tabopen
 
 
 " Convert all arguments to function from relative references to a file
-" based on the file currently being edited, so absolute references based 
+" based on the file currently being edited, so absolute references based
 " on current working directory.
 "
 " For instance, if we are in /some/path/, and we are editing
@@ -318,10 +318,10 @@ function RelativeFunc(function, ...)
 endfunction
 
 " A complete function for completing file names relative to the current
-" file being edited.  
+" file being edited.
 "
 " For instance, if we are in /some/path/, and we are editing
-" /some/path/src/nice.c, if we try to complete a path using this func, 
+" /some/path/src/nice.c, if we try to complete a path using this func,
 " we will intially get a list of files in /some/path/src/, NOT /some/path/.
 function RelativeFilesComplete(ArgLead, CmdLine, CursorPos)
 	let file_basename = expand("%:p:h")
@@ -346,7 +346,7 @@ function RelativeFilesComplete(ArgLead, CmdLine, CursorPos)
 endfunction
 
 
-command -nargs=+ -complete=customlist,RelativeFilesComplete 
+command -nargs=+ -complete=customlist,RelativeFilesComplete
 			\ RelativeTabopen call RelativeFunc(function('Tabopen_all_files'), <f-args>)
 cabbrev rt RelativeTabopen
 
@@ -376,7 +376,7 @@ autocmd BufWinEnter * if &buflisted && &filetype == "qf" | noremap <buffer> <CR>
 "set verbose=9
 
 
-""""""""" This uses the execute command to create an autocmd 
+""""""""" This uses the execute command to create an autocmd
 """"""""" that sets the fold_method if the syntax matches.
 """"""""" You have to use execute so that the variables get
 """"""""" evaluated now instead of when the autocmd executes.
@@ -427,7 +427,7 @@ function Add_eol_whitespace_highlighting(syntax_of_file)
 	" create the highlight group we are using
 	execute "autocmd Syntax " . a:syntax_of_file . 
 		\ " highlight EOLWS ctermbg=white guibg=white"
-	" now just run the command to actually highlight spaces at the end of lines so 
+	" now just run the command to actually highlight spaces at the end of lines so
 	" we see them as soon as we open the file
 	execute "autocmd Syntax " . a:syntax_of_file . 
 		\ " syn clear EOLWS | syn match EOLWS excludenl /\\s\\+$/ containedin=ALL"
@@ -441,6 +441,7 @@ call Add_eol_whitespace_highlighting("python")
 call Add_eol_whitespace_highlighting("php")
 call Add_eol_whitespace_highlighting("haskell")
 call Add_eol_whitespace_highlighting("ruby")
+call Add_eol_whitespace_highlighting("vim")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
@@ -481,7 +482,7 @@ autocmd FileType ruby set foldmethod=syntax
 
 " Make vim jump to the last position that you were editing in the file.
 " When we reload, tell vim to restore the cursor to the saved position.
-" This long, ugly thing is needed because funny things happen when you 
+" This long, ugly thing is needed because funny things happen when you
 " use folding.
 augroup JumpCursorOnEdit
  au!
@@ -512,3 +513,10 @@ augroup END
 " turn these on if you want to use vim over a slow link
 "set lazyredraw
 "set nottyfast
+
+" load a local .vimrc
+let vimrc_dir = fnamemodify(expand($MYVIMRC), ":h")
+let local_vimrc = vimrc_dir . "/.vimrc-local"
+if filereadable(local_vimrc)
+	execute "source " . local_vimrc
+endif
