@@ -246,6 +246,10 @@ nnoremap - <C-W>-
 " I want to jump to the exact position in the line
 nnoremap '' ``
 
+" I want to jump to the exact position in the line for marks
+nnoremap ' `
+nnoremap ` '
+
 " Open a bunch of tabs at once.  Also interpret globbing characters.
 function! Tabopen_all_files(...)
 	let i = 1
