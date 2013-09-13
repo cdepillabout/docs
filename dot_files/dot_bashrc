@@ -403,7 +403,7 @@ export HISTFILESIZE=20000
 export HISTSIZE=10000
 
 # ignore dumb commands in history
-export HISTIGNORE="&:ls:[bf]g:exit:cd:gst:hg st:gdiff:lsr:ls -lah:tree"
+export HISTIGNORE="&:ls:[bf]g:exit:cd:gst:hg st:lsr:ls -lah:tree"
 
 # I don't want a git pager
 export GIT_PAGER=''
