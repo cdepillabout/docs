@@ -369,6 +369,10 @@ command! -nargs=+ Vlgrep execute 'silent lgrep! <args>' | vert copen 30
 command! -nargs=+ Grep execute 'silent grep! <args>' | tab copen
 command! -nargs=+ LGrep execute 'silent lgrep! <args>' | tab copen
 
+" Create command for curl'ing a file into the current buffer
+command! -nargs=+ Curl execute 'read !curl <args> 2>/dev/null'
+cabbrev curl Curl
+
 " Autocommand to change what <CR> does on quickfix buffer.
 " (It changes <CR> to open the first result in a new tab).
 autocmd BufWinEnter * if &buflisted && &filetype == "qf" | noremap <buffer> <CR> <CR><C-W>T| endif
