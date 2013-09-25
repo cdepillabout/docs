@@ -295,7 +295,7 @@ endfunction
 " create a command ":Tabopen" that will call our tab-opening function
 " and create an abbreviation for it with the name "tabo".  So, to use this
 " just type ":tabo " and it will get replaced with ":Tabopen ".
-command -nargs=+ -complete=file Tabopen call Tabopen_all_files(<f-args>)
+command! -nargs=+ -complete=file Tabopen call Tabopen_all_files(<f-args>)
 cabbrev tabo Tabopen
 
 
@@ -306,7 +306,7 @@ cabbrev tabo Tabopen
 " For instance, if we are in /some/path/, and we are editing
 " /some/path/src/nice.c, then if we call this with :tabopen join.c,
 " the :tabopen function will get the argument src/join.c.
-function RelativeFunc(function, ...)
+function! RelativeFunc(function, ...)
 	let file_basename = expand("%:p:h")
 	let relativefiles = copy(a:000)
 
@@ -327,7 +327,7 @@ endfunction
 " For instance, if we are in /some/path/, and we are editing
 " /some/path/src/nice.c, if we try to complete a path using this func,
 " we will intially get a list of files in /some/path/src/, NOT /some/path/.
-function RelativeFilesComplete(ArgLead, CmdLine, CursorPos)
+function! RelativeFilesComplete(ArgLead, CmdLine, CursorPos)
 	let file_basename = expand("%:p:h")
 	let path = file_basename . "/" . a:ArgLead
 
@@ -350,7 +350,7 @@ function RelativeFilesComplete(ArgLead, CmdLine, CursorPos)
 endfunction
 
 
-command -nargs=+ -complete=customlist,RelativeFilesComplete
+command! -nargs=+ -complete=customlist,RelativeFilesComplete
 			\ RelativeTabopen call RelativeFunc(function('Tabopen_all_files'), <f-args>)
 cabbrev rt RelativeTabopen
 
@@ -385,7 +385,7 @@ autocmd BufWinEnter * if &buflisted && &filetype == "qf" | noremap <buffer> <CR>
 """"""""" You have to use execute so that the variables get
 """"""""" evaluated now instead of when the autocmd executes.
 
-function Add_auto_foldmethod(syntax_of_file, fold_method)
+function! Add_auto_foldmethod(syntax_of_file, fold_method)
 	execute "autocmd Syntax * "
 		\ "if expand(\"<amatch>\") == \"" . a:syntax_of_file . "\" | "
 		\ "execute \"set foldmethod=" . a:fold_method . "\" | "
@@ -412,7 +412,7 @@ au FileType xml set foldmethod=syntax
 
 " Kind of like above, add a method specifying whether or not we
 " want to highlight spaces at the end of a line
-function Add_eol_whitespace_highlighting(syntax_of_file)
+function! Add_eol_whitespace_highlighting(syntax_of_file)
 	" autocmd InsertEnter/Leave doesn't seem to work just by giving the group
 	" (like "c"), so we have to do this horrible, horrible thing.  In order to
 	" understand this, first run "autocmd Syntax", and then look at "autocmd
