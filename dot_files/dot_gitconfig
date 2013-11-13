@@ -4,3 +4,8 @@
 	enabled = 1
 [rebase]
 	autosquash = true
+[push]
+	default = upstream
+[merge]
+	defaultToUpstream = true
+	ff = only
