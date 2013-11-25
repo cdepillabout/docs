@@ -48,7 +48,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'Shougo/vimproc'
 	if isdirectory(expand("~/.vim/bundle/vimproc/.git")) &&
 			\ !filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_unix.so"))
-		echo "You must run `cd \"~/.vim/bundle/vimproc/ && make` in order to install vimproc (for ghc-mod)."
+		echo "You must run `(cd \"$HOME/.vim/bundle/vimproc/\" && make)` in order to install vimproc (for ghc-mod)."
 	endif
 
 	" Must `cabal install ghc-mod` to be able to use this.
@@ -88,6 +88,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"Bundle 'lukerandall/haskellmode-vim'
 	"let g:haddock_browser="/usr/bin/firefox"
 
+	" must `cabal install hlint` to be able to use hlint stuff.
 	" This does some cool things with syntax highlighting for you.
 	" It also does some really nice folding for us.
 	" :HLint	-- run file through hlint
