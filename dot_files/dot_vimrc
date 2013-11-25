@@ -1,5 +1,103 @@
-filetype plugin on
-filetype indent on
+set nocompatible		" Explicitly turn off compatibility mode
+filetype off
+
+" load vundles if we have any
+if isdirectory(expand("~/.vim/bundle/vundle/.git"))
+	set runtimepath+=~/.vim/bundle/vundle/
+	call vundle#rc()
+
+	" let Vundle manage Vundle
+	" required!
+	Bundle 'gmarik/vundle'
+	" Brief help
+	" :BundleList          - list configured bundles
+	" :BundleInstall(!)    - install (update) bundles
+	" :BundleSearch(!) foo - search (or refresh cache first) for foo
+	" :BundleClean(!)      - confirm (or auto-approve) removal of unused bundles
+	"
+	" see :h vundle for more details or wiki for FAQ
+	" NOTE: comments after Bundle commands are not allowed.
+
+
+	" original repos on GitHub
+	"Bundle 'tpope/vim-fugitive'
+	"Bundle 'Lokaltog/vim-easymotion'
+	"Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+	"Bundle 'tpope/vim-rails.git'
+	" vim-scripts repos
+	"Bundle 'L9'
+	"Bundle 'FuzzyFinder'
+	" non-GitHub repos
+	"Bundle 'git://git.wincent.com/command-t.git'
+	" Git repos on your local machine (i.e. when working on your own plugin)
+	"Bundle 'file:///Users/gmarik/path/to/plugin'
+
+
+	" Here are some more good haskell-related plugins
+	" http://blog.mno2.org/blog/2011/11/17/vim-plugins-for-haskell-programmers/
+	" http://comments.gmane.org/gmane.comp.lang.haskell.cafe/108152?set_cite=hide
+
+
+	" :help syntastic to get more help
+	" To toggle between active/passive type checking we can enable the following key bindings
+	"map <silent> <Leader>e :Errors<CR>
+	"map <Leader>s :SyntasticToggleMode<CR>
+	Bundle 'scrooloose/syntastic'
+
+	" This is used by ghcmod-vim for something.
+	Bundle 'Shougo/vimproc'
+	if isdirectory(expand("~/.vim/bundle/vimproc/.git")) &&
+			\ !filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_unix.so"))
+		echo "You must run `cd \"~/.vim/bundle/vimproc/ && make` in order to install vimproc (for ghc-mod)."
+	endif
+
+	" Must `cabal install ghc-mod` to be able to use this.
+	" :GhcModType		- Show the type of an expression (can be used multiple
+	"					  times to show bigger and bigger expressions)
+	" :GhcModTypeClear  - Clear subexpression's highlight
+	" :GhcModCheck      - Show compiler error/warnings in quickfix window
+	" :GhcModLint       - Show suggestions by ghc-mod lint
+	" :GhcModInfo       - Show the type of an expression
+	" :GhcModTypeInsert - Insert the type of a function
+	Bundle 'eagletmt/ghcmod-vim'
+
+	" Use neocomplete (this is supposed to work with neco-ghc for haskell
+	" completion, but it doesn't really look like it does anything)
+	"Bundle 'Shougo/neocomplete'
+
+	" Must `cabal install ghc-mod` to be able to use this.
+	" Use omnicompletion for haskell.
+	" See :help compl-omni for details on omni-completion.
+	" Enable with :setlocal omnifunc=necoghc#omnifunc (set below...)
+	" Can be used with Ctrl-X Ctrl-O
+	Bundle 'eagletmt/neco-ghc'
+
+	" Must run `cabal install hoogle && hoogle data` before using.
+	" Look up things through hoogle.
+	" See :help hoogle for help.
+	" :Hoogle         - run hoogle on the word under the cursor
+	Bundle 'Twinside/vim-hoogle'
+
+	" Must `cabal install hdevtools` to be able to use this.
+	" This is basically the same as ghc-mod
+	" :HdevtoolsInfo	- get info about a type
+	" :HdevtoolsType	- get short type information
+	Bundle 'bitc/vim-hdevtools'
+
+	" This doesn't seem to work either...
+	"Bundle 'lukerandall/haskellmode-vim'
+	"let g:haddock_browser="/usr/bin/firefox"
+
+	" This does some cool things with syntax highlighting for you.
+	" It also does some really nice folding for us.
+	" :HLint	-- run file through hlint
+	Bundle 'dag/vim2hs'
+
+	" EasyMotion.  Haven't really looked into this one yet...
+	Bundle 'Lokaltog/vim-easymotion'
+endif
+
+filetype plugin indent on
 
 set fileencodings=utf-8
 setglobal fileencoding=utf-8
@@ -458,12 +556,15 @@ call Add_eol_whitespace_highlighting("vim")
 autocmd BufRead,BufNewFile *.py set expandtab
 " maybe this could also be done with
 autocmd FileType python set expandtab
+" set autocomplete for python from the neocomplete plugin
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 
 " Haskell also needs spaces instead of tabs.
 autocmd BufRead,BufNewFile *.hs set expandtab
 autocmd BufRead,BufNewFile *.lhs set expandtab
 " maybe this could also be done with
 autocmd FileType haskell set expandtab
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 " Cabal files also needs spaces instead of tabs.
 autocmd BufRead,BufNewFile *.cabal set expandtab

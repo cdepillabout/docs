@@ -80,3 +80,15 @@ super_link $HOME/docs/dot_files/dot_hgrc $HOME/.hgrc
 # Xmodmaps
 super_link $HOME/docs/dot_files/dot_Xmodmap_japanese_keyboard $HOME/.Xmodmap_japanese_keyboard
 super_link $HOME/docs/dot_files/dot_Xmodmap_swap_ctrl_caps $HOME/.Xmodmap_swap_ctrl_caps
+
+# install vim vundles if it doesn't already exist
+if [ ! -d "$HOME/.vim/bundle/vundle/.git" ] ; then
+	echo "cloning vundle..."
+	mkdir -p "$HOME/.vim/bundle"
+	git clone https://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
+	echo "installing all bundles by opening vim and running :BundleInstall"
+	vim +BundleInstall +qall
+	echo "There may be extra files that need to be installed by hand in order"
+	echo "to get all the vim bundles working correctly.  Read the top of .vimrc"
+	echo "and install everything that is needed (this is stuff like ghc-mod, hlint, etc)."
+fi

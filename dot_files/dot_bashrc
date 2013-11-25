@@ -512,6 +512,9 @@ if [[ $EUID -ne 0 ]] ; then
 	#completion_for_alias "gfp" "_git_remotes_helper_function"
 fi
 
+# Add cabal to path if it isn't there already
+prepend_to_path PATH "$HOME/.cabal/bin"
+
 # start moving to using ~/.bashrc-local instead of ~/.local-bashrc
 if [ -f "$HOME/.local-bashrc" ]
 then
