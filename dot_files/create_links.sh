@@ -84,11 +84,19 @@ super_link $HOME/docs/dot_files/dot_Xmodmap_swap_ctrl_caps $HOME/.Xmodmap_swap_c
 # install vim vundles if it doesn't already exist
 if [ ! -d "$HOME/.vim/bundle/vundle/.git" ] ; then
 	echo "cloning vundle..."
+	echo
 	mkdir -p "$HOME/.vim/bundle"
 	git clone https://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
+	echo
 	echo "installing all bundles by opening vim and running :BundleInstall"
 	vim +BundleInstall +qall
+	echo
 	echo "There may be extra files that need to be installed by hand in order"
 	echo "to get all the vim bundles working correctly.  Read the top of .vimrc"
 	echo "and install everything that is needed (this is stuff like ghc-mod, hlint, etc)."
+	echo "You might want to install things with a cabal command like this:"
+	echo "(Remember, you might need to source your .bashrc to get the ~/.cabal/bin directory"
+	echo "added to the path)"
+	echo
+	echo "\`cabal install happy -j8 && source ~/.bashrc && cabal install ghc-mod hoogle hlint hdevtools -j8\`"
 fi
