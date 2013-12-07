@@ -1,6 +1,15 @@
 set nocompatible		" Explicitly turn off compatibility mode
 filetype off
 
+" This has to come first because it resets all highlighting.
+set background=dark
+colorscheme darkblue
+"colorscheme default
+"colorscheme delek
+"colorscheme desert
+"colorscheme torte
+syntax on
+
 " load vundles if we have any
 if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	set runtimepath+=~/.vim/bundle/vundle/
@@ -60,8 +69,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" :GhcModInfo       - Show the type of an expression
 	" :GhcModTypeInsert - Insert the type of a function
 	Bundle 'eagletmt/ghcmod-vim'
-	hi ghcmodType ctermbg=yellow
 	let g:ghcmod_type_highlight='ghcmodType'
+	hi ghcmodType ctermfg=0 ctermbg=yellow guifg=black guibg=yellow
 
 
 	" Use neocomplete (this is supposed to work with neco-ghc for haskell
@@ -117,7 +126,6 @@ set encoding=utf-8
 set ttymouse=xterm2		" mouse scrolling in vim
 set mouse=a
 set foldenable
-set background=dark
 set tabstop=4			" 4-space tab indent width
 set shiftwidth=4		" allows you to use < and > to indent/unindent blocks
 set softtabstop=4		" see multiple space characters as a tab
@@ -152,9 +160,6 @@ set backspace=indent,eol,start	" make sure backspace works correctly
 
 set guifont=Bitstream\ Vera\ Sans\ Mono\ 14 "font names to be used in gui
 
-" try to always use a syntax
-syntax on
-
 " this combination works out well to only apply case to searches
 " if there is an uppercase letter in your search string
 set ignorecase
@@ -172,12 +177,6 @@ set showtabline=2
 if &tabpagemax < 50
 	  set tabpagemax=50
 endif
-
-colorscheme darkblue
-"colorscheme default
-"colorscheme delek
-"colorscheme desert
-"colorscheme torte
 
 " highlight tab line differently
 hi TabLine term=bold,reverse cterm=bold ctermfg=black ctermbg=white
