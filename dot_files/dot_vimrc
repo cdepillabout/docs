@@ -11,6 +11,13 @@ colorscheme darkblue
 syntax on
 
 " let my leader key be space instead of \
+" This needs to be set as soon as possible because
+" things mapped with <Leader> are mapped with the
+" current leader and don't get changed to be a new
+" leader when you set a new leader. So we need to
+" set this as soon as possible so that the leader
+" gets mapped correctly when we are setting mappings
+" that use the leader.
 let mapleader = " "
 
 " load vundles if we have any
