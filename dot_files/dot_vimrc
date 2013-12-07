@@ -10,6 +10,9 @@ colorscheme darkblue
 "colorscheme torte
 syntax on
 
+" let my leader key be space instead of \
+let mapleader = " "
+
 " load vundles if we have any
 if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	set runtimepath+=~/.vim/bundle/vundle/
@@ -71,6 +74,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'eagletmt/ghcmod-vim'
 	let g:ghcmod_type_highlight='ghcmodType'
 	hi ghcmodType ctermfg=0 ctermbg=yellow guifg=black guibg=yellow
+	map <Leader>t :GhcModType<CR>
+	map <Leader>c :GhcModTypeClear<CR>
 
 
 	" Use neocomplete (this is supposed to work with neco-ghc for haskell
