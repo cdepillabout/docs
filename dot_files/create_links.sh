@@ -81,6 +81,9 @@ super_link $HOME/docs/dot_files/dot_hgrc $HOME/.hgrc
 super_link $HOME/docs/dot_files/dot_Xmodmap_japanese_keyboard $HOME/.Xmodmap_japanese_keyboard
 super_link $HOME/docs/dot_files/dot_Xmodmap_swap_ctrl_caps $HOME/.Xmodmap_swap_ctrl_caps
 
+# gdbinit
+super_link $HOME/docs/dot_files/dot_gdbinit $HOME/.gdbinit
+
 # install vim vundles if it doesn't already exist
 if [ ! -d "$HOME/.vim/bundle/vundle/.git" ] ; then
 	echo "cloning vundle..."

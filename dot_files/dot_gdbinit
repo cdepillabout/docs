@@ -1,0 +1,18 @@
+
+# there are A LOT of cool tricks here:
+# https://github.com/gdbinit/Gdbinit
+# Or maybe using something like this:
+# https://github.com/dholm/voidwalker
+
+# set the output to be in intel style
+set disassembly-flavor intel
+
+# show us the asm window and registers window
+# (these get messed up and are best turned on after debugging has started...)
+#layout asm
+#layout regs
+
+# pretty-print c structures
+set print pretty on
+
+
