@@ -87,7 +87,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Use neocomplete (this is supposed to work with neco-ghc for haskell
 	" completion, but it doesn't really look like it does anything)
-	Bundle 'Shougo/neocomplete'
+	if version >= 704 && has("if_lua")
+		Bundle 'Shougo/neocomplete'
+	endif
 
 	" Must `cabal install ghc-mod` to be able to use this.
 	" Use omnicompletion for haskell.
@@ -611,11 +613,11 @@ autocmd FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
 autocmd FileType cs set foldlevelstart=2
 
 " settings for ruby
-autocmd FileType ruby set tabstop=2
-autocmd FileType ruby set shiftwidth=2
-autocmd FileType ruby set softtabstop=2
-autocmd FileType ruby set expandtab
-autocmd FileType ruby set foldmethod=syntax
+autocmd FileType ruby setlocal tabstop=2
+autocmd FileType ruby setlocal shiftwidth=2
+autocmd FileType ruby setlocal softtabstop=2
+autocmd FileType ruby setlocal expandtab
+autocmd FileType ruby setlocal foldmethod=syntax
 
 " Make vim jump to the last position that you were editing in the file.
 " When we reload, tell vim to restore the cursor to the saved position.
