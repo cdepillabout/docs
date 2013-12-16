@@ -55,6 +55,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Here are some more good haskell-related plugins
 	" http://blog.mno2.org/blog/2011/11/17/vim-plugins-for-haskell-programmers/
 	" http://comments.gmane.org/gmane.comp.lang.haskell.cafe/108152?set_cite=hide
+	" http://haskelllive.com/environment.html
 
 
 	" :help syntastic to get more help
@@ -62,6 +63,12 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"map <silent> <Leader>e :Errors<CR>
 	"map <Leader>s :SyntasticToggleMode<CR>
 	Bundle 'scrooloose/syntastic'
+	" Always populate the location list even if :Errors is not run.
+	" (This is disabled by default to reduce conflicts with other plugins.)
+	" With this enabled, you can jump to different errors
+	let g:syntastic_always_populate_loc_list = 1
+	" don't use the :sign interface to mark errors
+	"let g:syntastic_enable_signs = 0
 
 	" This is used by ghcmod-vim for something.
 	Bundle 'Shougo/vimproc'
