@@ -7,9 +7,9 @@ import sys
 from subprocess import Popen, PIPE
 
 # setup debugging
-def debug(arg):
+def debug(arg = ""):
     print("*** -> %s" % arg)
-def nodebug(arg):
+def nodebug(arg = ""):
     pass
 DEBUG = nodebug
 
@@ -17,7 +17,7 @@ DEBUG = nodebug
 # These may have to be changed if I get a new monitor or tv or something."
 LCD_ACTIVE_REGEX = 'LVDS-1 connected (primary )?1920x1080\+0\+600 \(normal left inverted right x axis y axis\) 344mm x 193mm\n   1920x1080      60\.0\*\+   60\.0     50\.0'
 EXTERNAL_MONITOR_ACTIVE_REGEX = 'DVI-I-1 connected (primary )?1080x1920\+1920\+0 left \(normal left inverted right x axis y axis\) 510mm x 287mm\n   1920x1080      60.0\*\+   50.0'
-TV_ACTIVE_REGEX = 'HDMI-1 connected (primary )?1920x1080\+0\+600 \(normal left inverted right x axis y axis\) 886mm x 498mm\n   1920x1080      60.0\*\+   30.0     24.0'
+TV_ACTIVE_REGEX = 'HDMI-1 connected (primary )?1920x1080\+0\+600 \(normal left inverted right x axis y axis\) 886mm x 498mm\n   1920x1080      60.0\*\+   '
 
 XRANDR_LCD_AND_EXTERN_MON_COMMAND = 'xrandr --fb 3000x1920 --output HDMI-1 --off && xrandr --fb 3000x1920 --output LVDS-1 --auto --primary --pos 0x600 --output DVI-I-1 --rotate left  --pos 1920x0 --mode "1920x1080"'
 XRANDR_TV_AND_EXTERN_MON_COMMAND = 'xrandr --fb 3000x1920 --output LVDS-1 --off && xrandr --fb 3000x1920 --output HDMI-1 --auto --primary --pos 0x600 --output DVI-I-1 --rotate left  --pos 1920x0 --mode "1920x1080"'
@@ -114,6 +114,9 @@ def main():
     else:
         DEBUG("did not find external monitor active")
 
+    # put a new line in the debugging output to make it easier to read
+    DEBUG()
+
     if args.startup:
         if extern_mon_avail:
             setup_lcd_and_extern_mon(args.dry_run)
@@ -125,8 +128,15 @@ def main():
         setup_tv_and_extern_mon(args.dry_run)
     elif lcd_active == False and tv_avail == True and tv_active == True and extern_mon_avail == True and extern_mon_active == True:
         setup_lcd_and_extern_mon(args.dry_run)
+    elif extern_mon_avail == True:
+        DEBUG("Monitors are in weird state, but external monitor is available, ")
+        DEBUG("so we will just use the external monitor and reset to the default state. ")
+        DEBUG("This is exactly what would happen if you were to run with --startup.")
+        DEBUG("Maybe try running again with --debug to figure out what's going on.")
+        setup_lcd_and_extern_mon(args.dry_run)
     else:
-        DEBUG("monitors are in weird state, so not doing aything.  try running with --startup flag.")
+        DEBUG("Monitors are in weird state, so not doing aything.")
+        DEBUG("Try running with --startup flag or --debug flags.")
 
 
 
