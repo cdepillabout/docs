@@ -88,6 +88,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'eagletmt/ghcmod-vim'
 	let g:ghcmod_type_highlight='ghcmodType'
 	hi ghcmodType ctermfg=0 ctermbg=yellow guifg=black guibg=yellow
+	" TODO: Only use these when in haskell mode...
 	map <Leader>gt :GhcModType<CR>
 	map <Leader>gc :GhcModTypeClear<CR>
 	map <Leader>gi :GhcModTypeInsert<CR>
@@ -137,7 +138,22 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:haskell_conceal_enumerations = 0
 
 	" EasyMotion.  Haven't really looked into this one yet...
-	Bundle 'Lokaltog/vim-easymotion'
+	"Bundle 'Lokaltog/vim-easymotion'
+
+	" This uses :sign to show changed areas of code a la `git diff`.
+	" Haven't really looked into this one yet either...
+	"Bundle 'mhinz/vim-signify'
+
+	" Nerdtree.  Need to enable this and make some mappings...
+	"Bundle 'scrooloose/nerdtree'
+
+	" Use multiple cursors just like Sublime text.  I almost feel
+	" like this isn't needed because macros are so convenient...
+	"Bundle 'terryma/vim-multiple-cursors'
+
+	" Get more commands for doing things to surrounding text.
+	" Haven't looked at this one either yet.
+	"Bundle 'tpope/vim-surround'
 endif
 
 filetype plugin indent on
