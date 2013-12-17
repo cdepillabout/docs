@@ -1,0 +1,7 @@
+# This is the .rc file for hi, the haskell project template generator.
+# It is up on github here: https://github.com/fujimura/hi
+# It can be installed with `cabal install hi`.
+# A project can be initialized with a command like this:
+# hi --package-name "foo-bar" --module-name "Foo.Bar" --author "illabout" --email "cdep.illabout@gmail.com"
+
+repository: https://github.com/cdepillabout/hi-template.git

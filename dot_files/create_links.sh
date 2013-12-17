@@ -84,6 +84,9 @@ super_link $HOME/docs/dot_files/dot_Xmodmap_swap_ctrl_caps $HOME/.Xmodmap_swap_c
 # gdbinit
 super_link $HOME/docs/dot_files/dot_gdbinit $HOME/.gdbinit
 
+# hirc (This creates a haskell project based on a template)
+super_link $HOME/docs/dot_files/dot_hirc $HOME/.hirc
+
 # install vim vundles if it doesn't already exist
 if [ ! -d "$HOME/.vim/bundle/vundle/.git" ] ; then
 	echo "cloning vundle..."
