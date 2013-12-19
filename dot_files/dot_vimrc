@@ -121,6 +121,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"Bundle 'bitc/vim-hdevtools'
 
 	" This doesn't seem to work either...
+	" TODO: But it has a lot of functionality, like being able to
+	" import things under the cursor.  This would be very handy.
+	" Need to look into this more...
 	"Bundle 'lukerandall/haskellmode-vim'
 	"let g:haddock_browser="/usr/bin/firefox"
 
