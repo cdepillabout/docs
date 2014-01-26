@@ -87,8 +87,9 @@ super_link $HOME/docs/dot_files/dot_gdbinit $HOME/.gdbinit
 # hirc (This creates a haskell project based on a template)
 super_link $HOME/docs/dot_files/dot_hirc $HOME/.hirc
 
-# install vim vundles if it doesn't already exist
-if [ ! -d "$HOME/.vim/bundle/vundle/.git" ] ; then
+
+# install vim vundles if it doesn't already exist and we are not root
+if [ ! -d "$HOME/.vim/bundle/vundle/.git" -a "$UID" != "0" ] ; then
 	echo "cloning vundle..."
 	echo
 	mkdir -p "$HOME/.vim/bundle"
