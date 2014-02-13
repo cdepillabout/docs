@@ -654,6 +654,13 @@ autocmd FileType ruby setlocal softtabstop=2
 autocmd FileType ruby setlocal expandtab
 autocmd FileType ruby setlocal foldmethod=syntax
 
+" settings for puppet
+autocmd FileType puppet setlocal tabstop=2
+autocmd FileType puppet setlocal shiftwidth=2
+autocmd FileType puppet setlocal softtabstop=2
+autocmd FileType puppet setlocal expandtab
+autocmd FileType puppet setlocal foldmethod=syntax
+
 " Make vim jump to the last position that you were editing in the file.
 " When we reload, tell vim to restore the cursor to the saved position.
 " This long, ugly thing is needed because funny things happen when you
