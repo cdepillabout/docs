@@ -1,3 +1,11 @@
+
+" If there is a global vimrc, first read it.  This is used on Debian-based
+" distros that have a global vimrc. The filepath for addons is specified in
+" this global file.  Addons are then enabled and disabled with the
+" vim-addon-manager command.  This global file resets some of my settings
+" below, so this needs to be done before anything else is done.
+source /etc/vim/vimrc
+
 set nocompatible		" Explicitly turn off compatibility mode
 filetype off
 
