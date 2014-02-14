@@ -4,7 +4,12 @@
 " this global file.  Addons are then enabled and disabled with the
 " vim-addon-manager command.  This global file resets some of my settings
 " below, so this needs to be done before anything else is done.
-source /etc/vim/vimrc
+if filereadable("/etc/vim/vimrc") " debian
+	source /etc/vim/vimrc
+endif
+if filereadable("/etc/vimrc") " arch linux
+	source /etc/vimrc
+endif
 
 set nocompatible		" Explicitly turn off compatibility mode
 filetype off
