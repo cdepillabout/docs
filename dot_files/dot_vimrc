@@ -401,11 +401,6 @@ endfunction
 nnoremap <silent> <C-J> :call Resize('C-J')<CR>
 nnoremap <silent> <C-K> :call Resize('C-K')<CR>
 
-" mappings for increasing window size when working
-" with 3 or more splits
-nnoremap + <C-W>+
-nnoremap - <C-W>-
-
 " I want to jump to the exact position in the line
 nnoremap '' ``
 
