@@ -58,6 +58,25 @@ route add -net 192.168.1.0/24 dev eth0`
 route del -net 192.168.1.0/24 dev eth0
 
 
+####
+# This is how to add a route so that all your traffic goes through
+# a VPN.  (Be sure to actually add the routing rules in iptables on
+# the VPN though, otherwise your traffic won't actually get routed.)
+####
+
+# Add a route to your VPN that is routable over the internet.
+# The VPN_URL should be a publicly routable hostname (or ip address)
+# like myhost.mysite.com. The local gateway should be the ip address
+# of the gateway on your local network (probably something like 
+# 192.168.1.1).
+route add VPN_HOST_NAME gw LOCAL_GATEWAY dev wlan0
+
+# Add a default route sending all your traffic to either your
+# tun device (something like 10.0.0.5) OR to VPN's gateway
+# address (something like 10.0.0.1), whichever one you need to
+# route to.
+route add default gw VPN_GATEWAY_OR_LOCAL_TUN_INTERFACE_ADDRESS
+
 
 ############### TCPDUMP ###############
 
