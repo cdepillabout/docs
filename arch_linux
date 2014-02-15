@@ -1,4 +1,8 @@
 
+#############################
+## Various pacman commands ##
+#############################
+
 # refresh package list
 pacman --sync --refresh # -Sy
 
@@ -92,9 +96,9 @@ rc.d start httpd
 
 
 
-#################
-# Add your own key to the pacman key database so you can sign local packages.
-#################
+#################################################################################
+## Add your own key to the pacman key database so you can sign local packages. ##
+#################################################################################
 
 # first generate your own key
 gpg --gen-key
@@ -109,4 +113,19 @@ pacman-key -a you@example.com.asc
 # sign the public key
 pacman-key --lsign-key you@example.com
 
-# Also make sure you have "sign" enabled in /etc/makepkg.conf.
+# !!!Also make sure you have "sign" enabled in /etc/makepkg.conf!!!!
+
+
+###############################################################
+## Tell systemd to use a specific profile from /etc/netctl/. ##
+## This also works for wired connections.                    ##
+###############################################################
+
+# First, make sure you have the profile you want to use in
+# the netctl directory, like /etc/netctl/my-netprofile.
+# Then run either of the two commands below.
+# Run directly with systemctl.
+systemctl start 'netctl@my\x2dnetprofile'
+
+# Run with netctl itself.
+netctl start my-netprofile
