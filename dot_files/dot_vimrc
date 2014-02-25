@@ -170,6 +170,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Get more commands for doing things to surrounding text.
 	" Haven't looked at this one either yet.
 	"Bundle 'tpope/vim-surround'
+
+	" Syntax files for puppet.
+	Bundle 'puppetlabs/puppet-syntax-vim'
 endif
 
 filetype plugin indent on
@@ -570,6 +573,7 @@ call Add_auto_foldmethod('javascript', 'indent')
 call Add_auto_foldmethod('php', 'syntax')
 call Add_auto_foldmethod('objc', 'syntax')
 call Add_auto_foldmethod('haskell', 'syntax')
+call Add_auto_foldmethod('puppet', 'indent')
 au FileType xml set foldmethod=syntax
 
 " Kind of like above, add a method specifying whether or not we
@@ -610,6 +614,7 @@ call Add_eol_whitespace_highlighting("ruby")
 call Add_eol_whitespace_highlighting("vim")
 call Add_eol_whitespace_highlighting("sh")
 call Add_eol_whitespace_highlighting("bash")
+call Add_eol_whitespace_highlighting("puppet")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
@@ -659,7 +664,7 @@ autocmd FileType puppet setlocal tabstop=2
 autocmd FileType puppet setlocal shiftwidth=2
 autocmd FileType puppet setlocal softtabstop=2
 autocmd FileType puppet setlocal expandtab
-autocmd FileType puppet setlocal foldmethod=syntax
+autocmd FileType puppet setlocal foldmethod=indent
 
 " Make vim jump to the last position that you were editing in the file.
 " When we reload, tell vim to restore the cursor to the saved position.
