@@ -204,10 +204,29 @@ fi
 
 $
 
-
-
-
 # If ssh connections take a long time to occur, 
 # (especially if they are hanging after SSH2_MSG_SERVICE_ACCEPTED),
 # then you can disable DNS to speed things up.
 # Edit /etc/ssh/sshd_config and set 'UseDNS' to no.
+
+#####################################
+## Setup a reverse ssh socks proxy ##
+#####################################
+
+# There must be an ssh server running on the local machine.
+# This creates a reverse ssh listening shell that will listen
+# on port 24680 on the remote machine and forward connections
+# on that port to port 12345 on the local machine.
+ssh -v -NR 24680:localhost:12345 some_remote_machine_that_will_use_proxy
+
+# This creates a reverse ssh SOCKS proxy on the local machine
+ssh -v -ND 12345 localhost
+
+# On the remote machine, you can use the SOCKS5 proxy.  Specify
+# the proxy host as localhost, and the port as 24680.
+# This works for Firefox.
+# To use this proxy for ssh, you can launch ssh from the remote
+# machine with a command like this. The ProxyCommand part can
+# also just be put in your ssh config.
+ssh -o ProxyCommand='nc -X 5 -x localhost:24680 %h %p' some-host-to-ssh-to.com
+
