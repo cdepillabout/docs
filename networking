@@ -204,10 +204,14 @@ fi
 
 $
 
+
+
 # If ssh connections take a long time to occur, 
 # (especially if they are hanging after SSH2_MSG_SERVICE_ACCEPTED),
 # then you can disable DNS to speed things up.
 # Edit /etc/ssh/sshd_config and set 'UseDNS' to no.
+
+
 
 #####################################
 ## Setup a reverse ssh socks proxy ##
@@ -229,4 +233,16 @@ ssh -v -ND 12345 localhost
 # machine with a command like this. The ProxyCommand part can
 # also just be put in your ssh config.
 ssh -o ProxyCommand='nc -X 5 -x localhost:24680 %h %p' some-host-to-ssh-to.com
+
+
+
+##############################
+## Run ssh server on Cygwin ##
+##############################
+
+# http://docs.oracle.com/cd/E24628_01/install.121/e22624/preinstall_req_cygwin_ssh.htm
+# http://www.noah.org/ssh/cygwin-sshd.html
+
+# Once installed, it can be started like this.
+cygrunsrv.exe -S sshd
 
