@@ -88,6 +88,27 @@ super_link $HOME/docs/dot_files/dot_gdbinit $HOME/.gdbinit
 super_link $HOME/docs/dot_files/dot_hirc $HOME/.hirc
 
 
+
+# create a ~/.bashrc_local
+[ ! -f "$HOME/.bashrc-local" ] && touch "$HOME/.bashrc-local"
+
+# ask if we will add umask 022 to bashrc
+grep umask "$HOME/.bashrc-local" 2>/dev/null 1>&2
+does_umask_exist_in_bashrc_local="$?"
+[ "${does_umask_exist_in_bashrc_local}" != 0 ] && \
+	read -r -p "Do you want to add \`umask 022\` to $HOME/.bashrc-local? [y/N] " response
+if [ "${does_umask_exist_in_bashrc_local}" == "0" ] ; then
+	# umask is already in bashrc_local, so do nothing...
+	:
+elif [[ "${response}" =~ ^([yY][eE][sS]|[yY])$ ]] ; then
+	# adding valid umask to bashrc-local
+	echo -e '\numask 0022' >> $HOME/.bashrc-local
+else
+	# adding a commented out umask to bashrc-local
+	echo -e '\n#umask 0022' >> $HOME/.bashrc-local
+fi
+
+
 # install vim vundles if it doesn't already exist and we are not root
 if [ ! -d "$HOME/.vim/bundle/vundle/.git" -a "$UID" != "0" ] ; then
 	echo "cloning vundle..."
