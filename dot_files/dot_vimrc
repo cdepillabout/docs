@@ -307,6 +307,11 @@ hi PmenuSel ctermbg=lightblue
 " make sure the normal background is black
 hi Normal guibg=black
 
+" Make sure Special items are not Red.  The scala syntax highlighting makes
+" objects (strings that start with a captial letter) this "Special" value, and
+" it makes them dark red.  It makes them look like comments.  This makes them
+" a brighter red so they stand out from comments.
+hi Special ctermfg=red
 
 
 " settings specifically for java from
