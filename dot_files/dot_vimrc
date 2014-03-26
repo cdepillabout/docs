@@ -179,6 +179,35 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Syntax files for puppet.
 	Bundle 'puppetlabs/puppet-syntax-vim'
+
+	" Rainbow parentheses
+	Bundle 'kien/rainbow_parentheses.vim'
+	let g:rbpt_colorpairs = [
+	    \ ['darkred',     'DarkOrchid3'],
+	    \ ['darkgray',    'DarkOrchid3'],
+	    \ ['darkmagenta', 'DarkOrchid3'],
+	    \ ['darkgreen',   'RoyalBlue3'],
+	    \ ['red',         'firebrick3'],
+	    \ ['brown',       'RoyalBlue3'],
+	    \ ['darkmagenta', 'DarkOrchid3'],
+	    \ ['gray',        'RoyalBlue3'],
+	    \ ['darkcyan',    'SeaGreen3'],
+	    \ ['darkblue',    'SeaGreen3'],
+	    \ ['darkred',     'SeaGreen3'],
+	    \ ['darkgreen',   'firebrick3'],
+	    \ ['darkcyan',    'RoyalBlue3'],
+	    \ ['blue',        'firebrick3'],
+	    \ ['brown',       'firebrick3'],
+	    \ ['darkmagenta', 'DarkOrchid3'],
+	    \ ['darkgreen',   'RoyalBlue3'],
+	    \ ['red',         'firebrick3'],
+	    \ ]
+	au VimEnter * RainbowParenthesesToggle
+	au VimEnter * RainbowParenthesesLoadRound
+	au VimEnter * RainbowParenthesesLoadSquare
+	au VimEnter * RainbowParenthesesLoadBraces
+	au VimEnter * RainbowParenthesesLoadChevrons
+
 endif
 
 " I am moving syntax on down to here because putting it above was
