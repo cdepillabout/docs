@@ -180,6 +180,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Syntax files for puppet.
 	Bundle 'puppetlabs/puppet-syntax-vim'
 
+	" Scala syntax
+	Bundle 'derekwyatt/vim-scala'
+
 	" Rainbow parentheses
 	Bundle 'kien/rainbow_parentheses.vim'
 	let g:rbpt_colorpairs = [
