@@ -177,6 +177,23 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Haven't looked at this one either yet.
 	"Bundle 'tpope/vim-surround'
 
+	" nicer statusline
+	" This seems like it would be nice, but I would have to configure it
+	" not to look ugly.  Also, it doesn't seem like it would be too helpful
+	" without the fugitive git plugin.
+	"Bundle 'bling/vim-airline'
+
+	" Shows git-diff stuff in the sign column and allows you to stage/revert
+	" hunks.
+	"Bundle 'airblade/vim-gitgutter'
+
+	" Does various git commands.
+	"Bundle 'tpope/vim-fugitive'
+
+	" Vim plugin for browsing tags of source code.  It opens up a sidebar that
+	" displays ctags-generated gtags of the current file.
+	"Bundle 'majutsushi/tagbar'
+
 	" Syntax files for puppet.
 	Bundle 'puppetlabs/puppet-syntax-vim'
 
