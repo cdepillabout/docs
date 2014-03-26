@@ -5,7 +5,11 @@
 [rebase]
 	autosquash = true
 [push]
-	default = upstream
+	# git has deprecated "tracking" and it will be called
+	# "upstream" in future git releases.  "tracking" is still
+	# currently working though.  Old versions of git don't
+	# know about "upstream".
+	default = tracking
 [merge]
 	defaultToUpstream = true
 	ff = only
