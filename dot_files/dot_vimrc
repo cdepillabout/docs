@@ -188,7 +188,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"Bundle 'airblade/vim-gitgutter'
 
 	" Does various git commands.
-	"Bundle 'tpope/vim-fugitive'
+	Bundle 'tpope/vim-fugitive'
 
 	" Vim plugin for browsing tags of source code.  It opens up a sidebar that
 	" displays ctags-generated gtags of the current file.
@@ -476,6 +476,16 @@ nnoremap '' ``
 " I want to jump to the exact position in the line for marks
 nnoremap ' `
 nnoremap ` '
+
+
+" run glg from within vim
+function! Glg(...)
+	execute "silent !git log --decorate --graph --color " . join(a:000) . " | less -R"
+	redraw!
+endfunction
+command! -nargs=* Glg call Glg(<f-args>)
+cabbrev glg Glg
+
 
 " Open a bunch of tabs at once.  Also interpret globbing characters.
 function! Tabopen_all_files(...)
