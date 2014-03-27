@@ -222,11 +222,16 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	    \ ['darkgreen',   'RoyalBlue3'],
 	    \ ['red',         'firebrick3'],
 	    \ ]
-	au VimEnter * RainbowParenthesesToggle
-	au VimEnter * RainbowParenthesesLoadRound
-	au VimEnter * RainbowParenthesesLoadSquare
-	au VimEnter * RainbowParenthesesLoadBraces
-	"au VimEnter * RainbowParenthesesLoadChevrons
+	autocmd VimEnter * if exists(":RainbowParenthesesActivate") |
+		\ exec ":RainbowParenthesesActivate" | endif
+	autocmd BufEnter * if exists(":RainbowParenthesesLoadRound") |
+		\ exec ":RainbowParenthesesLoadRound" | endif
+	autocmd BufEnter * if exists(":RainbowParenthesesLoadSquare") |
+		\ exec ":RainbowParenthesesLoadSquare" | endif
+	autocmd BufEnter * if exists(":RainbowParenthesesLoadBraces") |
+		\ exec ":RainbowParenthesesLoadBraces" | endif
+	"autocmd BufEnter * if exists(":RainbowParenthesesLoadChevrons") |
+	"	\ exec ":RainbowParenthesesLoadChevrons" | endif
 
 endif
 
