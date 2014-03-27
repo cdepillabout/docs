@@ -744,6 +744,13 @@ autocmd FileType puppet setlocal softtabstop=2
 autocmd FileType puppet setlocal expandtab
 autocmd FileType puppet setlocal foldmethod=indent
 
+" settings for scala
+autocmd FileType scala setlocal tabstop=2
+autocmd FileType scala setlocal shiftwidth=2
+autocmd FileType scala setlocal softtabstop=2
+autocmd FileType scala setlocal expandtab
+autocmd FileType scala setlocal foldmethod=indent
+
 " Make vim jump to the last position that you were editing in the file.
 " When we reload, tell vim to restore the cursor to the saved position.
 " This long, ugly thing is needed because funny things happen when you
