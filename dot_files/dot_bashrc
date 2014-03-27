@@ -1,11 +1,11 @@
-#!/bin/bash 
+#!/bin/bash
 
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from
 # outputting anything in those cases.
 
 # Here is another way to do this:
-# [ -z "$PS1" ] && return 
+# [ -z "$PS1" ] && return
 if [[ $- != *i* || "$TERM" == "dumb" || "$0" != *bash ]] ; then
 	# Shell is non-interactive or shell is not bash.  Be done now!
     PROMPT_COMMAND=''
@@ -80,7 +80,7 @@ umask 0077
 # available in bash 4+.
 shopt_check_and_set() {
 	option="$1"
-	if [ -n "$(shopt -p | grep "${option}")" ] ; 
+	if [ -n "$(shopt -p | grep "${option}")" ] ;
 	then
 		shopt -s "${option}"
 	fi
@@ -90,7 +90,7 @@ shopt_check_and_set() {
 # make bash check the window size after each command
 shopt_check_and_set "checkwinsize"
 
-# automatically change directory if you just type the directory on the command line.  
+# automatically change directory if you just type the directory on the command line.
 shopt_check_and_set "autocd"
 
 # be able to use ** to match all subdirs
