@@ -226,7 +226,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	au VimEnter * RainbowParenthesesLoadRound
 	au VimEnter * RainbowParenthesesLoadSquare
 	au VimEnter * RainbowParenthesesLoadBraces
-	au VimEnter * RainbowParenthesesLoadChevrons
+	"au VimEnter * RainbowParenthesesLoadChevrons
 
 endif
 
@@ -650,6 +650,7 @@ call Add_auto_foldmethod('php', 'syntax')
 call Add_auto_foldmethod('objc', 'syntax')
 call Add_auto_foldmethod('haskell', 'syntax')
 call Add_auto_foldmethod('puppet', 'indent')
+call Add_auto_foldmethod('scala', 'indent')
 au FileType xml set foldmethod=syntax
 
 " Kind of like above, add a method specifying whether or not we
@@ -691,6 +692,7 @@ call Add_eol_whitespace_highlighting("vim")
 call Add_eol_whitespace_highlighting("sh")
 call Add_eol_whitespace_highlighting("bash")
 call Add_eol_whitespace_highlighting("puppet")
+call Add_eol_whitespace_highlighting("scala")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
