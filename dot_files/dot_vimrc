@@ -518,7 +518,7 @@ cabbrev gdf Gdf
 
 " run git push from within vim
 function! Gpsh(...)
-	execute "silent !git push " . join(a:000) . " | less -R"
+	execute "!git push " . join(a:000)
 	redraw!
 endfunction
 command! -nargs=* Gpsh call Gpsh(<f-args>)
