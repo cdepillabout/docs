@@ -233,6 +233,19 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"autocmd BufEnter * if exists(":RainbowParenthesesLoadChevrons") |
 	"	\ exec ":RainbowParenthesesLoadChevrons" | endif
 
+	" This adds mappings like the following:
+	" [a, ]a                :previous, :next
+	" [b, ]b                :bprevious, :bnext
+	" [l, ]l                :lprevious, :lnext
+	" [q, ]q                :cprevious, :cnext
+	" [<Space>, ]<Space>    add a blank line above or below the cursor
+	Bundle 'tpope/vim-unimpaired'
+
+	" This adds the key command 'gcc' to comment out the
+	" current line.  It also adds the command 'gc' in visual
+	" mode to comment out a block.
+	Bundle 'tpope/vim-commentary'
+
 endif
 
 " I am moving syntax on down to here because putting it above was
