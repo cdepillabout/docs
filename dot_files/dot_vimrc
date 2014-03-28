@@ -508,6 +508,22 @@ endfunction
 command! -nargs=* Glg call Glg(<f-args>)
 cabbrev glg Glg
 
+" run git diff from within vim
+function! Gdf(...)
+	execute "silent !git diff --color " . join(a:000) . " | less -R"
+	redraw!
+endfunction
+command! -nargs=* Gdf call Gdf(<f-args>)
+cabbrev gdf Gdf
+
+" run git push from within vim
+function! Gpsh(...)
+	execute "silent !git push " . join(a:000) . " | less -R"
+	redraw!
+endfunction
+command! -nargs=* Gpsh call Gpsh(<f-args>)
+cabbrev gpsh Gpsh
+
 
 " Open a bunch of tabs at once.  Also interpret globbing characters.
 function! Tabopen_all_files(...)
