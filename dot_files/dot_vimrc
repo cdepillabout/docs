@@ -244,6 +244,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" This adds the key command 'gcc' to comment out the
 	" current line.  It also adds the command 'gc' in visual
 	" mode to comment out a block.
+	" In order to set the comment character for a specific filetype,
+	" just use an autocommand like the following.
+	" autocmd FileType apache set commentstring=#\ %s
 	Bundle 'tpope/vim-commentary'
 
 endif
