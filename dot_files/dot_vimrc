@@ -248,6 +248,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" just use an autocommand like the following.
 	" autocmd FileType apache set commentstring=#\ %s
 	Bundle 'tpope/vim-commentary'
+	autocmd FileType puppet set commentstring=#%s
 
 endif
 
