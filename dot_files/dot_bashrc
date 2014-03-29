@@ -186,7 +186,7 @@ PS1_scmdir=""
 # a '$' if we are a normal user and a '#' if we are root
 PS1_dollar_or_pound="${PS1_blue}\\\$"
 
-# we want a different color hostname if we 
+# we want a different color hostname if we
 # are on a remote connection
 if [ -n "${SSH_CLIENT}" -a -n "${SSH_CONNECTION}" -a -n "${SSH_TTY}" ] ; then
 	PS1_hostname="${PS1_magenta}\h"
