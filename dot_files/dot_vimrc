@@ -160,7 +160,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:haskell_conceal_enumerations = 0
 
 	" EasyMotion.  Haven't really looked into this one yet...
-	"Bundle 'Lokaltog/vim-easymotion'
+	Bundle 'Lokaltog/vim-easymotion'
 
 	" This uses :sign to show changed areas of code a la `git diff`.
 	" Haven't really looked into this one yet either...
