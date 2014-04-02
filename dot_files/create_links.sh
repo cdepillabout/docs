@@ -87,6 +87,9 @@ super_link $HOME/docs/dot_files/dot_gdbinit $HOME/.gdbinit
 # hirc (This creates a haskell project based on a template)
 super_link $HOME/docs/dot_files/dot_hirc $HOME/.hirc
 
+# ctags
+super_link $HOME/docs/dot_files/dot_ctags $HOME/.ctags
+
 
 
 # create a ~/.bashrc_local
