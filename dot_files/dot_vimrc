@@ -669,6 +669,9 @@ cabbrev curl Curl
 " (It changes <CR> to open the first result in a new tab).
 autocmd BufWinEnter * if &buflisted && &filetype == "qf" | noremap <buffer> <CR> <CR><C-W>T| endif
 
+" Autocommand
+autocmd BufWinEnter * if &buflisted && &filetype == "qf" | noremap <buffer> q :q<CR>| endif
+
 " source ~/.vim/plugin/cscope_maps.vim
 " source ~/.vim/syntax/javascript.vim
 
