@@ -167,7 +167,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"Bundle 'mhinz/vim-signify'
 
 	" Nerdtree.  Need to enable this and make some mappings...
-	"Bundle 'scrooloose/nerdtree'
+	Bundle 'scrooloose/nerdtree'
+	nnoremap <F3> :NERDTreeToggle<CR>
 
 	" Use multiple cursors just like Sublime text.  I almost feel
 	" like this isn't needed because macros are so convenient...
