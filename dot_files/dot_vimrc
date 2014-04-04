@@ -177,6 +177,16 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Get more commands for doing things to surrounding text.
 	Bundle 'tpope/vim-surround'
 
+	" This allows to write really short html.
+	" You can convert the sparkup syntax to html with
+	" Ctrl-E in insert mode, and then move to the next
+	" empty element with Ctrl-N in insert mode.
+	" Some examples of syntax are below:
+	" https://github.com/rstacruz/sparkup
+	" Other examples of syntax:
+	" http://code.google.com/p/zen-coding/
+	Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+
 	" nicer statusline
 	" This seems like it would be nice, but I would have to configure it
 	" not to look ugly.  Also, it doesn't seem like it would be too helpful
