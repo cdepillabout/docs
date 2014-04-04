@@ -464,3 +464,7 @@ mp3splt -s -p min=1,off=0.5 audio_file.mp3
 # file to get the files to play.
 mplayer -playlist <(find $PWD -type f | sort -r)
 
+
+# Run ctags to generate tags for a scala play project.
+# This generates a 'tags' file in the current directory.
+ctags -R . --exclude target
