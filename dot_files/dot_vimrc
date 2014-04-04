@@ -175,8 +175,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"Bundle 'terryma/vim-multiple-cursors'
 
 	" Get more commands for doing things to surrounding text.
-	" Haven't looked at this one either yet.
-	"Bundle 'tpope/vim-surround'
+	Bundle 'tpope/vim-surround'
 
 	" nicer statusline
 	" This seems like it would be nice, but I would have to configure it
