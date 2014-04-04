@@ -742,6 +742,7 @@ call Add_eol_whitespace_highlighting("bash")
 call Add_eol_whitespace_highlighting("c")
 call Add_eol_whitespace_highlighting("cpp")
 call Add_eol_whitespace_highlighting("haskell")
+call Add_eol_whitespace_highlighting("html")
 call Add_eol_whitespace_highlighting("java")
 call Add_eol_whitespace_highlighting("php")
 " Actually, I don't know if these will work.  It might have to be "py" instead
@@ -808,6 +809,13 @@ autocmd FileType scala setlocal shiftwidth=2
 autocmd FileType scala setlocal softtabstop=2
 autocmd FileType scala setlocal expandtab
 autocmd FileType scala setlocal foldmethod=indent
+
+" settings for html
+autocmd FileType html setlocal tabstop=2
+autocmd FileType html setlocal shiftwidth=2
+autocmd FileType html setlocal softtabstop=2
+"autocmd FileType html setlocal expandtab
+autocmd FileType html setlocal foldmethod=indent
 
 " Make vim jump to the last position that you were editing in the file.
 " When we reload, tell vim to restore the cursor to the saved position.
