@@ -15,9 +15,9 @@ DEBUG = nodebug
 
 # regex strings for checking which monitors are active.
 # These may have to be changed if I get a new monitor or tv or something."
-LCD_ACTIVE_REGEX = 'LVDS-1 connected (primary )?1920x1080\+0\+600 \(normal left inverted right x axis y axis\) 344mm x 193mm\n   1920x1080      60\.0\*\+   60\.0     50\.0'
-EXTERNAL_MONITOR_ACTIVE_REGEX = 'DVI-I-1 connected (primary )?1080x1920\+1920\+0 left \(normal left inverted right x axis y axis\) 510mm x 287mm\n   1920x1080      60.0\*\+   50.0'
-TV_ACTIVE_REGEX = 'HDMI-1 connected (primary )?1920x1080\+0\+600 \(normal left inverted right x axis y axis\) 886mm x 498mm\n   1920x1080      60.0\*\+   '
+LCD_ACTIVE_REGEX = 'LVDS-1 connected (primary )?1920x1080\+0\+600 \(normal left inverted right x axis y axis\) 344mm x 193mm\n   1920x1080\s+60\.00?\*\+'
+EXTERNAL_MONITOR_ACTIVE_REGEX = 'DVI-I-1 connected (primary )?1080x1920\+1920\+0 left \(normal left inverted right x axis y axis\) 510mm x 287mm\n   1920x1080\s+60.00?\*\+'
+TV_ACTIVE_REGEX = 'HDMI-1 connected (primary )?1920x1080\+0\+600 \(normal left inverted right x axis y axis\) 886mm x 498mm\n   1920x1080      60.00?\*\+   '
 
 XRANDR_LCD_AND_EXTERN_MON_COMMAND = 'xrandr --fb 3000x1920 --output HDMI-1 --off && xrandr --fb 3000x1920 --output LVDS-1 --auto --primary --pos 0x600 --output DVI-I-1 --rotate left  --pos 1920x0 --mode "1920x1080"'
 XRANDR_TV_AND_EXTERN_MON_COMMAND = 'xrandr --fb 3000x1920 --output LVDS-1 --off && xrandr --fb 3000x1920 --output HDMI-1 --auto --primary --pos 0x600 --output DVI-I-1 --rotate left  --pos 1920x0 --mode "1920x1080"'
