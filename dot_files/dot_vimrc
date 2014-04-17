@@ -90,10 +90,12 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"let g:syntastic_enable_signs = 0
 
 	" This is used by ghcmod-vim for something.
-	Bundle 'Shougo/vimproc'
-	if isdirectory(expand("~/.vim/bundle/vimproc/.git")) &&
-			\ !filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_unix.so"))
-		echo "You must run `(cd \"$HOME/.vim/bundle/vimproc/\" && make)` in order to install vimproc (for ghc-mod)."
+	if version >= 701
+		Bundle 'Shougo/vimproc'
+		if isdirectory(expand("~/.vim/bundle/vimproc/.git")) &&
+				\ !filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_unix.so"))
+			echo "You must run `(cd \"$HOME/.vim/bundle/vimproc/\" && make)` in order to install vimproc (for ghc-mod)."
+		endif
 	endif
 
 	" Must `cabal install ghc-mod` to be able to use this.
@@ -204,24 +206,26 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Vim plugin for browsing tags of source code.  It opens up a sidebar that
 	" displays ctags-generated gtags of the current file.
-	Bundle 'majutsushi/tagbar'
-	" F2 for turning on and off tag list
-	nnoremap <F2> :TagbarToggle<CR>
-	let g:tagbar_type_scala = {
-		\ 'ctagstype' : 'Scala',
-		\ 'kinds'     : [
-			\ 'p:packages:1',
-			\ 'V:values',
-			\ 'v:variables',
-			\ 'T:types',
-			\ 't:traits',
-			\ 'o:objects',
-			\ 'a:aclasses',
-			\ 'c:classes',
-			\ 'r:cclasses',
-			\ 'm:methods'
-		\ ]
-	\ }
+	if version >= 701
+		Bundle 'majutsushi/tagbar'
+		" F2 for turning on and off tag list
+		nnoremap <F2> :TagbarToggle<CR>
+		let g:tagbar_type_scala = {
+			\ 'ctagstype' : 'Scala',
+			\ 'kinds'     : [
+				\ 'p:packages:1',
+				\ 'V:values',
+				\ 'v:variables',
+				\ 'T:types',
+				\ 't:traits',
+				\ 'o:objects',
+				\ 'a:aclasses',
+				\ 'c:classes',
+				\ 'r:cclasses',
+				\ 'm:methods'
+			\ ]
+		\ }
+	endif
 
 	" Syntax files for puppet.
 	Bundle 'puppetlabs/puppet-syntax-vim'
