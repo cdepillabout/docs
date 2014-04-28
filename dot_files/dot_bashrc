@@ -261,8 +261,8 @@ alias dd='safe-dd '
 alias gadd='git add '
 alias gba='git branch -a '
 alias gb='git branch '
-alias gcam='git commit -a -m '
-alias gcm='git commit -m '
+#alias gcam='git commit -a -m '
+#alias gcm='git commit -m '
 alias gco='git checkout '
 alias gdcf='git diff-changed-files '
 alias gdff='git diff '
@@ -308,6 +308,16 @@ function glga ()
 function glg ()
 {
 	git log --graph --decorate --color "$@" | less -R
+}
+
+function gcm ()
+{
+	git commit -m "$*"
+}
+
+function gcam ()
+{
+	git commit -a -m "$*"
 }
 
 # SSH Get Auth Sock.
