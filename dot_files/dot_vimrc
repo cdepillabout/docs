@@ -370,6 +370,8 @@ hi Special ctermfg=red
 
 " Give us some additional colors for highlighting haskell code.  This is used
 " by vim2hs.
+" TODO: Really what I want is for types to be bright green and keywords to be
+" the darker blue color...
 highlight hsType ctermfg=blue
 highlight hsKeyword ctermfg=brown
 
