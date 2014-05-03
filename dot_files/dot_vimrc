@@ -163,7 +163,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Also disable conceal for jmacro.
 	let g:jmacro_conceal = 0
 
-	" EasyMotion.  Haven't really looked into this one yet...
+	" EasyMotion.
 	Bundle 'Lokaltog/vim-easymotion'
 
 	" This uses :sign to show changed areas of code a la `git diff`.
