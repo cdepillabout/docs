@@ -368,6 +368,10 @@ hi Normal guibg=black
 " a brighter red so they stand out from comments.
 hi Special ctermfg=red
 
+" Give us some additional colors for highlighting haskell code.  This is used
+" by vim2hs.
+highlight hsType ctermfg=blue
+highlight hsKeyword ctermfg=brown
 
 " settings specifically for java from
 " http://vimdoc.sourceforge.net/htmldoc/syntax.html
