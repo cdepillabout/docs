@@ -245,3 +245,7 @@ ls some_dir/* | vim   # THIS DOESN'T WORK!!
 
 # htmlizle a vim buffer.  This optputs html that can be used to represent the current tab.
 :TOhtml
+
+
+# To find out where a color has been set, use :verbose
+:verbose highlight SignColumn

@@ -199,7 +199,18 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Shows git-diff stuff in the sign column and allows you to stage/revert
 	" hunks.
-	"Bundle 'airblade/vim-gitgutter'
+	" :GitGutterDisable	             -- disable git gutter
+	" :GitGutterLineHighlightsToggle -- toggle whether lines are highlighted
+	" ]c and [c                      -- jump to next hunk
+	" <Leader>hs                     -- stage the hunk
+	" <Leader>hr                     -- revert the hunk
+	" <Leader>hp                     -- preview the hunk?
+	" These two are needed if gitgutter becomes slow.
+	" let g:gitgutter_realtime = 0   -- Make it so that the gutter is not updated in realtime.
+	" let g:gitgutter_eager = 0      -- Make it so that the gutter is not updated when switching tabs.
+	Bundle 'airblade/vim-gitgutter'
+	" git gutter needs to use raw grep because i have colors turned on in my grep
+	let g:gitgutter_escape_grep = 1
 
 	" Does various git commands.
 	Bundle 'tpope/vim-fugitive'
