@@ -447,6 +447,9 @@ export HISTIGNORE="&:ls:[bf]g:exit:cd:gst:hg st:lsr:ls -lah:tree"
 # I don't want a git pager
 export GIT_PAGER=''
 
+# I don't want a darcs pager
+export DARCS_PAGER='cat'
+
 # add /sbin, /usr/sbin, and /usr/local/sbin to path if they are not in it
 add_to_path PATH "/sbin"
 add_to_path PATH "/usr/sbin"
