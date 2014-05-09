@@ -433,7 +433,7 @@ function reflector-update-mirrorlist() {
 	return 0
 }
 
-# don't record duplicate items in history or 
+# don't record duplicate items in history or
 # lines starting with a space ('$  ls -la')
 export HISTCONTROL='ignoreboth'
 
@@ -453,7 +453,7 @@ add_to_path PATH "/usr/sbin"
 add_to_path PATH "/usr/local/sbin"
 
 # add my program directory
-add_to_path PATH "$HOME/docs/code/bin" 
+add_to_path PATH "$HOME/docs/code/bin"
 
 # add classpath for java
 add_to_path_nocheck CLASSPATH "/usr/share/junit-4/lib/junit.jar"
