@@ -458,6 +458,11 @@ map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap sudow w !sudo tee > /dev/null %
 
+" Q is used to mess with macros.  q is used to close tabs/windows.
+" Q's original function is to go into EX-mode.  I almost never want
+" to go to EX mode, so I made this mapping.
+noremap Q q
+map q :q<CR>
 
 " this is needed for running taglist in screen:
 let Tlist_Inc_Winwidth = 0
