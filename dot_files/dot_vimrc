@@ -809,6 +809,7 @@ autocmd FileType haskell set expandtab
 " Cabal files also needs spaces instead of tabs.
 autocmd BufRead,BufNewFile *.cabal set expandtab
 autocmd FileType cabal set expandtab
+autocmd BufRead,BufNewFile *.cabal setlocal filetype=cabal
 
 " SConscript and SConstruct files are python files
 autocmd BufRead,BufNewFile SConstruct set ft=python
