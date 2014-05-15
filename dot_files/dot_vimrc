@@ -294,6 +294,13 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'tpope/vim-commentary'
 	autocmd FileType puppet set commentstring=#%s
 
+	" This adds text selection/movement commands for working
+	" with similarly indented blocks of code.
+	" It depends on the following plugin:
+	"Bundle 'kana/vim-textobj-user'
+	" Here is the plugin itself:
+	"Bundle 'kana/vim-textobj-indent'
+
 endif
 
 " I am moving syntax on down to here because putting it above was
