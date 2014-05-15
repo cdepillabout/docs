@@ -249,3 +249,15 @@ ls some_dir/* | vim   # THIS DOESN'T WORK!!
 
 # To find out where a color has been set, use :verbose
 :verbose highlight SignColumn
+
+
+# This allows you to paste from the system clipboard.
+"*p
+# This allows you to copy to the system clipboard.
+"*yy
+# The * register acts just like any of the normal (single letter) registers in
+# vi except that it also refers to the system clipboard in X11 or MS Windows. 
+# X11 also has a + register, which is for any text explicitly copied from a menu.
+# The * register is just for text that is highlighted with the mouse.
+# This needs vim to be compiled with +xterm_clipboard.
+
