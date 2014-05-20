@@ -468,3 +468,15 @@ mplayer -playlist <(find $PWD -type f | sort -r)
 # Run ctags to generate tags for a scala play project.
 # This generates a 'tags' file in the current directory.
 ctags -R . --exclude target
+
+
+# Here is a quick check that you can do on the command line to find out
+# what font will be used when running an application.
+$ fc-match Monospace:lang=ja
+# This shows what font will be used when an application asks for Monospace in
+# Japanese.  It can also be run like the below to find out what font will be
+# used when an application doesn't specify a font.
+$ fc-match
+# This was taken from the following web page.
+# http://docs.oracle.com/cd/E26502_01/html/E29214/glmkf.html
+
