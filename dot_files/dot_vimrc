@@ -22,13 +22,6 @@ colorscheme darkblue
 "colorscheme desert
 "colorscheme torte
 
-" I am moving 'syntax on' down below the bundle stuff because putting it here was
-" causing puppetlabs/puppet-syntax-vim to not pickup the ftdetect
-" settings for puppet files.  But I somewhat remember that putting
-" 'syntax on' down below caused some problems with my haskell stuff,
-" so I will have to make sure this doesn't cause any haskell problems...
-"syntax on
-
 " let my leader key be space instead of \
 " This needs to be set as soon as possible because
 " things mapped with <Leader> are mapped with the
@@ -310,9 +303,9 @@ let &runtimepath=("~/.vim/," . &runtimepath)
 
 " I am moving syntax on down to here because putting it above was
 " causing puppetlabs/puppet-syntax-vim to not pickup the ftdetect
-" settings for puppet files.  But I somewhat remember that putting
-" 'syntax on' down here caused some problems with my haskell stuff,
-" so I will have to make sure this doesn't cause any haskell problems...
+" settings for puppet files.  But this causes all highlights that
+" have been defined to be undefined, so all of my highlights have
+" to go below.
 syntax on
 filetype plugin indent on
 
