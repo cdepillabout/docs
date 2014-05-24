@@ -486,6 +486,13 @@ map q :q<CR>
 " in input mode, what about we try using jj as escape
 inoremap jj <Esc>
 
+" I want to jump to the exact position in the line
+nnoremap '' ``
+
+" I want to jump to the exact position in the line for marks
+nnoremap ' `
+nnoremap ` '
+
 function! Resize(dir)
 	" TODO: could also do something like this for horizontal split screen
 	let above = 0
@@ -555,14 +562,6 @@ endfunction
 " mappings for changing window size
 nnoremap <silent> <C-J> :call Resize('C-J')<CR>
 nnoremap <silent> <C-K> :call Resize('C-K')<CR>
-
-" I want to jump to the exact position in the line
-nnoremap '' ``
-
-" I want to jump to the exact position in the line for marks
-nnoremap ' `
-nnoremap ` '
-
 
 " run glg from within vim
 function! Glg(...)
