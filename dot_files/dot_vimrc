@@ -722,7 +722,8 @@ cabbrev curl Curl
 autocmd BufWinEnter * if &buflisted && &filetype == "qf" | noremap <buffer> <CR> <CR><C-W>T| endif
 
 " Autocommand
-autocmd BufWinEnter * if &buflisted && &filetype == "qf" | noremap <buffer> q :q<CR>| endif
+" I don't think I need this anymore because I mapped :q to q.
+"autocmd BufWinEnter * if &buflisted && &filetype == "qf" | noremap <buffer> q :q<CR>| endif
 
 " source ~/.vim/plugin/cscope_maps.vim
 " source ~/.vim/syntax/javascript.vim
@@ -797,7 +798,6 @@ call Add_eol_whitespace_highlighting("haskell")
 call Add_eol_whitespace_highlighting("html")
 call Add_eol_whitespace_highlighting("java")
 call Add_eol_whitespace_highlighting("php")
-" Actually, I don't know if these will work.  It might have to be "py" instead
 call Add_eol_whitespace_highlighting("puppet")
 call Add_eol_whitespace_highlighting("python")
 call Add_eol_whitespace_highlighting("ruby")
@@ -907,7 +907,7 @@ augroup END
 "set lazyredraw
 "set nottyfast
 
-" load a local .vimrc
+" load a local .vimrc from "~/.vimrc-local" if it exists
 let vimrc_dir = fnamemodify(expand($MYVIMRC), ":h")
 let local_vimrc = vimrc_dir . "/.vimrc-local"
 if filereadable(local_vimrc)
