@@ -401,17 +401,6 @@ let java_highlight_all=1
 "let java_highlight_functions="style"
 "let java_allow_cpp_keywords=1
 
-" Minibufexplorer plugin settings
-"let g:miniBufExplMapWindowNavVim = 1	" Let C-h, C-j, C-k, C-l move your
-										" current active buffer window
-"let g:miniBufExplMapCTabSwitchBufs = 1	" Let C-TAB move to the next buffer and
-										" C-SHIFT-TAB move to the previous
-										" buffer
-"let g:miniBufExplModSelTarget = 1		" Force minibufferexplorer to put
-										" buffers in windows with
-										" non-modifiable buffers
-										"
-
 " make sure xml files are folded
 let g:xml_syntax_folding=1
 
