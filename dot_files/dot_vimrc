@@ -882,29 +882,65 @@ autocmd BufNewFile,BufRead *.md set filetype=markdown
 " When we reload, tell vim to restore the cursor to the saved position.
 " This long, ugly thing is needed because funny things happen when you
 " use folding.
-augroup JumpCursorOnEdit
- au!
- autocmd BufReadPost *
- \ if expand("<afile>:p:h") !=? $TEMP |
- \ if line("'\"") > 1 && line("'\"") <= line("$") |
- \ let JumpCursorOnEdit_foo = line("'\"") |
- \ let b:doopenfold = 1 |
- \ if (foldlevel(JumpCursorOnEdit_foo) > foldlevel(JumpCursorOnEdit_foo - 1)) |
- \ let JumpCursorOnEdit_foo = JumpCursorOnEdit_foo - 1 |
- \ let b:doopenfold = 2 |
- \ endif |
- \ exe JumpCursorOnEdit_foo |
- \ endif |
- \ endif
- " Need to postpone using "zv" until after reading the modelines.
- autocmd BufWinEnter *
- \ if exists("b:doopenfold") |
- \ exe "normal zv" |
- \ if(b:doopenfold > 1) |
- \ exe "+".1 |
- \ endif |
- \ unlet b:doopenfold |
- \ endif
+" augroup JumpCursorOnEdit
+"  au!
+"  autocmd BufReadPost *
+"  \ if expand("<afile>:p:h") !=? $TEMP |
+"  \ if line("'\"") > 1 && line("'\"") <= line("$") |
+"  \ let JumpCursorOnEdit_foo = line("'\"") |
+"  \ let b:doopenfold = 1 |
+"  \ if (foldlevel(JumpCursorOnEdit_foo) > foldlevel(JumpCursorOnEdit_foo - 1)) |
+"  \ let JumpCursorOnEdit_foo = JumpCursorOnEdit_foo - 1 |
+"  \ let b:doopenfold = 2 |
+"  \ endif |
+"  \ exe JumpCursorOnEdit_foo |
+"  \ endif |
+"  \ endif
+"  " Need to postpone using "zv" until after reading the modelines.
+"  autocmd BufWinEnter *
+"  \ if exists("b:doopenfold") |
+"  \ exe "normal zv" |
+"  \ if(b:doopenfold > 1) |
+"  \ exe "+".1 |
+"  \ endif |
+"  \ unlet b:doopenfold |
+"  \ endif
+" augroup END
+
+" This is a newer function that apparently works better.
+function! ResCur()
+  if line("'\"") <= line("$")
+    normal! g`"
+    return 1
+  endif
+endfunction
+
+if has("folding")
+  function! UnfoldCur()
+    if !&foldenable
+      return
+    endif
+    let cl = line(".")
+    if cl <= 1
+      return
+    endif
+    let cf  = foldlevel(cl)
+    let uf  = foldlevel(cl - 1)
+    let min = (cf > uf ? uf : cf)
+    if min
+      execute "normal!" min . "zo"
+      return 1
+    endif
+  endfunction
+endif
+
+augroup resCur
+  autocmd!
+  if has("folding")
+    autocmd BufWinEnter * if ResCur() | call UnfoldCur() | endif
+  else
+    autocmd BufWinEnter * call ResCur()
+  endif
 augroup END
 
 
