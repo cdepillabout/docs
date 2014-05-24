@@ -294,6 +294,11 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 endif
 
+
+"""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""" General Settings """"""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""
+
 " make sure that ~/.vim is first in the runtimepath.  Commands like zg will
 " store files by default in the first entry in the runtime path.
 " (In this case, it will store the default spell file in a file like
@@ -367,6 +372,10 @@ if &tabpagemax < 50
 endif
 
 
+"""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""" Highlighting """""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""
+
 " Give us some additional colors for highlighting haskell code.
 " TODO: Really what I want is for types to be bright green and keywords to be
 " the darker blue color...
@@ -393,6 +402,11 @@ highlight Normal guibg=black
 " it makes them dark red.  It makes them look like comments.  This makes them
 " a brighter red so they stand out from comments.
 highlight Special ctermfg=red
+
+
+"""""""""""""""""""""""""""""""""""""""""""""
+"""""" Settings for specific syntaxes """""""
+"""""""""""""""""""""""""""""""""""""""""""""
 
 " settings specifically for java from
 " http://vimdoc.sourceforge.net/htmldoc/syntax.html
