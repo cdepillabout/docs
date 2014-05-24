@@ -164,6 +164,12 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:haskell_conceal_enumerations = 0
 	" Also disable conceal for jmacro.
 	let g:jmacro_conceal = 0
+	" Give us some additional colors for highlighting haskell code.
+	" TODO: Really what I want is for types to be bright green and keywords to be
+	" the darker blue color...
+	highlight hsType ctermfg=blue
+	highlight hsKeyword ctermfg=brown
+
 
 	" EasyMotion.
 	Bundle 'Lokaltog/vim-easymotion'
@@ -393,13 +399,6 @@ hi Normal guibg=black
 " it makes them dark red.  It makes them look like comments.  This makes them
 " a brighter red so they stand out from comments.
 hi Special ctermfg=red
-
-" Give us some additional colors for highlighting haskell code.  This is used
-" by vim2hs.
-" TODO: Really what I want is for types to be bright green and keywords to be
-" the darker blue color...
-highlight hsType ctermfg=blue
-highlight hsKeyword ctermfg=brown
 
 " settings specifically for java from
 " http://vimdoc.sourceforge.net/htmldoc/syntax.html
