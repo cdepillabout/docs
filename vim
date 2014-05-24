@@ -261,3 +261,7 @@ ls some_dir/* | vim   # THIS DOESN'T WORK!!
 # The * register is just for text that is highlighted with the mouse.
 # This needs vim to be compiled with +xterm_clipboard.
 
+
+# This allows you to see the syntax highlight group of the expression under the cursor.
+:echo "highlight_group<" . synIDattr(synID(line("."),col("."),1),"name") . '> transparent<' . synIDattr(synID(line("."),col("."),0),"name") . "> linked_to<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">" . " Foreground:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
+
