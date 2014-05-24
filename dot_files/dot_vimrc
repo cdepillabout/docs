@@ -424,6 +424,9 @@ let g:xml_syntax_folding=1
 " do php folding
 let g:php_folding=2
 
+" this is needed for running taglist in screen:
+let Tlist_Inc_Winwidth = 0
+
 " use F5 for turning off and on hlsearch,
 " in both input mode (imap?) and command mode (map?)
 map <F5> :set hlsearch!<CR>
@@ -474,9 +477,6 @@ cmap sudow w !sudo tee > /dev/null %
 " to go to EX mode, so I made this mapping.
 noremap Q q
 map q :q<CR>
-
-" this is needed for running taglist in screen:
-let Tlist_Inc_Winwidth = 0
 
 " use CTRL-s for saving
 " this doesn't work...
