@@ -99,7 +99,6 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" :GhcModTypeInsert - Insert the type of a function
 	Bundle 'eagletmt/ghcmod-vim'
 	let g:ghcmod_type_highlight='ghcmodType'
-	hi ghcmodType ctermfg=0 ctermbg=yellow guifg=black guibg=yellow
 	" TODO: Only use these when in haskell mode...
 	map <Leader>gt :GhcModType<CR>
 	map <Leader>gc :GhcModTypeClear<CR>
@@ -373,6 +372,10 @@ endif
 " the darker blue color...
 highlight hsType ctermfg=blue
 highlight hsKeyword ctermfg=brown
+
+" This lets ghcmod give us nice yellow background highlighting when
+" looking at an expression's type.
+highlight ghcmodType ctermfg=0 ctermbg=yellow guifg=black guibg=yellow
 
 " highlight tab line differently
 highlight TabLine term=bold,reverse cterm=bold ctermfg=black ctermbg=white
