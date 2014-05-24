@@ -427,6 +427,11 @@ let g:php_folding=2
 " this is needed for running taglist in screen:
 let Tlist_Inc_Winwidth = 0
 
+
+"""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""" Maps """""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""
+
 " use F5 for turning off and on hlsearch,
 " in both input mode (imap?) and command mode (map?)
 map <F5> :set hlsearch!<CR>
@@ -492,6 +497,11 @@ nnoremap '' ``
 " I want to jump to the exact position in the line for marks
 nnoremap ' `
 nnoremap ` '
+
+
+"""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""" Functions """""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""
 
 function! Resize(dir)
 	" TODO: could also do something like this for horizontal split screen
