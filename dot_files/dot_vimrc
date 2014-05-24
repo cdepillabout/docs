@@ -161,12 +161,6 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:haskell_conceal_enumerations = 0
 	" Also disable conceal for jmacro.
 	let g:jmacro_conceal = 0
-	" Give us some additional colors for highlighting haskell code.
-	" TODO: Really what I want is for types to be bright green and keywords to be
-	" the darker blue color...
-	highlight hsType ctermfg=blue
-	highlight hsKeyword ctermfg=brown
-
 
 	" EasyMotion.
 	Bundle 'Lokaltog/vim-easymotion'
@@ -380,13 +374,20 @@ if &tabpagemax < 50
 	  set tabpagemax=50
 endif
 
+
+" Give us some additional colors for highlighting haskell code.
+" TODO: Really what I want is for types to be bright green and keywords to be
+" the darker blue color...
+highlight hsType ctermfg=blue
+highlight hsKeyword ctermfg=brown
+
 " highlight tab line differently
 highlight TabLine term=bold,reverse cterm=bold ctermfg=black ctermbg=white
 highlight TabLineFill term=bold,reverse cterm=bold ctermfg=white ctermbg=white
 highlight TabLineSel term=reverse ctermfg=white ctermbg=lightblue
 
 " highlight the popup menu a little differently
-hi PmenuSel ctermbg=lightblue
+highlight PmenuSel ctermbg=lightblue
 
 " make sure the normal background is black
 hi Normal guibg=black
