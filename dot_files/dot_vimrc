@@ -807,6 +807,9 @@ augroup resCur
 augroup END
 
 
+"""""""""""""""""""""""""""""""""""""""""""""
+"""""""" Specific filetype settings """""""""
+"""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""" This uses the execute command to create an autocmd
 """"""""" that sets the fold_method if the syntax matches.
