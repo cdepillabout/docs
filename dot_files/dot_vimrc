@@ -376,6 +376,10 @@ endif
 """""""""""" Highlighting """""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""
 
+" NOTE: Highlighting has to be set here.  It must come after ":syntax on",
+" because ":syntax on" will reset all the highlighting.  So I can't put
+" any highlighting stuff above in the Vundle settings.  It all must go below.
+
 " Give us some additional colors for highlighting haskell code.
 " TODO: Really what I want is for types to be bright green and keywords to be
 " the darker blue color...
