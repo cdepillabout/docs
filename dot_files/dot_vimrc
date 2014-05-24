@@ -390,7 +390,7 @@ highlight hsConditional ctermfg=3
 highlight hsOperator ctermfg=blue
 
 " This lets ghcmod give us nice yellow background highlighting when
-" looking at an expression's type.
+" looking at an expression's type. This is for the ghcmod plugin.
 highlight ghcmodType ctermfg=0 ctermbg=yellow guifg=black guibg=yellow
 
 " highlight tab line differently
