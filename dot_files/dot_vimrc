@@ -811,11 +811,10 @@ augroup END
 """""""" Specific filetype settings """""""""
 """""""""""""""""""""""""""""""""""""""""""""
 
-""""""""" This uses the execute command to create an autocmd
-""""""""" that sets the fold_method if the syntax matches.
-""""""""" You have to use execute so that the variables get
-""""""""" evaluated now instead of when the autocmd executes.
-
+" This uses the execute command to create an autocmd
+" that sets the fold_method if the syntax matches.
+" You have to use execute so that the variables get
+" evaluated now instead of when the autocmd executes.
 function! Add_auto_foldmethod(syntax_of_file, fold_method)
 	execute "autocmd Syntax * "
 		\ "if expand(\"<amatch>\") == \"" . a:syntax_of_file . "\" | "
