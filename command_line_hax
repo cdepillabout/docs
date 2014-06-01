@@ -484,3 +484,11 @@ $ fc-match
 # View journalctl output without hostname and timestamps.
 # God I hate journalctl.
 script -c "sudo journalctl -b -l --no-pager -o short-iso" /dev/null | cut -f3- -d' '
+
+
+# Here are example xrandr commands for using two monitors.
+xrandr --output LVDS-1 --auto --primary --output DVI-I-1 --auto --left-of LVDS-1
+xrandr --output LVDS-1 --auto --primary --output DVI-I-1 --auto --same-as LVDS-1
+xrandr --output LVDS-1 --auto --primary --same-as DVI-I-1 --mode '1024x768' --output DVI-I-1 --auto --mode '1024x768'
+# This is what I want to use for mirroring my output to a bigger projector.
+xrandr --output LVDS-1 --auto --same-as DVI-I-1 --output DVI-I-1 --auto --mode "1024x768" --primary
