@@ -281,6 +281,9 @@ alias gpoh='git push origin HEAD '
 alias gpsh='git push '
 alias gst='git status '
 
+# darcs aliases
+alias dst='darcs status'
+
 # screen automatically connects to a running session
 alias screen='screen -R '
 
