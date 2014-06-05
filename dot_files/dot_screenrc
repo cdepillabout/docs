@@ -24,7 +24,7 @@ autodetach on
 #escape ^Zz 
 
 # give more scroll back
-defscrollback 2000
+defscrollback 20000
 
 # turn on alternate screen support
 altscreen on
