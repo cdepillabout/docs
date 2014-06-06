@@ -283,6 +283,7 @@ alias gst='git status '
 
 # darcs aliases
 alias dst='darcs status'
+alias dwn='darcs whatsnew'
 
 # screen automatically connects to a running session
 alias screen='screen -R '
