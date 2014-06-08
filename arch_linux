@@ -100,7 +100,11 @@ rc.d start httpd
 ## Add your own key to the pacman key database so you can sign local packages. ##
 #################################################################################
 
-# first generate your own key
+# First generate your own key. Make sure you put in an email address
+# because you will need it in the next step.  You may also need to 
+# install a random number generator.
+yaourt -S haveged && sudo haveged -F -v 3
+# (in seperate terminal)
 gpg --gen-key
 
 # export your private key (you@example.com should be the email address you used when
