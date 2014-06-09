@@ -260,6 +260,7 @@ alias dd='safe-dd '
 # git aliases
 alias gadd='git add '
 alias gba='git branch -a '
+alias gbav='git branch -a -v '
 alias gb='git branch '
 #alias gcam='git commit -a -m '
 #alias gcm='git commit -m '
