@@ -257,6 +257,9 @@ alias rsyncp='rsync -a -P '
 # this is a safe version of dd.  It doesn't overwrite the output file.
 alias dd='safe-dd '
 
+# ssh-gas alias for git
+alias git='ssh-gas ; git'
+
 # git aliases
 alias gadd='git add '
 alias gba='git branch -a '
@@ -313,22 +316,22 @@ alias gdb='gdb -q'
 # git command for pretty printing graph with specified commits for when gitk is not available
 function glga ()
 {
-	git log --graph --decorate --color --all "$@" | less -R
+	ssh-gas ; git log --graph --decorate --color --all "$@" | less -R
 }
 
 function glg ()
 {
-	git log --graph --decorate --color "$@" | less -R
+	ssh-gas ; git log --graph --decorate --color "$@" | less -R
 }
 
 function gcm ()
 {
-	git commit -m "$*"
+	ssh-gas ; git commit -m "$*"
 }
 
 function gcam ()
 {
-	git commit -a -m "$*"
+	ssh-gas ; git commit -a -m "$*"
 }
 
 # SSH Get Auth Sock.
