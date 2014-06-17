@@ -367,7 +367,7 @@ function ssh-gas ()
 
 	# make sure there actually are auth socks to get
 	if [ -z "$agent_files" ] ; then
-		echo "ERROR: no auth sock available" 
+		echo "ERROR: no auth sock available"
 		return
 	fi
 
@@ -378,34 +378,34 @@ function ssh-gas ()
 }
 
 # these are aliases for cd'ing and ls'ing at the same time
-function cd_and_ls_func(){ 
+function cd_and_ls_func(){
 	cd "$@" && ls
 }
-function cd_and_lsl_func(){ 
+function cd_and_lsl_func(){
 	cd "$@" && ls -l
 }
-function autojump_func() { 
+function autojump_func() {
 	new_path="$(autojump $@)"
-	if [ -n "$new_path" ]; then 
+	if [ -n "$new_path" ]; then
 		echo -e "\\033[31m${new_path}\\033[0m"
 		cd "$new_path"
-	fi 
+	fi
 }
-function autojump_and_ls_func(){ 
+function autojump_and_ls_func(){
 	new_path="$(autojump $@)"
-	if [ -n "$new_path" ]; then 
+	if [ -n "$new_path" ]; then
 		echo -e "\\033[31m${new_path}\\033[0m"
 		cd "$new_path"
 		ls
-	fi 
+	fi
 }
-function autojump_and_lsl_func(){ 
+function autojump_and_lsl_func(){
 	new_path="$(autojump $@)"
-	if [ -n "$new_path" ]; then 
+	if [ -n "$new_path" ]; then
 		echo -e "\\033[31m${new_path}\\033[0m"
 		cd "$new_path"
 		ls -l
-	fi 
+	fi
 }
 alias c='cd_and_ls_func'
 alias cl='cd_and_lsl_func'
@@ -527,7 +527,7 @@ if [[ $EUID -ne 0 ]] ; then
 	local_bash_completion_dir="$HOME/filesystem/etc/bash_completion.d"
 	if [ -d "$local_bash_completion_dir" ] ; then
 		if [ -f "$filesystem_bash_completion_script" ] ; then
-			# this have command gets unset at the end of /etc/bash_completion, 
+			# this have command gets unset at the end of /etc/bash_completion,
 			#so we need to put it back in
 			have()
 			{
