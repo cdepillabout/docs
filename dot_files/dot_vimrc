@@ -78,6 +78,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:syntastic_always_populate_loc_list = 1
 	" don't use the :sign interface to mark errors
 	"let g:syntastic_enable_signs = 0
+	" enable debugging
+	"let g:syntastic_debug = 1
+	"let g:syntastic_debug_file = "~/syntastic.log"
 
 	" This is used by ghcmod-vim for something.
 	if version >= 701
