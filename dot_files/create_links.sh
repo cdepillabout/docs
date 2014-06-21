@@ -129,5 +129,5 @@ if [ ! -d "$HOME/.vim/bundle/vundle/.git" -a "$UID" != "0" ] ; then
 	echo "(Remember, you might need to source your .bashrc to get the ~/.cabal/bin directory"
 	echo "added to the path)"
 	echo
-	echo "\`cabal install happy -j8 && source ~/.bashrc && cabal install ghc-mod hoogle hlint hdevtools -j8\`"
+	echo "\`cabal install happy -j8 && source ~/.bashrc && cabal install ghc-mod hoogle hlint -j8\`"
 fi
