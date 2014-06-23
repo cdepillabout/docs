@@ -315,6 +315,9 @@ alias twistd-ftp="twistd --nodaemon ftp --port 23984 --root `pwd`"
 # This is an alias for gdb that hides the warranty and copyright info.
 alias gdb='gdb -q'
 
+# Alias for only listing listening ports.
+alias netlisten="netstat -lanp | egrep '^(tcp|udp).+LISTEN.+'"
+
 # git command for pretty printing graph with specified commits for when gitk is not available
 function glga ()
 {
