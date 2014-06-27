@@ -413,6 +413,11 @@ highlight Normal guibg=black
 " a brighter red so they stand out from comments.
 highlight Special ctermfg=red
 
+" Set highlighting for sign column.  This looks like it is the default on
+" Arch Linux and is set in the colorscheme file, but for some reason it is
+" different on Debian.  Set it here so it is the same on both.
+highlight SignColumn term=standout ctermfg=14 ctermbg=238
+
 
 """""""""""""""""""""""""""""""""""""""""""""
 """""" Settings for specific syntaxes """""""
