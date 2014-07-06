@@ -434,7 +434,7 @@ function reflector-update-mirrorlist() {
 		return 1
 	fi
 
-	mirrorlist="$(/usr/bin/reflector -l 10 --sort rate -c "United States" -c "Japan" -c "Korea")"
+	mirrorlist="$(/usr/bin/reflector --number 15 --threads 10 --latest 50 --sort rate -c "Japan" -c "United States" -c "Korea")"
 
 	if [ -z "$mirrorlist" ] ; then
 		echo "ERROR! Could not get an updated mirrorlist." >&2
