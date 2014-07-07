@@ -348,6 +348,11 @@ function gcam ()
 	ssh-gas -q ; git commit -a -m "$*"
 }
 
+function gcAm ()
+{
+	ssh-gas -q ; git add -A ; git commit -m "$*"
+}
+
 # SSH Get Auth Sock.
 # This is a command to automatically update the SSH_AUTH_SOCK env var.
 # If "-q" is passed, then nothing will be output on error.
