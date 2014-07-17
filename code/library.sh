@@ -124,6 +124,12 @@ function add_to_path_side()
 	# remove the trailing '/' from $path, if it exists.
 	path="${path%'/'}"
 
+	if [ -z "${envvar}" -o -z "${path}" -o -z "${side}" -o -z "${checkifexists}" ] ; then
+		echo "ERROR! There was an empty value passed to add_to_path_side."
+		echo "Your add_to_path or prepend_to_path statement is missing an argument."
+		return
+	fi
+
 	if [[ "$checkifexists" = "yes" && ! -d "$path" ]] ; then
 		#echo "not adding ${path} to "'$'"${envvar} because it is not a valid path" >&2
 		return
