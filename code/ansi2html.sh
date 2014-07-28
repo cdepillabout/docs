@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Convert ANSI (terminal) colours and attributes to HTML
 
@@ -288,7 +288,7 @@ s#\x1b(B#λT0;#g
 s#\x0F#λT0;#g
 " |
 (
-awk '
+gawk '
 function dump_line(l,del,c,blanks,ret) {
   for(c=1;c<maxX;c++) {
     if ((c SUBSEP l) in attr || length(cur)) {
