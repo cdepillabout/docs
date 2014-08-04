@@ -3,64 +3,76 @@
 # This flips the command line arguments around, much like the `flip` function
 # in haskell.
 
-function usage_flipf () {
-cat <<END
-Usage: $0 <COMMAND> [COMMAND_ARGS...] <ARGS_TO_FLIP>...
+command_basename=$(basename "$0")
 
-$0 will flip the frist argument in ARGUMENTS_TO_FLIP and pass it to COMMAND as
-the last argument.  COMMAND_ARGS are arguments beginning with '-'.  $0 will
+function usage_flipf2l () {
+cat <<END
+Usage: ${command_basename} <COMMAND> [COMMAND_ARGS...] <ARGS_TO_FLIP>...
+
+${command_basename} will flip the first argument in ARGUMENTS_TO_FLIP and pass it to COMMAND as
+the *LAST* argument.  COMMAND_ARGS are arguments beginning with '-'.  ${command_basename} will
 ignore these and pass them to COMMAND unchanged. End of COMMAND_ARGS is
 signaled by '--'.
 
-This is most helpful when used with commands like \`mv\` and \`cp\`.
+${command_basename} is most helpful when used with commands like \`mv\` and \`cp\`.
 
 Example:
 
 - Run the command \`foo bar baz\`
-	\$ $0 foo baz bar
+\$ ${command_basename} foo baz bar
 
 - Run the command \`foo bar1 bar2 bar3 baz\`
-	\$ $0 foo baz bar1 bar2 bar3
+\$ ${command_basename} foo baz bar1 bar2 bar3
 
 - Run the command \`mv file1 file2 dir/\`
-	\$ $0 mv dir/ file1 file2
+\$ ${command_basename} mv dir/ file1 file2
 
 - Run the command \`cp -i file1 file2 dir/\`
-	\$ $0 cp -i dir/ file1 file2
+\$ ${command_basename} cp -i dir/ file1 file2
 
 - Run the command \`cp -- -file-with-leading-dash dir/\`
-	\$ $0 cp -- dir/ -file-with-leading-dash
+\$ ${command_basename} cp -- dir/ -file-with-leading-dash
 END
 }
 
-function usage_flipl () {
+function usage_flipl2f () {
 cat <<END
-Usage: $0 <COMMAND> [COMMAND_ARGS...] <ARGS_TO_FLIP>...
+Usage: ${command_basename} <COMMAND> [COMMAND_ARGS...] <ARGS_TO_FLIP>...
 
-$0 will flip the last argument in ARGUMENTS_TO_FLIP and pass it to COMMAND as
-the first argument.  COMMAND_ARGS are arguments beginning with '-'.  $0 will
+${command_basename} will flip the last argument in ARGUMENTS_TO_FLIP and pass it to COMMAND as
+the *FIRST* argument.  COMMAND_ARGS are arguments beginning with '-'.  ${command_basename} will
 ignore these and pass them to COMMAND unchanged. End of COMMAND_ARGS is
 signaled by '--'.
 
-This is most helpful when used with commands like \`grep\` and \`ack\`.
+${command_basename} is most helpful when used with commands like \`grep\` and \`ack\`.
 
 Example:
 
 - Run the command \`foo bar baz\`
-	\$ $0 foo baz bar
+\$ ${command_basename} foo baz bar
 
 - Run the command \`foo bar baz1 baz2 baz3\`
-	\$ $0 foo baz1 baz2 baz3 bar
+\$ ${command_basename} foo baz1 baz2 baz3 bar
 
 - Run the command \`grep "string" file1 file2\`
-	\$ $0 grep file1 file2 "string"
+\$ ${command_basename} grep file1 file2 "string"
 
 - Run the command \`grep "string" file1 file2 -i file1 file2 dir/\`
-	\$ $0 cp -i dir/ file1 file2
+\$ ${command_basename} cp -i dir/ file1 file2
 
 - Run the command \`cp -- -file-with-leading-dash dir/\`
-	\$ $0 cp -- dir/ -file-with-leading-dash
+\$ ${command_basename} cp -- dir/ -file-with-leading-dash
 END
 }
 
-usage_flipl
+case "$command_basename" in
+	flipf2l)
+		command_to_run=flipf2l
+		;;
+	flipl2f)
+		command_to_run=flipl2f
+		;;
+	*)
+		command_to_run=flipl2f
+		;;
+esac
