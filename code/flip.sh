@@ -4,7 +4,7 @@
 # in haskell.
 
 command_basename=$(basename "$0")
-debug=0
+_DEBUG=0
 
 function usage_flipf2l () {
 cat <<END
@@ -74,17 +74,26 @@ Example:
 END
 }
 
+function debug () {
+	[ "${_DEBUG}" -eq "1" ] && echo "$@"
+}
+
+function die () {
+	echo "ERROR: $@"
+	exit 1
+}
+
 # look at the filename we are being called with to figure out whether to
 # run flipf2l or flipl2f.
 case "$command_basename" in
 	flipf2l)
-		command_to_run=flipf2l
+		flip_type=flipf2l
 		;;
 	flipl2f)
-		command_to_run=flipl2f
+		flip_type=flipl2f
 		;;
 	*)
-		command_to_run=flipf2l
+		flip_type=flipf2l
 		;;
 esac
 
@@ -93,7 +102,7 @@ for arg in "$@" ; do
 	case "$arg" in
 		-d|--debug)
 			shift
-			debug=1
+			_DEBUG=1
 			;;
 		*)
 			break
@@ -101,11 +110,68 @@ for arg in "$@" ; do
 	esac
 done
 
-echo "$@"
+debug "args to ${flip_type}: $@"
 
 # Make sure we are given at least one argument.
+[ "$#" -lt "1" ] && die "Must be given at least one argument as the COMMAND."
 
+# Use the first argument as the command to run.
+command_to_run="$1" && shift
+debug "command to run: $command_to_run"
 
 # find the last of the COMMAND_ARGS.  We operate on the arguments after this.
+command_flags_end_index=0
+for command_arg in "$@" ; do
+	case "$command_arg" in
+		--)
+			((command_flags_end_index++))
+			break
+			;;
+		-*)
+			((command_flags_end_index++))
+			;;
+		*)
+			break
+			;;
+	esac
+done
+debug "command flags end index: $command_flags_end_index"
 
+# The flags for the COMMAND.  For example, with `grep -i -r "something" file1`,
+# command_flags would be -i and -r.
+command_flags="${@:1:$command_flags_end_index}"
+debug "command flags: $command_flags"
+
+# The non-flag arguments for the COMMAND.  For example, with `grep -i -r "something" file1`,
+# command_args would be "something" and file1.
+((command_args_start_index=command_flags_end_index+1))
+command_args="${@:$command_args_start_index}"
+debug "command args start index: $command_args_start_index"
+debug "command args: $command_args"
+
+# The index of the last argument.
+command_args_end_index=0
+for i in "$@" ; do
+	((command_args_end_index++))
+done
+debug "command args end index: $command_args_end_index"
+debug "\$@: $@"
+
+case "$flip_type" in
+	flipl2f)
+		"$command_to_run" \
+			"${@:1:$command_flags_end_index}" \
+			"${@:$command_args_end_index}" \
+			"${@:$command_args_start_index:(($command_args_end_index-$command_args_start_index))}"
+		;;
+	flipf2l)
+		"$command_to_run" \
+			"${@:1:$command_flags_end_index}" \
+			"${@:((command_args_start_index+1))}" \
+			"${@:$command_args_start_index:1}"
+		;;
+	*)
+		die "action for flip type \"$flip_type\" has not been defined."
+		;;
+esac
 
