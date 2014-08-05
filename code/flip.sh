@@ -219,9 +219,9 @@ debug "command args start index: $command_args_start_index"
 debug "command args total: $command_args_total"
 debug "command args: $command_args"
 
-
 debug "\$@: $@"
 
+# These evals are pretty awful.
 case "$flip_type" in
 	flipl2f)
 		# "$command_to_run" \
@@ -238,12 +238,15 @@ case "$flip_type" in
 			"${@:1:$command_flags_end_index}" \
 			"${@:((command_args_start_index+1))}" \
 			"${@:$command_args_start_index:1}"
+		eval "\"${command_to_run}\"" \
+			`if [ "$command_flags_end_index" -gt 0 ] ; then echo " \"\\\${@:1:$command_flags_end_index}\"" ; fi ` \
+			`if [ "$command_args_total" -gt 0 ] ; then echo " \"\\\${@:$command_total_args_and_flags}\"" ; fi ` \
+			`if [ "$command_args_total" -gt 1 ] ; then echo " \"\\\${@:$command_args_start_index:$(expr $command_total_args_and_flags-$command_args_start_index)}\"" ; fi `
 		;;
 	flip)
 		case "$command_total_args_and_flags" in
 			0)
-				"$command_to_run" \
-					"${@:1:$command_flags_end_index}"
+				"$command_to_run"
 				;;
 			1)
 				"$command_to_run" \
