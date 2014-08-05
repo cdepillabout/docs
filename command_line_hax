@@ -492,3 +492,8 @@ xrandr --output LVDS-1 --auto --primary --output DVI-I-1 --auto --same-as LVDS-1
 xrandr --output LVDS-1 --auto --primary --same-as DVI-I-1 --mode '1024x768' --output DVI-I-1 --auto --mode '1024x768'
 # This is what I want to use for mirroring my output to a bigger projector.
 xrandr --output LVDS-1 --auto --same-as DVI-I-1 --output DVI-I-1 --auto --mode "1024x768" --primary
+
+# Get a whole file output with the matching parts colored.
+egrep --color 'pattern|$' file
+ack --color --passthru pattern files
+
