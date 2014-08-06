@@ -224,39 +224,31 @@ debug "\$@: $@"
 # These evals are pretty awful.
 case "$flip_type" in
 	flipl2f)
-		# "$command_to_run" \
-		# 	"${@:1:$command_flags_end_index}" \
-		# 	"${@:$command_args_end_index}" \
-		# 	"${@:$command_args_start_index:(($command_args_end_index-$command_args_start_index))}"
-		eval "\"${command_to_run}\"" \
+		eval "\"\${command_to_run}\"" \
 			`if [ "$command_flags_end_index" -gt 0 ] ; then echo " \"\\\${@:1:$command_flags_end_index}\"" ; fi ` \
 			`if [ "$command_args_total" -gt 0 ] ; then echo " \"\\\${@:$command_total_args_and_flags}\"" ; fi ` \
 			`if [ "$command_args_total" -gt 1 ] ; then echo " \"\\\${@:$command_args_start_index:$(expr $command_total_args_and_flags-$command_args_start_index)}\"" ; fi `
 		;;
 	flipf2l)
-		"$command_to_run" \
-			"${@:1:$command_flags_end_index}" \
-			"${@:((command_args_start_index+1))}" \
-			"${@:$command_args_start_index:1}"
-		eval "\"${command_to_run}\"" \
+		eval "\"\${command_to_run}\"" \
 			`if [ "$command_flags_end_index" -gt 0 ] ; then echo " \"\\\${@:1:$command_flags_end_index}\"" ; fi ` \
-			`if [ "$command_args_total" -gt 0 ] ; then echo " \"\\\${@:$command_total_args_and_flags}\"" ; fi ` \
-			`if [ "$command_args_total" -gt 1 ] ; then echo " \"\\\${@:$command_args_start_index:$(expr $command_total_args_and_flags-$command_args_start_index)}\"" ; fi `
+			`if [ "$command_args_total" -gt 1 ] ; then echo " \"\\\${@:$((command_args_start_index + 1))}\"" ; fi ` \
+			`if [ "$command_args_total" -gt 0 ] ; then echo " \"\\\${@:$command_args_start_index:1}\"" ; fi `
 		;;
 	flip)
-		case "$command_total_args_and_flags" in
+		case "$command_args_total" in
 			0)
 				"$command_to_run"
 				;;
 			1)
-				"$command_to_run" \
-					"${@:1:$command_flags_end_index}" \
+				eval "\"\${command_to_run}\"" \
+					`if [ "$command_flags_end_index" -gt 0 ] ; then echo " \"\\\${@:1:$command_flags_end_index}\"" ; fi ` \
 					"${@:$command_args_start_index}"
 				;;
 			2)
-				"$command_to_run" \
-					"${@:1:$command_flags_end_index}" \
-					"${@:((command_args_start_index+1))}" \
+				eval "\"\${command_to_run}\"" \
+					`if [ "$command_flags_end_index" -gt 0 ] ; then echo " \"\\\${@:1:$command_flags_end_index}\"" ; fi ` \
+					"${@:$((command_args_start_index + 1))}" \
 					"${@:$command_args_start_index:1}"
 				;;
 			*)
