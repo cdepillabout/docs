@@ -497,3 +497,11 @@ xrandr --output LVDS-1 --auto --same-as DVI-I-1 --output DVI-I-1 --auto --mode "
 egrep --color 'pattern|$' file
 ack --color --passthru pattern files
 
+
+# FORCING BASH TAB FILENAME COMPLETION
+# If you're ever in a situation where bash_completion isn't being helpful, you
+# can use M-/ (aka Alt + /) to use bash's native filename completion instead.
+#
+# If a command is frequently giving you trouble, you can disable
+# bash_completion for this command using complete -r thatcommand at the end of
+# your .bashrc. 
