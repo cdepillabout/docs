@@ -2,7 +2,7 @@
 
 
 
-termcapinfo xterm|xterms|xs|rxvt ti@:te@
+termcapinfo xterm*|xs|rxvt ti@:te@
 
 term screen-256color
 
