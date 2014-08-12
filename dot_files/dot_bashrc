@@ -320,6 +320,13 @@ alias gdb='gdb -q'
 # Alias for only listing listening ports.
 alias netlisten="netstat -lanp | egrep '^(tcp|udp).+LISTEN.+'"
 
+# function for `ps auwx | grep`
+function pgrep ()
+{
+	local ps_output="$(ps auwwx)"
+	echo "${ps_output}" | grep "$@"
+}
+
 # git command for pretty printing graph with specified commits for when gitk is not available
 function glga ()
 {
