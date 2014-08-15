@@ -485,16 +485,16 @@ export GIT_PAGER=''
 export DARCS_PAGER='cat'
 
 # add /sbin, /usr/sbin, and /usr/local/sbin to path if they are not in it
-add_to_path PATH "/sbin"
-add_to_path PATH "/usr/sbin"
-add_to_path PATH "/usr/local/sbin"
+append_to_path PATH "/sbin"
+append_to_path PATH "/usr/sbin"
+append_to_path PATH "/usr/local/sbin"
 
 # add my program directory
-add_to_path PATH "$HOME/docs/code/bin"
+append_to_path PATH "$HOME/docs/code/bin"
 
 # add classpath for java
-add_to_path_nocheck CLASSPATH "/usr/share/junit-4/lib/junit.jar"
-add_to_path_nocheck CLASSPATH "/usr/share/hamcrest-core/lib/hamcrest-core.jar"
+append_to_path_nocheck CLASSPATH "/usr/share/junit-4/lib/junit.jar"
+append_to_path_nocheck CLASSPATH "/usr/share/hamcrest-core/lib/hamcrest-core.jar"
 
 
 # add default browser
@@ -527,13 +527,13 @@ if [[ $EUID -eq 0 ]] ; then
 fi
 
 # add the filesystem from the home directory to the PATH
-add_to_path PATH "$HOME/filesystem/bin"
+append_to_path PATH "$HOME/filesystem/bin"
 
 # if we have our filesystem, then make sure the python path
 # is set correctly within it
 for f in $HOME/filesystem/lib/python*
 do
-	add_to_path PYTHONPATH "${f}/site-packages/"
+	append_to_path PYTHONPATH "${f}/site-packages/"
 done
 
 

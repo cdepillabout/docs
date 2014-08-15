@@ -147,13 +147,23 @@ function add_to_path_side()
 	fi
 }
 
-function add_to_path()
+function append_to_path()
 {
 	add_to_path_side "$1" "$2" "back" "yes"
 }
+function add_to_path()
+{
+	echo "WARNING: add_to_path has been deprecated in favor of append_to_path."
+	add_to_path_side "$1" "$2" "back" "yes"
+}
 
+function append_to_path_nocheck()
+{
+	add_to_path_side "$1" "$2" "back" "no"
+}
 function add_to_path_nocheck()
 {
+	echo "WARNING: add_to_path_nocheck has been deprecated in favor of append_to_path_nocheck."
 	add_to_path_side "$1" "$2" "back" "no"
 }
 
