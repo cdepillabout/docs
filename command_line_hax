@@ -505,3 +505,8 @@ ack --color --passthru pattern files
 # If a command is frequently giving you trouble, you can disable
 # bash_completion for this command using complete -r thatcommand at the end of
 # your .bashrc. 
+
+
+# Use inotify tools to sync files in current directory to remote machine.
+inotifywait -m -q . -e modify | while read line ; do scp -r "../$(basename "$(readlink  -f .)")/" remote-machine:some/remote/directory/ ; done
+
