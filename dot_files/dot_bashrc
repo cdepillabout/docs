@@ -472,6 +472,23 @@ function reflector-update-mirrorlist() {
 	return 0
 }
 
+function mytake_and_ls() {
+	mytake "$@"
+	[ "$?" = "0" ] && ls
+}
+function mytake() {
+	take "$@"
+	ret="$?"
+	if [ "${ret}" != "0" ] ; then
+		return "${ret}"
+	fi
+
+	last_arg="${@:$#:1}"
+	cd "${last_arg}"
+}
+alias take='mytake'
+alias t='mytake_and_ls'
+
 # don't record duplicate items in history or
 # lines starting with a space ('$  ls -la')
 export HISTCONTROL='ignoreboth'
