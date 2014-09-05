@@ -87,7 +87,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 		Bundle 'Shougo/vimproc'
 		if isdirectory(expand("~/.vim/bundle/vimproc/.git")) &&
 				\ !(filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_unix.so")) ||
-				\   filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_linux64.so")))
+				\   filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_linux64.so")) ||
+				\   filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_linux32.so")))
 			echo "You must run `(cd \"$HOME/.vim/bundle/vimproc/\" && make)` in order to install vimproc (for ghc-mod)."
 		endif
 	endif
