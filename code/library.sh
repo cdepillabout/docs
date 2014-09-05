@@ -177,6 +177,27 @@ function prepend_to_path_nocheck()
 	add_to_path_side "$1" "$2" "front" "no"
 }
 
+# Remove a path from a $*PATH enviroment variable.  This works for $PATH,
+# $PYTHONPATH, $CLASSPATH, etc.
+#
+# $1 is the path enviroment variable to use, "PYTHONPATH", "PATH", etc.
+# $2 is the path to remove
+function remove_from_path () {
+	envvar="$1"
+	currentval="$(eval "echo $(echo '$'$envvar)")"
+	path="${2}"
+
+	# remove the trailing '/' from $path, if it exists.
+	path="${path%'/'}"
+
+	if [ -z "${envvar}" -o -z "${path}" ] ; then
+		echo "ERROR! There was an empty value passed to remove_from_path"
+		echo "Your remove_from_path statement is missing an argument."
+		return
+	fi
+	export "$envvar"=$(echo -n $currentval | awk -v RS=: -v ORS=: '$0 != "'${path}'"' | sed 's/:$//')
+}
+
 function func_exists()
 {
 	declare -f -F "$1" > /dev/null
