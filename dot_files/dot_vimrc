@@ -176,6 +176,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Get more commands for doing things to surrounding text.
 	Bundle 'tpope/vim-surround'
 
+	" Get the ability to repeat these surround commands.
+	Bundle 'tpope/vim-repeat'
+
 	" This allows to write really short html.
 	" You can convert the sparkup syntax to html with
 	" Ctrl-E in insert mode, and then move to the next
