@@ -42,6 +42,9 @@ make_directory $HOME/.xmonad
 super_link $HOME/docs/dot_files/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
 super_link $HOME/docs/dot_files/dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
 
+# xmobar files
+super_link $HOME/docs/dot_files/dot_xmobarrc $HOME/.xmobarrc
+
 # mplayer files
 make_directory $HOME/.mplayer
 super_link $HOME/docs/dot_files/dot_mplayer/config $HOME/.mplayer/config
