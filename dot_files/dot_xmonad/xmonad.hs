@@ -12,26 +12,27 @@ import Graphics.X11.Xlib
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+main :: IO ()
 main = do
-		dpy <- openDisplay ""
-		let dflt = defaultScreen dpy
-		let scr = defaultScreenOfDisplay dpy
-		let screen_size = widthOfScreen scr
+    --display <- openDisplay ""
+    --let defaultScreen = defaultScreen display
+    --let defaultScreen = defaultScreenOfDisplay display
+    --let screenSize = widthOfScreen defaultScreen
 
-		let myStatusBar = "dzen2  -ta 'l' -x 0 -w " ++ show (div screen_size 2)
-		let myTopBar = "conky-cli  -c ~/.xmonad/conky-rc | dzen2 -ta 'r' -x " ++ show (div screen_size 2) ++ " -w " ++ show (div screen_size 2)
+    xmobarProc <- spawnPipe "xmobar"
 
-		dzen <- spawnPipe myStatusBar
-		conkyTop <- spawnPipe myTopBar
-
-		xmonad  defaultConfig 
-				{ modMask = myModMask
-				, layoutHook = myLayout
-				, keys = myKeys
-				, logHook = dynamicLogWithPP (myDzenPP dzen)
-				, borderWidth = myBorderWidth
-				--, manageHook = manageDocks <+> manageHook defaultConfig
-				}
+    xmonad defaultConfig
+        { modMask = myModMask
+        , layoutHook = myLayout
+        , keys = myKeys
+        , terminal = "roxterm"
+        , logHook = dynamicLogWithPP xmobarPP
+            { ppOutput = hPutStrLn xmobarProc
+            , ppTitle = xmobarColor "green" "" . shorten 50
+            }
+        , borderWidth = myBorderWidth
+        --, manageHook = manageDocks <+> manageHook defaultConfig
+        }
 
 -- check out http://haskell.org/haskellwiki/Xmonad/Config_archive/Template_xmonad.hs_(darcs)
 -- for the defaults
@@ -44,38 +45,6 @@ myModMask = mod4Mask
 -- avoidStruts will make sure not avoid any sort of menu or status bar.
 -- smartBorders will only use a border where necessary.
 myLayout = avoidStruts $ smartBorders $ layoutHook defaultConfig
-
-
--- this is for dzen2
--- myLogHook = dynamicLogDzen
-
-myDzenPP h = defaultPP
-	{ ppCurrent	= dzenColor "green" "black" . pad
-	, ppVisible	= dzenColor "lightgreen" "" . pad
-	, ppHidden	= dzenColor "white" "" . pad
-	, ppHiddenNoWindows = dzenColor "#444444"  "" . pad
-	, ppUrgent	= dzenColor "" "red"
-	, ppWsSep    = ""
-	, ppSep      = "|"
-	, ppLayout   = dzenColor "green" "" .
-	(\ x -> case x of
-		"Maximize Tall"			-> "[]="
-		"Maximize Mirror Tall"		-> "TTT"
-		"Maximize Full"			-> "<M>"
-		"Maximize Grid"			-> "+++"
-		"Maximize Spiral"			-> "(@)"
-		"Maximize Accordion"		-> "Acc"
-		"Maximize Tabbed Simplest"	-> "Tab"
-		"Maximize Tabbed Bottom Simplest"	-> "TaB"
-		"Maximize SimplestFloat"		-> "><>"
-		"Maximize IM"			-> "IM "
-		"Maximize Dishes 2 (1%6)"		-> "Dsh"
-		_				-> pad x
-	)
-	, ppTitle    = (" " ++) . dzenColor "green" "" . dzenEscape 
-	, ppOutput = hPutStrLn h
-	}
-
 
 
 -- Key bindings. Add, modify or remove key bindings here.
@@ -126,7 +95,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_q     ), restart "xmonad" True)
     ]
     ++
- 
+
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
     [((m .|. modm, k), windows $ f i)
@@ -140,7 +109,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         | (i, k) <- zip (XMonad.workspaces conf) [xK_F1 .. xK_F9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
- 
+
     --
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
@@ -148,6 +117,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
- 
 
- 
+
+
