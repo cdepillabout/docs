@@ -278,7 +278,12 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" This adds mappings like the following:
 	" [a, ]a                :previous, :next
 	" [b, ]b                :bprevious, :bnext
-	" [l, ]l                :lprevious, :lnext
+	" [l, ]l                :lprevious, :lnext   = Jump to next location in
+	"                                              the location list.  This is
+	"                                              helpful because syntastic
+	"                                              adds errors to the location
+	"                                              list.  We can jump to them
+	"                                              fast with this.
 	" [q, ]q                :cprevious, :cnext
 	" [<Space>, ]<Space>    add a blank line above or below the cursor
 	Bundle 'tpope/vim-unimpaired'
