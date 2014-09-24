@@ -98,8 +98,9 @@ super_link $HOME/docs/dot_files/dot_ctags $HOME/.ctags
 # create a ~/.bashrc_local
 [ ! -f "$HOME/.bashrc-local" ] && touch "$HOME/.bashrc-local"
 
-# ask if we will add umask 022 to bashrc
-grep umask "$HOME/.bashrc-local" 2>/dev/null 1>&2
+
+# ask if we will add umask 022 to bashrc-local
+grep "umask" "$HOME/.bashrc-local" 2>/dev/null 1>&2
 does_umask_exist_in_bashrc_local="$?"
 [ "${does_umask_exist_in_bashrc_local}" != 0 ] && \
 	read -r -p "Do you want to add \`umask 022\` to $HOME/.bashrc-local? [y/N] " response
@@ -112,6 +113,14 @@ elif [[ "${response}" =~ ^([yY][eE][sS]|[yY])$ ]] ; then
 else
 	# adding a commented out umask to bashrc-local
 	echo -e '\n#umask 0022' >> $HOME/.bashrc-local
+fi
+
+
+# Make sure either a ~/.bash_profile or ~/.profile exists.  Usually
+# this file will source ~/.bashrc, so all my settings will get loaded.
+if [ ! \( -e "$HOME/.bash_profile" -o -e "$HOME/.profile" \) ] ; then
+	echo "Creating ~/.profile and making it source ~/.bashrc."
+	echo -e '\n[ -e "$HOME/.bashrc" ] && source "$HOME/.bashrc"' >> $HOME/.profile
 fi
 
 
