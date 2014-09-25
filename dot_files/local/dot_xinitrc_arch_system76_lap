@@ -54,7 +54,7 @@ eval `ssh-agent`
 xterm -e ssh-add &
 
 # this is minidlna for serving files over the network to sony bravia tv
-$HOME/.minidlna/run.sh start &
+#$HOME/.minidlna/run.sh start &
 
 xrandr-setup-screens --startup &
 
