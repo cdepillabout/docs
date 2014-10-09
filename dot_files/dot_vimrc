@@ -973,6 +973,15 @@ autocmd FileType html setlocal foldmethod=indent
 " settings for markdown
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 
+" settings for nix files
+autocmd BufRead,BufNewFile *.nix set expandtab
+autocmd BufRead,BufNewFile *.nix set tabstop=2
+autocmd BufRead,BufNewFile *.nix set shiftwidth=2
+autocmd BufRead,BufNewFile *.nix set softtabstop=2
+autocmd FileType nix set expandtab
+autocmd FileType nix set tabstop=2
+autocmd FileType nix set shiftwidth=2
+autocmd FileType nix set softtabstop=2
 
 " turn these on if you want to use vim over a slow link
 "set lazyredraw
