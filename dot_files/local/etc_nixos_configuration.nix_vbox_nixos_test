@@ -1,0 +1,99 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
+{ config, pkgs, ... }:
+
+{
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+      ./local-configuration.nix
+    ];
+
+
+  # Select internationalisation properties.
+  i18n = {
+    consoleFont = "lat9w-16";
+    consoleKeyMap = "us";
+    defaultLocale = "en_US.UTF-8";
+  };
+
+
+  # List packages installed in system profile. To search by name, run:
+  # -env -qaP | grep wget
+  environment.systemPackages = with pkgs; [
+    autojump
+    bc
+    bind
+    binutils
+    chromium
+    coreutils
+    evince
+    file
+    firefoxWrapper
+    gcc
+    gdb
+    geeqie
+    git
+    gnumake
+    #haskellPackages.xmobar
+    #haskellPackages.xmonad
+    #haskellPackages.xmonadContrib
+    #haskellPackages.xmonadExtras
+    haskellPlatform.ghc
+    htop
+    inetutils
+    netcat
+    rsync
+    screen
+    tree
+    unzip
+    vimHugeX
+    wget
+    #xchat
+    xlibs.xauth
+    #xlibs.xinit
+    #xlibs.xmodmap
+    xterm
+  ];
+
+
+  security.sudo.enable = true;
+  security.sudo.wheelNeedsPassword = false;
+
+
+  # Enable the OpenSSH daemon.
+  services.openssh.enable = true;
+  services.openssh.forwardX11 = true;
+
+  # Enable ntpd.
+  services.ntp.enable = true;
+
+
+  # X11 Options
+  services.xserver = {
+    autorun = false;
+    enable = true;
+    enableTCP = false;
+    exportConfiguration = true;
+    layout = "us";
+    xkbOptions = "ctrl:swapcaps";
+    desktopManager = {
+      default = "none";
+      #xterm.enable = false;
+      #xfce.enable = false;
+    };
+    # XXX: slim must not be disabled for xlaunch to work
+    displayManager = {
+    #  slim.defaultUser = "illabout";
+    #  slim.enable = false;
+    #  job.execCmd = "";
+    };
+    windowManager = {
+      default = "xmonad";
+      xmonad.enable = true;
+      xmonad.enableContribAndExtras = true;
+    };
+  };
+}
