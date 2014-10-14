@@ -1,5 +1,6 @@
 
 import XMonad
+import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
@@ -100,15 +101,19 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-shift-[1..9], Move client to workspace N
     [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+        -- , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
     ++
 
     -- alt-[F1..F9], Switch to workspace N
     -- alt-shift-[F1..F9], Move client to workspace N
-    [((m .|. mod1Mask, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_F1 .. xK_F9]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    ++
+    -- XXX: This is almost completely unlike fluxbox, so I will
+    -- not use it for now.
+    -- [((m .|. mod1Mask, k), windows $ f i)
+    --     | (i, k) <- zip (XMonad.workspaces conf) [xK_F1 .. xK_F9]
+    --     , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+    --     -- , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    -- ++
 
     --
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
@@ -117,6 +122,14 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    ++
 
+    -- My settings
+    [
+      -- Swap the current screen with the next screen.
+      ((modm, xK_o), swapNextScreen)
+      -- Swap the current screen with the previous screen.
+    , ((modm .|. shiftMask, xK_o), shiftNextScreen)
+    ]
 
 
