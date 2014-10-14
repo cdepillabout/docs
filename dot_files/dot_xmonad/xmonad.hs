@@ -101,8 +101,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-shift-[1..9], Move client to workspace N
     [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-        -- , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+        -- , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
     ++
 
     -- alt-[F1..F9], Switch to workspace N
@@ -130,6 +130,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
       ((modm, xK_o), swapNextScreen)
       -- Swap the current screen with the previous screen.
     , ((modm .|. shiftMask, xK_o), shiftNextScreen)
+      -- Spawn xscreensaver
+    , ((modm .|. shiftMask, xK_z), spawn "xscreensaver-command -lock")
     ]
 
 
