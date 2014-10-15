@@ -32,7 +32,8 @@ main = do
             , ppTitle = xmobarColor "green" "" . shorten 50
             }
         , borderWidth = myBorderWidth
-        --, manageHook = manageDocks <+> manageHook defaultConfig
+        , manageHook =
+            manageDocks <+> manageHook defaultConfig <+> composeAll myManagementHooks
         }
 
 -- check out http://haskell.org/haskellwiki/Xmonad/Config_archive/Template_xmonad.hs_(darcs)
@@ -47,6 +48,8 @@ myModMask = mod4Mask
 -- smartBorders will only use a border where necessary.
 myLayout = avoidStruts $ smartBorders $ layoutHook defaultConfig
 
+myManagementHooks :: [ManageHook]
+myManagementHooks = [resource =? "stalonetray" --> doIgnore]
 
 -- Key bindings. Add, modify or remove key bindings here.
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
@@ -56,7 +59,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
-    -- close focused window 
+    -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
      -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
