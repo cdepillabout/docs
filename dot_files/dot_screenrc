@@ -6,6 +6,14 @@ termcapinfo xterm*|xs|rxvt ti@:te@
 
 term screen-256color
 
+# Use bright colors for bold text.  (Most terminal emulators do this already.)
+attrcolor b ".I"
+
+# Default setting for new windows is that all characters cleared by an
+# erase/insert/scroll/clear operation will be displayed in the current
+# background color.
+defbce "on"
+
 hardstatus on
 hardstatus alwayslastline
 hardstatus string "%{= wb}%-w%{.yb}%n %t%{-}%+w %=%{b r} %H %{..b}[%l] %{..K}%C%a "
