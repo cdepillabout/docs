@@ -304,6 +304,13 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Here is the plugin itself:
 	"Bundle 'kana/vim-textobj-indent'
 
+	" Clever-f.
+	" This makes the 'f' key be able to be repeated in order to jump
+	" to the next match.  'F' is used to jump to previous matches.
+	" This makes the ';' and ',' key free to be able to be used for other
+	" things.
+	Bundle 'rhysd/clever-f.vim'
+
 endif
 
 
