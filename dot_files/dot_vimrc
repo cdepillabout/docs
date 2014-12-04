@@ -928,6 +928,9 @@ autocmd BufRead,BufNewFile *.lhs set expandtab
 " maybe this could also be done with
 autocmd FileType haskell set expandtab
 
+" hamlet files (for yesod) also need spaces instead of tabs
+autocmd BufRead,BufNewFile *.hamlet set expandtab
+
 " Cabal files also needs spaces instead of tabs.
 autocmd BufRead,BufNewFile *.cabal set expandtab
 autocmd FileType cabal set expandtab
