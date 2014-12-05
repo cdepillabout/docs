@@ -29,72 +29,72 @@ function make_directory {
 
 
 # bashrc files
-super_link $HOME/docs/dot_files/dot_bashrc $HOME/.bashrc
+super_link ./dot_bashrc $HOME/.bashrc
 
 # screen files
-super_link $HOME/docs/dot_files/dot_screenrc $HOME/.screenrc
+super_link ./dot_screenrc $HOME/.screenrc
 
 # emacs files
-super_link $HOME/docs/dot_files/dot_emacs $HOME/.emacs
+super_link ./dot_emacs $HOME/.emacs
 make_directory $HOME/.emacs-backups/
 make_directory $HOME/.emacs.d/
-super_link $HOME/docs/dot_files/dot_emacs.d/local.el $HOME/.emacs.d/local.el
+super_link ./dot_emacs.d/local.el $HOME/.emacs.d/local.el
 
 # xmonad files
 make_directory $HOME/.xmonad
-super_link $HOME/docs/dot_files/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
-super_link $HOME/docs/dot_files/dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
+super_link ./dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
+super_link ./dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
 
 # xmobar files
-super_link $HOME/docs/dot_files/dot_xmobarrc $HOME/.xmobarrc
+super_link ./dot_xmobarrc $HOME/.xmobarrc
 
 # mplayer files
 make_directory $HOME/.mplayer
-super_link $HOME/docs/dot_files/dot_mplayer/config $HOME/.mplayer/config
-super_link $HOME/docs/dot_files/dot_mplayer/input.conf $HOME/.mplayer/input.conf
+super_link ./dot_mplayer/config $HOME/.mplayer/config
+super_link ./dot_mplayer/input.conf $HOME/.mplayer/input.conf
 
 # fluxbox files
 make_directory $HOME/.fluxbox
-super_link $HOME/docs/dot_files/dot_fluxbox/keys $HOME/.fluxbox/keys
+super_link ./dot_fluxbox/keys $HOME/.fluxbox/keys
 
 # vim files
-super_link $HOME/docs/dot_files/dot_vimrc $HOME/.vimrc
+super_link ./dot_vimrc $HOME/.vimrc
 make_directory $HOME/.vim-tmp
 make_directory $HOME/.vim
 make_directory $HOME/.vim/after
 make_directory $HOME/.vim/after/syntax
-super_link $HOME/docs/dot_files/dot_vim/after/syntax/sas.vim $HOME/.vim/after/syntax/sas.vim
-super_link $HOME/docs/dot_files/dot_vim/after/syntax/java.vim $HOME/.vim/after/syntax/java.vim
+super_link ./dot_vim/after/syntax/sas.vim $HOME/.vim/after/syntax/sas.vim
+super_link ./dot_vim/after/syntax/java.vim $HOME/.vim/after/syntax/java.vim
 make_directory $HOME/.vim/after/indent
-super_link $HOME/docs/dot_files/dot_vim/after/indent/java.vim $HOME/.vim/after/indent/java.vim
+super_link ./dot_vim/after/indent/java.vim $HOME/.vim/after/indent/java.vim
 
 # vimperator
-super_link $HOME/docs/dot_files/dot_vimperatorrc $HOME/.vimperatorrc
+super_link ./dot_vimperatorrc $HOME/.vimperatorrc
 
 # pentadact
-super_link $HOME/docs/dot_files/dot_pentadactylrc $HOME/.pentadactylrc
+super_link ./dot_pentadactylrc $HOME/.pentadactylrc
 
 # eclim
-super_link $HOME/docs/dot_files/dot_eclimrc $HOME/.eclimrc
+super_link ./dot_eclimrc $HOME/.eclimrc
 
 # git
-super_link $HOME/docs/dot_files/dot_gitconfig $HOME/.gitconfig
+super_link ./dot_gitconfig $HOME/.gitconfig
 
 # mercurial
-super_link $HOME/docs/dot_files/dot_hgrc $HOME/.hgrc
+super_link ./dot_hgrc $HOME/.hgrc
 
 # Xmodmaps
-super_link $HOME/docs/dot_files/dot_Xmodmap_japanese_keyboard $HOME/.Xmodmap_japanese_keyboard
-super_link $HOME/docs/dot_files/dot_Xmodmap_swap_ctrl_caps $HOME/.Xmodmap_swap_ctrl_caps
+super_link ./dot_Xmodmap_japanese_keyboard $HOME/.Xmodmap_japanese_keyboard
+super_link ./dot_Xmodmap_swap_ctrl_caps $HOME/.Xmodmap_swap_ctrl_caps
 
 # gdbinit
-super_link $HOME/docs/dot_files/dot_gdbinit $HOME/.gdbinit
+super_link ./dot_gdbinit $HOME/.gdbinit
 
 # hirc (This creates a haskell project based on a template)
-super_link $HOME/docs/dot_files/dot_hirc $HOME/.hirc
+super_link ./dot_hirc $HOME/.hirc
 
 # ctags
-super_link $HOME/docs/dot_files/dot_ctags $HOME/.ctags
+super_link ./dot_ctags $HOME/.ctags
 
 
 
