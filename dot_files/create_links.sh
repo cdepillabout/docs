@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 # Create the proper links from ~/ to my dot files.
 
-source $HOME/docs/code/lib/library.sh
+# change directory to this file
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+
+source ../code/lib/library.sh
 
 function super_link {
 	file_name=$1
