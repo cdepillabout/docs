@@ -335,6 +335,15 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" This makes the ';' and ',' key free to be able to be used for other
 	" things.
 	Bundle 'rhysd/clever-f.vim'
+
+
+	" Haskell syntax for shakespearean templates.
+	" Hamlet, Lucius, Julius.
+	Bundle 'pbrisbin/vim-syntax-shakespeare'
+	" Don't highlight trailing space on the end of the line.
+	" I do this myself.
+	let g:hamlet_highlight_trailing_space = 0
+
 endif
 
 
@@ -935,6 +944,7 @@ call Add_eol_whitespace_highlighting("scala")
 call Add_eol_whitespace_highlighting("sh")
 call Add_eol_whitespace_highlighting("vim")
 call Add_eol_whitespace_highlighting("markdown")
+call Add_eol_whitespace_highlighting("hamlet")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
