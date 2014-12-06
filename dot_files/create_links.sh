@@ -3,6 +3,12 @@
 
 # change directory to this file
 cd "$( dirname "${BASH_SOURCE[0]}" )"
+ret="$?"
+if [ "$ret" -ne "0" ] ; then
+	echo "ERROR! could not cd to the script's directory!"
+	exit 1
+fi
+SCRIPT_DIR="$( pwd )"
 
 source ../code/lib/library.sh
 
@@ -29,72 +35,72 @@ function make_directory {
 
 
 # bashrc files
-super_link ./dot_bashrc $HOME/.bashrc
+super_link $SCRIPT_DIR/dot_bashrc $HOME/.bashrc
 
 # screen files
-super_link ./dot_screenrc $HOME/.screenrc
+super_link $SCRIPT_DIR/dot_screenrc $HOME/.screenrc
 
 # emacs files
-super_link ./dot_emacs $HOME/.emacs
+super_link $SCRIPT_DIR/dot_emacs $HOME/.emacs
 make_directory $HOME/.emacs-backups/
 make_directory $HOME/.emacs.d/
-super_link ./dot_emacs.d/local.el $HOME/.emacs.d/local.el
+super_link $SCRIPT_DIR/dot_emacs.d/local.el $HOME/.emacs.d/local.el
 
 # xmonad files
 make_directory $HOME/.xmonad
-super_link ./dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
-super_link ./dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
+super_link $SCRIPT_DIR/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
+super_link $SCRIPT_DIR/dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
 
 # xmobar files
-super_link ./dot_xmobarrc $HOME/.xmobarrc
+super_link $SCRIPT_DIR/dot_xmobarrc $HOME/.xmobarrc
 
 # mplayer files
 make_directory $HOME/.mplayer
-super_link ./dot_mplayer/config $HOME/.mplayer/config
-super_link ./dot_mplayer/input.conf $HOME/.mplayer/input.conf
+super_link $SCRIPT_DIR/dot_mplayer/config $HOME/.mplayer/config
+super_link $SCRIPT_DIR/dot_mplayer/input.conf $HOME/.mplayer/input.conf
 
 # fluxbox files
 make_directory $HOME/.fluxbox
-super_link ./dot_fluxbox/keys $HOME/.fluxbox/keys
+super_link $SCRIPT_DIR/dot_fluxbox/keys $HOME/.fluxbox/keys
 
 # vim files
-super_link ./dot_vimrc $HOME/.vimrc
+super_link $SCRIPT_DIR/dot_vimrc $HOME/.vimrc
 make_directory $HOME/.vim-tmp
 make_directory $HOME/.vim
 make_directory $HOME/.vim/after
 make_directory $HOME/.vim/after/syntax
-super_link ./dot_vim/after/syntax/sas.vim $HOME/.vim/after/syntax/sas.vim
-super_link ./dot_vim/after/syntax/java.vim $HOME/.vim/after/syntax/java.vim
+super_link $SCRIPT_DIR/dot_vim/after/syntax/sas.vim $HOME/.vim/after/syntax/sas.vim
+super_link $SCRIPT_DIR/dot_vim/after/syntax/java.vim $HOME/.vim/after/syntax/java.vim
 make_directory $HOME/.vim/after/indent
-super_link ./dot_vim/after/indent/java.vim $HOME/.vim/after/indent/java.vim
+super_link $SCRIPT_DIR/dot_vim/after/indent/java.vim $HOME/.vim/after/indent/java.vim
 
 # vimperator
-super_link ./dot_vimperatorrc $HOME/.vimperatorrc
+super_link $SCRIPT_DIR/dot_vimperatorrc $HOME/.vimperatorrc
 
 # pentadact
-super_link ./dot_pentadactylrc $HOME/.pentadactylrc
+super_link $SCRIPT_DIR/dot_pentadactylrc $HOME/.pentadactylrc
 
 # eclim
-super_link ./dot_eclimrc $HOME/.eclimrc
+super_link $SCRIPT_DIR/dot_eclimrc $HOME/.eclimrc
 
 # git
-super_link ./dot_gitconfig $HOME/.gitconfig
+super_link $SCRIPT_DIR/dot_gitconfig $HOME/.gitconfig
 
 # mercurial
-super_link ./dot_hgrc $HOME/.hgrc
+super_link $SCRIPT_DIR/dot_hgrc $HOME/.hgrc
 
 # Xmodmaps
-super_link ./dot_Xmodmap_japanese_keyboard $HOME/.Xmodmap_japanese_keyboard
-super_link ./dot_Xmodmap_swap_ctrl_caps $HOME/.Xmodmap_swap_ctrl_caps
+super_link $SCRIPT_DIR/dot_Xmodmap_japanese_keyboard $HOME/.Xmodmap_japanese_keyboard
+super_link $SCRIPT_DIR/dot_Xmodmap_swap_ctrl_caps $HOME/.Xmodmap_swap_ctrl_caps
 
 # gdbinit
-super_link ./dot_gdbinit $HOME/.gdbinit
+super_link $SCRIPT_DIR/dot_gdbinit $HOME/.gdbinit
 
 # hirc (This creates a haskell project based on a template)
-super_link ./dot_hirc $HOME/.hirc
+super_link $SCRIPT_DIR/dot_hirc $HOME/.hirc
 
 # ctags
-super_link ./dot_ctags $HOME/.ctags
+super_link $SCRIPT_DIR/dot_ctags $HOME/.ctags
 
 
 
