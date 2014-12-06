@@ -334,7 +334,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" to the next match.  'F' is used to jump to previous matches.
 	" This makes the ';' and ',' key free to be able to be used for other
 	" things.
-	Bundle 'rhysd/clever-f.vim'
+	"Bundle 'rhysd/clever-f.vim'
 
 
 	" Haskell syntax for shakespearean templates.
