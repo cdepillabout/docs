@@ -82,8 +82,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"let g:syntastic_debug = 1
 	"let g:syntastic_debug_file = "~/syntastic.log"
 
-	" This is used by ghcmod-vim for something.
+
 	if version >= 701
+		" This is used by ghcmod-vim for something.
 		Bundle 'Shougo/vimproc'
 		if isdirectory(expand("~/.vim/bundle/vimproc/.git")) &&
 				\ !(filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_unix.so")) ||
@@ -91,23 +92,24 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 				\   filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_linux32.so")))
 			echo "You must run `(cd \"$HOME/.vim/bundle/vimproc/\" && make)` in order to install vimproc (for ghc-mod)."
 		endif
-	endif
 
-	" Must `cabal install ghc-mod` to be able to use this.
-	" :GhcModType		- Show the type of an expression (can be used multiple
-	"					  times to show bigger and bigger expressions)
-	" :GhcModTypeClear  - Clear subexpression's highlight
-	" :GhcModCheck      - Show compiler error/warnings in quickfix window
-	" :GhcModLint       - Show suggestions by ghc-mod lint
-	" :GhcModInfo       - Show the type of an expression
-	" :GhcModTypeInsert - Insert the type of a function
-	Bundle 'eagletmt/ghcmod-vim'
-	let g:ghcmod_type_highlight='ghcmodType'
-	" TODO: Only use these when in haskell mode...
-	map <Leader>gt :GhcModType<CR>
-	map <Leader>gc :GhcModTypeClear<CR>
-	map <Leader>gi :GhcModTypeInsert<CR>
-	map <Leader>gn :GhcModInfo<CR>
+
+		" Must `cabal install ghc-mod` to be able to use this.
+		" :GhcModType		- Show the type of an expression (can be used multiple
+		"					  times to show bigger and bigger expressions)
+		" :GhcModTypeClear  - Clear subexpression's highlight
+		" :GhcModCheck      - Show compiler error/warnings in quickfix window
+		" :GhcModLint       - Show suggestions by ghc-mod lint
+		" :GhcModInfo       - Show the type of an expression
+		" :GhcModTypeInsert - Insert the type of a function
+		Bundle 'eagletmt/ghcmod-vim'
+		let g:ghcmod_type_highlight='ghcmodType'
+		" TODO: Only use these when in haskell mode...
+		map <Leader>gt :GhcModType<CR>
+		map <Leader>gc :GhcModTypeClear<CR>
+		map <Leader>gi :GhcModTypeInsert<CR>
+		map <Leader>gn :GhcModInfo<CR>
+	endif
 
 
 	" Use neocomplete (this is supposed to work with neco-ghc for haskell
@@ -115,6 +117,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	if version >= 704 && has("if_lua")
 		Bundle 'Shougo/neocomplete'
 	endif
+
 
 	" Must `cabal install ghc-mod` to be able to use this.
 	" Use omnicompletion for haskell.
@@ -124,11 +127,13 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'eagletmt/neco-ghc'
 	autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
+
 	" Must run `cabal install hoogle && hoogle data` before using.
 	" Look up things through hoogle.
 	" See :help hoogle for help.
 	" :Hoogle         - run hoogle on the word under the cursor
 	Bundle 'Twinside/vim-hoogle'
+
 
 	" Must `cabal install hdevtools` to be able to use this.
 	" This is basically the same as ghc-mod
@@ -136,12 +141,14 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" :HdevtoolsType	- get short type information
 	"Bundle 'bitc/vim-hdevtools'
 
+
 	" You can use keys like _i to automatically import stuff that
 	" has not yet been imported.
 	" But before you use this functionality, you must run :ExportDocIndex
 	Bundle 'lukerandall/haskellmode-vim'
 	let g:haddock_browser="/usr/bin/firefox"
 	let g:haddock_indexfiledir=$HOME . "/.vim/"
+
 
 	" must `cabal install hlint` to be able to use hlint stuff.
 	" This does some cool things with syntax highlighting for you.
@@ -158,26 +165,33 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Also disable conceal for jmacro.
 	let g:jmacro_conceal = 0
 
+
 	" EasyMotion.
 	Bundle 'Lokaltog/vim-easymotion'
+
 
 	" This uses :sign to show changed areas of code a la `git diff`.
 	" Haven't really looked into this one yet either...
 	"Bundle 'mhinz/vim-signify'
 
+
 	" Nerdtree.  Need to enable this and make some mappings...
 	Bundle 'scrooloose/nerdtree'
 	nnoremap <F3> :NERDTreeToggle<CR>
+
 
 	" Use multiple cursors just like Sublime text.  I almost feel
 	" like this isn't needed because macros are so convenient...
 	"Bundle 'terryma/vim-multiple-cursors'
 
+
 	" Get more commands for doing things to surrounding text.
 	Bundle 'tpope/vim-surround'
 
+
 	" Get the ability to repeat these surround commands.
 	Bundle 'tpope/vim-repeat'
+
 
 	" This allows to write really short html.
 	" You can convert the sparkup syntax to html with
@@ -189,11 +203,13 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" http://code.google.com/p/zen-coding/
 	Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 
+
 	" nicer statusline
 	" This seems like it would be nice, but I would have to configure it
 	" not to look ugly.  Also, it doesn't seem like it would be too helpful
 	" without the fugitive git plugin.
 	"Bundle 'bling/vim-airline'
+
 
 	" Shows git-diff stuff in the sign column and allows you to stage/revert
 	" hunks.
@@ -210,12 +226,14 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" git gutter needs to use raw grep because i have colors turned on in my grep
 	let g:gitgutter_escape_grep = 1
 
+
 	" Does various git commands.
 	Bundle 'tpope/vim-fugitive'
 
-	" Vim plugin for browsing tags of source code.  It opens up a sidebar that
-	" displays ctags-generated gtags of the current file.
+
 	if version >= 701
+		" Vim plugin for browsing tags of source code.  It opens up a sidebar that
+		" displays ctags-generated gtags of the current file.
 		Bundle 'majutsushi/tagbar'
 		" F2 for turning on and off tag list
 		nnoremap <F2> :TagbarToggle<CR>
@@ -236,11 +254,14 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 		\ }
 	endif
 
+
 	" Syntax files for puppet.
 	Bundle 'puppetlabs/puppet-syntax-vim'
 
+
 	" Scala syntax
 	Bundle 'derekwyatt/vim-scala'
+
 
 	" Rainbow parentheses
 	Bundle 'kien/rainbow_parentheses.vim'
@@ -275,6 +296,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"autocmd BufEnter * if exists(":RainbowParenthesesLoadChevrons") |
 	"	\ exec ":RainbowParenthesesLoadChevrons" | endif
 
+
 	" This adds mappings like the following:
 	" [a, ]a                :previous, :next
 	" [b, ]b                :bprevious, :bnext
@@ -288,6 +310,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" [<Space>, ]<Space>    add a blank line above or below the cursor
 	Bundle 'tpope/vim-unimpaired'
 
+
 	" This adds the key command 'gcc' to comment out the
 	" current line.  It also adds the command 'gc' in visual
 	" mode to comment out a block.
@@ -297,6 +320,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'tpope/vim-commentary'
 	autocmd FileType puppet set commentstring=#%s
 
+
 	" This adds text selection/movement commands for working
 	" with similarly indented blocks of code.
 	" It depends on the following plugin:
@@ -304,13 +328,13 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Here is the plugin itself:
 	"Bundle 'kana/vim-textobj-indent'
 
+
 	" Clever-f.
 	" This makes the 'f' key be able to be repeated in order to jump
 	" to the next match.  'F' is used to jump to previous matches.
 	" This makes the ';' and ',' key free to be able to be used for other
 	" things.
 	Bundle 'rhysd/clever-f.vim'
-
 endif
 
 
