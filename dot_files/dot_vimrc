@@ -933,9 +933,12 @@ endfunction
 call Add_eol_whitespace_highlighting("bash")
 call Add_eol_whitespace_highlighting("c")
 call Add_eol_whitespace_highlighting("cpp")
+call Add_eol_whitespace_highlighting("css")
+call Add_eol_whitespace_highlighting("hamlet")
 call Add_eol_whitespace_highlighting("haskell")
 call Add_eol_whitespace_highlighting("html")
 call Add_eol_whitespace_highlighting("java")
+call Add_eol_whitespace_highlighting("markdown")
 call Add_eol_whitespace_highlighting("php")
 call Add_eol_whitespace_highlighting("puppet")
 call Add_eol_whitespace_highlighting("python")
@@ -943,8 +946,6 @@ call Add_eol_whitespace_highlighting("ruby")
 call Add_eol_whitespace_highlighting("scala")
 call Add_eol_whitespace_highlighting("sh")
 call Add_eol_whitespace_highlighting("vim")
-call Add_eol_whitespace_highlighting("markdown")
-call Add_eol_whitespace_highlighting("hamlet")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
