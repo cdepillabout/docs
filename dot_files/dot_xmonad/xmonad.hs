@@ -137,6 +137,19 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_o), shiftNextScreen)
       -- Spawn xscreensaver
     , ((modm .|. shiftMask, xK_z), spawn "xscreensaver-command -lock")
+      -- Switch to the unfocused screen.  Does nothing if not exactly two
+      -- screens.
+    , ((modm, xK_Tab), switchToUnfocusedScreen)
     ]
 
-
+-- Switch to the unfocused screen.  Does nothing if not exactly two
+-- screens.
+switchToUnfocusedScreen :: X ()
+switchToUnfocusedScreen = do
+        allWorkspaces <- gets windowset
+        let visibleNonFocusedScreens = W.visible allWorkspaces
+        -- TODO: This only works for two screens.  It would be nice if it
+        -- worked for 3 or more screens.
+        case visibleNonFocusedScreens of
+            [screen] -> windows $ W.view $ W.tag $ W.workspace screen
+            _ -> return ()
