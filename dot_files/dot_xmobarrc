@@ -4,7 +4,8 @@ Config { font = "xft:Bitstream Vera Sans:size=9:bold:antialias=true"
        , border = TopB
        , bgColor = "black"
        , fgColor = "grey"
-       , position = TopW L 95
+       -- , position = TopW L 95
+       , position = Static { xpos = 0, ypos = 700, width = 1830, height = 18 }
        , commands = [ Run Weather "CYVR" [ "--template", "<fc=#ddddff><skyCondition></fc> | <tempC>C"
                                          , "--Low", "15"
                                          , "--High", "25"
