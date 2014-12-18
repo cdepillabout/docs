@@ -8,9 +8,13 @@
 map <C-h> gT
 map <C-l> gt
 
+" reorder tabs like vim
+nnoremap <C-y> :tabmove -1<CR>
+map <C-u> :tabmove +1<CR>
+
 " scroll up and down faster
-map k 4<C-y>
-map j 4<C-e>
+nnoremap k 4<C-y>
+nnoremap j 4<C-e>
 " these could also be done with something like this
 " :noremap j 3j
 " :noremap k 3k
@@ -26,11 +30,11 @@ map c zo
 " minimum width of tabs REALLY small.  He says he will
 " change it back, so this hack may not be needed in the future
 " (http://code.google.com/p/vimperator-labs/issues/detail?id=575)
-js styles.removeSheet(true, "mintabwidth", "", "", 0);
+" js styles.removeSheet(true, "mintabwidth", "", "", 0);
 
 set editor="roxterm --separate -e vim -f"
 set guioptions=mTBnrb
-set toolbars=all
+"set toolbars=all
 set runtimepath=/home/illabout/.vimperator
 source! /home/illabout/.vimperatorrc.local
 
