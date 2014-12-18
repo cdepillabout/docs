@@ -29,7 +29,7 @@ main = do
         , terminal = "roxterm"
         , logHook = dynamicLogWithPP xmobarPP
             { ppOutput = hPutStrLn xmobarProc
-            , ppTitle = xmobarColor "green" "" . shorten 50
+            , ppTitle = xmobarColor "green" "" . shorten 150
             }
         , borderWidth = myBorderWidth
         , manageHook =
@@ -48,6 +48,8 @@ myModMask = mod4Mask
 -- smartBorders will only use a border where necessary.
 myLayout = avoidStruts $ smartBorders $ layoutHook defaultConfig
 
+-- Special actions to be performed on newly created windows matching
+-- specific properties.
 myManagementHooks :: [ManageHook]
 myManagementHooks = [resource =? "stalonetray" --> doIgnore]
 
