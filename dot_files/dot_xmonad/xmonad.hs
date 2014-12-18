@@ -29,7 +29,7 @@ main = do
         , terminal = "roxterm"
         , logHook = dynamicLogWithPP xmobarPP
             { ppOutput = hPutStrLn xmobarProc
-            , ppTitle = xmobarColor "green" "" . shorten 150
+            , ppTitle = xmobarColor "lightblue" "" . shorten 150
             }
         , borderWidth = myBorderWidth
         , manageHook =
