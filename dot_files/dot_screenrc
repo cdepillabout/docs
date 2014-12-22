@@ -39,7 +39,7 @@ altscreen on
 
 
 # bash will be replaced by the running command
-shelltitle " $ |bash"
+shelltitle " "
 
 # bash will get the running command added after it
 #shelltitle "$ |bash:"
