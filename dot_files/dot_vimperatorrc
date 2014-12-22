@@ -35,6 +35,9 @@ map c zo
 " show numbers on each tab
 set tabnumbers
 
+" change the hint characters
+set hintchars=fjdkslaghrueiwovnm
+
 set editor="roxterm --separate -e vim -f"
 set guioptions=mTBnrb
 "set toolbars=all
