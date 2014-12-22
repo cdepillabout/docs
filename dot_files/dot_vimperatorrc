@@ -32,6 +32,9 @@ map c zo
 " (http://code.google.com/p/vimperator-labs/issues/detail?id=575)
 " js styles.removeSheet(true, "mintabwidth", "", "", 0);
 
+" show numbers on each tab
+set tabnumbers
+
 set editor="roxterm --separate -e vim -f"
 set guioptions=mTBnrb
 "set toolbars=all
