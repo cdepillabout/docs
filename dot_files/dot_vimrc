@@ -145,7 +145,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" You can use keys like _i to automatically import stuff that
 	" has not yet been imported.
 	" But before you use this functionality, you must run :ExportDocIndex
-	Bundle 'lukerandall/haskellmode-vim'
+	" Bundle 'lukerandall/haskellmode-vim'
 	let g:haddock_browser="/usr/bin/firefox"
 	let g:haddock_indexfiledir=$HOME . "/.vim/"
 
@@ -938,7 +938,9 @@ call Add_eol_whitespace_highlighting("hamlet")
 call Add_eol_whitespace_highlighting("haskell")
 call Add_eol_whitespace_highlighting("html")
 call Add_eol_whitespace_highlighting("java")
+call Add_eol_whitespace_highlighting("julius")
 call Add_eol_whitespace_highlighting("markdown")
+call Add_eol_whitespace_highlighting("lucius")
 call Add_eol_whitespace_highlighting("php")
 call Add_eol_whitespace_highlighting("puppet")
 call Add_eol_whitespace_highlighting("python")

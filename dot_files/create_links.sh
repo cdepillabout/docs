@@ -73,6 +73,8 @@ super_link $SCRIPT_DIR/dot_vim/after/syntax/sas.vim $HOME/.vim/after/syntax/sas.
 super_link $SCRIPT_DIR/dot_vim/after/syntax/java.vim $HOME/.vim/after/syntax/java.vim
 make_directory $HOME/.vim/after/indent
 super_link $SCRIPT_DIR/dot_vim/after/indent/java.vim $HOME/.vim/after/indent/java.vim
+make_directory $HOME/.vim/spell
+super_link $SCRIPT_DIR/dot_vim/spell/en.utf-8.add $HOME/.vim/spell/en.utf-8.add
 
 # vimperator
 super_link $SCRIPT_DIR/dot_vimperatorrc $HOME/.vimperatorrc
