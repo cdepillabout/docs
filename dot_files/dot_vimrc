@@ -423,6 +423,42 @@ if &tabpagemax < 50
 	  set tabpagemax=50
 endif
 
+"""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""" Spelling """""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""
+
+" Make sure my spell checking is done in English.  (This is the default).
+set spelllang=en
+
+" Vim searches for additional spell files in the "spell/" subdirectory of the
+" directories in "runtimepath" (usually, "~/.vim/" is on the "runtimepath", so
+" it will look in "~/.vim/spell/").  By default, it looks for files of the
+" name "LL.EEE.add", where "LL" is the language name (by default "en") and
+" where "EEE" is the encoding (by default "utf-8").
+
+" Commands:
+"
+"   - :setlocal spell                                 Turn on spell checking for
+"                                                     the current buffer.
+"
+"   - :set spellfile=~/.vim/myspellfile.utf-8.add     Change the spell file to
+"                                                     a custom spellfile.  It
+"                                                     must end in
+"                                                     ".{encoding}.add".
+"
+"   - zg       Add word under cursor to spell file as "correct word"
+"
+"   - zw       Add word under cursor to spell file as "incorrect word"
+"
+"   - zug      Undo "zg"
+"
+"   - zuw      Undo "zw"
+"
+"   - ]s       Move to the next misspelled word after the cursor.
+"
+"   - [s       Move to the previous misspelled word before the cursor.
+"
+
 
 """""""""""""""""""""""""""""""""""""""""""""
 """""""""""" Highlighting """""""""""""""""""
@@ -509,6 +545,10 @@ set pastetoggle=<F6>
 " use F7 for turning on and off list mode
 map <F7> :set list!<CR>
 imap <F7> <ESC>:set list!<CR>a
+
+" use F8 for turning on and off spell check mode for the current buffer
+map <F8> :setlocal spell!<CR>
+imap <F8> <ESC>:setlocal spell!<CR>a
 
 " use <C-h> and <C-l> to go forward and backward in tabs
 " nnoremap just makes a normal mode mapping
