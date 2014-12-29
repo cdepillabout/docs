@@ -346,6 +346,16 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" I do this myself.
 	let g:hamlet_highlight_trailing_space = 0
 
+	" A shell for vim.
+	" :VimShell                           Open the shell.  It can be used like
+	"                                     bash.
+	" :VimShellInteractive idris          Run another program in the shell.
+	"                                     For example, we can run ghci.
+	Bundle 'Shougo/vimshell.vim'
+
+	" Idris mode for vim.
+	Bundle 'idris-hackers/idris-vim'
+
 endif
 
 
