@@ -22,7 +22,8 @@ colorscheme darkblue
 "colorscheme desert
 "colorscheme torte
 
-" let my leader key be space instead of \
+" Set my leader key to be space instead of \, and
+" set my local leader key to be return.
 " This needs to be set as soon as possible because
 " things mapped with <Leader> are mapped with the
 " current leader and don't get changed to be a new
@@ -31,6 +32,7 @@ colorscheme darkblue
 " gets mapped correctly when we are setting mappings
 " that use the leader.
 let mapleader = " "
+let maplocalleader = "\r"
 
 " load vundles if we have any
 if isdirectory(expand("~/.vim/bundle/vundle/.git"))
