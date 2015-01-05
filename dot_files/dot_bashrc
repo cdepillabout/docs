@@ -113,7 +113,9 @@ case $TERM in
 		fi
 		;;
 	screen)
-		SCREEN_OR_XTERM_PS1_ESCAPE='\[\033k\033\\\]'
+		# for now, don't use screen
+		# SCREEN_OR_XTERM_PS1_ESCAPE='\[\033k\033\\\]'
+		SCREEN_OR_XTERM_PS1_ESCAPE=''
 		;;
 	*)
 		SCREEN_OR_XTERM_PS1_ESCAPE=''
