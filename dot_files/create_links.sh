@@ -79,6 +79,9 @@ super_link $SCRIPT_DIR/dot_vim/spell/en.utf-8.add $HOME/.vim/spell/en.utf-8.add
 # vimperator
 super_link $SCRIPT_DIR/dot_vimperatorrc $HOME/.vimperatorrc
 
+# muttator
+super_link $SCRIPT_DIR/dot_muttatorrc $HOME/.muttatorrc
+
 # pentadact
 super_link $SCRIPT_DIR/dot_pentadactylrc $HOME/.pentadactylrc
 
