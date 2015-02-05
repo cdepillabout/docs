@@ -308,6 +308,8 @@ alias gpll='git pull '
 alias gpo='git push origin '
 alias gpoh='git push origin HEAD '
 alias gpsh='git push '
+alias gr='git remote '
+alias grv='git remote -v '
 alias gst='git status '
 
 # darcs aliases
