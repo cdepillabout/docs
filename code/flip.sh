@@ -70,7 +70,7 @@ Example:
 \$ ${command_basename} grep -i file1 file2 "string"
 
 - Run the command \`grep -- "-search-string-with-leading-dash" file1\`
-\$ ${command_basename} grep -- file1 -file-with-leading-dash
+\$ ${command_basename} grep -- file1 "-search-string-with-leading-dash"
 END
 }
 
