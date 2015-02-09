@@ -66,6 +66,7 @@ super_link $SCRIPT_DIR/dot_fluxbox/keys $HOME/.fluxbox/keys
 # vim files
 super_link $SCRIPT_DIR/dot_vimrc $HOME/.vimrc
 make_directory $HOME/.vim-tmp
+make_directory $HOME/.vim-undo
 make_directory $HOME/.vim
 make_directory $HOME/.vim/after
 make_directory $HOME/.vim/after/syntax
