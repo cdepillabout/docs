@@ -380,16 +380,16 @@ filetype plugin indent on
 set fileencodings=utf-8
 setglobal fileencoding=utf-8
 set encoding=utf-8
-set ttymouse=xterm2		" mouse scrolling in vim
+set ttymouse=xterm2   " mouse scrolling in vim
 set mouse=a
 set foldenable
-set tabstop=4			" 4-space tab indent width
-set shiftwidth=4		" allows you to use < and > to indent/unindent blocks
-set softtabstop=4		" see multiple space characters as a tab
-set shiftround			" Indent to nearest tab stop
-set autoindent			" carries over previous indent to the next line
-set smarttab			" A tab infront of a line inserts spaces or tabs according to expandtab
-set autoread			" when file detected changed outside of Vim, automatically read it again
+set tabstop=4         " 4-space tab indent width
+set shiftwidth=4      " allows you to use < and > to indent/unindent blocks
+set softtabstop=4     " see multiple space characters as a tab
+set shiftround        " Indent to nearest tab stop
+set autoindent        " carries over previous indent to the next line
+set smarttab          " A tab infront of a line inserts spaces or tabs according to expandtab
+set autoread          " when file detected changed outside of Vim, automatically read it again
 
 if version <= 702
 	set switchbuf=usetab,useopen
@@ -405,12 +405,12 @@ endif
 "  n... : where to save the viminfo files
 set viminfo='100,\"100,:20,%,n~/.viminfo
 
-set wildmode=list:longest	" When autocompleting things, do it like the shell
-set wildmenu				" Autocomplete things on the menu?
-set scrolloff=3				" Scroll when the cursor is 3 lines from top or bottom
+set wildmode=list:longest   " When autocompleting things, do it like the shell
+set wildmenu                " Autocomplete things on the menu?
+set scrolloff=3             " Scroll when the cursor is 3 lines from top or bottom
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set ruler					" know how far you are in a file
+set ruler                   " know how far you are in a file
 set enc=utf-8
 set fenc=utf-8
 set backspace=indent,eol,start	" make sure backspace works correctly
