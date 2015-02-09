@@ -137,23 +137,36 @@ if [ ! \( -e "$HOME/.bash_profile" -o -e "$HOME/.profile" \) ] ; then
 	echo -e '\n[ -e "$HOME/.bashrc" ] && source "$HOME/.bashrc"' >> $HOME/.profile
 fi
 
+# check to make sure git is installed
+command -v "git" &>/dev/null
+git_check_ret="$?"
 
-# install vim vundles if it doesn't already exist and we are not root
-if [ ! -d "$HOME/.vim/bundle/vundle/.git" -a "$UID" != "0" ] ; then
-	echo "cloning vundle..."
-	echo
-	mkdir -p "$HOME/.vim/bundle"
-	git clone https://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
-	echo
-	echo "installing all bundles by opening vim and running :BundleInstall"
-	vim +BundleInstall +qall
-	echo
-	echo "There may be extra files that need to be installed by hand in order"
-	echo "to get all the vim bundles working correctly.  Read the top of .vimrc"
-	echo "and install everything that is needed (this is stuff like ghc-mod, hlint, etc)."
-	echo "You might want to install things with a cabal command like this:"
-	echo "(Remember, you might need to source your .bashrc to get the ~/.cabal/bin directory"
-	echo "added to the path)"
-	echo
-	echo "\`cabal install happy -j8 && source ~/.bashrc && cabal install ghc-mod hoogle hlint -j8\`"
+# check to make sure vim is installed
+command -v "vim" &>/dev/null
+vim_check_ret="$?"
+
+if [ "${git_check_ret}" = "0" -a "${vim_check_ret}" = 0 ] ; then
+	# install vim vundles if it doesn't already exist and we are not root
+	if [ ! -d "$HOME/.vim/bundle/vundle/.git" -a "$UID" != "0" ] ; then
+		echo "cloning vundle..."
+		echo
+		mkdir -p "$HOME/.vim/bundle"
+		git clone https://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
+		echo
+		echo "installing all bundles by opening vim and running :BundleInstall"
+		vim +BundleInstall +qall
+		echo
+		echo "There may be extra files that need to be installed by hand"
+		echo "in order to get all the vim bundles working correctly."
+		echo "Read the top of .vimrc and install everything that is needed"
+		echo "(this is stuff like ghc-mod, hlint, etc)."
+		echo
+		echo "You might want to install things with a cabal command like this:"
+		echo "(Remember, you might need to source your .bashrc to get the"
+		echo "~/.cabal/bin directory added to the path)"
+		echo
+		echo "\`cabal install happy -j8 && source ~/.bashrc && cabal install ghc-mod hoogle hlint -j8\`"
+	fi
+else
+	echo "ERROR! \`git\` or \`vim\` does not exist. Not installing vim bundles."
 fi
