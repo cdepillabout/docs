@@ -435,6 +435,12 @@ if &tabpagemax < 50
 	  set tabpagemax=50
 endif
 
+" Use an undo file to save undos through closing file
+if version >= 703
+	set undodir=~/.vim-undo,/var/tmp,/tmp
+	set undofile
+endif
+
 """""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Spelling """""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""
