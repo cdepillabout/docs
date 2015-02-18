@@ -52,6 +52,7 @@ fcitx &
 
 eval `ssh-agent`
 xterm -e ssh-add &
+ssh-add "$HOME/.ssh/awsworkprivatekeypair2.pem" &
 
 # this is minidlna for serving files over the network to sony bravia tv
 #$HOME/.minidlna/run.sh start &
@@ -60,8 +61,8 @@ xrandr-setup-screens --startup &
 
 # set both screens
 #xrandr --output LVDS1 --auto --primary --output VGA1 --left-of LVDS1 --rate 75 --size 1024x768
-#if [ "$(xrandr | grep -o "DVI-I-1 connected")" == "DVI-I-1 connected" ] 
-#then 
+#if [ "$(xrandr | grep -o "DVI-I-1 connected")" == "DVI-I-1 connected" ]
+#then
 	#xrandr --output LVDS-1 --auto --primary --output DVI-I-1 --left-of LVDS-1 --mode "1024x768"
 	#xrandr --output LVDS-1 --auto --primary --pos 0x600 --output DVI-I-1 --rotate left --pos 1920x0
 	#xrandr --output LVDS-1 --auto --primary --pos 0x600 --output DVI-I-1 --rotate left --pos 1920x0 --mode "1920x1080"
@@ -70,7 +71,7 @@ xrandr-setup-screens --startup &
 fluxbox &
 fluxboxpid=$!
 
-sleep 5 
+sleep 5
 {
 	# change keys on Japanese keyboard if we are using a Japanese keyboard
 	japanese_keyboard_xmodmap="$HOME/.Xmodmap_japanese_keyboard"
