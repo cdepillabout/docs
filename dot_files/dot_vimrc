@@ -356,6 +356,11 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Idris mode for vim.
 	Bundle 'idris-hackers/idris-vim'
 
+	" Ledger syntax for vim
+	let g:ledger_bin = 'hledger'
+	Bundle 'ledger/vim-ledger'
+	autocmd BufEnter .hledger.journal setlocal filetype=ledger
+
 endif
 
 
@@ -1089,6 +1094,10 @@ autocmd FileType nix set tabstop=2
 autocmd FileType nix set shiftwidth=2
 autocmd FileType nix set softtabstop=2
 autocmd FileType nix setlocal commentstring=#%s
+
+" settings for ledger files
+autocmd FileType ledger set expandtab
+
 
 " turn these on if you want to use vim over a slow link
 "set lazyredraw
