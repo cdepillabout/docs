@@ -52,7 +52,7 @@ super_link $SCRIPT_DIR/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
 super_link $SCRIPT_DIR/dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
 
 # xmobar files
-super_link $SCRIPT_DIR/dot_xmobarrc $HOME/.xmobarrc
+#super_link $SCRIPT_DIR/dot_xmobarrc $HOME/.xmobarrc
 
 # mplayer files
 make_directory $HOME/.mplayer
