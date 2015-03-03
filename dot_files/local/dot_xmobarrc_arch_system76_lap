@@ -1,0 +1,49 @@
+
+Config { font = "xft:Bitstream Vera Sans:size=9:bold:antialias=true"
+       , borderColor = "black"
+       , border = TopB
+       , bgColor = "black"
+       , fgColor = "grey"
+       -- , position = TopW L 95
+       , position = Static { xpos = 0, ypos = 600, width = 1830, height = 18 }
+       , commands = [ Run Weather "CYVR" [ "--template", "<fc=#ddddff><skyCondition></fc> | <tempC>C"
+                                         , "--Low", "15"
+                                         , "--High", "25"
+                                         , "--low", "green"
+                                         , "--normal", "orange"
+                                         , "--high", "red"
+                                         ] 36000
+                    , Run DynNetwork [ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
+                                     , "--Low", "1000"   -- units: kB/s
+                                     , "--High", "5000"  -- units: kB/s
+                                     , "--low", "green"
+                                     , "--normal", "orange"
+                                     , "--high", "red"
+                                     ] 10
+                    , Run Cpu [ "-L", "34"
+                              , "-H", "67"
+                              , "--low", "green"
+                              , "--normal", "orange"
+                              , "--high", "red"
+                              ] 10
+                    , Run Memory [ "--template", "Mem: <usedratio>%"
+                                 , "--Low", "20"
+                                 , "--High", "80"
+                                 , "--low", "green"
+                                 , "--normal", "orange"
+                                 , "--high", "red"
+                                 ] 10
+                    , Run Swap [ "--Low", "0"
+                               , "--High", "10"
+                               , "--low", "green"
+                               , "--normal", "orange"
+                               , "--high", "red"
+                               ] 10
+                    , Run Com "uname" ["-s","-r"] "" 36000
+                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+                    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% | %cpu% | %memory% * %swap% | %dynnetwork% }{<fc=#ee9a00>%date%</fc> | %uname% | %CYVR% "
+       }
