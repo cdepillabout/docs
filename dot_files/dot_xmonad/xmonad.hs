@@ -3,6 +3,7 @@ import XMonad
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers ((-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook)
 import XMonad.Hooks.DynamicLog
 import XMonad.Util.Run
 import System.Exit
@@ -32,8 +33,10 @@ main = do
             , ppTitle = xmobarColor "lightblue" "" . shorten 150
             }
         , borderWidth = myBorderWidth
-        , manageHook =
-            manageDocks <+> manageHook defaultConfig <+> composeAll myManagementHooks
+        , manageHook = manageDocks
+                   <+> manageHook defaultConfig
+                   <+> composeAll myManagementHooks
+                   <+> composeOne myMaybeManagementHooks
         }
 
 -- check out http://haskell.org/haskellwiki/Xmonad/Config_archive/Template_xmonad.hs_(darcs)
@@ -51,7 +54,18 @@ myLayout = avoidStruts $ smartBorders $ layoutHook defaultConfig
 -- Special actions to be performed on newly created windows matching
 -- specific properties.
 myManagementHooks :: [ManageHook]
-myManagementHooks = [resource =? "stalonetray" --> doIgnore]
+myManagementHooks = [ resource =? "stalonetray" --> doIgnore
+                    ]
+
+-- Special actions to be performed on newly created windows matching
+-- specific properties. Only returns action for first ManageHook that
+-- returns a Just.
+myMaybeManagementHooks :: [MaybeManageHook]
+myMaybeManagementHooks = [ -- Make sure that full screened windows like
+                           -- firefox's flash are actually shown as full
+                           -- screen.
+                           isFullscreen -?> doFullFloat
+                         ]
 
 -- Key bindings. Add, modify or remove key bindings here.
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
