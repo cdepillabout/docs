@@ -2,8 +2,13 @@
 # Add transactions to hledger, and then commit the new ledger file
 # using `git commit`.
 
-if [ ! -f "$HLEDGER_DEFAULT_LEDGER" ] ; then
+if [ -z "$HLEDGER_DEFAULT_LEDGER" ] ; then
 	echo "ERROR! Define \$HLEDGER_DEFAULT_LEDGER to point to your default ledger."
+	exit 1
+fi
+
+if [ ! -f "$HLEDGER_DEFAULT_LEDGER" ] ; then
+	echo "ERROR! The file defined by \$HLEDGER_DEFAULT_LEDGER ($HLEDGER_DEFAULT_LEDGER) does not exist."
 	exit 1
 fi
 
