@@ -158,6 +158,9 @@ executable whatwhat
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.6 && <4.7
 
+  -- Options for GHC.
+  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
+
   -- Directories containing source files.
   hs-source-dirs:      src
 
