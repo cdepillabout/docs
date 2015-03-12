@@ -266,7 +266,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 
 	" Rainbow parentheses
-	Bundle 'kien/rainbow_parentheses.vim'
+	Bundle 'eapache/rainbow_parentheses.vim'
 	let g:rbpt_colorpairs = [
 	    \ ['darkred',     'DarkOrchid3'],
 	    \ ['darkgray',    'DarkOrchid3'],
@@ -287,6 +287,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	    \ ['darkgreen',   'RoyalBlue3'],
 	    \ ['red',         'firebrick3'],
 	    \ ]
+	" Turn off bold parenthesis
+	"let g:bold_parentheses = 0
 	autocmd VimEnter * if exists(":RainbowParenthesesActivate") |
 		\ exec ":RainbowParenthesesActivate" | endif
 	autocmd BufEnter * if exists(":RainbowParenthesesLoadRound") |
