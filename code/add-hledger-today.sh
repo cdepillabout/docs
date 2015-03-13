@@ -32,7 +32,9 @@ trap SIGINT
 
 if [ "$ret" -eq "0" ]; then
 	echo
-	echo "Commiting and pushing..."
+	echo "Commiting and pushing the following diffs..."
+	echo
+	git diff
 	echo
 	git add "${HLEDGER_DEFAULT_LEDGER}"
 	git commit -m "Ledger update for $(date '+%Y-%m-%d')."
