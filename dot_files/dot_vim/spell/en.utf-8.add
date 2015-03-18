@@ -18,3 +18,7 @@ dl
 dt
 kbd
 dd
+MultiParamTypeClasses
+TypeFamilies
+FlexibleInstances
+FunctionalDependencies
