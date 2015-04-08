@@ -225,8 +225,11 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" let g:gitgutter_realtime = 0   -- Make it so that the gutter is not updated in realtime.
 	" let g:gitgutter_eager = 0      -- Make it so that the gutter is not updated when switching tabs.
 	Bundle 'airblade/vim-gitgutter'
-	" git gutter needs to use raw grep because i have colors turned on in my grep
+	" Git gutter needs to use raw grep because I have colors turned on in my grep.
 	let g:gitgutter_escape_grep = 1
+	" By default, gitgutter make the signcolumn highlighting match the line
+	" number highlighting.  This tells it not to do that.
+	let g:gitgutter_override_sign_column_highlight = 0
 
 
 	" Does various git commands.
