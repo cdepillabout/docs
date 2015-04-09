@@ -315,6 +315,12 @@ alias gr='git remote '
 alias grv='git remote -v '
 alias gst='git status '
 
+# grep aliases
+alias rgrep='grep -r '
+alias igrep='grep -i '
+alias irgrep='grep -i -r '
+alias rigrep='grep -r -i '
+
 # darcs aliases
 alias dst='darcs status'
 alias dwn='darcs whatsnew'
