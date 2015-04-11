@@ -372,6 +372,27 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'elzr/vim-json'
 	" Don't let the plugin conceal double quotes
 	let g:vim_json_syntax_conceal = 0
+
+	" Elm mode.
+	"   Available Commands:
+	"     :ElmMakeCurrentFile    compiles the current file.
+	"     :ElmMakeMain           compiles an assumed Main.elm file.
+	"     :ElmPrintTypes         displays the types of the current
+	"                            file in a new split window.
+	"     :ElmEvalLine           evaluates the current line and puts
+	"                            the result as a comment in a new line below it.
+	"     :ElmEvalSelection      evaluates a visual mode selection.
+	"   Suggested Mappings:
+	"     :nnoremap <leader>el :ElmEvalLine<CR>
+	"     :vnoremap <leader>es :<C-u>ElmEvalSelection<CR>
+	"     nnoremap <leader>ep :ElmPrintTypes<CR>
+	"     nnoremap <leader>em :ElmMakeCurrentFile<CR>
+	"   Suggested Autocommands:
+	"     Compile Main.elm when writing any elm file.  The autocommand can be
+	"     cleared with `:au! BufWritePost *.elm`.
+	"       :au BufWritePost *.elm ElmMakeFile("Main.elm")
+	Bundle 'lambdatoast/elm.vim'
+
 endif
 
 
