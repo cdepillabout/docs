@@ -84,7 +84,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Resize viewed windows to the correct size
     , ((modm,               xK_n     ), refresh)
     -- Move focus to the next window
-    , ((modm,               xK_Tab   ), windows W.focusDown)
+    -- , ((modm,               xK_Tab   ), windows W.focusDown)
+    -- , ((mod1Mask,           xK_Tab   ), windows W.focusDown)
     -- Move focus to the next window
     , ((modm,               xK_j     ), windows W.focusDown)
     -- Move focus to the previous window
@@ -128,11 +129,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- alt-shift-[F1..F9], Move client to workspace N
     -- XXX: This is almost completely unlike fluxbox, so I will
     -- not use it for now.
-    -- [((m .|. mod1Mask, k), windows $ f i)
-    --     | (i, k) <- zip (XMonad.workspaces conf) [xK_F1 .. xK_F9]
-    --     , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    --     -- , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
-    -- ++
+    [((m .|. mod1Mask, k), windows $ f i)
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_F1 .. xK_F9]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+        -- , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    ++
 
     --
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
@@ -146,14 +147,15 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- My settings
     [
       -- Swap the current screen with the next screen.
-      ((modm, xK_o), swapNextScreen)
+      ((modm,               xK_o), swapNextScreen)
       -- Swap the current screen with the previous screen.
     , ((modm .|. shiftMask, xK_o), shiftNextScreen)
       -- Spawn xscreensaver
     , ((modm .|. shiftMask, xK_z), spawn "xscreensaver-command -lock")
       -- Switch to the unfocused screen.  Does nothing if not exactly two
       -- screens.
-    , ((modm, xK_Tab), switchToUnfocusedScreen)
+    , ((modm,               xK_Tab), switchToUnfocusedScreen)
+    , ((mod1Mask,           xK_Tab), switchToUnfocusedScreen)
     ]
 
 -- Switch to the unfocused screen.  Does nothing if not exactly two
