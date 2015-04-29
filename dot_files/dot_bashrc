@@ -603,9 +603,7 @@ fi
 
 # If we have our filesystem, then make sure the python path
 # is set correctly within it.
-# TODO: adapt this so that it works like the
-# $HOME/filesystem/PACKAGENAME thing above.
-for f in $HOME/filesystem/lib/python*
+for f in $HOME/filesystem/lib/python* $HOME/filesystem/*/lib/python*
 do
 	append_to_path PYTHONPATH "${f}/site-packages/"
 done
