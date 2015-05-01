@@ -1,8 +1,8 @@
 # Icons stick to right side of tray
 icon_gravity E
 
-geometry 5x1-500+0
-max_geometry 6x1-500+0
+geometry 5x1-0+0
+max_geometry 6x1-0+0
 
 # Black background
 background "#000000"
