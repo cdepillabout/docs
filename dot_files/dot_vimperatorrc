@@ -39,7 +39,7 @@ set tabnumbers
 set hintchars=fjdkslaghrueiwovnm
 
 set editor="roxterm --separate -e vim -f"
-set guioptions=mTBnrb
+"set guioptions=mTBnrb
 "set toolbars=all
 set runtimepath=/home/illabout/.vimperator
 source! /home/illabout/.vimperatorrc.local
