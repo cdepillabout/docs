@@ -38,6 +38,9 @@ set tabnumbers
 " change the hint characters
 set hintchars=fjdkslaghrueiwovnm
 
+" make hint font bigger
+:highlight Hint font-size:150%;color:white;background-color:red;padding:2px;
+
 set editor="roxterm --separate -e vim -f"
 "set guioptions=mTBnrb
 "set toolbars=all
