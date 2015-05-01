@@ -1,0 +1,52 @@
+#!/bin/sh
+# $Xorg: xinitrc.cpp,v 1.3 2000/08/17 19:54:30 cpqbld Exp $
+
+# setup dbus
+# test for an existing bus daemon, just to be safe
+#if test -z "$DBUS_SESSION_BUS_ADDRESS" ; then
+	# if not found, launch a new one
+#	eval `dbus-launch --sh-syntax`
+#fi
+
+# load in user resources
+userresources=$HOME/.Xresources
+
+if [ -f $userresources ]; then
+    xrdb -merge $userresources
+fi
+
+# swap ctrl and caps
+#swap_caps_ctrl_xmodmap="$HOME/.Xmodmap_swap_ctrl_caps"
+
+#if [ -f "$swap_caps_ctrl_xmodmap" ]; then
+#	( sleep 3 && xmodmap "$swap_caps_ctrl_xmodmap" ) &
+#fi
+
+#setxkbmap -option ctrl:swapcaps     # Swap Left Control and Caps Lock
+setxkbmap -option ctrl:nocaps       # Make Caps Lock a Control key
+
+
+export TERM="xterm-256color"
+export LC_ALL="ja_JP.UTF-8"
+export LANG="ja_JP.UTF-8"
+
+export XMODIFIERS="@im=fcitx"
+export XMODIFIER="@im=fcitx"
+export GTK_IM_MODULE="fcitx"
+export QT_IM_MODULE="fcitx"
+#fcitx &
+
+#/usr/bin/wmacpi &
+
+# screensaver
+/usr/bin/xscreensaver -no-splash &
+
+eval `ssh-agent`
+xterm -e ssh-add &
+#ssh-add "$HOME/.ssh/awsworkprivatekeypair2.pem" &
+
+#xrandr-setup-screens --startup
+
+xmonad &
+windowmanagerpid=$!
+wait $windowmanagerpid
