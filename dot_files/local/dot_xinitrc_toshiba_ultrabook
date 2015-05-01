@@ -23,30 +23,36 @@ fi
 #fi
 
 #setxkbmap -option ctrl:swapcaps     # Swap Left Control and Caps Lock
-setxkbmap -option ctrl:nocaps       # Make Caps Lock a Control key
+#setxkbmap -option ctrl:nocaps       # Make Caps Lock a Control key
 
 
 export TERM="xterm-256color"
-export LC_ALL="ja_JP.UTF-8"
-export LANG="ja_JP.UTF-8"
+#export LC_ALL="ja_JP.UTF-8"
+#export LANG="ja_JP.UTF-8"
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
 
 export XMODIFIERS="@im=fcitx"
 export XMODIFIER="@im=fcitx"
 export GTK_IM_MODULE="fcitx"
 export QT_IM_MODULE="fcitx"
-#fcitx &
+fcitx &
 
-#/usr/bin/wmacpi &
+# stalonetray
+stalonetray &
 
 # screensaver
 /usr/bin/xscreensaver -no-splash &
 
+# add ssh keys
 eval `ssh-agent`
 xterm -e ssh-add &
 #ssh-add "$HOME/.ssh/awsworkprivatekeypair2.pem" &
 
+# xrandr settings
 #xrandr-setup-screens --startup
 
+# startup xmonad
 xmonad &
 windowmanagerpid=$!
 wait $windowmanagerpid
