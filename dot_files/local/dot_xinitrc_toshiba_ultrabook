@@ -10,33 +10,37 @@
 
 # load in user resources
 userresources=$HOME/.Xresources
-
 if [ -f $userresources ]; then
     xrdb -merge $userresources
 fi
 
-# swap ctrl and caps
+# swap ctrl and caps with xmodmap
 #swap_caps_ctrl_xmodmap="$HOME/.Xmodmap_swap_ctrl_caps"
-
 #if [ -f "$swap_caps_ctrl_xmodmap" ]; then
 #	( sleep 3 && xmodmap "$swap_caps_ctrl_xmodmap" ) &
 #fi
 
-#setxkbmap -option ctrl:swapcaps     # Swap Left Control and Caps Lock
-#setxkbmap -option ctrl:nocaps       # Make Caps Lock a Control key
+# swap left control and caps lock
+#setxkbmap -option ctrl:swapcaps
+# make caps lock a control key
+#setxkbmap -option ctrl:nocaps
 
-
+# set some environment variables
 export TERM="xterm-256color"
 #export LC_ALL="ja_JP.UTF-8"
 #export LANG="ja_JP.UTF-8"
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
+# load fcitx
 export XMODIFIERS="@im=fcitx"
 export XMODIFIER="@im=fcitx"
 export GTK_IM_MODULE="fcitx"
 export QT_IM_MODULE="fcitx"
 fcitx &
+
+# network manager applet
+nm-applet &
 
 # stalonetray
 stalonetray &
