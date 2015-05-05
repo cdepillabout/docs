@@ -7,66 +7,75 @@ Config { font = "xft:Bitstream Vera Sans:size=9:bold:antialias=true"
        -- , position = TopW L 95
        , position = Static { xpos = 0, ypos = 0, width = 1500, height = 18 }
        , commands = [ Run Weather "CYVR"
-						[ "--template", "<fc=#ddddff><skyCondition></fc> | <tempC>C"
-						, "--Low", "15"
-						, "--High", "25"
-						, "--low", "green"
-						, "--normal", "orange"
-						, "--high", "red"
-						] 36000
+                        [ "--template", "<fc=#ddddff><skyCondition></fc> | <tempC>C"
+                        , "--Low", "15"
+                        , "--High", "25"
+                        , "--low", "green"
+                        , "--normal", "orange"
+                        , "--high", "red"
+                        ] 36000
                     , Run DynNetwork
-						[ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
-						, "--Low", "1000"   -- units: kB/s
-						, "--High", "5000"  -- units: kB/s
-						, "--low", "green"
-						, "--normal", "orange"
-						, "--high", "red"
-						] 10
+                        [ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
+                        , "--Low", "1000"   -- units: kB/s
+                        , "--High", "5000"  -- units: kB/s
+                        , "--low", "green"
+                        , "--normal", "orange"
+                        , "--high", "red"
+                        ] 10
                     , Run Cpu
-						[ "-L", "34"
-						, "-H", "67"
-						, "--low", "green"
-						, "--normal", "orange"
-						, "--high", "red"
-						] 10
+                        [ "-L", "34"
+                        , "-H", "67"
+                        , "--low", "green"
+                        , "--normal", "orange"
+                        , "--high", "red"
+                        ] 10
                     , Run Memory
-						[ "--template", "Mem: <usedratio>%"
-						, "--Low", "20"
-						, "--High", "80"
-						, "--low", "green"
-						, "--normal", "orange"
-						, "--high", "red"
-						] 10
+                        [ "--template", "Mem: <usedratio>%"
+                        , "--Low", "20"
+                        , "--High", "80"
+                        , "--low", "green"
+                        , "--normal", "orange"
+                        , "--high", "red"
+                        ] 10
                     , Run Swap
-						[ "--Low", "0"
-						, "--High", "10"
-						, "--low", "green"
-						, "--normal", "orange"
-						, "--high", "red"
-						] 10
-					, Run Battery
-						[ "-t", "<acstatus> <watts> (<left>%)"
-						, "--Low", "10"
-						, "--High", "80"
-						, "--low", "darkred"
-						, "--normal", "darkorange"
-						, "--high", "darkgreen"
-						-- color to display battery charging
-						--, "-p", "3"
-						, "--"
-							-- AC "on" status
-							-- discharging status
-							, "-o", "On Battery"
-							-- AC "on" status
-							, "-O", "<fc=#dAA520>Charging</fc>"
-							-- charged status
-							, "-i", "<fc=#006000>Charged</fc>"
-						] 50
-                    , Run Com "uname" ["-s","-r"] "" 36000
-                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+                        [ "--Low", "0"
+                        , "--High", "10"
+                        , "--low", "green"
+                        , "--normal", "orange"
+                        , "--high", "red"
+                        ] 10
+                    , Run Battery
+                        [ "-t", "<acstatus> <watts> (<left>%)"
+                        , "--Low", "10"
+                        , "--High", "80"
+                        , "--low", "darkred"
+                        , "--normal", "darkorange"
+                        , "--high", "darkgreen"
+                        -- color to display battery charging
+                        --, "-p", "3"
+                        , "--"
+                            -- AC "on" status
+                            -- discharging status
+                            , "-o", "Battery"
+                            -- AC "on" status
+                            , "-O", "<fc=#dAA520>Charging</fc>"
+                            -- charged status
+                            , "-i", "<fc=#006000>Charged</fc>"
+                        ] 50
+                    , Run CoreTemp
+                        [ "-t", "Temp:<core0>:<core1>:<core2>C"
+                        , "--Low", "40"
+                        , "--High", "60"
+                        , "--low", "lightblue"
+                        , "--normal", "gray90"
+                        , "--high", "red"
+                        ] 50
+                    -- , Run Com "uname" ["-s","-r"] "" 36000
+                    , Run Date "%a %Y-%m-%d %H:%M" "date" 50
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% | %cpu% | %memory% * %swap% | %dynnetwork% }{%battery% | <fc=#ee9a00>%date%</fc> | %uname% | %CYVR% "
+       -- , template = "%StdinReader% | %cpu% | %memory% * %swap% | %dynnetwork% }{%battery% | <fc=#ee9a00>%date%</fc> | %uname% | %CYVR% "
+       , template = "%StdinReader% | %cpu% | %memory% * %swap% | %dynnetwork% }{%coretemp% | %battery% | <fc=#ee9a00>%date%</fc> | %CYVR% "
        }
