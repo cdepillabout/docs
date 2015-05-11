@@ -1048,6 +1048,7 @@ call Add_eol_whitespace_highlighting("ruby")
 call Add_eol_whitespace_highlighting("scala")
 call Add_eol_whitespace_highlighting("sh")
 call Add_eol_whitespace_highlighting("vim")
+call Add_eol_whitespace_highlighting("yaml")
 
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
