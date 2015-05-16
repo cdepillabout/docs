@@ -108,6 +108,10 @@ super_link $SCRIPT_DIR/dot_hirc $HOME/.hirc
 # ctags
 super_link $SCRIPT_DIR/dot_ctags $HOME/.ctags
 
+# radare2
+super_link $SCRIPT_DIR/dot_radare2rc $HOME/.radare2rc
+
+
 
 
 # create a ~/.bashrc_local
