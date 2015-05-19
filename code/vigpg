@@ -10,7 +10,7 @@ function usage {
 	echo "Usage: $0 FILE"
 }
 
-GPG=`get_correct_filename_from_choices "gpg1" "gpg"`
+GPG=`get_correct_filename_from_choices "gpg2" "gpg"`
 
 # make sure there is only one argument
 if [ "$#" != "1" ]
@@ -30,19 +30,23 @@ temp_file=`mktemp`
 # read in password
 
 read -s -p "Password: " password
-echo 
+echo
 
 # unencrypt the file and put it's output in tempfile
-echo $password | $GPG --passphrase-fd 0 -d ${file_name} > ${temp_file} || 
+echo "${password}" | $GPG --batch --passphrase-fd 0 -d "${file_name}" > "${temp_file}" ||
 	die "ERROR! Could not decrypt $file_name"
 
 # edit the tempfile
-$EDITOR ${temp_file} || 
+$EDITOR "${temp_file}" ||
 	die "ERROR! Could not edit the decrypted file ${temp_file}"
 
 # reencrypt the tempfile
-echo $password | $GPG --passphrase-fd 0 -c -o ${file_name} ${temp_file} || 
-	die "ERROR! Could not reencrypt ${temp_file} to ${file_name}."
+echo $password | $GPG --batch --passphrase-fd 0 -c -o "${file_name}.updated" "${temp_file}" ||
+	die "ERROR! Could not reencrypt ${temp_file} to ${file_name}.updated."
+
+# rename the updated file
+mv "${file_name}.updated" "${file_name}" ||
+	die "ERROR! Could not rename ${file_name}.updated to ${file_name}."
 
 # delete the tempfile
-rm ${temp_file}
+rm "${temp_file}"
