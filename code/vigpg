@@ -33,7 +33,7 @@ read -s -p "Password: " password
 echo
 
 # unencrypt the file and put it's output in tempfile
-echo "${password}" | $GPG --batch --passphrase-fd 0 -d "${file_name}" > "${temp_file}" ||
+builtin echo "${password}" | $GPG --batch --passphrase-fd 0 -d "${file_name}" > "${temp_file}" ||
 	die "ERROR! Could not decrypt $file_name"
 
 # edit the tempfile
@@ -41,7 +41,7 @@ $EDITOR "${temp_file}" ||
 	die "ERROR! Could not edit the decrypted file ${temp_file}"
 
 # reencrypt the tempfile
-echo $password | $GPG --batch --passphrase-fd 0 -c -o "${file_name}.updated" "${temp_file}" ||
+builtin echo "${password}" | $GPG --batch --passphrase-fd 0 -c -o "${file_name}.updated" "${temp_file}" ||
 	die "ERROR! Could not reencrypt ${temp_file} to ${file_name}.updated."
 
 # rename the updated file
