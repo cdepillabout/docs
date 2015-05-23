@@ -12,3 +12,7 @@ e cmd.stack = true
 
 # Use UTF-8 to show cool arrows that do not look like crap :)
 e scr.utf8 = true
+
+# Make sure that we are able to see comments.  The following changes them from
+# dark blue to bright purple.
+ec comment rgb:f0f
