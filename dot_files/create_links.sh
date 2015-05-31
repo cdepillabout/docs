@@ -111,6 +111,11 @@ super_link $SCRIPT_DIR/dot_ctags $HOME/.ctags
 # radare2
 super_link $SCRIPT_DIR/dot_radare2rc $HOME/.radare2rc
 
+# gpg
+make_directory $HOME/.gnupg
+chmod 0700 $HOME/.gnupg
+super_link $SCRIPT_DIR/dot_gnupg/gpg.conf $HOME/.gnupg/gpg.conf
+
 
 
 
