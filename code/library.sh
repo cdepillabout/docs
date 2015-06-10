@@ -247,6 +247,18 @@ function remove_from_path () {
 	export "$envvar"=$(echo -n $currentval | awk -v RS=: -v ORS=: '$0 != "'${path}'"' | sed 's/:$//')
 }
 
+function remove_and_append_to_path()
+{
+	remove_from_path "$1" "$2"
+	append_to_path "$1" "$2"
+}
+
+function remove_and_prepend_to_path()
+{
+	remove_from_path "$1" "$2"
+	prepend_to_path "$1" "$2"
+}
+
 function func_exists()
 {
 	declare -f -F "$1" > /dev/null
