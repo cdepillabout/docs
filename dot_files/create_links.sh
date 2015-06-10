@@ -116,6 +116,9 @@ make_directory $HOME/.gnupg
 chmod 0700 $HOME/.gnupg
 super_link $SCRIPT_DIR/dot_gnupg/gpg.conf $HOME/.gnupg/gpg.conf
 
+# ghci.conf
+make_directory $HOME/.ghc
+super_link $SCRIPT_DIR/dot_ghc/ghci.conf $HOME/.ghc/ghci.conf
 
 
 
