@@ -867,15 +867,17 @@ cabbrev rt RelativeTabopen
 
 " This renames a file.  It is relative to the CWD.  It deletes the old file.
 " It also saves the undo history.
-" TODO: It would be nice if this command would take a directory as the first
-" argument.  If a directory is passed in, then the a file of the same name
-" would be created under the directory, similar to how the `mv` command
-" works.
 " TODO: It would also be nice to make this a shared vim plugin, instead of
 " hard-coding it here.
 function! Rename(name)
 	let l:name    = a:name
 	let l:oldfile = expand('%:p')
+
+    " If the l:name is the name of a directory, than append the basename of
+    " l:oldfile to it and use it.
+    if isdirectory(l:name)
+        let l:name = l:name . fnamemodify(l:oldfile, ':p:t')
+    endif
 
 	if bufexists(fnamemodify(l:name, ':p'))
 		echohl ErrorMsg
