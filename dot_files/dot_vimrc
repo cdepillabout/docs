@@ -104,13 +104,19 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 		" :GhcModLint       - Show suggestions by ghc-mod lint
 		" :GhcModInfo       - Show the type of an expression
 		" :GhcModTypeInsert - Insert the type of a function
-		Bundle 'eagletmt/ghcmod-vim'
-		let g:ghcmod_type_highlight='ghcmodType'
-		" TODO: Only use these when in haskell mode...
-		map <Leader>gt :GhcModType<CR>
-		map <Leader>gc :GhcModTypeClear<CR>
-		map <Leader>gi :GhcModTypeInsert<CR>
-		map <Leader>gn :GhcModInfo<CR>
+		"
+		" Only load this plugin if ghc-mod exists on the PATH.
+		" (This plugin throws up a really annoying warning if
+		" it is loaded and ghc-mod doesn't exist.)
+		if executable('ghc-mod')
+			Bundle 'eagletmt/ghcmod-vim'
+			let g:ghcmod_type_highlight='ghcmodType'
+			" TODO: Only use these when in haskell mode...
+			map <Leader>gt :GhcModType<CR>
+			map <Leader>gc :GhcModTypeClear<CR>
+			map <Leader>gi :GhcModTypeInsert<CR>
+			map <Leader>gn :GhcModInfo<CR>
+		endif
 	endif
 
 
