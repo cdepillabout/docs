@@ -766,6 +766,23 @@ endfunction
 command! -nargs=* Gpsh call Gpsh(<f-args>)
 cabbrev gpsh Gpsh
 
+" run git commit -a -m from within vim
+function! Gcam(...)
+	execute "!git commit -a -m \"" . join(a:000) . "\""
+	redraw!
+endfunction
+command! -nargs=* Gcam call Gcam(<f-args>)
+cabbrev gcam Gcam
+
+" run git commit -a -m from within vim
+function! Gcamp(...)
+	execute "!git commit -a -m \"" . join(a:000) . "\""
+	execute "!git push"
+	redraw!
+endfunction
+command! -nargs=* Gcamp call Gcamp(<f-args>)
+cabbrev gcamp Gcamp
+
 
 " Open a bunch of tabs at once.  Also interpret globbing characters.
 function! Tabopen_all_files(...)
