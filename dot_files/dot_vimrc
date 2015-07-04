@@ -951,6 +951,60 @@ command! -nargs=1 -complete=customlist,RelativeFilesComplete
 			\ Rename call RelativeFunc(function('Rename'), <f-args>)
 cabbrev rename Rename
 
+" This copies a file.  It is relative to the CWD.  It's like :Rename but it
+" doesn't delete the old file.
+" TODO: It would also be nice to make this a shared vim plugin, instead of
+" hard-coding it here.
+function! Copy(name)
+	let l:name    = a:name
+	let l:oldfile = expand('%:p')
+
+    " If the l:name is the name of a directory, than append the basename of
+    " l:oldfile to it and use it.
+    if isdirectory(l:name)
+        let l:name = l:name . fnamemodify(l:oldfile, ':p:t')
+    endif
+
+	" I don't think I actually need this check...
+	" if bufexists(fnamemodify(l:name, ':p'))
+	" 	echohl ErrorMsg
+	" 	echomsg 'A buffer with that name already exists (use ! to override).'
+	" 	echohl None
+	" 	return 0
+	" endif
+
+	let v:errmsg = ''
+
+	let l:cpo_save = &cpoptions
+	set cpoptions-=A
+
+	silent! exe 'write ' . l:name
+
+	let &cpoptions = l:cpo_save
+
+	if v:errmsg != ''
+		echohl ErrorMsg
+		echomsg 'Copying file ' . l:oldfile . ' to ' . l:name . ' failed:'
+		echoerr v:errmsg
+		return 0
+	endif
+
+	silent! exe 'tabedit ' . l:name
+
+	if v:errmsg != ''
+		echohl ErrorMsg
+		echomsg 'tabopen file ' . l:oldfile . ' failed:'
+		echoerr v:errmsg
+		return 0
+	endif
+
+	return 1
+endfunction
+
+command! -nargs=1 -complete=customlist,RelativeFilesComplete
+			\ Copy call RelativeFunc(function('Copy'), <f-args>)
+cabbrev cp Copy
+
 " Execute the line under the cursor.
 "function! ExecuteLine()
 "	let thisline = getline('.')
