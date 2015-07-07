@@ -399,6 +399,33 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"       :au BufWritePost *.elm ElmMakeFile("Main.elm")
 	Bundle 'lambdatoast/elm.vim'
 
+	" Align code.
+	"   Available Commands:
+	"     :Align        basic alignment command
+	"     :AlignCtrl    provide options for next call to :Align
+	"   Mappings:
+	"     \t=           align assignments (don't count logic, like == or !=)
+	"     \t,           align on commas
+	"     \t|           align on vertical bars (|)
+	"     \tsp          align on whitespace
+	"   Examples:
+	"     :5,10Align =
+	"         Align on '=' signs
+	"     :'<,'>Align = + - \* /
+	"         Align on any of the five separator characters shown.
+	"         Note that visual block mode was used to fire off Align.
+	"     :AlignCtrl =lp1P1I
+	"         which means:
+	"           =   all separators are equivalent
+	"           l   fields will be left-justified
+	"           p1  pad one space before each separator
+	"           P1  pad one space after each separator
+	"           I   preserve and apply the first line's leading white space
+	"               to all Align'd lines
+	"     :help align
+	"         open help file
+	Bundle 'vim-scripts/Align'
+
 endif
 
 
