@@ -151,12 +151,18 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
       ((modm,               xK_o), swapNextScreen)
       -- Swap the current screen with the previous screen.
     , ((modm .|. shiftMask, xK_o), shiftNextScreen)
+
       -- Spawn xscreensaver
     , ((modm .|. shiftMask, xK_z), spawn "xscreensaver-command -lock")
+
       -- Switch to the unfocused screen.  Does nothing if not exactly two
       -- screens.
     , ((modm,               xK_Tab), switchToUnfocusedScreen)
     , ((mod1Mask,           xK_Tab), switchToUnfocusedScreen)
+
+      -- Use printscreen key for taking screenshot and copying it to the
+      -- clipboard.
+    , ((0, xK_Print), spawn "screenshot-to-clipboard")
     ]
 
 -- Switch to the unfocused screen.  Does nothing if not exactly two
