@@ -803,8 +803,7 @@ cabbrev gcam Gcam
 
 " run git commit -a -m from within vim
 function! Gcamp(...)
-	execute "!git commit -a -m \"" . join(a:000) . "\""
-	execute "!git push"
+	execute "!git commit -a -m \"" . join(a:000) . "\" && git push"
 	redraw!
 endfunction
 command! -nargs=* Gcamp call Gcamp(<f-args>)
