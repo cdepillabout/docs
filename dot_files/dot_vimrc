@@ -694,6 +694,9 @@ nnoremap '' ``
 nnoremap ' `
 nnoremap ` '
 
+" Let zz do :w
+nnoremap zz :w<CR>
+
 
 """""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""" Functions """""""""""""""""""
