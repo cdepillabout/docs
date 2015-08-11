@@ -16,6 +16,11 @@ ledger_directory="$(dirname "$HLEDGER_DEFAULT_LEDGER")"
 
 cd "$ledger_directory"
 
+echo "Last 3 or 4 transactions:"
+echo
+cat "$HLEDGER_DEFAULT_LEDGER" | tail -n15
+echo
+
 echo "Running \`hledger add -f \"${HLEDGER_DEFAULT_LEDGER}\"\`."
 echo "Press Ctrl-C to cancel transaction."
 echo "Press Ctrl-D to accept transaction and commit into git."
