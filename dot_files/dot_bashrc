@@ -317,7 +317,6 @@ alias gpsh='git push '
 alias gpshf='git push --force '
 alias gr='git remote '
 alias grv='git remote -v '
-alias gst='git status '
 
 # grep aliases
 alias rgrep='grep -r '
@@ -407,6 +406,23 @@ function gcamp ()
 function gcAmp ()
 {
 	ssh-gas -q ; git add -A ; git commit -m "$*" ; git push
+}
+
+function gst ()
+{
+	ssh-gas -q
+
+	# run git status
+	git status
+
+	# See if there are any uninitialized submodules.
+	git submodule status | cut -c1 | grep -- '-' &> /dev/null
+	local ret="$?"
+
+	if [ "$ret" = 0 ] ; then
+		echo
+		echo "Uninitialized submodules.  Run \`git submodule update --init\`"
+	fi
 }
 
 # SSH Get Auth Sock.

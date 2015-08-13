@@ -1,7 +1,7 @@
 [color]
 	ui = auto
 [rerere]
-	enabled = 1
+	enabled = true
 [rebase]
 	autosquash = true
 [push]
@@ -13,3 +13,5 @@
 [merge]
 	defaultToUpstream = true
 	ff = only
+[status]
+	submoduleSummary = true
