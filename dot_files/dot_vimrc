@@ -426,6 +426,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"         open help file
 	Bundle 'vim-scripts/Align'
 
+	" Ocaml syntax.
+	Bundle 'rgrinberg/vim-ocaml'
+
 endif
 
 
@@ -1311,6 +1314,9 @@ autocmd FileType ledger set expandtab
 " settings for matlab files
 autocmd FileType matlab setlocal commentstring=%%s
 
+" settings for ocaml files.
+" For some reason this doesn't work if we don't use "BufEnter".
+autocmd! BufRead,BufNewFile,BufEnter *.ml,*.mli,*mll,*.mly set filetype=ocaml
 
 " turn these on if you want to use vim over a slow link
 "set lazyredraw
