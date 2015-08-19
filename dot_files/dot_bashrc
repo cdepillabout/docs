@@ -342,6 +342,9 @@ alias dwn='darcs whatsnew'
 # screen automatically connects to a running session
 alias screen='screen -R '
 
+# an alias for listing the available screen sessions
+alias screens='screen -ls'
+
 # make sure Anki 2 uses the ~/.anki2/ directory to store the decks and its config files
 # instead of the default (which is ~/Anki/).
 alias anki="anki --base=\"${HOME}/.anki2\""
