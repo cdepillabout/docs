@@ -429,6 +429,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Ocaml syntax.
 	Bundle 'rgrinberg/vim-ocaml'
 
+	" Purescript syntax.
+	Bundle 'raichoo/purescript-vim'
+
 endif
 
 
@@ -1317,6 +1320,14 @@ autocmd FileType matlab setlocal commentstring=%%s
 " settings for ocaml files.
 " For some reason this doesn't work if we don't use "BufEnter".
 autocmd! BufRead,BufNewFile,BufEnter *.ml,*.mli,*mll,*.mly set filetype=ocaml
+
+" settings for purescript files
+autocmd FileType purescript set expandtab
+autocmd FileType purescript set tabstop=4
+autocmd FileType purescript set shiftwidth=4
+autocmd FileType purescript set softtabstop=4
+autocmd FileType purescript setlocal commentstring=--%s
+
 
 " turn these on if you want to use vim over a slow link
 "set lazyredraw
