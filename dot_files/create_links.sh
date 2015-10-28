@@ -49,7 +49,6 @@ super_link $SCRIPT_DIR/dot_emacs.d/local.el $HOME/.emacs.d/local.el
 # xmonad files
 make_directory $HOME/.xmonad
 super_link $SCRIPT_DIR/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
-super_link $SCRIPT_DIR/dot_xmonad/conky-rc $HOME/.xmonad/conky-rc
 
 # xmobar files
 #super_link $SCRIPT_DIR/dot_xmobarrc $HOME/.xmobarrc
