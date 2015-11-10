@@ -1328,6 +1328,8 @@ autocmd FileType purescript set tabstop=4
 autocmd FileType purescript set shiftwidth=4
 autocmd FileType purescript set softtabstop=4
 autocmd FileType purescript setlocal commentstring=--%s
+autocmd FileType purescript setlocal comments=:--
+autocmd FileType purescript setlocal formatoptions+=1crq formatoptions-=t
 
 
 " turn these on if you want to use vim over a slow link
