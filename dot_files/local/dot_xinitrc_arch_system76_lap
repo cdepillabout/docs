@@ -43,6 +43,12 @@ fcitx &
 # network manager applet
 nm-applet &
 
+# redshift
+# (TODO: The latitude and longitude are hard-coded because redshift-1.9 doesn't
+# work well with the geocode program.  Version 1.10 is supposed to use
+# geocode-2.0 and work a lot better.)
+redshift-gtk -l 35:140 &
+
 # stalonetray
 stalonetray &
 
@@ -50,6 +56,7 @@ eval `ssh-agent`
 xterm -e ssh-add &
 ssh-add "$HOME/.ssh/awsworkprivatekeypair2.pem" &
 
+eval `gpg-agent --daemon`
 
 xmonad &
 windowmanagerpid=$!
