@@ -44,7 +44,9 @@ fcitx &
 nm-applet &
 
 # redshift
-redshift-gtk &
+# (NOTE: doesn't really work when you are offline.  So I am leaving it hard
+# coded for now.)
+redshift-gtk -l 35:140 &
 
 # stalonetray
 stalonetray &

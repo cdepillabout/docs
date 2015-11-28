@@ -47,6 +47,9 @@ nm-applet &
 # (TODO: The latitude and longitude are hard-coded because redshift-1.9 doesn't
 # work well with the geocode program.  Version 1.10 is supposed to use
 # geocode-2.0 and work a lot better.)
+# (NOTE: Well, it doesn't seem to work any better with geocode-2.0.  Still
+# doesn't really work when you are offline.  So I am leaving it hard coded for
+# now.)
 redshift-gtk -l 35:140 &
 
 # stalonetray
