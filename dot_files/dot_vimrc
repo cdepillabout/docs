@@ -1299,6 +1299,7 @@ autocmd FileType html setlocal foldmethod=indent
 
 " settings for markdown
 autocmd BufNewFile,BufRead *.md set filetype=markdown
+autocmd FileType markdown setlocal expandtab
 
 " settings for nix files
 autocmd BufRead,BufNewFile *.nix set expandtab
@@ -1327,9 +1328,9 @@ autocmd FileType purescript set expandtab
 autocmd FileType purescript set tabstop=4
 autocmd FileType purescript set shiftwidth=4
 autocmd FileType purescript set softtabstop=4
+autocmd FileType purescript setlocal formatoptions+=1crq formatoptions-=t
 autocmd FileType purescript setlocal commentstring=--%s
 autocmd FileType purescript setlocal comments=:--
-autocmd FileType purescript setlocal formatoptions+=1crq formatoptions-=t
 
 
 " turn these on if you want to use vim over a slow link
