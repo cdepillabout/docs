@@ -162,16 +162,45 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" This does some cool things with syntax highlighting for you.
 	" It also does some really nice folding for us.
 	" :HLint	-- run file through hlint
-	Bundle 'dag/vim2hs'
+	" However, the haskell-vim plugin is better.
+	" Bundle 'dag/vim2hs'
 	" disable all conceals, including the simple ones like
 	" lambda and composition
-	let g:haskell_conceal = 0
+	" let g:haskell_conceal = 0
 	" disable concealing of "enumerations": commatized lists like
 	" deriving clauses and LANGUAGE pragmas,
 	" otherwise collapsed into a single ellipsis
-	let g:haskell_conceal_enumerations = 0
+	" let g:haskell_conceal_enumerations = 0
 	" Also disable conceal for jmacro.
-	let g:jmacro_conceal = 0
+	" let g:jmacro_conceal = 0
+
+
+	" Haskell syntax highlighting.
+	Bundle 'neovimhaskell/haskell-vim'
+	"
+	" Commands
+	" :HaskellAddModuleComment  " Adds an empty module comment to the top of
+	"                           " the file.
+	" :CabalAddExecutable       " Adds an executable section to a cabal file.
+	" :CabalAddLibrary          " Adds a library section to a cabal file.
+	" :CabalAddFlag             " Adds a flag section to a cabal file.
+	"
+	" Haskell syntax highlighting config options:
+	let g:haskell_enable_quantification = 1 " enable highlighting of forall
+	"let g:haskell_enable_recursivedo = 1 " enable highlighting of mdo and rec
+	"let g:haskell_enable_arrowsyntax = 1 " enable highlighting of proc
+	"let g:haskell_enable_pattern_synonyms = 1 " enable highlighting of pattern
+	"let g:haskell_enable_typeroles = 1 " enable highlighting of type roles
+	"let g:haskell_enable_static_pointers = 1 " enable highlighting of static
+	"
+	" Indentation options:
+	let g:haskell_indent_if = 4 " indentation of 'then' and 'else' in if statements.
+	let g:haskell_indent_case = 4 " indentation of cases in case statement.
+	let g:haskell_indent_let = 4 " indentation of additional lines in let statement.
+	let g:haskell_indent_where = 2 " indentation of clauses in where statement.
+	let g:haskell_indent_do = 3 " indentation of things in do statement.
+	let g:haskell_indent_in = 0 " indentation of 'in' statement.
+	let g:cabal_indent_section = 2  " indentation of sections in cabal file
 
 
 	" EasyMotion.
