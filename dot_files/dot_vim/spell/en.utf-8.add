@@ -60,3 +60,11 @@ apps
 PureScript
 Purescript/!
 PureScript's
+datatype
+DynamoDB
+Haskellers
+datatypes
+GADTs
+MongoDB
+PostgreSQL
+SQLite
