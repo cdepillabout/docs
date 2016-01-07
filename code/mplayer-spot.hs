@@ -26,6 +26,8 @@
 
 import Control.Concurrent (threadDelay, forkIO)
 import Control.Concurrent.Async (Concurrently(..))
+import Control.Concurrent.MVar (MVar, newMVar)
+import Control.Exception (finally)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Binary (encode, decode)
 import Data.ByteString (ByteString)
@@ -35,6 +37,7 @@ import Data.Conduit.List as CL
 import Data.Conduit.Process (ClosedStream(..), streamingProcess, waitForStreamingProcess)
 import Data.Maybe (fromJust)
 import Data.Monoid ((<>))
+import Data.Streaming.Process (StreamingProcessHandle)
 import qualified Data.Text as T
 import GHC.Word (Word32, Word8, byteSwap32)
 import Numeric (showHex)
@@ -47,27 +50,49 @@ import System.Process (shell)
 -- doesn't matter what order they are in.
 default (T.Text, Int)
 
-main :: IO ()
-main = do
-    programArgs <- getArgs
+data MediaInfo = MediaInfo { mediaInfoLength :: Maybe Float }
+
+defaultMediaInfo :: MediaInfo
+defaultMediaInfo = MediaInfo { mediaInfoLength = Nothing }
+
+data MPlayer = MPlayer { mplayerStdin :: Sink ByteString IO ()
+                       , mplayerStdout :: Source IO ByteString
+                       , mplayerStderr :: Source IO ByteString
+                       , mplayerProcHandle :: StreamingProcessHandle
+                       }
+
+createMPlayerProcess :: [String] -> IO MPlayer
+createMPlayerProcess programArgs = do
     let mplayerArgs = unwords $ ["mplayer", "-identify", "-slave"] <> programArgs
-
-    -- open the ropasaurauxrex binary
-    (processStdin :: Sink ByteString IO (), processStdout :: Source IO ByteString, processStderr :: Source IO ByteString, processHandle) <-
+    (processStdin, processStdout, processStderr, processHandle) <-
         streamingProcess (shell mplayerArgs)
-        -- streamingProcess (shell "yes")
+    return $! MPlayer processStdin processStdout processStderr processHandle
 
-    let stdinToMplayerStdin = stdin $$ processStdin
-    let mplayerStdoutToStdout = processStdout $$ stdout
-    let mplayerStderrToStderr = processStderr $$ stderr
+runMPlayerUpdateMediaInfo :: MPlayer -> MVar MediaInfo -> IO ()
+runMPlayerUpdateMediaInfo mplayer mediaInfoMVar = do
+    let stdinToMplayerStdin = stdin $$ mplayerStdin mplayer
+    let mplayerStdoutToStdout = mplayerStdout mplayer $$ stdout
+    let mplayerStderrToStderr = mplayerStderr mplayer $$ stderr
+    let mplayerHandle = mplayerProcHandle mplayer
 
     exitCode <- runConcurrently $
                     Concurrently mplayerStdoutToStdout *>
                     Concurrently mplayerStderrToStderr *>
                     Concurrently stdinToMplayerStdin *>
-                    Concurrently (waitForStreamingProcess processHandle)
+                    Concurrently (waitForStreamingProcess mplayerHandle)
 
     print $ "Exiting with error code: " <> show exitCode
+
+main :: IO ()
+main = do
+    programArgs <- getArgs
+    mplayerProcess <- createMPlayerProcess programArgs
+
+    mediaInfoMVar <- newMVar defaultMediaInfo
+
+    finally (runMPlayerUpdateMediaInfo mplayerProcess mediaInfoMVar) $
+        print "finished"
+
 
     -- run our input and output conduits concurrently
     -- exitCode <- runConcurrently $
