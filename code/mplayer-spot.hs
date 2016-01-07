@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --resolver=lts-3.20 runghc --package=async --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit-combinators
+-- stack --resolver=lts-4.0 runghc --package=async --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit-combinators
 
 -- This gives us an experience similar to @ghci@.  Raw values (1 and
 -- 10 below) that implement the 'Num' type class will be defaulted to 'Int'
@@ -24,36 +24,50 @@
 -- certain types.  It's okay because this is just shell programming.
 {-# OPTIONS_GHC -fno-warn-type-defaults #-}
 
+-- import Prelude hiding (takeWhile)
+
+import Conduit (iterMC)
+import Control.Applicative ((<|>))
 import Control.Concurrent (threadDelay, forkIO)
 import Control.Concurrent.Async (Concurrently(..))
-import Control.Concurrent.MVar (MVar, newMVar)
+import Control.Concurrent.MVar (MVar, modifyMVar_, newMVar, tryReadMVar)
 import Control.Exception (finally)
 import Control.Monad.IO.Class (MonadIO)
+import Data.Attoparsec.ByteString.Char8
 import Data.Binary (encode, decode)
-import Data.ByteString (ByteString)
-import Data.Conduit (($$), Sink, Source, yield)
+import Data.ByteString (ByteString, isPrefixOf)
+import Data.ByteString.Char8 as C8
+import Data.Conduit ((=$=), ($$), Sink, Source, yield)
 import Data.Conduit.Combinators (stderr, stdin, stdout)
 import Data.Conduit.List as CL
 import Data.Conduit.Process (ClosedStream(..), streamingProcess, waitForStreamingProcess)
 import Data.Maybe (fromJust)
 import Data.Monoid ((<>))
 import Data.Streaming.Process (StreamingProcessHandle)
+import Data.Text (Text)
 import qualified Data.Text as T
 import GHC.Word (Word32, Word8, byteSwap32)
 import Numeric (showHex)
 import System.Environment (getArgs)
 import System.IO (Handle)
-import System.Process (shell)
+import System.Process (proc)
 
 -- Define the the types that should be defaulted to.  We can define one
 -- type for string-like things, and one type for integer-like things.  It
 -- doesn't matter what order they are in.
 default (T.Text, Int)
 
-data MediaInfo = MediaInfo { mediaInfoLength :: Maybe Float }
+data MediaInfo = MediaInfo { mediaInfoLength :: Maybe Float
+                           , mediaInfoFilename :: Maybe ByteString
+                           , mediaInfoCurPos :: Maybe Float
+                           }
+    deriving Show
 
 defaultMediaInfo :: MediaInfo
-defaultMediaInfo = MediaInfo { mediaInfoLength = Nothing }
+defaultMediaInfo = MediaInfo { mediaInfoLength = Nothing
+                             , mediaInfoFilename = Nothing
+                             , mediaInfoCurPos = Nothing
+                             }
 
 data MPlayer = MPlayer { mplayerStdin :: Sink ByteString IO ()
                        , mplayerStdout :: Source IO ByteString
@@ -63,15 +77,85 @@ data MPlayer = MPlayer { mplayerStdin :: Sink ByteString IO ()
 
 createMPlayerProcess :: [String] -> IO MPlayer
 createMPlayerProcess programArgs = do
-    let mplayerArgs = unwords $ ["mplayer", "-identify", "-slave"] <> programArgs
+    let mplayerArgs = ["-identify", "-slave"] <> programArgs
     (processStdin, processStdout, processStderr, processHandle) <-
-        streamingProcess (shell mplayerArgs)
+        streamingProcess (proc "mplayer" mplayerArgs)
     return $! MPlayer processStdin processStdout processStderr processHandle
+
+-- | Parser for a value prefixed by a bytestring.  Uses skipWhile to make it
+-- faster.
+genericParser :: forall a . ByteString -> Parser a -> ByteString -> Maybe a
+genericParser str parser mplayerLine =
+    either (const Nothing) Just $ parseOnly go mplayerLine
+  where
+    go :: Parser a
+    go = do
+        -- Skip until we find the first character of the prefix that we are looking for.
+        skipWhile (/= C8.head str)
+        -- Try to match the prefix. If it matches, run the parser.
+        string str *> parser
+            -- If it doesn't match, then strip the first character and recurse.
+            <|> char (C8.head str) *> go
+
+getLength :: ByteString -> Maybe Float
+getLength = genericParser "ID_LENGTH=" rational
+
+getFilename :: ByteString -> Maybe ByteString
+getFilename = genericParser "ID_FILENAME=" $ takeWhile1 (notInClass "\n")
+
+getCurPos :: ByteString -> Maybe Float
+getCurPos = genericParser "A: " $ skipSpace *> rational
+
+updateLength :: MVar MediaInfo -> ByteString -> IO ()
+updateLength mediaInfoMVar mplayerLine = do
+    maybeMediaInfo <- tryReadMVar mediaInfoMVar
+    case maybeMediaInfo of
+        Just (MediaInfo (Just _) _ _) -> pure ()
+        _ ->
+            case getLength mplayerLine of
+                Nothing -> pure ()
+                Just mediaLength ->
+                    modifyMVar_ mediaInfoMVar $ updateMediaInfo mediaLength
+  where
+    updateMediaInfo :: Float -> MediaInfo -> IO MediaInfo
+    updateMediaInfo mediaLength mediaInfo =
+        pure mediaInfo { mediaInfoLength = Just mediaLength }
+
+updateFilename :: MVar MediaInfo -> ByteString -> IO ()
+updateFilename mediaInfoMVar mplayerLine = do
+    maybeMediaInfo <- tryReadMVar mediaInfoMVar
+    case maybeMediaInfo of
+        Just (MediaInfo _ (Just _) _) -> pure ()
+        _ ->
+            case getFilename mplayerLine of
+                Nothing -> pure ()
+                Just mediaFilename ->
+                    modifyMVar_ mediaInfoMVar $ updateMediaInfo mediaFilename
+  where
+    updateMediaInfo :: ByteString -> MediaInfo -> IO MediaInfo
+    updateMediaInfo mediaFilename mediaInfo =
+        pure mediaInfo { mediaInfoFilename = Just mediaFilename }
+
+updateCurPos :: MVar MediaInfo -> ByteString -> IO ()
+updateCurPos mediaInfoMVar mplayerLine =
+    maybe (pure ()) (modifyMVar_ mediaInfoMVar . updateMediaInfo) $ getCurPos mplayerLine
+  where
+    updateMediaInfo :: Float -> MediaInfo -> IO MediaInfo
+    updateMediaInfo mediaCurPos mediaInfo =
+        pure mediaInfo { mediaInfoCurPos = Just mediaCurPos }
+
+processMPlayerStdout :: MVar MediaInfo -> ByteString -> IO ()
+processMPlayerStdout mediaInfoMVar mplayerLine = do
+    updateLength mediaInfoMVar mplayerLine
+    updateFilename mediaInfoMVar mplayerLine
+    updateCurPos mediaInfoMVar mplayerLine
 
 runMPlayerUpdateMediaInfo :: MPlayer -> MVar MediaInfo -> IO ()
 runMPlayerUpdateMediaInfo mplayer mediaInfoMVar = do
     let stdinToMplayerStdin = stdin $$ mplayerStdin mplayer
-    let mplayerStdoutToStdout = mplayerStdout mplayer $$ stdout
+    let mplayerStdoutToStdout = mplayerStdout mplayer $$
+                                iterMC (processMPlayerStdout mediaInfoMVar) =$=
+                                stdout
     let mplayerStderrToStderr = mplayerStderr mplayer $$ stderr
     let mplayerHandle = mplayerProcHandle mplayer
 
@@ -86,12 +170,14 @@ runMPlayerUpdateMediaInfo mplayer mediaInfoMVar = do
 main :: IO ()
 main = do
     programArgs <- getArgs
+    print programArgs
     mplayerProcess <- createMPlayerProcess programArgs
 
     mediaInfoMVar <- newMVar defaultMediaInfo
 
-    finally (runMPlayerUpdateMediaInfo mplayerProcess mediaInfoMVar) $
-        print "finished"
+    finally (runMPlayerUpdateMediaInfo mplayerProcess mediaInfoMVar) $ do
+        maybeMediaInfo <- tryReadMVar mediaInfoMVar
+        print $ "finished: " <> show maybeMediaInfo
 
 
     -- run our input and output conduits concurrently
