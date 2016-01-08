@@ -28,35 +28,32 @@
 
 import Conduit (iterMC)
 import Control.Applicative ((<|>))
-import Control.Concurrent (threadDelay, forkIO)
 import Control.Concurrent.Async (Concurrently(..))
 import Control.Concurrent.MVar (MVar, modifyMVar_, newMVar, tryReadMVar)
 import Control.Exception (IOException, finally, try)
 import Control.Monad (void)
-import Control.Monad.IO.Class (MonadIO)
+import Control.Monad.IO.Class (liftIO)
 import Data.Attoparsec.ByteString.Char8
     ( Parser, char, notInClass, parseOnly, rational, skipSpace, skipWhile
     , string, takeWhile1
     )
-import Data.Binary (encode, decode)
-import Data.ByteString (ByteString, isPrefixOf)
+import Data.ByteString (ByteString)
 import qualified Data.ByteString.Char8 as C8
-import Data.Conduit ((=$=), ($$), Sink, Source, yield)
+import Data.Conduit
+    ( (=$=), ($$), Conduit, Producer, Sink, Source, awaitForever, yield )
 import Data.Conduit.Combinators (stderr, stdin, stdout)
-import Data.Conduit.List as CL
-import Data.Conduit.Process (ClosedStream(..), streamingProcess, waitForStreamingProcess)
-import Data.Maybe (fromJust)
+import Data.Conduit.Process (streamingProcess, waitForStreamingProcess)
 import Data.Monoid ((<>))
 import Data.Streaming.Process (StreamingProcessHandle)
-import Data.Text (Text, unpack)
+import Data.Text (unpack)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8)
-import GHC.Word (Word32, Word8, byteSwap32)
-import Numeric (showHex)
 import System.Directory (createDirectoryIfMissing, getHomeDirectory, removeFile)
 import System.Environment (getArgs)
+import System.Exit (exitWith)
 import System.FilePath ((</>))
-import System.IO (Handle)
+import System.IO (BufferMode(..), hSetBuffering)
+import qualified System.IO as IO
 import System.Process (proc)
 
 -- Define the the types that should be defaulted to.  We can define one
@@ -64,23 +61,30 @@ import System.Process (proc)
 -- doesn't matter what order they are in.
 default (T.Text, Int)
 
-data Config = Config { configMPlayerSpotRCDir :: FilePath
-                     , configSpotsDir :: FilePath
-                     , configIgnoreSeconds :: Float
+-- | A config for our program.
+data Config = Config { configMPlayerSpotRCDir :: FilePath -- ^ @~/.mplayer-spots@ dir
+                     , configSpotsDir :: FilePath         -- ^ @~/.mplayer-spots/spots@ dir
+                     , configIgnoreSeconds :: Float       -- how many seconds to ignore
+                                                          -- in media before creating
+                                                          -- spot file
                      }
     deriving Show
 
+-- | Create a default 'Config'.
 defaultConfig :: IO Config
 defaultConfig = do
     homeDir <- getHomeDirectory
     let rcDir = homeDir </> ".mplayer-spot"
     let spotsDir = rcDir </> "spots"
-    let ignoreSeconds = 10
+    let ignoreSeconds = 180
     pure $ Config rcDir spotsDir ignoreSeconds
 
-data MediaInfo = MediaInfo { mediaInfoLength :: Maybe Float
-                           , mediaInfoFilename :: Maybe ByteString
-                           , mediaInfoCurPos :: Maybe Float
+-- | Info about our media.
+data MediaInfo = MediaInfo { mediaInfoLength :: Maybe Float          -- ^ length of the media
+                           , mediaInfoFilename :: Maybe ByteString   -- ^ filename of the media
+                           , mediaInfoCurPos :: Maybe Float          -- ^ current position
+                           , mediaInfoAlreadySetOldLocation :: Bool  -- ^ whether we have already
+                                                                     -- set the old location
                            }
     deriving Show
 
@@ -88,14 +92,17 @@ defaultMediaInfo :: MediaInfo
 defaultMediaInfo = MediaInfo { mediaInfoLength = Nothing
                              , mediaInfoFilename = Nothing
                              , mediaInfoCurPos = Nothing
+                             , mediaInfoAlreadySetOldLocation = False
                              }
 
+-- | Datatype to hold mplayer's stdin, stdout, etc conduits.
 data MPlayer = MPlayer { mplayerStdin :: Sink ByteString IO ()
                        , mplayerStdout :: Source IO ByteString
                        , mplayerStderr :: Source IO ByteString
                        , mplayerProcHandle :: StreamingProcessHandle
                        }
 
+-- | Take in a bunch of arguments and use them to create the mplayer process.
 createMPlayerProcess :: [String] -> IO MPlayer
 createMPlayerProcess programArgs = do
     let mplayerArgs = ["-identify", "-slave"] <> programArgs
@@ -118,20 +125,23 @@ genericParser str parser mplayerLine =
             -- If it doesn't match, then strip the first character and recurse.
             <|> char (C8.head str) *> go
 
+-- | Parser for the length of the of the media.
 getLength :: ByteString -> Maybe Float
 getLength = genericParser "ID_LENGTH=" rational
 
+-- | Parser for the filename of the of the media.
 getFilename :: ByteString -> Maybe ByteString
 getFilename = genericParser "ID_FILENAME=" $ takeWhile1 (notInClass "\n")
 
+-- | Parser for the current location in the media.
 getCurPos :: ByteString -> Maybe Float
-getCurPos = genericParser "A: " $ skipSpace *> rational
+getCurPos = genericParser "A:" $ skipSpace *> rational
 
 updateLength :: MVar MediaInfo -> ByteString -> IO ()
 updateLength mediaInfoMVar mplayerLine = do
     maybeMediaInfo <- tryReadMVar mediaInfoMVar
     case maybeMediaInfo of
-        Just (MediaInfo (Just _) _ _) -> pure ()
+        Just (MediaInfo (Just _) _ _ _) -> pure ()
         _ ->
             case getLength mplayerLine of
                 Nothing -> pure ()
@@ -146,7 +156,7 @@ updateFilename :: MVar MediaInfo -> ByteString -> IO ()
 updateFilename mediaInfoMVar mplayerLine = do
     maybeMediaInfo <- tryReadMVar mediaInfoMVar
     case maybeMediaInfo of
-        Just (MediaInfo _ (Just _) _) -> pure ()
+        Just (MediaInfo _ (Just _) _ _) -> pure ()
         _ ->
             case getFilename mplayerLine of
                 Nothing -> pure ()
@@ -165,23 +175,83 @@ updateCurPos mediaInfoMVar mplayerLine =
     updateMediaInfo mediaCurPos mediaInfo =
         pure mediaInfo { mediaInfoCurPos = Just mediaCurPos }
 
+-- | Try to read 3 different things from the mplayer stdout:
+--
+--   - length of the media
+--   - media filename
+--   - current position in the media
 processMPlayerStdout :: MVar MediaInfo -> ByteString -> IO ()
 processMPlayerStdout mediaInfoMVar mplayerLine = do
     updateLength mediaInfoMVar mplayerLine
     updateFilename mediaInfoMVar mplayerLine
     updateCurPos mediaInfoMVar mplayerLine
 
-runMPlayerUpdateMediaInfo :: MPlayer -> MVar MediaInfo -> IO ()
-runMPlayerUpdateMediaInfo mplayer mediaInfoMVar = do
+-- | 'Conduit' that reads in key presses (from stdin), and yields mplayer
+-- commands.
+--
+-- In order for this to work right when hooked up to stdin, stdin should be set
+-- to 'NoBuffering'.
+sendMPlayerCommands :: Conduit ByteString IO ByteString
+sendMPlayerCommands = awaitForever go
+  where
+    go :: ByteString -> Conduit ByteString IO ByteString
+    go inputChar
+        | inputChar == "q"       = yield "quit\n"
+        | inputChar == "p"       = yield "pause\n"
+        | inputChar == " "       = yield "pause\n"
+        | inputChar == "\ESC[D"  = yield "seek -10\n"
+        | inputChar == "\ESC[C"  = yield "seek 10\n"
+        | inputChar == "\ESC[B"  = yield "seek -60\n"
+        | inputChar == "\ESC[A"  = yield "seek 60\n"
+        | inputChar == "\ESC[6~" = yield "seek -600\n"
+        | inputChar == "\ESC[5~" = yield "seek 600\n"
+        | otherwise =
+            liftIO $ print $ "got keypress " <> inputChar <> " but don't know what to do with it"
+
+-- | Producer that tries to read the filename from the @'MVar' 'MediaInfo'@,
+-- and if it succeeds, tries to open the spot file and read in the saved
+-- position.  Produce it as a value.
+setOldLocation :: Config -> MVar MediaInfo -> Producer IO ByteString
+setOldLocation config@(Config _ spotsDir _) mediaInfoMVar = do
+    maybeMediaInfo <- liftIO $ tryReadMVar mediaInfoMVar
+    case maybeMediaInfo of
+        Just (MediaInfo _ _ _ True) -> pure ()
+        Just (MediaInfo _ (Just filename) _ False) -> do
+            filecontents <- liftIO $ try $ readFile $ spotsDir </> unpack (decodeUtf8 filename)
+            case filecontents of
+                Right oldLocation -> do
+                    yield $ "seek " <> C8.pack oldLocation <> "\n"
+                Left (_ :: IOException) -> pure ()
+            liftIO $ modifyMVar_ mediaInfoMVar $ \mediaInfo -> pure mediaInfo { mediaInfoAlreadySetOldLocation = True }
+        _ -> setOldLocation config mediaInfoMVar
+
+-- | Run the mplayer process while doing 3 things:
+--
+--  - Read mplayer's stdout, looking for the length, filename, and current
+--    position of the media.
+--  - Once the filename has been found, look for a spot file, and if it exists,
+--    make mplayer seek to the location.
+--  - Take keys from stdin and translate them to mplayer commands.  Since mplayer
+--    is in slave mode, it can't take in commands like normal.
+runMPlayerUpdateMediaInfo :: Config -> MPlayer -> MVar MediaInfo -> IO ()
+runMPlayerUpdateMediaInfo config mplayer mediaInfoMVar = do
+    -- set stdin to not be buffered so we only get one character at a time
+    hSetBuffering IO.stdin NoBuffering
+
+    -- a conduit for sending the old location to mplayer
+    let oldLocationToMplayerStdin =
+            setOldLocation config mediaInfoMVar $$ mplayerStdin mplayer
+
     -- Read keypresses from stdin, translate to mplayer commands, and pipe to mplayer.
-    let stdinToMplayerStdin = stdin $$ mplayerStdin mplayer
+    let stdinToMplayerStdin = stdin $$
+                              sendMPlayerCommands =$=
+                              mplayerStdin mplayer
 
     -- Process mplayer's stdout to find filename, length, and current position.
     -- Print mplayer's stdout to our stdout.
     let mplayerStdoutToStdout = mplayerStdout mplayer $$
                                 iterMC (processMPlayerStdout mediaInfoMVar) =$=
                                 stdout
-
 
     -- Print mplayer's stderr to our stderr.
     let mplayerStderrToStderr = mplayerStderr mplayer $$ stderr
@@ -190,26 +260,33 @@ runMPlayerUpdateMediaInfo mplayer mediaInfoMVar = do
     let mplayerHandle = mplayerProcHandle mplayer
 
     -- Run all conduits concurrently.
-    exitCode <- runConcurrently $
-                    Concurrently mplayerStdoutToStdout *>
-                    Concurrently mplayerStderrToStderr *>
-                    Concurrently stdinToMplayerStdin *>
-                    Concurrently (waitForStreamingProcess mplayerHandle)
+    runConcurrently $
+        Concurrently mplayerStdoutToStdout *>
+        Concurrently mplayerStderrToStderr *>
+        Concurrently oldLocationToMplayerStdin *>
+        Concurrently stdinToMplayerStdin *>
+        Concurrently (waitForStreamingProcess mplayerHandle >>= exitWith)
 
+-- | Create the .mplayer-spots/ and spots/ directories from the config file.
 createMPlayerSpotsDir :: Config -> IO ()
 createMPlayerSpotsDir (Config rcDir spotsDir _) = do
     createDirectoryIfMissing True rcDir
     createDirectoryIfMissing True spotsDir
 
+-- | Write out a spot file to the spots directory if all the required fields
+-- have been filled in the MediaInfo, and if our current position in the media
+-- file is not too early or not too late.
 writeSpotFile :: Config -> MVar MediaInfo -> IO ()
 writeSpotFile (Config _ spotsDir ignoreLength) mediaInfoMVar = do
     maybeMediaInfo <- tryReadMVar mediaInfoMVar
     case maybeMediaInfo of
-        Just (MediaInfo (Just mediaLength) (Just filename) (Just exitPos)) -> do
+        Just (MediaInfo (Just mediaLength) (Just filename) (Just exitPos) _) -> do
             let spotFilename = spotsDir </> unpack (decodeUtf8 filename)
             writeSpotFile' mediaLength spotFilename exitPos
         _ -> putStrLn "When exiting, do not currently have all fields of media info, so cannot write out spot file."
   where
+    -- | Check that the length is not too early or too late.  If it is not,
+    -- then write out the spot file.
     writeSpotFile' :: Float -> FilePath -> Float -> IO ()
     writeSpotFile' mediaLength spotFilename exitPos
         | exitPos <= ignoreLength = do
@@ -220,11 +297,13 @@ writeSpotFile (Config _ spotsDir ignoreLength) mediaInfoMVar = do
         | otherwise =
             writeFloatToFile spotFilename exitPos
 
+    -- | Write a Float to a FilePath.
     writeFloatToFile :: FilePath -> Float -> IO ()
     writeFloatToFile spotFilename exitPos = do
         putStrLn $ "writing to file: " <> spotFilename <> " (" <> show exitPos <> ")"
         writeFile spotFilename $ show exitPos
 
+    -- | Remove a file and ignore errors (like if the file doesn't exist).
     removeOldSpotFile :: FilePath -> IO ()
     removeOldSpotFile =
         void . (try :: IO () -> IO (Either IOException ())) . removeFile
@@ -237,7 +316,7 @@ main = do
     -- create the config we will be using
     config <- defaultConfig
 
-    -- create the .mplayer-spots directory
+    -- create the .mplayer-spots directory if it doesn't exist
     createMPlayerSpotsDir config
 
     -- create the mplayer process
@@ -246,57 +325,6 @@ main = do
     -- create the MediaInfo MVar we will be using to do concurrent stuff
     mediaInfoMVar <- newMVar defaultMediaInfo
 
-    finally (runMPlayerUpdateMediaInfo mplayerProcess mediaInfoMVar) $ do
+    finally (runMPlayerUpdateMediaInfo config mplayerProcess mediaInfoMVar) $
+        -- write the spot file after exiting
         writeSpotFile config mediaInfoMVar
-        maybeMediaInfo <- tryReadMVar mediaInfoMVar
-        print $ "finished: " <> show maybeMediaInfo
-
-
-    -- run our input and output conduits concurrently
-    -- exitCode <- runConcurrently $
-    --                 Concurrently mplayerStdoutToStdout *>
-    --                 -- Concurrently stdinToMplayerStdin *>
-    --                 Concurrently (waitForStreamingProcess processHandle)
-
-    -- putStrLn $ "exitCode: " <> show exitCode
-
-    -- -- send the exploit to ropasaurusrex's stdin
-    -- yield (BL.toStrict paddedExploit) $$ processStdin
-
-    -- -- read the addr of write in libc from ropasaurusrex's stdout
-    -- writeAddrRaw <- fromJust <$> (processStdout $$ CL.head)
-
-    -- -- calculate the value of 'system' based on the value of 'write'
-    -- let writeAddr = toAddr . decode $ BL.fromStrict writeAddrRaw
-    -- let systemAddr = toAddr (writeAddr - systemOffset)
-
-    -- putStrLn $ showHex writeAddr ""
-    -- putStrLn $ showHex systemOffset ""
-    -- putStrLn $ showHex (toAddr systemAddr) ""
-
-    -- -- send the calculated address of 'system' to ropasaurusrex's stdin
-    -- yield (BL.toStrict $ encode systemAddr) $$ processStdin
-
-    -- -- send the @/bin/sh@ string to ropasaurusrex's stdin
-    -- yield "/bin/sh\0" $$ processStdin
-
-    -- -- make two conduits that feed breaker.hs's stdin to ropasaurusrex's
-    -- -- stdin, and ropasaurusrex's stdout to breaker.hs's stdout.  This lets us
-    -- -- easily control the shell that will spawn.
-    -- -- let input = CB.sourceHandle stdin $$ processStdin
-    -- let stdinToRopasaurusrexStdin = stdin $$ processStdin
-    --     ropasaurusrexStdoutToStdout = processStdout $$ stdout
-
-    -- -- run our input and output conduits concurrently
-    -- exitCode <- runConcurrently $
-    --                 Concurrently stdinToRopasaurusrexStdin *>
-    --                 Concurrently ropasaurusrexStdoutToStdout *>
-    --                 Concurrently (waitForStreamingProcess processHandle)
-
-    -- putStrLn $ "exitCode: " <> show exitCode
-
-    -- BL.hPutStr stderr "\n"
-    -- BL.hPutStr stderr "---------------\n"
-    -- BL.hPutStr stderr "-- Finished. --\n"
-    -- BL.hPutStr stderr "---------------\n\n"
-
