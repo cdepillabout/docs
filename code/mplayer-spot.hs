@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --resolver=lts-4.0 runghc --package=async --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit-combinators
+-- stack --resolver=lts-4.0 runghc --package=async --package=filepath --package=directory --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit-combinators
 
 -- This gives us an experience similar to @ghci@.  Raw values (1 and
 -- 10 below) that implement the 'Num' type class will be defaulted to 'Int'
@@ -31,12 +31,16 @@ import Control.Applicative ((<|>))
 import Control.Concurrent (threadDelay, forkIO)
 import Control.Concurrent.Async (Concurrently(..))
 import Control.Concurrent.MVar (MVar, modifyMVar_, newMVar, tryReadMVar)
-import Control.Exception (finally)
+import Control.Exception (IOException, finally, try)
+import Control.Monad (void)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Attoparsec.ByteString.Char8
+    ( Parser, char, notInClass, parseOnly, rational, skipSpace, skipWhile
+    , string, takeWhile1
+    )
 import Data.Binary (encode, decode)
 import Data.ByteString (ByteString, isPrefixOf)
-import Data.ByteString.Char8 as C8
+import qualified Data.ByteString.Char8 as C8
 import Data.Conduit ((=$=), ($$), Sink, Source, yield)
 import Data.Conduit.Combinators (stderr, stdin, stdout)
 import Data.Conduit.List as CL
@@ -44,11 +48,14 @@ import Data.Conduit.Process (ClosedStream(..), streamingProcess, waitForStreamin
 import Data.Maybe (fromJust)
 import Data.Monoid ((<>))
 import Data.Streaming.Process (StreamingProcessHandle)
-import Data.Text (Text)
+import Data.Text (Text, unpack)
 import qualified Data.Text as T
+import Data.Text.Encoding (decodeUtf8)
 import GHC.Word (Word32, Word8, byteSwap32)
 import Numeric (showHex)
+import System.Directory (createDirectoryIfMissing, getHomeDirectory, removeFile)
 import System.Environment (getArgs)
+import System.FilePath ((</>))
 import System.IO (Handle)
 import System.Process (proc)
 
@@ -56,6 +63,20 @@ import System.Process (proc)
 -- type for string-like things, and one type for integer-like things.  It
 -- doesn't matter what order they are in.
 default (T.Text, Int)
+
+data Config = Config { configMPlayerSpotRCDir :: FilePath
+                     , configSpotsDir :: FilePath
+                     , configIgnoreSeconds :: Float
+                     }
+    deriving Show
+
+defaultConfig :: IO Config
+defaultConfig = do
+    homeDir <- getHomeDirectory
+    let rcDir = homeDir </> ".mplayer-spot"
+    let spotsDir = rcDir </> "spots"
+    let ignoreSeconds = 10
+    pure $ Config rcDir spotsDir ignoreSeconds
 
 data MediaInfo = MediaInfo { mediaInfoLength :: Maybe Float
                            , mediaInfoFilename :: Maybe ByteString
@@ -152,30 +173,81 @@ processMPlayerStdout mediaInfoMVar mplayerLine = do
 
 runMPlayerUpdateMediaInfo :: MPlayer -> MVar MediaInfo -> IO ()
 runMPlayerUpdateMediaInfo mplayer mediaInfoMVar = do
+    -- Read keypresses from stdin, translate to mplayer commands, and pipe to mplayer.
     let stdinToMplayerStdin = stdin $$ mplayerStdin mplayer
+
+    -- Process mplayer's stdout to find filename, length, and current position.
+    -- Print mplayer's stdout to our stdout.
     let mplayerStdoutToStdout = mplayerStdout mplayer $$
                                 iterMC (processMPlayerStdout mediaInfoMVar) =$=
                                 stdout
+
+
+    -- Print mplayer's stderr to our stderr.
     let mplayerStderrToStderr = mplayerStderr mplayer $$ stderr
+
+    -- Handle for controlling the mplayer process.
     let mplayerHandle = mplayerProcHandle mplayer
 
+    -- Run all conduits concurrently.
     exitCode <- runConcurrently $
                     Concurrently mplayerStdoutToStdout *>
                     Concurrently mplayerStderrToStderr *>
                     Concurrently stdinToMplayerStdin *>
                     Concurrently (waitForStreamingProcess mplayerHandle)
 
-    print $ "Exiting with error code: " <> show exitCode
+createMPlayerSpotsDir :: Config -> IO ()
+createMPlayerSpotsDir (Config rcDir spotsDir _) = do
+    createDirectoryIfMissing True rcDir
+    createDirectoryIfMissing True spotsDir
+
+writeSpotFile :: Config -> MVar MediaInfo -> IO ()
+writeSpotFile (Config _ spotsDir ignoreLength) mediaInfoMVar = do
+    maybeMediaInfo <- tryReadMVar mediaInfoMVar
+    case maybeMediaInfo of
+        Just (MediaInfo (Just mediaLength) (Just filename) (Just exitPos)) -> do
+            let spotFilename = spotsDir </> unpack (decodeUtf8 filename)
+            writeSpotFile' mediaLength spotFilename exitPos
+        _ -> putStrLn "When exiting, do not currently have all fields of media info, so cannot write out spot file."
+  where
+    writeSpotFile' :: Float -> FilePath -> Float -> IO ()
+    writeSpotFile' mediaLength spotFilename exitPos
+        | exitPos <= ignoreLength = do
+            putStrLn $ "exit position is " <> show exitPos <> " seconds so not writing spot file (not far enough)"
+        | exitPos >= (mediaLength - ignoreLength) = do
+            putStrLn $ "exit position is " <> show exitPos <> " seconds so not writing spot file (too close to end)"
+            removeOldSpotFile spotFilename
+        | otherwise =
+            writeFloatToFile spotFilename exitPos
+
+    writeFloatToFile :: FilePath -> Float -> IO ()
+    writeFloatToFile spotFilename exitPos = do
+        putStrLn $ "writing to file: " <> spotFilename <> " (" <> show exitPos <> ")"
+        writeFile spotFilename $ show exitPos
+
+    removeOldSpotFile :: FilePath -> IO ()
+    removeOldSpotFile =
+        void . (try :: IO () -> IO (Either IOException ())) . removeFile
 
 main :: IO ()
 main = do
+    -- read in program arguments
     programArgs <- getArgs
-    print programArgs
+
+    -- create the config we will be using
+    config <- defaultConfig
+
+    -- create the .mplayer-spots directory
+    createMPlayerSpotsDir config
+
+    -- create the mplayer process
     mplayerProcess <- createMPlayerProcess programArgs
 
+    -- create the MediaInfo MVar we will be using to do concurrent stuff
     mediaInfoMVar <- newMVar defaultMediaInfo
 
     finally (runMPlayerUpdateMediaInfo mplayerProcess mediaInfoMVar) $ do
+        writeSpotFile config mediaInfoMVar
         maybeMediaInfo <- tryReadMVar mediaInfoMVar
         print $ "finished: " <> show maybeMediaInfo
 
