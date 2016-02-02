@@ -67,6 +67,9 @@ xterm -e ssh-add &
 # click when I am typing.
 syndaemon -t -K &
 
+# setup keyboard keymap based on what which keyboards are available
+setup-keyboard
+
 # startup xmonad
 xmonad &
 windowmanagerpid=$!

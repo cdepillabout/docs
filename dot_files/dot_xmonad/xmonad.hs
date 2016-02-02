@@ -1,18 +1,17 @@
 
+import Data.Map (Map)
+import qualified Data.Map as M
+import Graphics.X11.Xlib
+import System.Exit
+import System.IO
 import XMonad
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers ((-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook)
 import XMonad.Hooks.DynamicLog
-import XMonad.Util.Run
-import System.Exit
-import System.IO
-
-import Graphics.X11.Xlib
-
 import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
+import XMonad.Util.Run
 
 main :: IO ()
 main = do
@@ -23,7 +22,7 @@ main = do
 
     xmobarProc <- spawnPipe "xmobar"
 
-    xmonad defaultConfig
+    xmonad def
         { modMask = myModMask
         , layoutHook = myLayout
         , keys = myKeys
@@ -34,7 +33,7 @@ main = do
             }
         , borderWidth = myBorderWidth
         , manageHook = manageDocks
-                   <+> manageHook defaultConfig
+                   <+> manageHook def
                    <+> composeAll myManagementHooks
                    <+> composeOne myMaybeManagementHooks
         }
@@ -49,7 +48,7 @@ myModMask = mod4Mask
 
 -- avoidStruts will make sure not avoid any sort of menu or status bar.
 -- smartBorders will only use a border where necessary.
-myLayout = avoidStruts $ smartBorders $ layoutHook defaultConfig
+myLayout = avoidStruts $ smartBorders $ layoutHook def
 
 -- Special actions to be performed on newly created windows matching
 -- specific properties.
@@ -68,6 +67,7 @@ myMaybeManagementHooks = [ -- Make sure that full screened windows like
                          ]
 
 -- Key bindings. Add, modify or remove key bindings here.
+myKeys :: XConfig Layout -> Map (ButtonMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch a terminal
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
@@ -147,22 +147,25 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- My settings
     [
-      -- Swap the current screen with the next screen.
+    -- Swap the current screen with the next screen.
       ((modm,               xK_o), swapNextScreen)
-      -- Swap the current screen with the previous screen.
+    -- Swap the current screen with the previous screen.
     , ((modm .|. shiftMask, xK_o), shiftNextScreen)
 
-      -- Spawn xscreensaver
+    -- Spawn xscreensaver
     , ((modm .|. shiftMask, xK_z), spawn "xscreensaver-command -lock")
 
-      -- Switch to the unfocused screen.  Does nothing if not exactly two
-      -- screens.
+    -- Switch to the unfocused screen.  Does nothing if not exactly two
+    -- screens.
     , ((modm,               xK_Tab), switchToUnfocusedScreen)
     , ((mod1Mask,           xK_Tab), switchToUnfocusedScreen)
 
-      -- Use printscreen key for taking screenshot and copying it to the
-      -- clipboard.
+    -- Use printscreen key for taking screenshot and copying it to the
+    -- clipboard.
     , ((0, xK_Print), spawn "screenshot-to-clipboard")
+
+    -- Use Ctrl-F12 to re-setup the keyboard.
+    , ((controlMask, xK_F12), spawn "setup-keyboard")
     ]
 
 -- Switch to the unfocused screen.  Does nothing if not exactly two
