@@ -68,7 +68,7 @@ xterm -e ssh-add &
 syndaemon -t -K &
 
 # setup keyboard keymap based on what which keyboards are available
-setup-keyboard
+( sleep 3 && setup-keyboard ) &
 
 # startup xmonad
 xmonad &
