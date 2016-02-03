@@ -465,6 +465,20 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" This doesn't seem to work with stack and ghc-7.10.3.
 	" Bundle 'dan-t/vim-hsimport'
 
+	" align code
+	Bundle 'godlygeek/tabular'
+	" With the following mappings, we are able to align stuff in visual mode.
+	" For instance, if we had the following code:
+	"        What -> pure 1
+	"        Who -> pure 2
+	"        Whomever -> pure 3
+	" And you highlighted it and hit 'a-', it would make it look like this:
+	"        What     -> pure 1
+	"        Who      -> pure 2
+	"        Whomever -> pure 3
+	vmap a= :Tabularize /=<CR>
+	vmap a; :Tabularize /::<CR>
+	vmap a- :Tabularize /-><CR>
 endif
 
 
