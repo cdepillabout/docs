@@ -479,6 +479,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	vmap a= :Tabularize /=<CR>
 	vmap a; :Tabularize /::<CR>
 	vmap a- :Tabularize /-><CR>
+	vmap ac :Tabularize /--<CR>
 endif
 
 
