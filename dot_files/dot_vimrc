@@ -461,6 +461,10 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Purescript syntax.
 	Bundle 'raichoo/purescript-vim'
 
+	" hsimport
+	" This doesn't seem to work with stack and ghc-7.10.3.
+	" Bundle 'dan-t/vim-hsimport'
+
 endif
 
 
