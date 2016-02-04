@@ -121,7 +121,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Use neocomplete (works with necoghc)
 	if version >= 704 && has("lua")
-		let g:neocomplete#enable_at_startup=1
+		" This turns on autocoompletion all the time.  It's really annoying.
+		" let g:neocomplete#enable_at_startup=1
 		Bundle 'Shougo/neocomplete'
 	endif
 
