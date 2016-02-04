@@ -8,7 +8,7 @@ if filereadable("/etc/vim/vimrc") " debian
 	source /etc/vim/vimrc
 endif
 if filereadable("/etc/vimrc") " arch linux
-	source /etc/vimrc
+	" source /etc/vimrc
 endif
 
 set nocompatible		" Explicitly turn off compatibility mode
@@ -305,39 +305,40 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 
 	" Rainbow parentheses
-	Bundle 'eapache/rainbow_parentheses.vim'
-	let g:rbpt_colorpairs = [
-	    \ ['darkred',     'DarkOrchid3'],
-	    \ ['darkgray',    'DarkOrchid3'],
-	    \ ['darkmagenta', 'DarkOrchid3'],
-	    \ ['darkgreen',   'RoyalBlue3'],
-	    \ ['red',         'firebrick3'],
-	    \ ['brown',       'RoyalBlue3'],
-	    \ ['darkmagenta', 'DarkOrchid3'],
-	    \ ['gray',        'RoyalBlue3'],
-	    \ ['darkcyan',    'SeaGreen3'],
-	    \ ['darkblue',    'SeaGreen3'],
-	    \ ['darkred',     'SeaGreen3'],
-	    \ ['darkgreen',   'firebrick3'],
-	    \ ['darkcyan',    'RoyalBlue3'],
-	    \ ['blue',        'firebrick3'],
-	    \ ['brown',       'firebrick3'],
-	    \ ['darkmagenta', 'DarkOrchid3'],
-	    \ ['darkgreen',   'RoyalBlue3'],
-	    \ ['red',         'firebrick3'],
-	    \ ]
-	" Turn off bold parenthesis
-	"let g:bold_parentheses = 0
-	autocmd VimEnter * if exists(":RainbowParenthesesActivate") |
-		\ exec ":RainbowParenthesesActivate" | endif
-	autocmd BufEnter * if exists(":RainbowParenthesesLoadRound") |
-		\ exec ":RainbowParenthesesLoadRound" | endif
-	autocmd BufEnter * if exists(":RainbowParenthesesLoadSquare") |
-		\ exec ":RainbowParenthesesLoadSquare" | endif
-	autocmd BufEnter * if exists(":RainbowParenthesesLoadBraces") |
-		\ exec ":RainbowParenthesesLoadBraces" | endif
-	"autocmd BufEnter * if exists(":RainbowParenthesesLoadChevrons") |
-	"	\ exec ":RainbowParenthesesLoadChevrons" | endif
+	" This doesn't play well with haskell files, so we need to disable it :-(
+	" Bundle 'eapache/rainbow_parentheses.vim'
+	" let g:rbpt_colorpairs = [
+	"     \ ['darkred',     'DarkOrchid3'],
+	"     \ ['darkgray',    'DarkOrchid3'],
+	"     \ ['darkmagenta', 'DarkOrchid3'],
+	"     \ ['darkgreen',   'RoyalBlue3'],
+	"     \ ['red',         'firebrick3'],
+	"     \ ['brown',       'RoyalBlue3'],
+	"     \ ['darkmagenta', 'DarkOrchid3'],
+	"     \ ['gray',        'RoyalBlue3'],
+	"     \ ['darkcyan',    'SeaGreen3'],
+	"     \ ['darkblue',    'SeaGreen3'],
+	"     \ ['darkred',     'SeaGreen3'],
+	"     \ ['darkgreen',   'firebrick3'],
+	"     \ ['darkcyan',    'RoyalBlue3'],
+	"     \ ['blue',        'firebrick3'],
+	"     \ ['brown',       'firebrick3'],
+	"     \ ['darkmagenta', 'DarkOrchid3'],
+	"     \ ['darkgreen',   'RoyalBlue3'],
+	"     \ ['red',         'firebrick3'],
+	"     \ ]
+	" " Turn off bold parenthesis
+	" "let g:bold_parentheses = 0
+	" autocmd VimEnter * if exists(":RainbowParenthesesActivate") |
+	" 	\ exec ":RainbowParenthesesActivate" | endif
+	" autocmd BufEnter * if exists(":RainbowParenthesesLoadRound") |
+	" 	\ exec ":RainbowParenthesesLoadRound" | endif
+	" autocmd BufEnter * if exists(":RainbowParenthesesLoadSquare") |
+	" 	\ exec ":RainbowParenthesesLoadSquare" | endif
+	" autocmd BufEnter * if exists(":RainbowParenthesesLoadBraces") |
+	" 	\ exec ":RainbowParenthesesLoadBraces" | endif
+	" "autocmd BufEnter * if exists(":RainbowParenthesesLoadChevrons") |
+	" "	\ exec ":RainbowParenthesesLoadChevrons" | endif
 
 
 	" This adds mappings like the following:
