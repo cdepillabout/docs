@@ -72,8 +72,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" :help syntastic to get more help
 	" To toggle between active/passive type checking we can enable the following key bindings
 	"map <silent> <Leader>e :Errors<CR>
-	"map <Leader>s :SyntasticToggleMode<CR>
 	Bundle 'scrooloose/syntastic'
+	map <Leader>s :SyntasticToggleMode<CR>
 	" Always populate the location list even if :Errors is not run.
 	" (This is disabled by default to reduce conflicts with other plugins.)
 	" With this enabled, you can jump to different errors
@@ -86,13 +86,12 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 
 	if version >= 701
-		" This is used by ghcmod-vim for something.
 		Bundle 'Shougo/vimproc'
 		if isdirectory(expand("~/.vim/bundle/vimproc/.git")) &&
-				\ !(filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_unix.so")) ||
-				\   filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_linux64.so")) ||
-				\   filereadable(expand("~/.vim/bundle/vimproc/autoload/vimproc_linux32.so")))
-			echo "You must run `(cd \"$HOME/.vim/bundle/vimproc/\" && make)` in order to install vimproc (for ghc-mod)."
+				\ !(filereadable(expand("~/.vim/bundle/vimproc/lib/vimproc_unix.so")) ||
+				\   filereadable(expand("~/.vim/bundle/vimproc/lib/vimproc_linux64.so")) ||
+				\   filereadable(expand("~/.vim/bundle/vimproc/lib/vimproc_linux32.so")))
+			echo "You must run `(cd \"$HOME/.vim/bundle/vimproc/\" && make)` in order to install vimproc (for ghc-mod). You also might need t o update all vim bundles."
 		endif
 
 
@@ -120,9 +119,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	endif
 
 
-	" Use neocomplete (this is supposed to work with neco-ghc for haskell
-	" completion, but it doesn't really look like it does anything)
-	if version >= 704 && has("if_lua")
+	" Use neocomplete (works with necoghc)
+	if version >= 704 && has("lua")
+		let g:neocomplete#enable_at_startup=1
 		Bundle 'Shougo/neocomplete'
 	endif
 
@@ -132,6 +131,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" See :help compl-omni for details on omni-completion.
 	" Enable with :setlocal omnifunc=necoghc#omnifunc (set below...)
 	" Can be used with Ctrl-X Ctrl-O
+	let g:haskellmode_completion_ghc = 1
 	Bundle 'eagletmt/neco-ghc'
 	autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
