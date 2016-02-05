@@ -16,8 +16,14 @@ function super_link {
 	file_name=$1
 	link_target=$2
 
-	[ ! -e $link_target -o -L $link_target ] || \
+	[ ! -e "${link_target}" -o -L "${link_target}" ] || \
 		die "ERROR! $link_target is not a link, so exiting."
+
+	# if the link target is a symbolic link and a directory, we should delete
+	# it first to make sure the new link doesn't get created INSIDE of it.
+	if [ -L "${link_target}" -a -d "${link_target}" ] ; then
+		rm "${link_target}"
+	fi
 
 	ln -sf $file_name $link_target
 }
@@ -67,14 +73,10 @@ super_link $SCRIPT_DIR/dot_vimrc $HOME/.vimrc
 make_directory $HOME/.vim-tmp
 make_directory $HOME/.vim-undo
 make_directory $HOME/.vim
-make_directory $HOME/.vim/after
-make_directory $HOME/.vim/after/syntax
-super_link $SCRIPT_DIR/dot_vim/after/syntax/sas.vim $HOME/.vim/after/syntax/sas.vim
-super_link $SCRIPT_DIR/dot_vim/after/syntax/java.vim $HOME/.vim/after/syntax/java.vim
-make_directory $HOME/.vim/after/indent
-super_link $SCRIPT_DIR/dot_vim/after/indent/java.vim $HOME/.vim/after/indent/java.vim
 make_directory $HOME/.vim/spell
 super_link $SCRIPT_DIR/dot_vim/spell/en.utf-8.add $HOME/.vim/spell/en.utf-8.add
+super_link $SCRIPT_DIR/dot_vim/after $HOME/.vim/after
+super_link $SCRIPT_DIR/dot_vim/syntax $HOME/.vim/syntax
 
 # vimperator
 super_link $SCRIPT_DIR/dot_vimperatorrc $HOME/.vimperatorrc
