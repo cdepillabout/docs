@@ -1382,6 +1382,11 @@ autocmd FileType purescript setlocal formatoptions+=1crq formatoptions-=t
 autocmd FileType purescript setlocal commentstring=--%s
 autocmd FileType purescript setlocal comments=:--
 
+" settings for purescript files
+autocmd FileType javascript set expandtab
+autocmd FileType javascript set tabstop=2
+autocmd FileType javascript set shiftwidth=2
+autocmd FileType javascript set softtabstop=2
 
 " turn these on if you want to use vim over a slow link
 "set lazyredraw
