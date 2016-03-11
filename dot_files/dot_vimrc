@@ -83,6 +83,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" enable debugging
 	"let g:syntastic_debug = 1
 	"let g:syntastic_debug_file = "~/syntastic.log"
+	let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 
 
 	if version >= 701
@@ -1320,6 +1321,7 @@ autocmd FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
 autocmd FileType cs set foldlevelstart=2
 
 " settings for ruby
+let ruby_no_expensive=1
 autocmd FileType ruby setlocal tabstop=2
 autocmd FileType ruby setlocal shiftwidth=2
 autocmd FileType ruby setlocal softtabstop=2
