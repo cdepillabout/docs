@@ -84,6 +84,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"let g:syntastic_debug = 1
 	"let g:syntastic_debug_file = "~/syntastic.log"
 	let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+	" Ideally I would include 'flow' in this list, but it runs as `flow check`
+	" instead of just `flow`, so it takes too long to run.
+	let g:syntastic_javascript_checkers = ['jshint', 'jslint', 'eslint']
 
 
 	if version >= 701
