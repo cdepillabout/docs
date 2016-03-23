@@ -6,16 +6,16 @@ import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.IO (hPutStrLn)
 import XMonad
-    ( ChangeLayout(NextLayout), Layout, ManageHook, Resize(Expand, Shrink)
+    ( ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook, Resize(Expand, Shrink)
     , IncMasterN(IncMasterN), X
     , XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.), (-->)
-    , (=?), (<+>), composeAll, doIgnore, gets, io, kill, layoutHook
+    , (=?), (<+>), composeAll, doIgnore, float, gets, io, kill, layoutHook
     , manageHook, refresh, resource, restart, screenWorkspace, sendMessage
-    , setLayout, spawn, terminal, windows, windowset, withFocused, whenJust
+    , setLayout, spawn, terminal, tileWindow, windows, windowset, withFocused, whenJust
     , workspaces, xmonad )
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Layout.NoBorders (smartBorders)
-import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks)
+import XMonad.Hooks.ManageDocks (ToggleStruts(ToggleStruts), avoidStruts, manageDocks)
 import XMonad.Hooks.ManageHelpers
     ( (-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook )
 import XMonad.Hooks.DynamicLog
@@ -51,9 +51,11 @@ main = do
 -- check out http://haskell.org/haskellwiki/Xmonad/Config_archive/Template_xmonad.hs_(darcs)
 -- for the defaults
 
+myBorderWidth :: Dimension
 myBorderWidth = 5
 
 -- Make the mod key be the windows key
+myModMask :: KeyMask
 myModMask = mod4Mask
 
 -- avoidStruts will make sure not avoid any sort of menu or status bar.
@@ -78,9 +80,9 @@ myMaybeManagementHooks = [ -- Make sure that full screened windows like
 
 -- Key bindings. Add, modify or remove key bindings here.
 myKeys :: XConfig Layout -> Map (ButtonMask, KeySym) (X ())
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     -- launch a terminal
-    [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
+    [ ((modm .|. shiftMask, xK_Return), spawn $ terminal conf)
     -- launch dmenu
     -- , ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
     , ((modm,               xK_p     ), spawn "dmenu_run")
@@ -91,7 +93,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
      -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
     --  Reset the layouts on the current workspace to default
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
+    , ((modm .|. shiftMask, xK_space ), setLayout $ layoutHook conf)
     -- Resize viewed windows to the correct size
     , ((modm,               xK_n     ), refresh)
     -- Move focus to the next window
@@ -100,15 +102,15 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Move focus to the next window
     , ((modm,               xK_j     ), windows W.focusDown)
     -- Move focus to the previous window
-    , ((modm,               xK_k     ), windows W.focusUp  )
+    , ((modm,               xK_k     ), windows W.focusUp)
     -- Move focus to the master window
-    , ((modm,               xK_m     ), windows W.focusMaster  )
+    , ((modm,               xK_m     ), windows W.focusMaster)
     -- Swap the focused window and the master window
     , ((modm,               xK_Return), windows W.swapMaster)
     -- Swap the focused window with the next window
-    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  )
+    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown)
     -- Swap the focused window with the previous window
-    , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
+    , ((modm .|. shiftMask, xK_k     ), windows W.swapUp)
     -- Shrink the master area
     , ((modm,               xK_h     ), sendMessage Shrink)
     -- Expand the master area
@@ -120,7 +122,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Deincrement the number of windows in the master area
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
     -- toggle the status bar gap (used with avoidStruts from Hooks.ManageDocks)
-    -- , ((modm , xK_b ), sendMessage ToggleStruts)
+    , ((modm              , xK_b     ), sendMessage ToggleStruts)
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
     -- Restart xmonad
@@ -176,6 +178,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Use Ctrl-F12 to re-setup the keyboard.
     , ((controlMask, xK_F12), spawn "setup-keyboard")
+
+    -- Use mod-s to make a window floating and resize it for a screencast
+    , ((modm, xK_s), withFocused setupWindowForScreenCast)
+    , ((modm,               xK_t     ), withFocused $ windows . W.sink)
     ]
 
 -- Switch to the unfocused screen.  Does nothing if not exactly two
@@ -189,3 +195,8 @@ switchToUnfocusedScreen = do
         case visibleNonFocusedScreens of
             [screen] -> windows $ W.view $ W.tag $ W.workspace screen
             _ -> return ()
+
+setupWindowForScreenCast :: Window -> X ()
+setupWindowForScreenCast window = do
+    float window
+    tileWindow window (Rectangle 100 100 1280 720)
