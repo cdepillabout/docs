@@ -1,17 +1,27 @@
 
+import Data.Default (def)
 import Data.Map (Map)
 import qualified Data.Map as M
 import Graphics.X11.Xlib
-import System.Exit
-import System.IO
+import System.Exit (ExitCode(ExitSuccess), exitWith)
+import System.IO (hPutStrLn)
 import XMonad
+    ( ChangeLayout(NextLayout), Layout, ManageHook, Resize(Expand, Shrink)
+    , IncMasterN(IncMasterN), X
+    , XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.), (-->)
+    , (=?), (<+>), composeAll, doIgnore, gets, io, kill, layoutHook
+    , manageHook, refresh, resource, restart, screenWorkspace, sendMessage
+    , setLayout, spawn, terminal, windows, windowset, withFocused, whenJust
+    , workspaces, xmonad )
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
-import XMonad.Layout.NoBorders
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers ((-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook)
+import XMonad.Layout.NoBorders (smartBorders)
+import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks)
+import XMonad.Hooks.ManageHelpers
+    ( (-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook )
 import XMonad.Hooks.DynamicLog
+    ( dynamicLogWithPP, ppOutput, ppTitle, shorten, xmobarPP, xmobarColor )
 import qualified XMonad.StackSet as W
-import XMonad.Util.Run
+import XMonad.Util.Run (spawnPipe)
 
 main :: IO ()
 main = do
