@@ -1,4 +1,5 @@
 
+import Control.Monad.IO.Class (liftIO)
 import Data.Default (def)
 import Data.Map (Map)
 import qualified Data.Map as M
@@ -9,8 +10,8 @@ import XMonad
     ( ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook, Resize(Expand, Shrink)
     , IncMasterN(IncMasterN), X
     , XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.), (-->)
-    , (=?), (<+>), composeAll, doIgnore, float, gets, io, kill, layoutHook
-    , manageHook, refresh, resource, restart, screenWorkspace, sendMessage
+    , (=?), (<+>), composeAll, doIgnore, float, get, gets, kill, layoutHook
+    , manageHook, refresh, resource, restart, screenRect, screenWorkspace, sendMessage
     , setLayout, spawn, terminal, tileWindow, windows, windowset, withFocused, whenJust
     , workspaces, xmonad )
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
@@ -124,7 +125,7 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     -- toggle the status bar gap (used with avoidStruts from Hooks.ManageDocks)
     , ((modm              , xK_b     ), sendMessage ToggleStruts)
     -- Quit xmonad
-    , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
+    , ((modm .|. shiftMask, xK_q     ), liftIO $ exitWith ExitSuccess)
     -- Restart xmonad
     , ((modm              , xK_q     ), restart "xmonad" True)
     ]
@@ -198,5 +199,11 @@ switchToUnfocusedScreen = do
 
 setupWindowForScreenCast :: Window -> X ()
 setupWindowForScreenCast window = do
+    xstate <- get
+    let windowSet = windowset xstate
+        currentScreen = W.current windowSet
+        screenDetail = W.screenDetail currentScreen
+        screenRectangle = screenRect screenDetail
+        screenX = rect_x screenRectangle
+    tileWindow window (Rectangle (100 + screenX) 100 1280 720)
     float window
-    tileWindow window (Rectangle 100 100 1280 720)
