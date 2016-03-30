@@ -486,6 +486,11 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	vmap a; :Tabularize /::<CR>
 	vmap a- :Tabularize /-><CR>
 	vmap ac :Tabularize /--<CR>
+
+	" Haskell code formatting with hindent.
+	" (This doesn't really have a formatter that I like.)
+	"Bundle 'octol/vim-hindent'
+	"let g:hindent_style = 'cramer'
 endif
 
 
