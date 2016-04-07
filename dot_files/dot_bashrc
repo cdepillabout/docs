@@ -712,6 +712,12 @@ fi
 # Add cabal to path if it isn't there already
 prepend_to_path PATH "$HOME/.cabal/bin"
 
+# Add ~/.local/bin to the PATH because `stack` installs things there.
+append_to_path PATH "$HOME/.local/bin"
+
+# If `stack` is available on the path, source it's bash completion script.
+type -P "stack" >/dev/null && eval "$(stack --bash-completion-script stack)"
+
 # start moving to using ~/.bashrc-local instead of ~/.local-bashrc
 if [ -f "$HOME/.local-bashrc" ]
 then
