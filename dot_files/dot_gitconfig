@@ -15,3 +15,5 @@
 	ff = only
 [status]
 	submoduleSummary = true
+[diff]
+	tool = vimdiff
