@@ -487,6 +487,14 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	vmap a- :Tabularize /-><CR>
 	vmap ac :Tabularize /--<CR>
 
+	" Markdown support.  Required to be run after the "tabular" plugin.
+	" The folding in this doesn't work correctly.
+	"Bundle 'plasticboy/vim-markdown'
+
+	" Folding for markdown.
+	" This folding doesn't work correctly either.
+	"Bundle 'nelstrom/vim-markdown-folding'
+
 	" Haskell code formatting with hindent.
 	" (This doesn't really have a formatter that I like.)
 	"Bundle 'octol/vim-hindent'
@@ -1361,9 +1369,20 @@ autocmd FileType html setlocal softtabstop=2
 "autocmd FileType html setlocal expandtab
 autocmd FileType html setlocal foldmethod=indent
 
+function! MarkdownFoldLevel()
+	let h = matchstr(getline(v:lnum), '^#\+')
+	if empty(h)
+		return "="
+	else
+		return ">" . len(h)
+	endif
+endfunction
+
 " settings for markdown
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 autocmd FileType markdown setlocal expandtab
+autocmd FileType markdown setlocal foldexpr=MarkdownFoldLevel()
+autocmd FileType markdown setlocal foldmethod=expr
 
 " settings for nix files
 autocmd BufRead,BufNewFile *.nix set expandtab
