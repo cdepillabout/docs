@@ -5,22 +5,24 @@ import Data.Map (Map)
 import qualified Data.Map as M
 import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
-import System.IO (hPutStrLn)
+import System.IO (Handle, hPutStrLn)
 import XMonad
-    ( ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook, Resize(Expand, Shrink)
-    , IncMasterN(IncMasterN), X
+    ( ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook
+    , Resize(Expand, Shrink), IncMasterN(IncMasterN), X
     , XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.), (-->)
-    , (=?), (<+>), composeAll, doIgnore, float, get, gets, kill, layoutHook
-    , manageHook, refresh, resource, restart, screenRect, screenWorkspace, sendMessage
-    , setLayout, spawn, terminal, tileWindow, windows, windowset, withFocused, whenJust
-    , workspaces, xmonad )
+    , (=?), (<+>), composeAll, doIgnore, float, get, gets, handleEventHook
+    , kill, layoutHook, manageHook, refresh, resource, restart, screenRect
+    , screenWorkspace, sendMessage, setLayout, spawn, terminal, tileWindow
+    , trace, windows, windowset, withFocused, whenJust, workspaces, xmonad )
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Layout.NoBorders (smartBorders)
-import XMonad.Hooks.ManageDocks (ToggleStruts(ToggleStruts), avoidStruts, manageDocks)
+import XMonad.Hooks.ManageDocks
+    ( ToggleStruts(ToggleStruts), avoidStruts, manageDocks )
 import XMonad.Hooks.ManageHelpers
     ( (-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook )
 import XMonad.Hooks.DynamicLog
     ( dynamicLogWithPP, ppOutput, ppTitle, shorten, xmobarPP, xmobarColor )
+import XMonad.Hooks.WorkspaceHistory (workspaceHistory, workspaceHistoryHook)
 import qualified XMonad.StackSet as W
 import XMonad.Util.Run (spawnPipe)
 
@@ -38,10 +40,7 @@ main = do
         , layoutHook = myLayout
         , keys = myKeys
         , terminal = "on-screen roxterm"
-        , logHook = dynamicLogWithPP xmobarPP
-            { ppOutput = hPutStrLn xmobarProc
-            , ppTitle = xmobarColor "lightblue" "" . shorten 150
-            }
+        , logHook = myLogHook xmobarProc
         , borderWidth = myBorderWidth
         , manageHook = manageDocks
                    <+> manageHook def
@@ -51,6 +50,14 @@ main = do
 
 -- check out http://haskell.org/haskellwiki/Xmonad/Config_archive/Template_xmonad.hs_(darcs)
 -- for the defaults
+
+myLogHook :: Handle -> X ()
+myLogHook xmobarProc = do
+    workspaceHistoryHook
+    dynamicLogWithPP xmobarPP
+        { ppOutput = hPutStrLn xmobarProc
+        , ppTitle = xmobarColor "lightblue" "" . shorten 150
+        }
 
 myBorderWidth :: Dimension
 myBorderWidth = 5
@@ -185,17 +192,24 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
     ]
 
--- Switch to the unfocused screen.  Does nothing if not exactly two
--- screens.
+-- Switch to the previously focused workspace.
 switchToUnfocusedScreen :: X ()
 switchToUnfocusedScreen = do
-        allWorkspaces <- gets windowset
-        let visibleNonFocusedScreens = W.visible allWorkspaces
-        -- TODO: This only works for two screens.  It would be nice if it
-        -- worked for 3 or more screens.
-        case visibleNonFocusedScreens of
-            [screen] -> windows $ W.view $ W.tag $ W.workspace screen
-            _ -> return ()
+    -- -- TODO: This only works for two screens.  It would be nice if it
+    -- -- worked for 3 or more screens.
+    -- allWorkspaces <- gets windowset
+    -- let visibleNonFocusedScreens = W.visible allWorkspaces
+    -- case visibleNonFocusedScreens of
+    --     [screen] -> windows $ W.view $ W.tag $ W.workspace screen
+    --     _ -> return ()
+    history <- workspaceHistory
+    case secondMay history of
+        Nothing -> pure ()
+        Just workspaceId -> windows $ W.view workspaceId
+  where
+    secondMay :: [a] -> Maybe a
+    secondMay (_:x:_) = Just x
+    secondMay _ = Nothing
 
 setupWindowForScreenCast :: Window -> X ()
 setupWindowForScreenCast window = do
