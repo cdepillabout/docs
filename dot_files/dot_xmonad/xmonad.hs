@@ -8,12 +8,14 @@ import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.IO (Handle, hPutStrLn)
 import XMonad
     ( ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook
-    , Resize(Expand, Shrink), IncMasterN(IncMasterN), X
+    , Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId, ScreenDetail
+    , WindowSet, WorkspaceId, X
     , XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.), (-->)
     , (=?), (<+>), composeAll, doIgnore, float, get, gets, handleEventHook
     , kill, layoutHook, manageHook, refresh, resource, restart, screenRect
     , screenWorkspace, sendMessage, setLayout, spawn, terminal, tileWindow
-    , trace, windows, windowset, withFocused, whenJust, workspaces, xmonad )
+    , trace, windows, windowset, withFocused, withWindowSet, whenJust
+    , workspaces, xmonad )
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Hooks.ManageDocks
@@ -192,20 +194,17 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
     ]
 
--- Switch to the previously focused workspace.
+-- Switch to the previously focused workspace that is visible on a Xinerama
+-- screen.
 switchToUnfocusedScreen :: X ()
 switchToUnfocusedScreen = do
-    -- -- TODO: This only works for two screens.  It would be nice if it
-    -- -- worked for 3 or more screens.
-    -- allWorkspaces <- gets windowset
-    -- let visibleNonFocusedScreens = W.visible allWorkspaces
-    -- case visibleNonFocusedScreens of
-    --     [screen] -> windows $ W.view $ W.tag $ W.workspace screen
-    --     _ -> return ()
-    history <- workspaceHistory
-    case secondMay history of
-        Nothing -> pure ()
-        Just workspaceId -> windows $ W.view workspaceId
+    withWindowSet $ \windowSet -> do
+        history <- workspaceHistory
+        case filter (isWorkspaceVisible windowSet) history of
+            -- We ignore the very first screen because it is the currently
+            -- focused screen.
+            (_:workspaceId:_) -> windows $ W.view workspaceId
+            _ -> pure ()
   where
     secondMay :: [a] -> Maybe a
     secondMay (_:x:_) = Just x
@@ -221,3 +220,26 @@ setupWindowForScreenCast window = do
         screenX = rect_x screenRectangle
     tileWindow window (Rectangle (100 + screenX) 100 1280 720)
     float window
+
+
+-------------
+-- HELPERS --
+-------------
+
+type Screen' = W.Screen WorkspaceId (Layout Window) Window ScreenId ScreenDetail
+
+-- | Return whether or not 'WorkspaceId' is a visible 'Workspace' in
+-- 'WindowSet'.
+isWorkspaceVisible :: WindowSet -> WorkspaceId -> Bool
+isWorkspaceVisible windowSet workspaceId =
+    isWorkspaceOnScreen workspaceId (W.current windowSet) ||
+        any (isWorkspaceOnScreen workspaceId) (W.visible windowSet)
+
+-- | Get a 'WorkspaceId' from a 'Screen'.
+workspaceIdFromScreen :: Screen' -> WorkspaceId
+workspaceIdFromScreen = W.tag . W.workspace
+
+-- | Return 'True' if a 'WorkspaceId' is on a 'Screen'.
+isWorkspaceOnScreen :: WorkspaceId -> Screen' -> Bool
+isWorkspaceOnScreen workspaceId screen =
+    workspaceIdFromScreen screen == workspaceId
