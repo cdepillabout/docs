@@ -1369,12 +1369,41 @@ autocmd FileType html setlocal softtabstop=2
 "autocmd FileType html setlocal expandtab
 autocmd FileType html setlocal foldmethod=indent
 
+let b:markdownFoldLevelInSyntaxBlock=0
 function! MarkdownFoldLevel()
-	let h = matchstr(getline(v:lnum), '^#\+')
-	if empty(h)
+	let h = matchstr(getline(v:lnum), '^\s*```')
+
+	" If we are already in a markdown syntax block, and there is not "```" on
+	" the current line, then just keep the indentation the same.
+	if b:markdownFoldLevelInSyntaxBlock && empty(h)
+		return "="
+	endif
+
+
+	" If we are already in a markdown syntax block, and there is a closing
+	" "```" on the current line, then close the syntax block and decrease the
+	" indentation by one.
+	if b:markdownFoldLevelInSyntaxBlock && !empty(h)
+		let b:markdownFoldLevelInSyntaxBlock=0
+		return "s1"
+	endif
+
+	" If we are not already in a markdown syntax block, and there is an
+	" opening "```" on the current line, then set that we are in a syntax
+	" block and increase the indentation by one.
+	if !empty(h)
+		let b:markdownFoldLevelInSyntaxBlock=1
+		return "a1"
+	endif
+
+	" If we are not in a markdown syntax block, and there is not a "```" on
+	" the current line, then check if this is a header line, and increase the
+	" indentation by that amount.
+	let g = matchstr(getline(v:lnum), '^#\+')
+	if empty(g)
 		return "="
 	else
-		return ">" . len(h)
+		return ">" . len(g)
 	endif
 endfunction
 
