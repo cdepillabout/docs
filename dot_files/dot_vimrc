@@ -1370,6 +1370,9 @@ autocmd FileType html setlocal softtabstop=2
 autocmd FileType html setlocal foldmethod=indent
 
 let b:markdownFoldLevelInSyntaxBlock=0
+" This function returns the appropriate indentation level for the current
+" line.  It is used with the &foldexpr setting for markdown files.  It folds
+" code blocks appropriately.
 function! MarkdownFoldLevel()
 	let h = matchstr(getline(v:lnum), '^\s*```')
 
