@@ -1111,6 +1111,36 @@ command! -nargs=1 -complete=customlist,RelativeFilesComplete
 			\ Copy call RelativeFunc(function('Copy'), <f-args>)
 cabbrev cp Copy
 
+" Make a new directory.  It is relative to the directory of the currently
+" opened buffer.
+" TODO: It would also be nice to make this a shared vim plugin, instead of
+" hard-coding it here.
+function! Mkdir(name)
+	let l:name = a:name
+
+    " If the l:name already exists, show an error message.
+    if isdirectory(l:name) || filereadable(l:name)
+		echohl ErrorMsg
+		echomsg 'Tried to create directory "' . l:name . '", but it already exists.'
+		return 0
+    endif
+
+	silent let l:output = system('mkdir -p ' . l:name)
+
+	if v:shell_error != 0
+		echohl ErrorMsg
+		echomsg 'Tried to create directory "' . l:name . '", but failed with error code "' . v:shell_error . '" and output:'
+		echoerr l:output
+		return 0
+	endif
+
+	return 1
+endfunction
+
+command! -nargs=1 -complete=customlist,RelativeFilesComplete
+			\ Mkdir call RelativeFunc(function('Mkdir'), <f-args>)
+cabbrev mkdir Mkdir
+
 " Execute the line under the cursor.
 "function! ExecuteLine()
 "	let thisline = getline('.')
