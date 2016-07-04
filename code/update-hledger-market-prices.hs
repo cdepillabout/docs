@@ -175,4 +175,3 @@ main = do
     marketPriceFiles <- getMarketPriceFiles marketPricesDir
     yahooMarketPriceFiles <- filterOutNonYahooFiles marketPriceFiles
     updateMarketPricesForYahooFiles yahooMarketPriceFiles
-
