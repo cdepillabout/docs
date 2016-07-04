@@ -12,7 +12,7 @@ import ClassyPrelude
 
 import Control.Monad.Except ( runExceptT )
 import Data.ConfigFile
-    ( ConfigParser, CPError, CPErrorData, emptyCP, get, readfile, to_string )
+    ( ConfigParser, CPError, CPErrorData, emptyCP, get, readfile )
 import Data.Text ( replace )
 import Formatting ( format, fixed )
 import Network.HTTP.Client.TLS ( getGlobalManager )
