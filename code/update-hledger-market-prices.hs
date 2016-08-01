@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --resolver nightly-2016-07-09 --install-ghc runghc --package classy-prelude --package ConfigFile --package filepath --package formatting --package http-client-tls --package servant-client --package shakespeare --package text --package yahoo-finance-api -- -Wall
+-- stack --verbose --resolver nightly-2016-07-09 --install-ghc --no-system-ghc runghc --package classy-prelude --package ConfigFile --package filepath --package formatting --package http-client-tls --package http-client --package servant-client --package shakespeare --package text --package yahoo-finance-api
 
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
