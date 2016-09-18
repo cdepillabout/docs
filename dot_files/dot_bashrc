@@ -315,6 +315,7 @@ alias gpfoh='git push --force-with-lease origin HEAD '
 alias gpuoh='git push --set-upstream origin HEAD '
 alias gpsh='git push '
 alias gpshf='git push --force-with-lease '
+alias gpsht='git push --tags '
 alias gr='git remote '
 alias grv='git remote -v '
 
