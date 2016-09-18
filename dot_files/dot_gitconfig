@@ -17,3 +17,7 @@
 	submoduleSummary = true
 [diff]
 	tool = vimdiff
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
