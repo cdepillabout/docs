@@ -1356,6 +1356,9 @@ autocmd BufRead,BufNewFile *.hs setlocal expandtab
 autocmd BufRead,BufNewFile *.lhs setlocal expandtab
 " maybe this could also be done with
 autocmd FileType haskell setlocal expandtab
+" set the indenter to hindent
+autocmd BufRead,BufNewFile *.hs setlocal formatprg=hindent
+autocmd FileType haskell setlocal formatprg=hindent
 
 " hamlet files (for yesod) also need spaces instead of tabs
 autocmd BufRead,BufNewFile *.hamlet set expandtab
