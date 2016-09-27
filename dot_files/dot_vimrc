@@ -1352,10 +1352,10 @@ autocmd FileType python set expandtab
 "autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 
 " Haskell also needs spaces instead of tabs.
-autocmd BufRead,BufNewFile *.hs set expandtab
-autocmd BufRead,BufNewFile *.lhs set expandtab
+autocmd BufRead,BufNewFile *.hs setlocal expandtab
+autocmd BufRead,BufNewFile *.lhs setlocal expandtab
 " maybe this could also be done with
-autocmd FileType haskell set expandtab
+autocmd FileType haskell setlocal expandtab
 
 " hamlet files (for yesod) also need spaces instead of tabs
 autocmd BufRead,BufNewFile *.hamlet set expandtab
