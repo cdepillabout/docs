@@ -479,7 +479,6 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'raichoo/purescript-vim'
 
 	" hsimport
-	" This doesn't seem to work with stack and ghc-7.10.3.
 	" Bundle 'dan-t/vim-hsimport'
 
 	" align code
@@ -510,6 +509,10 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" (This doesn't really have a formatter that I like.)
 	"Bundle 'octol/vim-hindent'
 	"let g:hindent_style = 'cramer'
+
+	" Erlang plugin for syntax checking and omnicomplete.
+	Bundle 'vim-erlang/vim-erlang-compiler'
+	Bundle 'vim-erlang/vim-erlang-omnicomplete'
 endif
 
 
