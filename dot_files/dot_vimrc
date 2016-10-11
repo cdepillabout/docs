@@ -1278,6 +1278,7 @@ call Add_auto_foldmethod('ant', 'syntax')
 call Add_auto_foldmethod('c', 'syntax')
 call Add_auto_foldmethod('cpp', 'syntax')
 call Add_auto_foldmethod('css', 'indent')
+call Add_auto_foldmethod('erlang', 'syntax')
 call Add_auto_foldmethod('haskell', 'syntax')
 call Add_auto_foldmethod('java', 'syntax')
 call Add_auto_foldmethod('javascript', 'indent')
@@ -1324,6 +1325,7 @@ call Add_eol_whitespace_highlighting("c")
 call Add_eol_whitespace_highlighting("cpp")
 call Add_eol_whitespace_highlighting("css")
 call Add_eol_whitespace_highlighting("elm")
+call Add_eol_whitespace_highlighting("erlang")
 call Add_eol_whitespace_highlighting("hamlet")
 call Add_eol_whitespace_highlighting("haskell")
 call Add_eol_whitespace_highlighting("html")
@@ -1499,6 +1501,12 @@ autocmd FileType javascript set expandtab
 autocmd FileType javascript set tabstop=2
 autocmd FileType javascript set shiftwidth=2
 autocmd FileType javascript set softtabstop=2
+
+" settings for erlang files
+autocmd FileType erlang set expandtab
+autocmd FileType erlang set tabstop=4
+autocmd FileType erlang set shiftwidth=4
+autocmd FileType erlang set softtabstop=4
 
 " turn these on if you want to use vim over a slow link
 "set lazyredraw
