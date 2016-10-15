@@ -1504,9 +1504,9 @@ autocmd FileType javascript set softtabstop=2
 
 " settings for erlang files
 autocmd FileType erlang set expandtab
-autocmd FileType erlang set tabstop=4
-autocmd FileType erlang set shiftwidth=4
-autocmd FileType erlang set softtabstop=4
+autocmd FileType erlang set tabstop=2
+autocmd FileType erlang set shiftwidth=2
+autocmd FileType erlang set softtabstop=2
 
 " turn these on if you want to use vim over a slow link
 "set lazyredraw
