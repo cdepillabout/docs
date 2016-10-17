@@ -18,6 +18,7 @@
 [diff]
 	tool = vimdiff
 [alias]
-	co = checkout
 	br = branch
 	ci = commit
+	co = checkout
+	ps = push
