@@ -73,7 +73,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" To toggle between active/passive type checking we can enable the following key bindings
 	"map <silent> <Leader>e :Errors<CR>
 	Bundle 'scrooloose/syntastic'
-	map <Leader>s :SyntasticToggleMode<CR>
+	" map <Leader>s :SyntasticToggleMode<CR>
 	" Always populate the location list even if :Errors is not run.
 	" (This is disabled by default to reduce conflicts with other plugins.)
 	" With this enabled, you can jump to different errors
@@ -513,6 +513,17 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Erlang plugin for syntax checking and omnicomplete.
 	Bundle 'vim-erlang/vim-erlang-compiler'
 	Bundle 'vim-erlang/vim-erlang-omnicomplete'
+
+	" Snippets.
+	" The snippet engine, and the repo of snippets.
+	Plugin 'SirVer/ultisnips'
+	Plugin 'honza/vim-snippets'
+	" Trigger configuration.
+	let g:UltiSnipsExpandTrigger="<c-f>"
+	let g:UltiSnipsJumpForwardTrigger="<c-b>"
+	let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+	" If you want :UltiSnipsEdit to split your window.
+	" let g:UltiSnipsEditSplit="vertical"
 endif
 
 
