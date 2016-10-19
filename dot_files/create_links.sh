@@ -123,7 +123,6 @@ make_directory $HOME/.ghc
 super_link $SCRIPT_DIR/dot_ghc/ghci.conf $HOME/.ghc/ghci.conf
 
 
-
 # create a ~/.bashrc_local
 [ ! -f "$HOME/.bashrc-local" ] && touch "$HOME/.bashrc-local"
 
@@ -175,12 +174,6 @@ if [ "${git_check_ret}" = "0" -a "${vim_check_ret}" = 0 ] ; then
 		echo "in order to get all the vim bundles working correctly."
 		echo "Read the top of .vimrc and install everything that is needed"
 		echo "(this is stuff like ghc-mod, hlint, etc)."
-		echo
-		echo "You might want to install things with a cabal command like this:"
-		echo "(Remember, you might need to source your .bashrc to get the"
-		echo "~/.cabal/bin directory added to the path)"
-		echo
-		echo "\`cabal install happy -j8 && source ~/.bashrc && cabal install ghc-mod hoogle hlint -j8\`"
 	fi
 else
 	echo "ERROR! \`git\` or \`vim\` does not exist. Not installing vim bundles."
