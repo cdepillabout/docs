@@ -77,6 +77,7 @@ make_directory $HOME/.vim/spell
 super_link $SCRIPT_DIR/dot_vim/spell/en.utf-8.add $HOME/.vim/spell/en.utf-8.add
 super_link $SCRIPT_DIR/dot_vim/after $HOME/.vim/after
 super_link $SCRIPT_DIR/dot_vim/syntax $HOME/.vim/syntax
+super_link $SCRIPT_DIR/dot_vim/UltiSnips $HOME/.vim/UltiSnips
 
 # vimperator
 super_link $SCRIPT_DIR/dot_vimperatorrc $HOME/.vimperatorrc
