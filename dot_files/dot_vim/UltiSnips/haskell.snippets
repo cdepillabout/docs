@@ -1,8 +1,29 @@
 
-snippet infoshort "Very short modinfo"
+snippet infoshort "Very short haddock module info" b
 {- |
 Module      :  `!v substitute(substitute(expand('%:r'), '[/\\]','.','g'),'^\%(\l*\.\)\?','','')`
 
-${1:module description}
+${0:module description}
 -}
+endsnippet
+
+snippet info "Verbose haddock module info" b
+{- |
+Module      :  `!v substitute(substitute(expand('%:r'), '[/\\]','.','g'),'^\%(\l*\.\)\?','','')`
+
+Copyright   :  Dennis Gosnell `!v strftime("%Y")`
+License     :  BSD3
+
+Maintainer  :  Dennis Gosnell (cdep.illabout@gmail.com)
+Stability   :  experimental
+Portability :  unknown
+
+${0:module description}
+-}
+endsnippet
+
+snippet module "a module definition with the current module name" b
+module `!v substitute(substitute(expand('%:r'), '[/\\]','.','g'),'^\%(\l*\.\)\?','','')`
+  (
+  ) where
 endsnippet
