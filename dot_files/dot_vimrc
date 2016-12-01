@@ -473,7 +473,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'vim-scripts/Align'
 
 	" Ocaml syntax.
-	Bundle 'rgrinberg/vim-ocaml'
+	" Bundle 'rgrinberg/vim-ocaml'
 
 	" Purescript syntax.
 	Bundle 'raichoo/purescript-vim'
@@ -1496,7 +1496,7 @@ autocmd FileType matlab setlocal commentstring=%%s
 
 " settings for ocaml files.
 " For some reason this doesn't work if we don't use "BufEnter".
-autocmd! BufRead,BufNewFile,BufEnter *.ml,*.mli,*mll,*.mly set filetype=ocaml
+" autocmd! BufRead,BufNewFile,BufEnter *.ml,*.mli,*mll,*.mly set filetype=ocaml
 
 " settings for purescript files
 autocmd FileType purescript set expandtab
@@ -1519,9 +1519,17 @@ autocmd FileType erlang set tabstop=2
 autocmd FileType erlang set shiftwidth=2
 autocmd FileType erlang set softtabstop=2
 
+"""""""""""""""""
+" Extra Options "
+"""""""""""""""""
+
 " turn these on if you want to use vim over a slow link
 "set lazyredraw
 "set nottyfast
+
+"""""""""""""""""
+" Local Options "
+"""""""""""""""""
 
 " load a local .vimrc from "~/.vimrc-local" if it exists
 let vimrc_dir = fnamemodify(expand($MYVIMRC), ":h")
