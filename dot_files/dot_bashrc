@@ -731,6 +731,14 @@ append_to_path PATH "$HOME/.local/bin"
 # If `stack` is available on the path, source it's bash completion script.
 type -P "stack" >/dev/null && eval "$(stack --bash-completion-script stack)"
 
+# If opam configuration files are on the system, then source them.  Else, if
+# opam is on the system, read in its environment variables.
+if [ -r "${HOME}/.opam/opam-init/init.sh" ] ; then
+	source "${HOME}/.opam/opam-init/init.sh" > /dev/null 2> /dev/null
+elif hash opam 2>/dev/null ; then
+	eval `opam config env`
+fi
+
 # start moving to using ~/.bashrc-local instead of ~/.local-bashrc
 if [ -f "$HOME/.local-bashrc" ]
 then
