@@ -87,6 +87,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Ideally I would include 'flow' in this list, but it runs as `flow check`
 	" instead of just `flow`, so it takes too long to run.
 	let g:syntastic_javascript_checkers = ['jshint', 'jslint', 'eslint']
+	" Add merlin to the list of ocaml checkers.
+	let g:syntastic_ocaml_checkers = ['merlin']
 
 
 	if version >= 701
@@ -1518,6 +1520,31 @@ autocmd FileType erlang set expandtab
 autocmd FileType erlang set tabstop=2
 autocmd FileType erlang set shiftwidth=2
 autocmd FileType erlang set softtabstop=2
+
+"""""""""""""""""""""""""""
+" OCaml Specific Settings "
+"""""""""""""""""""""""""""
+
+" Load in the merlin vim settings and ocp-indent settings.
+if executable('opam')
+	let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
+
+	" merlin
+	let g:merlindir = g:opamshare . "/merlin/vim"
+	if isdirectory(g:merlindir)
+		execute "set rtp+=" . g:merlindir
+		" This should get executed so that the merlin documentation is
+		" available.
+		" :execute "helptags " . g:opamshare . "/merlin/vim/doc"
+	endif
+
+	let g:ocpindentdir = g:opamshare . "/ocp-indent/vim"
+	if isdirectory(g:ocpindentdir)
+		" This needs to go on the front of the run time path so that it gets
+		" loaded before the stock vim indentation files.
+		execute "set rtp^=" . g:ocpindentdir
+	endif
+endif
 
 """""""""""""""""
 " Extra Options "
