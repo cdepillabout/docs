@@ -122,6 +122,8 @@ super_link $SCRIPT_DIR/dot_gnupg/gpg.conf $HOME/.gnupg/gpg.conf
 make_directory $HOME/.ghc
 super_link $SCRIPT_DIR/dot_ghc/ghci.conf $HOME/.ghc/ghci.conf
 
+# ocamlinit (for utop)
+super_link $SCRIPT_DIR/dot_ocamlinit $HOME/.ocamlinit
 
 # create a ~/.bashrc_local
 [ ! -f "$HOME/.bashrc-local" ] && touch "$HOME/.bashrc-local"
