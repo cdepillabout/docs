@@ -1,0 +1,11 @@
+
+[edit]
+up: prev-line
+down: next-line
+
+[read-line]
+up: prev-line
+down: next-line
+C-p: history-prev
+C-n: history-next
+
