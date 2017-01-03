@@ -201,11 +201,11 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"let g:haskell_enable_static_pointers = 1 " enable highlighting of static
 	"
 	" Indentation options:
-	let g:haskell_indent_if = 4 " indentation of 'then' and 'else' in if statements.
-	let g:haskell_indent_case = 4 " indentation of cases in case statement.
-	let g:haskell_indent_let = 4 " indentation of additional lines in let statement.
+	let g:haskell_indent_if = 2 " indentation of 'then' and 'else' in if statements.
+	let g:haskell_indent_case = 2 " indentation of cases in case statement.
+	let g:haskell_indent_let = 2 " indentation of additional lines in let statement.
 	let g:haskell_indent_where = 2 " indentation of clauses in where statement.
-	let g:haskell_indent_do = 3 " indentation of things in do statement.
+	let g:haskell_indent_do = 2 " indentation of things in do statement.
 	let g:haskell_indent_in = 0 " indentation of 'in' statement.
 	let g:cabal_indent_section = 2  " indentation of sections in cabal file
 
@@ -526,6 +526,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 	" If you want :UltiSnipsEdit to split your window.
 	" let g:UltiSnipsEditSplit="vertical"
+
+	" Pug file highlighting
+	Bundle 'digitaltoad/vim-pug'
 endif
 
 
@@ -1378,6 +1381,13 @@ autocmd FileType haskell setlocal expandtab
 autocmd BufRead,BufNewFile *.hs setlocal formatprg=hindent
 autocmd FileType haskell setlocal formatprg=hindent
 
+autocmd FileType haskell setlocal tabstop=2
+autocmd FileType haskell setlocal shiftwidth=2
+autocmd FileType haskell setlocal softtabstop=2
+autocmd BufRead,BufNewFile *.hs setlocal tabstop=2
+autocmd BufRead,BufNewFile *.hs setlocal shiftwidth=2
+autocmd BufRead,BufNewFile *.hs setlocal softtabstop=2
+
 " hamlet files (for yesod) also need spaces instead of tabs
 autocmd BufRead,BufNewFile *.hamlet set expandtab
 
@@ -1520,6 +1530,12 @@ autocmd FileType erlang set expandtab
 autocmd FileType erlang set tabstop=2
 autocmd FileType erlang set shiftwidth=2
 autocmd FileType erlang set softtabstop=2
+
+" settings for pug files
+autocmd FileType pug set expandtab
+autocmd FileType pug set tabstop=2
+autocmd FileType pug set shiftwidth=2
+autocmd FileType pug set softtabstop=2
 
 """""""""""""""""""""""""""
 " OCaml Specific Settings "
