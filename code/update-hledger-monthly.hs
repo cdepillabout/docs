@@ -290,9 +290,12 @@ parseCmdLineOptions = liftIO $ execParser opts
 
 type MyParser = Parsec Text ()
 
+-- | Call 'readFile' on the 'inputFilePath' from 'Options'.
 readInputFile :: MonadIO m => Options -> m Text
 readInputFile = readFile . inputFilePath
 
+-- | Read a list of 'SimpleEntriesOnDate' from the 'inputFilePath' in
+-- 'Options', and then convert them to a list of 'DatedEntry's.
 readDatedEntries :: MonadIO m => Options -> m [DatedEntry]
 readDatedEntries options = do
   today <- liftIO getCurrentDay
@@ -305,14 +308,25 @@ readDatedEntries options = do
   pure $
     concatMap simpleEntriesOnDateToDatedEntries simpleEntriesOnDateSkipFirst
 
-parseInputFile :: Day -> Options -> Text -> Either ParseError [SimpleEntriesOnDate]
+-- | Parse the input file passed in as 'Text'.
+parseInputFile
+  :: Day  -- ^ Current 'Day'. Today.
+  -> Options -- ^ Options with the 'inputFilePath'.
+  -> Text -- ^ Entire text of the input file.
+  -> Either ParseError [SimpleEntriesOnDate]
 parseInputFile today options inputFile =
   parse (simpleEntriesOnDatesParser today) (inputFilePath options) inputFile
 
-simpleEntriesOnDatesParser :: Day -> MyParser [SimpleEntriesOnDate]
+-- | Run 'simpleEntriesOnDateParser' multiple times with 'many1'.
+simpleEntriesOnDatesParser
+  :: Day  -- ^ Current 'Day'. Today.
+  -> MyParser [SimpleEntriesOnDate]
 simpleEntriesOnDatesParser today = spaces *> many1 (simpleEntriesOnDateParser today)
 
-simpleEntriesOnDateParser :: Day -> MyParser SimpleEntriesOnDate
+-- | Parse a 'SimpleEntriesOnDate'.
+simpleEntriesOnDateParser
+  :: Day  -- ^ Current 'Day'. Today.
+  -> MyParser SimpleEntriesOnDate
 simpleEntriesOnDateParser today = do
   day <- dayParser today
   spaces
@@ -343,7 +357,15 @@ simpleEntryParser today = do
       let simpleEntry = SimpleEntry posInt $ pack desc
       pure simpleEntry
 
-dayParser :: Day -> MyParser Day
+-- | Parse a 'Day' from a value like @12/28@.
+--
+-- Uses 'calcYear' to figure out whether the year for the parsed 'Day' should
+-- be this year or the previous year.
+dayParser
+  :: Day -- ^ This input 'Day' is the 'Day' for today.  It is used to determine
+         -- whether the output 'Day's year will be this year or the previous
+         -- year.
+  -> MyParser Day
 dayParser today = do
   PositiveInt month <- positiveIntParser
   void $ char '/'
@@ -426,21 +448,27 @@ data SimpleEntry = SimpleEntry
   , description :: Text
   } deriving (Data, Eq, Generic, Read, Show, Typeable)
 
+-- | This is the main type read from the input file.  It is a 'Day' with a
+-- list of 'SimpleEntry's.
 data SimpleEntriesOnDate = SimpleEntriesOnDate
   { day :: Day
   , simpleEntries :: [SimpleEntry]
   } deriving (Data, Eq, Generic, Read, Show, Typeable)
 
+-- | A list of 'SimpleEntry's will get turned into this data type, which is
+-- used throughout most of the code.
 data DatedEntry = DatedEntry
   { day :: Day
   , amount :: PositiveInt
   , description :: Text
   } deriving (Data, Eq, Generic, Read, Show, Typeable)
 
+-- | Convert a 'Day' and a 'SimpleEntry' to a 'DatedEntry'.
 simpleEntryToDatedEntry :: Day -> SimpleEntry -> DatedEntry
 simpleEntryToDatedEntry day SimpleEntry {amount, description} =
   DatedEntry day amount description
 
+-- | Convert a 'SimplEntriesOnDate' to a list of 'DatedEntry's.
 simpleEntriesOnDateToDatedEntries :: SimpleEntriesOnDate -> [DatedEntry]
 simpleEntriesOnDateToDatedEntries SimpleEntriesOnDate {day, simpleEntries} =
   simpleEntryToDatedEntry day <$> simpleEntries
