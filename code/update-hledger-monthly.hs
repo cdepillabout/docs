@@ -17,7 +17,8 @@ import ClassyPrelude
 
 import Control.FromSum (fromEitherOrM, fromMaybeOrM)
 import Data.Data (Data)
-import Hledger.Cli.Add (transactionsSimilarTo)
+import Hledger.Cli.Add
+       (journalAddTransaction, transactionsSimilarTo)
 import Hledger.Cli.CliOptions (CliOpts(..))
 import Hledger.Cli.Main (argsToCliOpts)
 import Hledger.Cli.Utils (withJournalDo)
@@ -37,7 +38,6 @@ import System.Exit (exitFailure)
 import Text.Parsec
        (Parsec, ParseError, (<?>), char, digit, getInput, many1, noneOf,
         parse, parserFail, spaces)
-import Text.Pretty.Simple (pPrint)
 
 getHledgerCliOptsWithJournal :: MonadIO m => m CliOpts
 getHledgerCliOptsWithJournal = do
@@ -66,6 +66,17 @@ getSimilarTransaction today hledgerCliOpts journal desc =
 what :: MonadIO m => [DatedEntry] -> CliOpts -> Journal -> m ()
 what datedEntries hledgerCliOpts journal = do
   today <- liftIO getCurrentDay
+  let transactions =
+        snd <$>
+        datedEntriesToTransactions
+          today
+          hledgerCliOpts
+          journal
+          datedEntries
+  traverse_ (liftIO . journalAddTransaction journal hledgerCliOpts) transactions
+
+datedEntriesToTransactions :: Day -> CliOpts -> Journal -> [DatedEntry] -> [(DatedEntry, Transaction)]
+datedEntriesToTransactions today hledgerCliOpts journal datedEntries =
   let datedEntriesAndMaybeSimilarTransactions =
         zipDatedEntryAndSimilarTransaction today hledgerCliOpts journal <$>
         datedEntries
@@ -75,7 +86,7 @@ what datedEntries hledgerCliOpts journal = do
           datedEntriesAndMaybeSimilarTransactions
       datedEntriesAndTransactions =
         fmap (uncurry nothingTransactionToTempTransaction) datedEntriesAndMaybeNewTransactions
-  pPrint datedEntriesAndTransactions
+  in datedEntriesAndTransactions
 
 nothingTransactionToTempTransaction :: DatedEntry -> Maybe Transaction -> (DatedEntry, Transaction)
 nothingTransactionToTempTransaction datedEntry (Just transaction) = (datedEntry, transaction)
@@ -199,9 +210,12 @@ readDatedEntries options = do
   today <- liftIO getCurrentDay
   inputFile <- readInputFile options
   let eitherSimpleEntriesOnDate = parseInputFile today options inputFile
-  simpleEntriesOnDate <- fromEitherOrM eitherSimpleEntriesOnDate $ \parseError ->
+  simpleEntriesOnDate <-
+    fromEitherOrM eitherSimpleEntriesOnDate $ \parseError ->
       die $ "Got parser error: " <> tshow parseError
-  pure $ concatMap simpleEntriesOnDateToDatedEntries simpleEntriesOnDate
+  let simpleEntriesOnDateSkipFirst = tailSafe simpleEntriesOnDate
+  pure $
+    concatMap simpleEntriesOnDateToDatedEntries simpleEntriesOnDateSkipFirst
 
 parseInputFile :: Day -> Options -> Text -> Either ParseError [SimpleEntriesOnDate]
 parseInputFile today options inputFile =
@@ -288,6 +302,10 @@ die msg = do
 
 applyFuncAndZip :: (a -> b) -> a -> (a, b)
 applyFuncAndZip f a = (a, f a)
+
+tailSafe :: [a] -> [a]
+tailSafe [] = []
+tailSafe (_:t) = t
 
 -----------
 -- Types --
