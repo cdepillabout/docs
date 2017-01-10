@@ -203,7 +203,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" Indentation options:
 	let g:haskell_indent_if = 2 " indentation of 'then' and 'else' in if statements.
 	let g:haskell_indent_case = 2 " indentation of cases in case statement.
-	let g:haskell_indent_let = 2 " indentation of additional lines in let statement.
+	let g:haskell_indent_let = 4 " indentation of additional lines in let statement.
 	let g:haskell_indent_where = 2 " indentation of clauses in where statement.
 	let g:haskell_indent_do = 2 " indentation of things in do statement.
 	let g:haskell_indent_in = 0 " indentation of 'in' statement.
