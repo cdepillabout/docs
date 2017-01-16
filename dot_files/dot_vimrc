@@ -804,6 +804,8 @@ nnoremap ` '
 " Let zz do :w
 nnoremap zz :w<CR>
 
+vnoremap <C-F> <PageDown>
+
 
 """""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""" Functions """""""""""""""""""
@@ -1377,9 +1379,13 @@ autocmd BufRead,BufNewFile *.hs setlocal expandtab
 autocmd BufRead,BufNewFile *.lhs setlocal expandtab
 " maybe this could also be done with
 autocmd FileType haskell setlocal expandtab
-" set the indenter to hindent
-autocmd BufRead,BufNewFile *.hs setlocal formatprg=hindent
-autocmd FileType haskell setlocal formatprg=hindent
+" Set the indenter to hindent
+" autocmd BufRead,BufNewFile *.hs setlocal formatprg=hindent
+" autocmd FileType haskell setlocal formatprg=hindent
+" Since formatprg is a global option (and not a global-local option), we have
+" to do this dance to get formatprg be the correct value:
+autocmd BufEnter *.hs set formatprg=hindent
+autocmd BufLeave *.hs set formatprg=
 
 autocmd FileType haskell setlocal tabstop=2
 autocmd FileType haskell setlocal shiftwidth=2
