@@ -1384,6 +1384,7 @@ autocmd FileType haskell setlocal expandtab
 " autocmd FileType haskell setlocal formatprg=hindent
 " Since formatprg is a global option (and not a global-local option), we have
 " to do this dance to get formatprg be the correct value:
+" https://groups.google.com/forum/#!msg/vim_dev/cFK1UjstyAk/mreb2H4VCtoJ
 autocmd BufEnter *.hs set formatprg=hindent
 autocmd BufLeave *.hs set formatprg=
 
