@@ -109,8 +109,14 @@ datedEntriesToTransactions today hledgerCliOpts journal datedEntries =
         fmap
           (uncurry zipDatedEntryAndNewTransaction)
           datedEntriesAndMaybeSimilarTransactions
+      datedEntriesAndMaybeNewTransactionsAndAtm =
+        fmap
+          (uncurry zipDatedEntryAndAtmTransaction)
+          datedEntriesAndMaybeNewTransactions
       datedEntriesAndTransactions =
-        fmap (uncurry nothingTransactionToTempTransaction) datedEntriesAndMaybeNewTransactions
+        fmap
+          (uncurry nothingTransactionToTempTransaction)
+          datedEntriesAndMaybeNewTransactionsAndAtm
   in datedEntriesAndTransactions
 
 -- | Takes a 'DatedEntry' and a 'Maybe' 'Transaction'.  If the 'Maybe'
@@ -167,6 +173,37 @@ zipDatedEntryAndNewTransaction datedEntry (Just similarTransaction) =
       datedEntry
       similarTransaction)
 
+-- | In @'zipDatedEntryAndNewTransaction' datedEntry maybeSimilarTransaction@,
+-- if @maybeSimilarTransaction@ is 'Nothing' and the @datedEntry@ has a
+-- description of \"atm\", then return an atm 'Transaction'.
+zipDatedEntryAndAtmTransaction
+  :: DatedEntry
+  -> Maybe Transaction
+  -> (DatedEntry, Maybe Transaction)
+zipDatedEntryAndAtmTransaction datedEntry (Just similarTransaction) =
+  (datedEntry, Just similarTransaction)
+zipDatedEntryAndAtmTransaction datedEntry@DatedEntry {description = "atm"} Nothing =
+  (datedEntry, Just $ createAtmTransaction datedEntry)
+zipDatedEntryAndAtmTransaction datedEntry Nothing =
+  (datedEntry, Nothing)
+
+-- | Convert a 'DatedEntry' into a ATM 'Transaction'.
+createAtmTransaction :: DatedEntry -> Transaction
+createAtmTransaction datedEntry =
+  let entryAmount = datedEntryAmountToQuantity datedEntry
+      cashAmount = num entryAmount
+      checkingAmount = num (negate entryAmount)
+      assetsCashPosting =
+        nullposting {paccount = "assets:cash", pamount = Mixed [cashAmount]}
+      assetsCheckingPosting =
+        nullposting
+        {paccount = "assets:checking:mizuho", pamount = Mixed [checkingAmount]}
+  in nulltransaction
+     { tdate = (day :: DatedEntry -> Day) datedEntry
+     , tdescription = "atm"
+     , tpostings = [assetsCashPosting, assetsCheckingPosting]
+     }
+
 -- | Find a similar 'Transaction' for a given 'DatedEntry'. Uses
 -- 'getSimilarTransaction'.
 --
@@ -198,7 +235,6 @@ datedEntryAndSimilarTransactionToRealTransaction datedEntry similarTransaction =
       expensesAccount <- findExpensesAccountName account1 account2
       pure $ createNewTransaction datedEntry assetsCashAccount expensesAccount
     _ -> Nothing
-
 
 -- | Create a new 'Transaction' based on the 'DatedEntry' with the given
 -- 'AccountName's.
