@@ -52,6 +52,8 @@ super_link $SCRIPT_DIR/dot_screenrc $HOME/.screenrc
 make_directory $HOME/.emacs-backups/
 make_directory $HOME/.emacs.d/
 # super_link $SCRIPT_DIR/dot_emacs.d/local.el $HOME/.emacs.d/local.el
+super_link $SCRIPT_DIR/dot_spacemacs $HOME/.spacemacs
+
 
 # xmonad files
 make_directory $HOME/.xmonad
