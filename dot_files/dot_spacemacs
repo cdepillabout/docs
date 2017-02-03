@@ -291,6 +291,13 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  (custom-set-variables
+   '(spacemacs-theme-custom-colors
+     '((bg1 . "#000000")
+       (bg2 . "#111111")
+       (bg3 . "#222222")
+       (bg4 . "#333333")))
+   '(spacemacs-theme-comment-bg nil))
   )
 
 (defun dotspacemacs/user-config ()
