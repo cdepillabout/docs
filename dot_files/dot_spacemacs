@@ -48,7 +48,7 @@ values."
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     spell-checking
+     ;; spell-checking
      syntax-checking
      version-control
      )
@@ -308,7 +308,12 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
- (setq vc-follow-symlinks t)
+  (setq
+   ;; Always follow symlinks when opening files.  This helps with making sure
+   ;; that we are editing files in projects.  Especially dot files.
+   vc-follow-symlinks t
+   )
+  (add-hook 'text-mode-hook 'spacemacs/toggle-truncate-lines-off)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
