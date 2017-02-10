@@ -313,6 +313,7 @@ you should place your code here."
    ;; that we are editing files in projects.  Especially dot files.
    vc-follow-symlinks t
    )
+  ;; Wrap lines in text mode.
   (add-hook 'text-mode-hook 'spacemacs/toggle-truncate-lines-off)
   )
 
