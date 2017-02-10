@@ -315,6 +315,8 @@ you should place your code here."
    )
   ;; Wrap lines in text mode.
   (add-hook 'text-mode-hook 'spacemacs/toggle-truncate-lines-off)
+  ;; Make sure the time is displayed in the status bar.
+  (display-time-mode 1)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
