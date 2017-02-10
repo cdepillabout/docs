@@ -71,7 +71,6 @@ SQLite
 Dockerfile
 AWS
 Heroku
-PostgreSQL
 Redis
 MVC
 UI
