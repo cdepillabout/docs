@@ -575,8 +575,8 @@ alias t='mytake_and_ls'
 export HISTCONTROL='ignoreboth'
 
 # make history bigger
-export HISTFILESIZE=20000
-export HISTSIZE=10000
+export HISTFILESIZE=40000
+export HISTSIZE=20000
 
 # ignore dumb commands in history
 export HISTIGNORE="&:ls:[bf]g:exit:cd:gst:hg st:lsr:ls -lah:tree"
