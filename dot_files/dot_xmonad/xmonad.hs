@@ -7,19 +7,21 @@ import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.IO (Handle, hPutStrLn)
 import XMonad
-    ( ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook
-    , Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId, ScreenDetail
-    , WindowSet, WorkspaceId, X
-    , XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.), (-->)
-    , (=?), (<+>), composeAll, doIgnore, float, get, gets, handleEventHook
-    , kill, layoutHook, manageHook, refresh, resource, restart, screenRect
-    , screenWorkspace, sendMessage, setLayout, spawn, terminal, tileWindow
-    , trace, windows, windowset, withFocused, withWindowSet, whenJust
-    , workspaces, xmonad )
+       (ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook,
+        Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
+        ScreenDetail, WindowSet, WorkspaceId, X,
+        XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.),
+        (-->), (=?), (<+>), composeAll, doIgnore, float, get, gets,
+        handleEventHook, kill, layoutHook, manageHook, refresh, resource,
+        restart, screenRect, screenWorkspace, sendMessage, setLayout,
+        spawn, terminal, tileWindow, trace, windows, windowset,
+        withFocused, withWindowSet, whenJust, workspaces, xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
-import XMonad.Layout.NoBorders (smartBorders)
+import XMonad.Layout (Choose, Full, Mirror, Tall)
+import XMonad.Layout.LayoutModifier (ModifiedLayout)
+import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Hooks.ManageDocks
-    ( ToggleStruts(ToggleStruts), avoidStruts, manageDocks )
+       (AvoidStruts, ToggleStruts(ToggleStruts), avoidStruts, docks, manageDocks)
 import XMonad.Hooks.ManageHelpers
     ( (-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook )
 import XMonad.Hooks.DynamicLog
@@ -30,27 +32,18 @@ import XMonad.Util.Run (spawnPipe)
 
 main :: IO ()
 main = do
-    --display <- openDisplay ""
-    --let defaultScreen = defaultScreen display
-    --let defaultScreen = defaultScreenOfDisplay display
-    --let screenSize = widthOfScreen defaultScreen
-
     xmobarProc <- spawnPipe "xmobar"
-
-    xmonad def
+    xmonad $ docks $ def
         { modMask = myModMask
         , layoutHook = myLayout
         , keys = myKeys
-        , terminal = "on-screen roxterm"
+        , terminal = "roxterm"
         , logHook = myLogHook xmobarProc
         , borderWidth = myBorderWidth
-        , manageHook = manageDocks
-                   <+> manageHook def
-                   <+> composeAll myManagementHooks
-                   <+> composeOne myMaybeManagementHooks
         }
 
--- check out http://haskell.org/haskellwiki/Xmonad/Config_archive/Template_xmonad.hs_(darcs)
+-- check out
+-- http://haskell.org/haskellwiki/Xmonad/Config_archive/Template_xmonad.hs_(darcs)
 -- for the defaults
 
 myLogHook :: Handle -> X ()
@@ -70,23 +63,9 @@ myModMask = mod4Mask
 
 -- avoidStruts will make sure not avoid any sort of menu or status bar.
 -- smartBorders will only use a border where necessary.
-myLayout = avoidStruts $ smartBorders $ layoutHook def
-
--- Special actions to be performed on newly created windows matching
--- specific properties.
-myManagementHooks :: [ManageHook]
-myManagementHooks = [ resource =? "stalonetray" --> doIgnore
-                    ]
-
--- Special actions to be performed on newly created windows matching
--- specific properties. Only returns action for first ManageHook that
--- returns a Just.
-myMaybeManagementHooks :: [MaybeManageHook]
-myMaybeManagementHooks = [ -- Make sure that full screened windows like
-                           -- firefox's flash are actually shown as full
-                           -- screen.
-                           isFullscreen -?> doFullFloat
-                         ]
+myLayout
+  :: ModifiedLayout AvoidStruts (ModifiedLayout SmartBorder (Choose Tall (Choose (Mirror Tall) Full))) Window
+myLayout = avoidStruts . smartBorders $ layoutHook def
 
 -- Key bindings. Add, modify or remove key bindings here.
 myKeys :: XConfig Layout -> Map (ButtonMask, KeySym) (X ())
