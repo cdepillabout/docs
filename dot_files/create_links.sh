@@ -129,6 +129,10 @@ super_link $SCRIPT_DIR/dot_ghc/ghci.conf $HOME/.ghc/ghci.conf
 super_link $SCRIPT_DIR/dot_ocamlinit $HOME/.ocamlinit
 super_link $SCRIPT_DIR/dot_lambda-term-inputrc $HOME/.lambda-term-inputrc
 
+# files under .config
+make_directory $HOME/.config
+super_link $SCRIPT_DIR/dot_config/user-dirs.dirs $HOME/.config/user-dirs.dirs
+
 # create a ~/.bashrc_local
 [ ! -f "$HOME/.bashrc-local" ] && touch "$HOME/.bashrc-local"
 
