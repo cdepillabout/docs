@@ -317,6 +317,8 @@ you should place your code here."
   (add-hook 'text-mode-hook 'spacemacs/toggle-truncate-lines-off)
   ;; Make sure the time is displayed in the status bar.
   (display-time-mode 1)
+  ;; Make sure that TRAMP uses the correct PATH on a remote server.
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
