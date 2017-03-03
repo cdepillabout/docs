@@ -182,10 +182,10 @@ zipDatedEntryAndAtmTransaction
   -> (DatedEntry, Maybe Transaction)
 zipDatedEntryAndAtmTransaction datedEntry (Just similarTransaction) =
   (datedEntry, Just similarTransaction)
-zipDatedEntryAndAtmTransaction datedEntry@DatedEntry {description = "atm"} Nothing =
-  (datedEntry, Just $ createAtmTransaction datedEntry)
-zipDatedEntryAndAtmTransaction datedEntry Nothing =
-  (datedEntry, Nothing)
+zipDatedEntryAndAtmTransaction datedEntry@DatedEntry {description} Nothing
+  | toLower description == "atm" =
+    (datedEntry, Just $ createAtmTransaction datedEntry)
+zipDatedEntryAndAtmTransaction datedEntry Nothing = (datedEntry, Nothing)
 
 -- | Convert a 'DatedEntry' into a ATM 'Transaction'.
 createAtmTransaction :: DatedEntry -> Transaction
@@ -247,14 +247,13 @@ createNewTransaction datedEntry assetsCashAccount expensesAccount =
   let entryAmount = datedEntryAmountToQuantity datedEntry
       expensesAmount = num entryAmount
       assetsCashAmount = num (negate entryAmount)
-      expensesPosting =
-        accountAndAmountToPosting expensesAccount expensesAmount
+      expensesPosting = accountAndAmountToPosting expensesAccount expensesAmount
       assetsCashPosting =
         accountAndAmountToPosting assetsCashAccount assetsCashAmount
   in nulltransaction
      { tdate = (day :: DatedEntry -> Day) datedEntry
      , tdescription = (description :: DatedEntry -> Text) datedEntry
-     , tpostings = [assetsCashPosting, expensesPosting]
+     , tpostings = [expensesPosting, assetsCashPosting]
      }
 
 -- | Create a temporary @TODO@ 'Transaction' that needs to filled in by hand
