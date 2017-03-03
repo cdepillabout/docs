@@ -65,7 +65,8 @@ xterm -e ssh-add &
 # startup syndaemon.  This disables the synaptics touchpad for two seconds
 # after every keypress.  This stops me from accidentally making the mouse
 # click when I am typing.
-syndaemon -t -K &
+# XXX: This isn't needed any more now that I am using libinput.
+#syndaemon -t -K &
 
 # setup keyboard keymap based on what which keyboards are available
 ( sleep 3 && setup-keyboard ) &
