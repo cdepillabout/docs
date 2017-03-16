@@ -44,6 +44,11 @@ shelltitle " "
 # bash will get the running command added after it
 #shelltitle "$ |bash:"
 
+# Don't wait to send the ESC key to the underlying shell.
+# This was causing problems in lag in emacs when coming out of insert mode.
+# https://github.com/syl20bnr/spacemacs/issues/7145
+# http://unix.stackexchange.com/questions/8439/gnu-screen-makes-vim-esc-key-slow
+maptimeout 0
 
 screen 7
 screen 6
