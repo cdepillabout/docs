@@ -321,8 +321,9 @@ you should place your code here."
   (display-time-mode 1)
   ;; Make sure that TRAMP uses the correct PATH on a remote server.
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-  ;; Disable smartparens everywhere.
+  ;; Disable smartparens everywhere.  I hate smartparens.
   (remove-hook 'prog-mode-hook #'smartparens-mode)
+  (spacemacs/toggle-smartparens-globally-off)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
