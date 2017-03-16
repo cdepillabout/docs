@@ -41,7 +41,9 @@ values."
      colors
      emacs-lisp
      git
-     haskell
+     (haskell :variables
+              haskell-completion-backend 'intero
+              haskell-enable-hindent-style "fundamental")
      helm
      markdown
      (org :variables org-enable-github-support t)
@@ -319,6 +321,8 @@ you should place your code here."
   (display-time-mode 1)
   ;; Make sure that TRAMP uses the correct PATH on a remote server.
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+  ;; Disable smartparens everywhere.
+  (remove-hook 'prog-mode-hook #'smartparens-mode)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
