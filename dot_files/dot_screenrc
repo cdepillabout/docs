@@ -16,7 +16,7 @@ defbce "on"
 
 hardstatus on
 hardstatus alwayslastline
-hardstatus string "%{= wb}%-w%{.yb}%n %t%{-}%+w %=%{b r} %H %{..b}[%l] %{..K}%C%a "
+hardstatus string "%{= wb}%-w%{.yb}%n %t%{-}%+w %=%{b r} %H %{..b}%S %{..K}%C%a "
 
 #caption always "%{kB}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kB}%?%+Lw%?"
 
