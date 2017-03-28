@@ -521,7 +521,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Plugin 'SirVer/ultisnips'
 	Plugin 'honza/vim-snippets'
 	" Trigger configuration.
-	let g:UltiSnipsExpandTrigger="<c-f>"
+	let g:UltiSnipsExpandTrigger="<c-g>"
 	let g:UltiSnipsJumpForwardTrigger="<c-j>"
 	let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 	" If you want :UltiSnipsEdit to split your window.
