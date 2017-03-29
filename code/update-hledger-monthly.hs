@@ -36,8 +36,8 @@ import Options.Applicative
 import System.Environment (lookupEnv)
 import System.Exit (exitFailure)
 import Text.Parsec
-       (Parsec, ParseError, (<?>), char, digit, getInput, many1, noneOf,
-        parse, parserFail, spaces)
+       (Parsec, ParseError, (<?>), char, digit, eof, getInput, many1,
+        noneOf, parse, parserFail, spaces)
 
 -- | Look for the @HLEDGER_DEFAULT_LEDGER@ environment variable, and set it as
 -- the 'file_' field in a default set of 'CliOpts'.
@@ -356,7 +356,8 @@ parseInputFile today options inputFile =
 simpleEntriesOnDatesParser
   :: Day  -- ^ Current 'Day'. Today.
   -> MyParser [SimpleEntriesOnDate]
-simpleEntriesOnDatesParser today = spaces *> many1 (simpleEntriesOnDateParser today)
+simpleEntriesOnDatesParser today =
+  spaces *> many1 (simpleEntriesOnDateParser today) <* spaces <* eof
 
 -- | Parse a 'SimpleEntriesOnDate'.
 simpleEntriesOnDateParser
