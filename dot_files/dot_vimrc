@@ -1519,9 +1519,9 @@ autocmd FileType matlab setlocal commentstring=%%s
 
 " settings for purescript files
 autocmd FileType purescript set expandtab
-autocmd FileType purescript set tabstop=4
-autocmd FileType purescript set shiftwidth=4
-autocmd FileType purescript set softtabstop=4
+autocmd FileType purescript set tabstop=2
+autocmd FileType purescript set shiftwidth=2
+autocmd FileType purescript set softtabstop=2
 autocmd FileType purescript setlocal formatoptions+=1crq formatoptions-=t
 autocmd FileType purescript setlocal commentstring=--%s
 autocmd FileType purescript setlocal comments=:--
