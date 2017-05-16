@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cd ~/.xmonad
+
+stack \
+	ghc \
+	--resolver "lts-8.13" \
+	--package dbus \
+	--package libxml-sax \
+	--package xmonad \
+	--package xmonad-contrib \
+	-- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -v2 -o "${1}"
+

@@ -58,6 +58,7 @@ super_link $SCRIPT_DIR/dot_spacemacs $HOME/.spacemacs
 # xmonad files
 make_directory $HOME/.xmonad
 super_link $SCRIPT_DIR/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
+super_link $SCRIPT_DIR/dot_xmonad/build $HOME/.xmonad/build
 
 # xmobar files
 #super_link $SCRIPT_DIR/dot_xmobarrc $HOME/.xmobarrc
