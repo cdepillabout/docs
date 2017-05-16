@@ -39,7 +39,7 @@ import XMonad.Util.Run (spawnPipe)
 
 main :: IO ()
 main = do
-  xmonad $ {- ewmh $ pagerHints $ -} docks $ def
+  xmonad . ewmh . pagerHints . docks $ def
     { borderWidth = myBorderWidth
     , keys = myKeys
     , layoutHook = myLayout

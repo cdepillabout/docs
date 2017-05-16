@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+#
+#
 
 function die ()
 {
@@ -9,15 +11,17 @@ function die ()
 
 cd ~/.xmonad
 
+# Source the xmonad build variables, like the LTS version to use.
 source ./xmonad_build_vars.sh
 
 if [ "$?" -ne 0 ] ; then
 	die "Failed to source the xmonad_build_vars.sh file."
 fi
 
+# Create the binary directory for things like taffybar and gtk2hs build tools.
 mkdir -p "${XMONAD_LOCAL_BIN_PATH}"
 
-# This is for taffybar.
+# Install gtk2hs-buildtools for taffybar.
 PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
 	--resolver "${XMONAD_STACK_RESOLVER}" \
 	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
@@ -27,6 +31,7 @@ if [ "$?" -ne 0 ] ; then
 	die "Failed to install gtk2hs-buildtools (for taffybar)."
 fi
 
+# Install taffybar.
 PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
 	--resolver "${XMONAD_STACK_RESOLVER}" \
 	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
@@ -39,6 +44,26 @@ if [ "$?" -ne 0 ] ; then
 	die "Failed to install taffybar."
 fi
 
+# Install xmonad.
+PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
+	--resolver "${XMONAD_STACK_RESOLVER}" \
+	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
+	xmonad
+
+if [ "$?" -ne 0 ] ; then
+	die "Failed to install xmonad."
+fi
+
+# delete old xmonad output files
+rm -rf "${XMONAD_DIR}/xmonad.hi" "${XMONAD_DIR}/xmonad.o"
+
+# Figure out what the binary name is for the output xmonad binary.
+xmonad_binary="${1}"
+if [ "$xmonad_binary" == "" ] ; then
+	xmonad_binary="xmonad-x86_64-linux"
+fi
+
+# Build our xmonad config.
 PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
 	--resolver "${XMONAD_STACK_RESOLVER}" \
 	--package dbus \
@@ -47,4 +72,4 @@ PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
 	--package taffybar \
 	--package xmonad \
 	--package xmonad-contrib \
-	-- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -o "${1}"
+	-- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -o "${xmonad_binary}"

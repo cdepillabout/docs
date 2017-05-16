@@ -51,12 +51,6 @@ redshift-gtk -l 35:140 &
 # stalonetray
 #stalonetray &
 
-# taffybar
-# source "${HOME}/.xmonad/xmonad_build_vars.sh"
-# PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
-# 	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
-# 	--resolver="${XMONAD_STACK_RESOLVER}" \
-# 	-- taffybar &
 
 # screensaver
 /usr/bin/xscreensaver -no-splash &
@@ -78,8 +72,17 @@ xterm -e ssh-add &
 # setup keyboard keymap based on what which keyboards are available
 ( sleep 3 && setup-keyboard ) &
 
+# source xmonad settings for xmonad and taffybar
+source "${HOME}/.xmonad/xmonad_build_vars.sh"
+
+# taffybar
+# PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
+# 	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
+# 	--resolver="${XMONAD_STACK_RESOLVER}" \
+# 	-- taffybar &
+
 # startup xmonad
-xmonad &
-# fluxbox &
+${XMONAD_LOCAL_BIN_PATH}/xmonad &
+#fluxbox &
 windowmanagerpid=$!
 wait $windowmanagerpid
