@@ -1,24 +1,34 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+function die ()
+{
+	local msg="${1}"
+	echo "${msg}" >&2
+    exit 1
+}
 
 cd ~/.xmonad
 
-source ~/.xmonad_build_vars.sh
+source ./xmonad_build_vars.sh
+
+if [ "$?" -ne 0 ] ; then
+	die "Failed to source the xmonad_build_vars.sh file."
+fi
 
 mkdir -p "${XMONAD_LOCAL_BIN_PATH}"
 
 # This is for taffybar.
 PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
-	--resolver "${STACK_RESOLVER}" \
+	--resolver "${XMONAD_STACK_RESOLVER}" \
 	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
 	gtk2hs-buildtools \
 
 if [ "$?" -ne 0 ] ; then
-	echo "Failed to install gtk2hs-buildtools (for taffybar)."
-    exit 1
+	die "Failed to install gtk2hs-buildtools (for taffybar)."
 fi
 
 PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
-	--resolver "${STACK_RESOLVER}" \
+	--resolver "${XMONAD_STACK_RESOLVER}" \
 	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
 	dbus \
 	gtk-traymanager \
@@ -26,12 +36,11 @@ PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
 	taffybar
 
 if [ "$?" -ne 0 ] ; then
-	echo "Failed to install taffybar."
-    exit 1
+	die "Failed to install taffybar."
 fi
 
 PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
-	--resolver "${STACK_RESOLVER}" \
+	--resolver "${XMONAD_STACK_RESOLVER}" \
 	--package dbus \
 	--package gtk-traymanager \
 	--package libxml-sax \
