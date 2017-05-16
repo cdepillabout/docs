@@ -2,12 +2,40 @@
 
 cd ~/.xmonad
 
-stack \
-	ghc \
-	--resolver "lts-8.13" \
+source ~/.xmonad_build_vars.sh
+
+mkdir -p "${XMONAD_LOCAL_BIN_PATH}"
+
+# This is for taffybar.
+PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
+	--resolver "${STACK_RESOLVER}" \
+	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
+	gtk2hs-buildtools \
+
+if [ "$?" -ne 0 ] ; then
+	echo "Failed to install gtk2hs-buildtools (for taffybar)."
+    exit 1
+fi
+
+PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
+	--resolver "${STACK_RESOLVER}" \
+	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
+	dbus \
+	gtk-traymanager \
+	libxml-sax \
+	taffybar
+
+if [ "$?" -ne 0 ] ; then
+	echo "Failed to install taffybar."
+    exit 1
+fi
+
+PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
+	--resolver "${STACK_RESOLVER}" \
 	--package dbus \
+	--package gtk-traymanager \
 	--package libxml-sax \
+	--package taffybar \
 	--package xmonad \
 	--package xmonad-contrib \
-	-- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -v2 -o "${1}"
-
+	-- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -o "${1}"

@@ -8,7 +8,7 @@ import DBus.Client (Client, connectSession)
 import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.IO (Handle, hPutStrLn)
-import System.Taffybar.XMonadLog (dbusLog)
+import System.Taffybar.Hooks.PagerHints (pagerHints)
 import XMonad
        (ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook,
         Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
@@ -23,12 +23,12 @@ import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Layout (Choose, Full, Mirror, Tall)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
--- import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
        (AvoidStruts, ToggleStruts(ToggleStruts), avoidStruts, docks,
         manageDocks)
 import XMonad.Hooks.ManageHelpers
        ((-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook)
+import XMonad.Hooks.EwmhDesktops (ewmh)
 import XMonad.Hooks.DynamicLog
        (dynamicLogWithPP, ppOutput, ppTitle, shorten, xmobarPP,
         xmobarColor)
@@ -39,21 +39,18 @@ import XMonad.Util.Run (spawnPipe)
 
 main :: IO ()
 main = do
-  client <- connectSession
-  xmonad $ docks $ def
+  xmonad $ ewmh $ pagerHints $ docks $ def
     { borderWidth = myBorderWidth
     , keys = myKeys
     , layoutHook = myLayout
-    , logHook = myLogHook client
-    , manageHook = manageDocks
+    , logHook = myLogHook
+    -- , manageHook = manageDocks
     , modMask = myModMask
     , terminal = "roxterm"
     }
 
-myLogHook :: Client -> X ()
-myLogHook client = do
-    workspaceHistoryHook
-    dbusLog client defaultPP
+myLogHook :: X ()
+myLogHook = workspaceHistoryHook
 
 myBorderWidth :: Dimension
 myBorderWidth = 5
