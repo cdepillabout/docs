@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Create the proper links from ~/ to my dot files.
 
+######################
+## Helper functions ##
+######################
+
 # change directory to this file
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 ret="$?"
@@ -25,6 +29,9 @@ function super_link {
 		rm "${link_target}"
 	fi
 
+	[ -e "${file_name}" ] || \
+		die "ERROR! The file we are trying to link from doesn't exist: ${file_name}."
+
 	ln -sf $file_name $link_target
 }
 
@@ -39,6 +46,9 @@ function make_directory {
 	fi
 }
 
+###################
+## Files under ~ ##
+###################
 
 # bashrc files
 super_link $SCRIPT_DIR/dot_bashrc $HOME/.bashrc
@@ -59,7 +69,7 @@ super_link $SCRIPT_DIR/dot_spacemacs $HOME/.spacemacs
 make_directory $HOME/.xmonad
 super_link $SCRIPT_DIR/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
 super_link $SCRIPT_DIR/dot_xmonad/build $HOME/.xmonad/build
-super_link $SCRIPT_DIR/dot_xmonad/build $HOME/.xmonad/xmonad_build_vars.sh
+super_link $SCRIPT_DIR/dot_xmonad/xmonad_build_vars.sh $HOME/.xmonad/xmonad_build_vars.sh
 
 # xmobar files
 #super_link $SCRIPT_DIR/dot_xmobarrc $HOME/.xmobarrc
@@ -131,13 +141,25 @@ super_link $SCRIPT_DIR/dot_ghc/ghci.conf $HOME/.ghc/ghci.conf
 super_link $SCRIPT_DIR/dot_ocamlinit $HOME/.ocamlinit
 super_link $SCRIPT_DIR/dot_lambda-term-inputrc $HOME/.lambda-term-inputrc
 
-# files under .config
+#########################
+## files under .config ##
+#########################
+
 make_directory $HOME/.config
+
+# taffybar
+make_directory $HOME/.config/taffybar
+super_link $SCRIPT_DIR/dot_config/taffybar/taffybar.hs $HOME/.config/taffybar/taffybar.hs
+
+# xdg user-dirs file
 super_link $SCRIPT_DIR/dot_config/user-dirs.dirs $HOME/.config/user-dirs.dirs
+
+###########################################
+## Additional install and setup commands ##
+###########################################
 
 # create a ~/.bashrc_local
 [ ! -f "$HOME/.bashrc-local" ] && touch "$HOME/.bashrc-local"
-
 
 # ask if we will add umask 022 to bashrc-local
 grep "umask" "$HOME/.bashrc-local" 2>/dev/null 1>&2
