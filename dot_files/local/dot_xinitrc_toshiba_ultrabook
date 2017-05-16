@@ -49,7 +49,7 @@ nm-applet &
 redshift-gtk -l 35:140 &
 
 # stalonetray
-stalonetray &
+#stalonetray &
 
 # screensaver
 /usr/bin/xscreensaver -no-splash &
@@ -73,5 +73,6 @@ xterm -e ssh-add &
 
 # startup xmonad
 xmonad &
+# fluxbox &
 windowmanagerpid=$!
 wait $windowmanagerpid

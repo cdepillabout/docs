@@ -1,11 +1,14 @@
+{-# OPTIONS_GHC -Wall #-}
 
 import Control.Monad.IO.Class (liftIO)
 import Data.Default (def)
 import Data.Map (Map)
 import qualified Data.Map as M
+import DBus.Client (Client, connectSession)
 import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.IO (Handle, hPutStrLn)
+import System.Taffybar.XMonadLog (dbusLog)
 import XMonad
        (ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook,
         Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
@@ -20,39 +23,37 @@ import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Layout (Choose, Full, Mirror, Tall)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
+-- import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
-       (AvoidStruts, ToggleStruts(ToggleStruts), avoidStruts, docks, manageDocks)
+       (AvoidStruts, ToggleStruts(ToggleStruts), avoidStruts, docks,
+        manageDocks)
 import XMonad.Hooks.ManageHelpers
-    ( (-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook )
+       ((-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook)
 import XMonad.Hooks.DynamicLog
-    ( dynamicLogWithPP, ppOutput, ppTitle, shorten, xmobarPP, xmobarColor )
-import XMonad.Hooks.WorkspaceHistory (workspaceHistory, workspaceHistoryHook)
+       (dynamicLogWithPP, ppOutput, ppTitle, shorten, xmobarPP,
+        xmobarColor)
+import XMonad.Hooks.WorkspaceHistory
+       (workspaceHistory, workspaceHistoryHook)
 import qualified XMonad.StackSet as W
 import XMonad.Util.Run (spawnPipe)
 
 main :: IO ()
 main = do
-    xmobarProc <- spawnPipe "xmobar"
-    xmonad $ docks $ def
-        { modMask = myModMask
-        , layoutHook = myLayout
-        , keys = myKeys
-        , terminal = "roxterm"
-        , logHook = myLogHook xmobarProc
-        , borderWidth = myBorderWidth
-        }
+  client <- connectSession
+  xmonad $ docks $ def
+    { borderWidth = myBorderWidth
+    , keys = myKeys
+    , layoutHook = myLayout
+    , logHook = myLogHook client
+    , manageHook = manageDocks
+    , modMask = myModMask
+    , terminal = "roxterm"
+    }
 
--- check out
--- http://haskell.org/haskellwiki/Xmonad/Config_archive/Template_xmonad.hs_(darcs)
--- for the defaults
-
-myLogHook :: Handle -> X ()
-myLogHook xmobarProc = do
+myLogHook :: Client -> X ()
+myLogHook client = do
     workspaceHistoryHook
-    dynamicLogWithPP xmobarPP
-        { ppOutput = hPutStrLn xmobarProc
-        , ppTitle = xmobarColor "lightblue" "" . shorten 150
-        }
+    dbusLog client defaultPP
 
 myBorderWidth :: Dimension
 myBorderWidth = 5
@@ -64,7 +65,12 @@ myModMask = mod4Mask
 -- avoidStruts will make sure not avoid any sort of menu or status bar.
 -- smartBorders will only use a border where necessary.
 myLayout
-  :: ModifiedLayout AvoidStruts (ModifiedLayout SmartBorder (Choose Tall (Choose (Mirror Tall) Full))) Window
+  :: ModifiedLayout
+       AvoidStruts
+       (ModifiedLayout
+         SmartBorder
+         (Choose Tall (Choose (Mirror Tall) Full)))
+       Window
 myLayout = avoidStruts . smartBorders $ layoutHook def
 
 -- Key bindings. Add, modify or remove key bindings here.
