@@ -76,10 +76,10 @@ xterm -e ssh-add &
 source "${HOME}/.xmonad/xmonad_build_vars.sh"
 
 # taffybar
-# PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
-# 	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
-# 	--resolver="${XMONAD_STACK_RESOLVER}" \
-# 	-- taffybar &
+PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
+	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
+	--resolver="${XMONAD_STACK_RESOLVER}" \
+	-- taffybar &
 
 # startup xmonad
 ${XMONAD_LOCAL_BIN_PATH}/xmonad &
