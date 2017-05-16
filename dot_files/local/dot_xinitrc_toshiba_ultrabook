@@ -52,11 +52,11 @@ redshift-gtk -l 35:140 &
 #stalonetray &
 
 # taffybar
-source "${HOME}/.xmonad/xmonad_build_vars.sh"
-PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
-	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
-	--resolver="${XMONAD_STACK_RESOLVER}" \
-	-- taffybar &
+# source "${HOME}/.xmonad/xmonad_build_vars.sh"
+# PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
+# 	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
+# 	--resolver="${XMONAD_STACK_RESOLVER}" \
+# 	-- taffybar &
 
 # screensaver
 /usr/bin/xscreensaver -no-splash &
