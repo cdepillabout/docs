@@ -1,22 +1,37 @@
-import System.Taffybar
-import System.Taffybar.Systray
-import System.Taffybar.SimpleClock
-import System.Taffybar.TaffyPager
-import System.Taffybar.Widgets.PollingGraph
-import System.Information.CPU
+{-# OPTIONS_GHC -Wall #-}
 
+import System.Taffybar
+       (defaultTaffybar, defaultTaffybarConfig, endWidgets, startWidgets)
+import System.Taffybar.Systray (systrayNew)
+import System.Taffybar.SimpleClock (textClockNew)
+import System.Taffybar.TaffyPager
+       (defaultPagerConfig, taffyPagerNew)
+import System.Taffybar.Widgets.PollingGraph
+       (defaultGraphConfig, graphDataColors, graphLabel, pollingGraphNew)
+import System.Information.CPU (cpuLoad)
+
+cpuCallback :: IO [Double]
 cpuCallback = do
   (_, systemLoad, totalLoad) <- cpuLoad
-  return [ totalLoad, systemLoad ]
+  pure [totalLoad, systemLoad]
 
+main :: IO ()
 main = do
-  let cpuCfg = defaultGraphConfig { graphDataColors = [ (0, 1, 0, 1), (1, 0, 1, 0.5) ]
-                                  , graphLabel = Just "cpu"
-                                  }
-      clock = textClockNew Nothing "<span fgcolor='orange'>%a %b %_d %H:%M</span>" 1
+  let cpuCfg =
+        defaultGraphConfig
+          { graphDataColors = [ (0, 1, 0, 1), (1, 0, 1, 0.5) ]
+          , graphLabel = Just "cpu"
+          }
+      clock =
+        textClockNew
+          Nothing
+          "<span fgcolor='orange'>%a %b %_d %H:%M</span>"
+          1
       pager = taffyPagerNew defaultPagerConfig
       tray = systrayNew
       cpu = pollingGraphNew cpuCfg 0.5 cpuCallback
-  defaultTaffybar defaultTaffybarConfig { startWidgets = [ pager ]
-                                        , endWidgets = [ tray, clock, cpu ]
-                                        }
+  defaultTaffybar
+    defaultTaffybarConfig
+      { startWidgets = [pager]
+      , endWidgets = [tray, clock, cpu]
+      }

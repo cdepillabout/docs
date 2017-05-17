@@ -59,7 +59,7 @@ rm -rf "${XMONAD_DIR}/xmonad.hi" "${XMONAD_DIR}/xmonad.o"
 
 # Figure out what the binary name is for the output xmonad binary.
 xmonad_binary="${1}"
-if [ "$xmonad_binary" == "" ] ; then
+if [ "${xmonad_binary}" == "" ] ; then
 	xmonad_binary="xmonad-x86_64-linux"
 fi
 

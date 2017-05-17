@@ -4,21 +4,18 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Default (def)
 import Data.Map (Map)
 import qualified Data.Map as M
-import DBus.Client (Client, connectSession)
 import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
-import System.IO (Handle, hPutStrLn)
 import System.Taffybar.Hooks.PagerHints (pagerHints)
 import XMonad
-       (ChangeLayout(NextLayout), Dimension, KeyMask, Layout, ManageHook,
+       (ChangeLayout(NextLayout), Dimension, KeyMask, Layout,
         Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
         ScreenDetail, WindowSet, WorkspaceId, X,
         XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.),
-        (-->), (=?), (<+>), composeAll, doIgnore, float, get, gets,
-        handleEventHook, kill, layoutHook, manageHook, refresh, resource,
-        restart, screenRect, screenWorkspace, sendMessage, setLayout,
-        spawn, terminal, tileWindow, trace, windows, windowset,
-        withFocused, withWindowSet, whenJust, workspaces, xmonad)
+        float, get, kill, layoutHook, manageHook, refresh, restart,
+        screenRect, screenWorkspace, sendMessage, setLayout, spawn,
+        terminal, tileWindow, windows, windowset, withFocused,
+        withWindowSet, whenJust, workspaces, xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Layout (Choose, Full, Mirror, Tall)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
@@ -26,16 +23,10 @@ import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Hooks.ManageDocks
        (AvoidStruts, ToggleStruts(ToggleStruts), avoidStruts, docks,
         manageDocks)
-import XMonad.Hooks.ManageHelpers
-       ((-?>), composeOne, doFullFloat, isFullscreen, MaybeManageHook)
 import XMonad.Hooks.EwmhDesktops (ewmh)
-import XMonad.Hooks.DynamicLog
-       (dynamicLogWithPP, ppOutput, ppTitle, shorten, xmobarPP,
-        xmobarColor)
 import XMonad.Hooks.WorkspaceHistory
        (workspaceHistory, workspaceHistoryHook)
 import qualified XMonad.StackSet as W
-import XMonad.Util.Run (spawnPipe)
 
 main :: IO ()
 main = do
@@ -187,10 +178,6 @@ switchToUnfocusedScreen = do
             -- focused screen.
             (_:workspaceId:_) -> windows $ W.view workspaceId
             _ -> pure ()
-  where
-    secondMay :: [a] -> Maybe a
-    secondMay (_:x:_) = Just x
-    secondMay _ = Nothing
 
 setupWindowForScreenCast :: Window -> X ()
 setupWindowForScreenCast window = do
