@@ -49,7 +49,7 @@ nm-applet &
 redshift-gtk -l 35:140 &
 
 # toggl
-toggldesktop --background &
+(sleep 7 && toggldesktop --background) &
 
 # screensaver
 /usr/bin/xscreensaver -no-splash &
@@ -61,7 +61,7 @@ xterm -e ssh-add &
 
 
 # setup keyboard keymap based on what which keyboards are available
-( sleep 3 && setup-keyboard ) &
+(sleep 3 && setup-keyboard) &
 
 # source xmonad settings for xmonad and taffybar
 source "${HOME}/.xmonad/xmonad_build_vars.sh"
