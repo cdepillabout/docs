@@ -1,5 +1,8 @@
+{-# LANGUAGE MultiWayIf #-}
 {-# OPTIONS_GHC -Wall #-}
 
+import Data.Monoid ((<>))
+import Graphics.UI.Gtk (Widget, widgetShowAll)
 import System.Information.CPU (cpuLoad)
 import System.Information.Memory (parseMeminfo, memoryUsedRatio)
 import System.Taffybar
@@ -15,6 +18,7 @@ import System.Taffybar.TaffyPager
        (defaultPagerConfig, taffyPagerNew)
 import System.Taffybar.Widgets.PollingGraph
        (defaultGraphConfig, graphDataColors, graphLabel, pollingGraphNew)
+import System.Taffybar.Widgets.PollingLabel (pollingLabelNew)
 
 
 memCallback :: IO [Double]
@@ -26,6 +30,29 @@ cpuCallback :: IO [Double]
 cpuCallback = do
   (_, systemLoad, totalLoad) <- cpuLoad
   pure [totalLoad, systemLoad]
+
+cpuTempNew :: Double -> IO Widget
+cpuTempNew pollSeconds = do
+  let temp = fmap tempLabel getCPUTemp
+  label <- pollingLabelNew "" pollSeconds temp
+  widgetShowAll label
+  pure label
+  where
+    getCPUTemp :: IO Int
+    getCPUTemp = do
+      temp <-
+        readFile "/sys/bus/platform/devices/coretemp.0/hwmon/hwmon1/temp1_input"
+      pure $ read temp `div` 1000
+
+    tempLabel :: Int -> String
+    tempLabel temp =
+      let color =
+            if | temp > 70 -> "red"
+               | temp > 62 -> "orange"
+               | temp > 54 -> "white"
+               | temp > 46 -> "green"
+               | otherwise -> "blue"
+      in "temp <span fgcolor='" <> color <> "'>" <> show temp <> "</span>C"
 
 main :: IO ()
 main = do
@@ -56,9 +83,10 @@ main = do
       mem = pollingGraphNew memCfg 5 memCallback
       -- disk = dioMonitorNew diskCfg 2 "sda"
       battery = batteryBarNew defaultBatteryConfig 2
+      temp = cpuTempNew 5
   defaultTaffybar
     defaultTaffybarConfig
       { barHeight = 20
       , startWidgets = [pager, note]
-      , endWidgets = [tray, clock, battery, mem, cpu]
+      , endWidgets = [tray, clock, battery, temp, cpu, mem]
       }
