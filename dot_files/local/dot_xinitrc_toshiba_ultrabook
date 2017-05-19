@@ -48,9 +48,6 @@ nm-applet &
 # coded for now.)
 redshift-gtk -l 35:140 &
 
-# toggl
-(sleep 7 && toggldesktop --background) &
-
 # screensaver
 /usr/bin/xscreensaver -no-splash &
 
