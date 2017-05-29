@@ -33,37 +33,39 @@ export TERM="xterm-256color"
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
-# load fcitx
+# Start fcitx (Japanese IME)
 export XMODIFIERS="@im=fcitx"
 export XMODIFIER="@im=fcitx"
 export GTK_IM_MODULE="fcitx"
 export QT_IM_MODULE="fcitx"
 fcitx &
 
-# network manager applet
+# Start NetworkManager applet
 nm-applet &
 
-# redshift
-# (NOTE: doesn't really work when you are offline.  So I am leaving it hard
-# coded for now.)
+# Start redshift.  Reduces blue in screen when it gets late at night.
+# (NOTE: doesn't really work when you are offline.  So I am leaving the
+# lattitude and logitue hard coded for now.)
 redshift-gtk -l 35:140 &
 
-# screensaver
+# Start pnmixer.  This lets us control the audio volume from the system tray.
+pnmixer &
+
+# Start screen-saver.
 /usr/bin/xscreensaver -no-splash &
 
-# add ssh keys
+# Add ssh keys.
 eval `ssh-agent`
 xterm -e ssh-add &
 #ssh-add "$HOME/.ssh/awsworkprivatekeypair2.pem" &
 
-
-# setup keyboard keymap based on what which keyboards are available
+# Setup keyboard keymap based on what which keyboards are available
 (sleep 3 && setup-keyboard) &
 
-# source xmonad settings for xmonad and taffybar
+# Source xmonad settings for xmonad and taffybar
 source "${HOME}/.xmonad/xmonad_build_vars.sh"
 
-# taffybar
+# Start taffybar.
 PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
 	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
 	--resolver="${XMONAD_STACK_RESOLVER}" \
@@ -73,7 +75,7 @@ PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
 # we might not want.
 rm -f "${XMONAD_LOCAL_BIN_PATH}/xmonad.state"
 
-# xmonad
+# Start xmonad.
 ${XMONAD_LOCAL_BIN_PATH}/xmonad &
 #fluxbox &
 windowmanagerpid=$!
