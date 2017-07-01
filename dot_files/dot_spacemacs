@@ -321,6 +321,10 @@ you should place your code here."
 
    ;; Emacs will get slow for some reason if I have highlight lines on.
    global-hl-line-mode nil
+
+   ;; Make sure that shift-insert will actually insert what is on the X
+   ;; clipboard.
+   select-enable-primary t
    )
 
   ;; Wrap lines in text mode.
