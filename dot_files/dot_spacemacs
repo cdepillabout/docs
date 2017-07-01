@@ -335,6 +335,10 @@ you should place your code here."
   ;; Disable smartparens everywhere.  I hate smartparens.
   (remove-hook 'prog-mode-hook #'smartparens-mode)
   (spacemacs/toggle-smartparens-globally-off)
+
+  ;; Make sure that middle-clicking on a heading in org-mode doesn't change the
+  ;; level of the heading but instead just yanks like normal.
+  (setcdr org-bullets-bullet-map nil)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
