@@ -338,7 +338,9 @@ you should place your code here."
 
   ;; Make sure that middle-clicking on a heading in org-mode doesn't change the
   ;; level of the heading but instead just yanks like normal.
-  (setcdr org-bullets-bullet-map nil)
+  (with-eval-after-load "org-bullets"
+    (setcdr org-bullets-bullet-map nil)
+    )
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
