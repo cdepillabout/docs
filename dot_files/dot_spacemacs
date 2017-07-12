@@ -46,6 +46,7 @@ values."
               haskell-enable-hindent-style "fundamental")
      helm
      html
+     ;; latex
      markdown
      (org :variables org-enable-github-support t)
      (shell :variables
