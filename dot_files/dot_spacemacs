@@ -337,6 +337,9 @@ you should place your code here."
    ;; Make sure that shift-insert will actually insert what is on the X
    ;; clipboard.
    select-enable-primary t
+
+   ;; Add beamer to the default export backends for org-mode.
+   org-export-backends '(ascii beamer gfm html latex md odt)
    )
 
   ;; Wrap lines in text mode.
