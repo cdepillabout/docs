@@ -64,7 +64,9 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages
+   '(smartparens
+     )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -340,6 +342,9 @@ you should place your code here."
 
    ;; Add beamer to the default export backends for org-mode.
    org-export-backends '(ascii beamer gfm html latex md odt)
+
+   ;; Don't show text popups for completion.
+   company-idle-delay nil
    )
 
   ;; Wrap lines in text mode.
@@ -352,8 +357,8 @@ you should place your code here."
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
   ;; Disable smartparens everywhere.  I hate smartparens.
-  (remove-hook 'prog-mode-hook #'smartparens-mode)
-  (spacemacs/toggle-smartparens-globally-off)
+  ;;(remove-hook 'prog-mode-hook #'smartparens-mode)
+  ;;(spacemacs/toggle-smartparens-globally-off)
 
   ;; Make sure that middle-clicking on a heading in org-mode doesn't change the
   ;; level of the heading but instead just yanks like normal.
