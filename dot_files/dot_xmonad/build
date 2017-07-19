@@ -25,7 +25,7 @@ mkdir -p "${XMONAD_LOCAL_BIN_PATH}"
 PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
 	--resolver "${XMONAD_STACK_RESOLVER}" \
 	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
-	gtk2hs-buildtools \
+	gtk2hs-buildtools
 
 if [ "$?" -ne 0 ] ; then
 	die "Failed to install gtk2hs-buildtools (for taffybar)."
