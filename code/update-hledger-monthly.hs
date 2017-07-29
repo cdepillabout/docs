@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --verbose --resolver lts-7.14 --install-ghc --no-system-ghc runghc --package classy-prelude --package hledger-lib --package hledger --package pretty-simple --package from-sum --package optparse-applicative -- -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates -fwarn-monomorphism-restriction
+-- stack --verbose --resolver lts-9.0 --install-ghc --no-system-ghc runghc --package classy-prelude --package hledger-lib --package hledger --package pretty-simple --package from-sum --package optparse-applicative -- -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates -fwarn-monomorphism-restriction
 
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -327,7 +327,7 @@ type MyParser = Parsec Text ()
 
 -- | Call 'readFile' on the 'inputFilePath' from 'Options'.
 readInputFile :: MonadIO m => Options -> m Text
-readInputFile = readFile . inputFilePath
+readInputFile options = fmap decodeUtf8 . readFile $ inputFilePath options
 
 -- | Read a list of 'SimpleEntriesOnDate' from the 'inputFilePath' in
 -- 'Options', and then convert them to a list of 'DatedEntry's.
