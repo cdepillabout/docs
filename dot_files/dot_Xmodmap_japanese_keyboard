@@ -49,7 +49,7 @@ keycode 135 = bar
 add Mod4 = Super_L
 add Mod4 = Super_R
 
-add Mod3 = Meta_L
+add Mod1 = Meta_L
 
 add Mod1 = Alt_R
 add Mod1 = Alt_L
