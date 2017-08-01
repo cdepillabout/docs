@@ -348,6 +348,10 @@ you should place your code here."
 
    ;; Don't show text popups for completion.
    company-idle-delay nil
+
+   ;; Don't show the holes menu when loading files in the idris repl by
+   ;; default.
+   idris-hole-show-on-load nil
    )
 
   ;; Wrap lines in text mode.
