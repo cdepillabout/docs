@@ -348,7 +348,7 @@ you should place your code here."
    org-export-backends '(ascii beamer gfm html latex md odt)
 
    ;; Don't show text popups for completion.
-   company-idle-delay nil
+   ;company-idle-delay nil
 
    ;; Don't show the holes menu when loading files in the idris repl by
    ;; default.
