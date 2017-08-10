@@ -365,8 +365,8 @@ you should place your code here."
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
   ;; Disable smartparens everywhere.  I hate smartparens.
-  ;;(remove-hook 'prog-mode-hook #'smartparens-mode)
-  ;;(spacemacs/toggle-smartparens-globally-off)
+  (remove-hook 'prog-mode-hook #'smartparens-mode)
+  ;(spacemacs/toggle-smartparens-globally-off)
 
   ;; Make sure that middle-clicking on a heading in org-mode doesn't change the
   ;; level of the heading but instead just yanks like normal.
