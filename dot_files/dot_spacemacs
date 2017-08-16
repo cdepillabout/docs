@@ -368,6 +368,9 @@ you should place your code here."
   (remove-hook 'prog-mode-hook #'smartparens-mode)
   ;(spacemacs/toggle-smartparens-globally-off)
 
+  ;; Make sure that things are not auto-indented in idris-mode.
+  (add-to-list 'spacemacs-indent-sensitive-modes 'idris-mode)
+
   ;; Make sure that middle-clicking on a heading in org-mode doesn't change the
   ;; level of the heading but instead just yanks like normal.
   (with-eval-after-load "org-bullets"
