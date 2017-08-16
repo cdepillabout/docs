@@ -354,6 +354,11 @@ you should place your code here."
    ;; Don't show the holes menu when loading files in the idris repl by
    ;; default.
    idris-hole-show-on-load nil
+
+   ;; The Tuareg moe uses abbreviations, so we are asked if we want to save them
+   ;; when quitting.  It is annoying to get asked every time, so this makes them
+   ;; saved silently to the default file.
+   save-abbrevs 'silently
    )
 
   ;; Wrap lines in text mode.
