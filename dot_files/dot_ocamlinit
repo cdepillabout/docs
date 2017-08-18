@@ -11,4 +11,4 @@ let () =
 #require "core.syntax";;
 
 (* Use Core as the standard library *)
-open Core.Std
+open Core
