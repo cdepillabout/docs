@@ -22,3 +22,5 @@
 	ci = commit
 	co = checkout
 	ps = push
+[fetch]
+	prune = true
