@@ -359,6 +359,9 @@ you should place your code here."
    ;; when quitting.  It is annoying to get asked every time, so this makes them
    ;; saved silently to the default file.
    save-abbrevs 'silently
+
+   ;; Make sure magit will prune when fetching.
+   magit-fetch-arguments '("--prune")
    )
 
   ;; Wrap lines in text mode.
