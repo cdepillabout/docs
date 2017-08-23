@@ -362,6 +362,9 @@ you should place your code here."
 
    ;; Make sure magit will prune when fetching.
    magit-fetch-arguments '("--prune")
+
+   ;; Make sure magit will give us pretty graphs when viewing the log.
+   magit-log-arguments '("--graph" "--color" "--decorate" "-n256")
    )
 
   ;; Wrap lines in text mode.
