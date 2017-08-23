@@ -385,6 +385,13 @@ you should place your code here."
   (with-eval-after-load "org-bullets"
     (setcdr org-bullets-bullet-map nil)
     )
+
+  ;; Disable auto-complete by default for all buffers.
+  (add-hook
+   'buffer-list-update-hook
+   (lambda ()
+     (if (eq 'company auto-completion-front-end)
+         (company-mode -1))))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
