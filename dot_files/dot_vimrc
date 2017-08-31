@@ -1345,6 +1345,7 @@ call Add_eol_whitespace_highlighting("bash")
 call Add_eol_whitespace_highlighting("c")
 call Add_eol_whitespace_highlighting("cpp")
 call Add_eol_whitespace_highlighting("css")
+call Add_eol_whitespace_highlighting("dockerfile")
 call Add_eol_whitespace_highlighting("elm")
 call Add_eol_whitespace_highlighting("erlang")
 call Add_eol_whitespace_highlighting("hamlet")
@@ -1557,6 +1558,9 @@ autocmd FileType terraform setlocal expandtab
 autocmd FileType terraform setlocal commentstring=#%s
 autocmd FileType terraform setlocal comments=:#
 autocmd FileType terraform setlocal formatoptions+=r formatoptions+=o
+
+" settings for Dockerfiles
+autocmd FileType dockerfile setlocal expandtab
 
 """""""""""""""""""""""""""
 " OCaml Specific Settings "
