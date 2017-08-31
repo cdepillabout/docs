@@ -1587,6 +1587,8 @@ if executable('opam')
 	endif
 endif
 
+autocmd FileType ocaml set commentstring=(*%s*)
+
 """""""""""""""""
 " Extra Options "
 """""""""""""""""
