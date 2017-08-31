@@ -529,6 +529,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Pug file highlighting
 	Bundle 'digitaltoad/vim-pug'
+
+	" Terraform
+	Bundle 'hashivim/vim-terraform'
 endif
 
 
@@ -1362,6 +1365,7 @@ call Add_eol_whitespace_highlighting("python")
 call Add_eol_whitespace_highlighting("ruby")
 call Add_eol_whitespace_highlighting("scala")
 call Add_eol_whitespace_highlighting("sh")
+call Add_eol_whitespace_highlighting("terraform")
 call Add_eol_whitespace_highlighting("vim")
 call Add_eol_whitespace_highlighting("yaml")
 
@@ -1544,6 +1548,15 @@ autocmd FileType pug set expandtab
 autocmd FileType pug set tabstop=2
 autocmd FileType pug set shiftwidth=2
 autocmd FileType pug set softtabstop=2
+
+" settings for terraform files
+autocmd FileType terraform setlocal tabstop=2
+autocmd FileType terraform setlocal shiftwidth=2
+autocmd FileType terraform setlocal softtabstop=2
+autocmd FileType terraform setlocal expandtab
+autocmd FileType terraform setlocal commentstring=#%s
+autocmd FileType terraform setlocal comments=:#
+autocmd FileType terraform setlocal formatoptions+=r formatoptions+=o
 
 """""""""""""""""""""""""""
 " OCaml Specific Settings "
