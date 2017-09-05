@@ -1587,7 +1587,11 @@ if executable('opam')
 	endif
 endif
 
-autocmd FileType ocaml set commentstring=(*%s*)
+autocmd FileType ocaml setlocal tabstop=2
+autocmd FileType ocaml setlocal shiftwidth=2
+autocmd FileType ocaml setlocal softtabstop=2
+autocmd FileType ocaml setlocal expandtab
+autocmd FileType ocaml setlocal commentstring=(*%s*)
 
 """""""""""""""""
 " Extra Options "
