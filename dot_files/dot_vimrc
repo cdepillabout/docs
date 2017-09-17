@@ -532,6 +532,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Terraform
 	Bundle 'hashivim/vim-terraform'
+
+	" Nix
+	Bundle 'LnL7/vim-nix'
 endif
 
 
