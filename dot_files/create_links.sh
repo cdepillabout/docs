@@ -141,6 +141,10 @@ super_link $SCRIPT_DIR/dot_ghc/ghci.conf $HOME/.ghc/ghci.conf
 super_link $SCRIPT_DIR/dot_ocamlinit $HOME/.ocamlinit
 super_link $SCRIPT_DIR/dot_lambda-term-inputrc $HOME/.lambda-term-inputrc
 
+# local .nix environment files
+make_directory $HOME/.nix-local
+super_link $SCRIPT_DIR/dot_nix-local/ocaml.nix $HOME/.nix-local/ocaml.nix
+
 #########################
 ## files under .config ##
 #########################
