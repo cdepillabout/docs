@@ -24,12 +24,15 @@ stdenv.mkDerivation rec {
   buildInputs =
     (with ocaml-ng.ocamlPackages_4_05; [
       ocaml
-      # findlib
       camlp4
     ]) ++ 
     [
+      # this is for conf-gmp
+      gmp
       ncurses
       opam
+      # this is for cryptokit
+      zlib
     ];
 
   # shellHook = ''
