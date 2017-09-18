@@ -29,8 +29,11 @@ stdenv.mkDerivation rec {
     [
       # this is for conf-gmp
       gmp
+      # this is for the ocaml compiler
       ncurses
       opam
+      # this is for the ssl library
+      openssl
       # this is for cryptokit
       zlib
     ];
