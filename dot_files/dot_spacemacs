@@ -347,6 +347,7 @@ you should place your code here."
    ;; Make sure that long lines will be wrapped in org-mode.
    ;; TODO: This doesn't appear to actually change whether or not lines are
    ;; truncated.
+   ;; https://emacs.stackexchange.com/questions/35473/how-to-set-truncate-lines-in-org-mode-in-spacemacs-by-default
    org-startup-truncated nil
 
    ;; Don't show text popups for completion.
@@ -373,6 +374,7 @@ you should place your code here."
 
   ;; Make sure that lines wrap in org-mode as well.
   ;; TODO: This doesn't appear to do anything.
+  ;; https://emacs.stackexchange.com/questions/35473/how-to-set-truncate-lines-in-org-mode-in-spacemacs-by-default
   (add-hook 'org-mode-hook 'spacemacs/toggle-truncate-lines-off)
 
   ;; Make sure the time is displayed in the status bar.
