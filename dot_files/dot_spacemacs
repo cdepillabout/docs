@@ -413,40 +413,42 @@ you should place your code here."
          (company-mode -1))))
 
   ;; Setup my GTD workflow when the ~/gtd/ directory exists.
-  (when (file-directory-p "~/gtd")
+  (with-eval-after-load "org"
+    (when (file-directory-p "~/gtd")
 
-    ;; Set which files are checked for agendas.
-    (setq
-     org-agenda-files
-     '("~/gtd/inbox.org"
-       "~/gtd/projects.org"
-       "~/gtd/tickler.org"))
+      ;; Set which files are checked for agendas.
+      (setq
+      org-agenda-files
+      '("~/gtd/inbox.org"
+        "~/gtd/projects.org"
+        "~/gtd/tickler.org"))
 
-    ;; Define capture templates for use with org-capture.
-    (setq
-     org-capture-templates
-     '(("t"
-        "Todo [inbox]"
-        entry
-        (file+headline "~/gtd/inbox.org" "Inbox")
-        "* TODO %i%?")
-       ("T"
-        "Tickler"
-        entry
-        (file+headline "~/gtd/tickler.org" "Tickler")
-        "* %i%? \n %U")))
+      ;; Define capture templates for use with org-capture.
+      (setq
+      org-capture-templates
+      '(("t"
+          "Todo [inbox]"
+          entry
+          (file+headline "~/gtd/inbox.org" "Inbox")
+          "* TODO %i%?")
+        ("T"
+          "Tickler"
+          entry
+          (file+headline "~/gtd/tickler.org" "Tickler")
+          "* %i%? \n %U")))
 
-    ;; Create the refile targets for moving around tasks.
-    (setq
-     org-refile-targets
-     '(("~/gtd/projects.org" :maxlevel . 3)
-       ("~/gtd/someday.org" :level . 1)
-       ("~/gtd/tickler.org" :maxlevel . 2)))
+      ;; Create the refile targets for moving around tasks.
+      (setq
+      org-refile-targets
+      '(("~/gtd/projects.org" :maxlevel . 3)
+        ("~/gtd/someday.org" :level . 1)
+        ("~/gtd/tickler.org" :maxlevel . 2)))
 
-    ;; Setup the todo keywords.
-    (setq
-     org-todo-keywords
-     '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+      ;; Setup the todo keywords.
+      (setq
+      org-todo-keywords
+      '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+      )
     )
   )
 
