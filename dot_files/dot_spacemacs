@@ -372,6 +372,10 @@ you should place your code here."
 
    ;; Make sure magit will give us pretty graphs when viewing the log.
    magit-log-arguments '("--graph" "--color" "--decorate" "-n256")
+
+   ;; Make sure that we can perform command when selecting blocks of text in
+   ;; visual mode in org mode.
+   org-support-shift-select t
    )
 
   ;; Wrap lines in text mode.
