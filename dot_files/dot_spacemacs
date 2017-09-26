@@ -438,6 +438,11 @@ you should place your code here."
      '(("~/gtd/projects.org" :maxlevel . 3)
        ("~/gtd/someday.org" :level . 1)
        ("~/gtd/tickler.org" :maxlevel . 2)))
+
+    ;; Setup the todo keywords.
+    (setq
+     org-todo-keywords
+     '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
     )
   )
 
