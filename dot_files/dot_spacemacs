@@ -376,6 +376,10 @@ you should place your code here."
    ;; Make sure that we can perform command when selecting blocks of text in
    ;; visual mode in org mode.
    org-support-shift-select t
+
+   ;; When calling ", T" to show only TODO actions in a tree in org-mode, don't
+   ;; highlight matching TODOs with the secondary selection.
+   org-highlight-sparse-tree-matches nil
    )
 
   ;; Wrap lines in text mode.
