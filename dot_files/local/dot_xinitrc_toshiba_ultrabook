@@ -73,7 +73,7 @@ PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
 
 # Remove old xmonad.state file because it keeps around monitor dimensions that
 # we might not want.
-rm -f "${XMONAD_LOCAL_BIN_PATH}/xmonad.state"
+rm -f "${XMONAD_DIR}/xmonad.state"
 
 # Start xmonad.
 ${XMONAD_LOCAL_BIN_PATH}/xmonad &
