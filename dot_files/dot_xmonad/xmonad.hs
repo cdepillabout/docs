@@ -167,7 +167,7 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
 
     -- open graphical emacs
-    , ((modm, xw_i), spawn "gemacs")
+    , ((modm, xK_i), spawn "gemacs")
     ]
 
 -- Switch to the previously focused workspace that is visible on a Xinerama
