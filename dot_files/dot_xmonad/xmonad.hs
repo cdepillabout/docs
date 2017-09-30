@@ -165,6 +165,9 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     -- Use mod-s to make a window floating and resize it for a screencast
     , ((modm, xK_s), withFocused setupWindowForScreenCast)
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
+
+    -- open graphical emacs
+    , ((modm, xw_i), spawn "gemacs")
     ]
 
 -- Switch to the previously focused workspace that is visible on a Xinerama
