@@ -321,6 +321,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
        (bg3 . "#222222")
        (bg4 . "#333333")))
    '(spacemacs-theme-comment-bg nil))
+
+  ;; Don't use exec-path-from-shell to set PATH to the normal path set in
+  ;; ~/.bashrc. Use the PATH that emacs was executed with.
+  (setq exec-path-from-shell-variables nil)
   )
 
 (defun dotspacemacs/user-config ()
