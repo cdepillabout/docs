@@ -268,3 +268,56 @@ function func_exists()
 		echo "no"
 	fi
 }
+
+# Restore the old path if all the elements in the new path are also in the old
+# path.
+#
+# $1 is the path environment variable to use. This should probably be "PATH".
+# $2 is the old "PATH" to compare to (and use).
+#
+# For example, with the current PATH being "/usr/bin:/bin", you can call this
+# function like this:
+#
+# $ old_path="$PATH"
+# $ (do something to change the PATH variable)
+# $ restore_old_path PATH "${old_path}"
+function restore_old_path()
+{
+	envvar="${1}"
+	oldpath="${2}"
+	currentpath="$(eval "echo $(echo '$'$envvar)")"
+
+	if [ -z "${envvar}" -o -z "${oldpath}" ] ; then
+		echo "ERROR! There was an empty value passed to restore_old_path"
+		echo "Your remove_from_path statement is missing an argument."
+		return
+	fi
+
+	# Create an array of all the individual paths in the current PATH.
+	IFS=: read -a currentpath_array <<< "${currentpath}"
+
+	# Create an array of all the individual paths in the old PATH.
+	IFS=: read -a oldpath_array <<< "${oldpath}"
+
+	# Flag to indiciate whether there was an item from the current PATH that
+	# does not exist in the old PATH.
+	all_current_items_in_oldpath="true"
+
+	# Loop over all the items in the current PATH, making sure they are all in
+	# the old PATH.
+	for current_path_element in "${currentpath_array[@]}" ; do
+		found="false"
+		for old_path_element in "${oldpath_array[@]}" ; do
+			if [ "${current_path_element}" == "${old_path_element}" ] ; then
+				found="true"
+			fi
+		done
+		if [ "${found}" == "false" ] ; then
+			all_current_items_in_oldpath="false"
+		fi
+	done
+
+	if [ "${all_current_items_in_oldpath}" == "true" ] ; then
+		export "${envvar}"="${oldpath}"
+	fi
+}
