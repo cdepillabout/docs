@@ -17,10 +17,21 @@ if [[ -e "${HOME}/docs/code/library.sh" ]] ; then
 	source "${HOME}/docs/code/library.sh"
 fi
 
+# Save the current value of PATH so we can potentially restore it later.
+_old_path="${PATH}"
+
 # source the global /etc/profile
 if [[ -f "/etc/profile" ]] ; then
 	source "/etc/profile"
 fi
+
+# /etc/profile might reset our PATH, so we need to undo the reset if we have
+# some special things placed into our path before sourcing ~/.bashrc.  This is
+# mostly useful for running under something like a nix-shell that puts lots of
+# important things into our path that we don't want to lose when sourcing
+# /etc/profile.
+restore_old_path PATH "${_old_path}"
+unset _old_path
 
 # Enable colors for ls, etc.
 if [ -x "`get_location_of_file dircolors`" ]; then
