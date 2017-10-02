@@ -407,6 +407,28 @@ you should place your code here."
   ;; Make sure that things are not auto-indented in idris-mode.
   (add-to-list 'spacemacs-indent-sensitive-modes 'idris-mode)
 
+  (with-eval-after-load "haskell-mode"
+    ;; This changes the evil "O" and "o" keys for haskell-mode to make sure that
+    ;; indentation is done correctly. See
+    ;; https://github.com/haskell/haskell-mode/issues/1265#issuecomment-252492026.
+    (defun haskell-evil-open-above ()
+      (interactive)
+      (evil-digit-argument-or-evil-beginning-of-line)
+      (haskell-indentation-newline-and-indent)
+      (evil-previous-line)
+      (haskell-indentation-indent-line)
+      (evil-append-line nil))
+
+    (defun haskell-evil-open-below ()
+      (interactive)
+      (evil-append-line nil)
+      (haskell-indentation-newline-and-indent))
+
+    (evil-define-key 'normal haskell-mode-map
+      "o" 'haskell-evil-open-below
+      "O" 'haskell-evil-open-above)
+  )
+
   ;; Make sure that middle-clicking on a heading in org-mode doesn't change the
   ;; level of the heading but instead just yanks like normal.
   (with-eval-after-load "org-bullets"
