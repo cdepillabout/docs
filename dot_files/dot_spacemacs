@@ -384,6 +384,9 @@ you should place your code here."
    ;; When calling ", T" to show only TODO actions in a tree in org-mode, don't
    ;; highlight matching TODOs with the secondary selection.
    org-highlight-sparse-tree-matches nil
+
+   ;; Always startup org-mode in indented mode.  This looks better.
+   org-startup-indented t
    )
 
   ;; Wrap lines in text mode.
