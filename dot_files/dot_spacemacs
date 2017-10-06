@@ -451,20 +451,20 @@ you should place your code here."
 
       ;; Set which files are checked for agendas.
       (setq
-      org-agenda-files
-      '("~/gtd/inbox.org"
-        "~/gtd/projects.org"
-        "~/gtd/tickler.org"))
+       org-agenda-files
+       '("~/gtd/inbox.org"
+         "~/gtd/projects.org"
+         "~/gtd/tickler.org"))
 
       ;; Define capture templates for use with org-capture.
       (setq
-      org-capture-templates
-      '(("t"
+       org-capture-templates
+       '(("t"
           "Todo [inbox]"
           entry
           (file+headline "~/gtd/inbox.org" "Inbox")
           "* TODO %i%?")
-        ("T"
+         ("T"
           "Tickler"
           entry
           (file+headline "~/gtd/tickler.org" "Tickler")
@@ -472,15 +472,15 @@ you should place your code here."
 
       ;; Create the refile targets for moving around tasks.
       (setq
-      org-refile-targets
-      '(("~/gtd/projects.org" :maxlevel . 3)
-        ("~/gtd/someday.org" :level . 1)
-        ("~/gtd/tickler.org" :maxlevel . 2)))
+       org-refile-targets
+       '(("~/gtd/projects.org" :maxlevel . 3)
+         ("~/gtd/someday.org" :level . 1)
+         ("~/gtd/tickler.org" :maxlevel . 2)))
 
       ;; Setup the todo keywords.
       (setq
-      org-todo-keywords
-      '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+       org-todo-keywords
+       '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
       )
     )
   )
