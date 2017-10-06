@@ -481,6 +481,11 @@ you should place your code here."
       (setq
        org-todo-keywords
        '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+
+      ;; Setup the default column format if it doesn't appear in the file.
+      (setq
+       org-columns-default-format
+       "%4TODO %55ITEM(Task) %7Effort(Effort){:} %7CLOCKSUM(Clock){:} %TAGS")
       )
     )
   )
