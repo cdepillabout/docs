@@ -387,6 +387,9 @@ you should place your code here."
 
    ;; Always startup org-mode in indented mode.  This looks better.
    org-startup-indented t
+
+   ;; Always show trailing whitespace.
+   show-trailing-whitespace t
    )
 
   ;; Wrap lines in text mode.
