@@ -390,6 +390,14 @@ you should place your code here."
 
    ;; Always show trailing whitespace.
    show-trailing-whitespace t
+
+   ;; Always use org-agenda-log-mode in new agenda views. Can be toggled with
+   ;; 'L'.
+   org-agenda-start-with-log-mode t
+
+   ;; Always use org-agenda-clockreport-mode in new agenda views. Can be toggled
+   ;; with 'R'.
+   org-agenda-start-with-clockreport-mode t
    )
 
   ;; Wrap lines in text mode.
