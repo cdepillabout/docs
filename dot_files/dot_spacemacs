@@ -37,6 +37,7 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      auto-completion
+     ;; This doesn't do anything for the vim editing style.
      ;; better-defaults
      colors
      docker
