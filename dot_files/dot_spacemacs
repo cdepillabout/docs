@@ -486,7 +486,7 @@ you should place your code here."
       (setq
        org-refile-targets
        '(("~/gtd/projects.org" :maxlevel . 3)
-         ("~/gtd/someday.org" :level . 1)
+         ("~/gtd/someday.org" :level . 2)
          ("~/gtd/tickler.org" :maxlevel . 2)))
 
       ;; Setup the todo keywords.
