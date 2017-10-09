@@ -399,6 +399,9 @@ you should place your code here."
    ;; Always use org-agenda-clockreport-mode in new agenda views. Can be toggled
    ;; with 'R'.
    org-agenda-start-with-clockreport-mode t
+
+   ;; Don't use the org-agenda time grid.
+   org-agenda-use-time-grid nil
    )
 
   ;; Wrap lines in text mode.
