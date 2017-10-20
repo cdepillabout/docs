@@ -403,6 +403,10 @@ you should place your code here."
 
    ;; Don't use the org-agenda time grid.
    org-agenda-use-time-grid nil
+
+   ;; Make sure the task that is currently being clocked is shown in the clock
+   ;; report.
+   org-clock-report-include-clocking-task t
    )
 
   ;; Wrap lines in text mode.
