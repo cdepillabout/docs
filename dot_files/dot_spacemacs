@@ -507,6 +507,9 @@ you should place your code here."
       (setq
        org-columns-default-format
        "%4TODO %55ITEM(Task) %7Effort(Effort){:} %7CLOCKSUM(Clock){:} %TAGS")
+
+      ;; Make sure the org clock always comes on in the modeline when it is running.
+      (spacemacs/toggle-mode-line-org-clock-on)
       )
     )
   )
