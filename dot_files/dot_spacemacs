@@ -336,6 +336,8 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+  ;; Set the value of non-buffer-local variables.
   (setq
    ;; Always follow symlinks when opening files.  This helps with making sure
    ;; that we are editing files in projects.  Especially dot files.
@@ -390,9 +392,6 @@ you should place your code here."
    ;; Always startup org-mode in indented mode.  This looks better.
    org-startup-indented t
 
-   ;; Always show trailing whitespace.
-   show-trailing-whitespace t
-
    ;; Always use org-agenda-log-mode in new agenda views. Can be toggled with
    ;; 'L'.
    org-agenda-start-with-log-mode t
@@ -407,6 +406,12 @@ you should place your code here."
    ;; Make sure the task that is currently being clocked is shown in the clock
    ;; report.
    org-clock-report-include-clocking-task t
+   )
+
+  ;; Set the global default value of buffer-local variables.
+  (setq-default
+   ;; Always show trailing whitespace.
+   show-trailing-whitespace t
    )
 
   ;; Wrap lines in text mode.
