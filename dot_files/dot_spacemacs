@@ -470,6 +470,15 @@ you should place your code here."
      (if (eq 'company auto-completion-front-end)
          (company-mode -1))))
 
+  ;; General org-mode settings.
+  (with-eval-after-load "org"
+
+    ;; Make sure that org-mode doesn't show headings with eldoc in the echo
+    ;; area.
+    (remove-hook 'org-mode-hook 'org-eldoc-load)
+    )
+
+
   ;; Setup my GTD workflow when the ~/gtd/ directory exists.
   (with-eval-after-load "org"
     (when (file-directory-p "~/gtd")
@@ -526,6 +535,7 @@ you should place your code here."
 
       ;; Make sure the org clock always comes on in the modeline when it is running.
       (spacemacs/toggle-mode-line-org-clock-on)
+
       )
     )
   )
