@@ -406,11 +406,16 @@ you should place your code here."
    ;; Make sure the task that is currently being clocked is shown in the clock
    ;; report.
    org-clock-report-include-clocking-task t
+
+   ;; Make sure that html indentation is set to 2 by default.
+   web-mode-markup-indent-offset 2
    )
 
   ;; Set the global default value of buffer-local variables.
   (setq-default
    ;; Always show trailing whitespace.
+   ;; TODO: This shouldn't be enabled for all buffers, but just for select
+   ;; buffers (including org-mode).
    show-trailing-whitespace t
    )
 
