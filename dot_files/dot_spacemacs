@@ -44,7 +44,10 @@ values."
      emacs-lisp
      git
      (haskell :variables
-              haskell-completion-backend 'intero
+              ;; Don't use intero because it takes up a lot of memory, makes
+              ;; emacs slow, and doesn't provide that much helpful
+              ;; functionality.
+              ;; haskell-completion-backend 'intero
               haskell-enable-hindent-style "fundamental")
      helm
      html
