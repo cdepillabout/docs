@@ -422,6 +422,13 @@ you should place your code here."
    show-trailing-whitespace t
    )
 
+  ;; Make sure that "*" does evil's normal search forward instead of going into
+  ;; Spacemacs "Symbol Highlight Transient State".
+  ;; https://emacs.stackexchange.com/questions/36590/make-in-spacemacs-work-like-it-does-in-vim
+  (with-eval-after-load 'auto-highlight-symbol
+    (define-key evil-motion-state-map (kbd "*") 'evil-search-word-forward)
+    (define-key evil-motion-state-map (kbd "#") 'evil-search-word-backward))
+
   ;; Wrap lines in text mode.
   (add-hook 'text-mode-hook 'spacemacs/toggle-truncate-lines-off)
 
