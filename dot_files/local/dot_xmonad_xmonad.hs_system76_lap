@@ -21,17 +21,17 @@ main = do
     --let defaultScreen = defaultScreenOfDisplay display
     --let screenSize = widthOfScreen defaultScreen
 
-    xmobarProc <- spawnPipe "xmobar"
+    -- xmobarProc <- spawnPipe "xmobar"
 
     xmonad defaultConfig
         { modMask = myModMask
         , layoutHook = myLayout
         , keys = myKeys
         , terminal = "on-screen roxterm"
-        , logHook = dynamicLogWithPP xmobarPP
-            { ppOutput = hPutStrLn xmobarProc
-            , ppTitle = xmobarColor "lightblue" "" . shorten 150
-            }
+        -- , logHook = dynamicLogWithPP xmobarPP
+        --     { ppOutput = hPutStrLn xmobarProc
+        --     , ppTitle = xmobarColor "lightblue" "" . shorten 150
+        --     }
         , borderWidth = myBorderWidth
         , manageHook = manageDocks
                    <+> manageHook defaultConfig

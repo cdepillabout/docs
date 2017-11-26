@@ -22,7 +22,6 @@ fi
 #	( sleep 3 && xmodmap "$swap_caps_ctrl_xmodmap" ) &
 #fi
 
-xrandr-setup-screens --startup
 
 #setxkbmap -option ctrl:swapcaps     # Swap Left Control and Caps Lock
 setxkbmap -option ctrl:nocaps       # Make Caps Lock a Control key
@@ -43,15 +42,6 @@ fcitx &
 # network manager applet
 nm-applet &
 
-# redshift
-# (TODO: The latitude and longitude are hard-coded because redshift-1.9 doesn't
-# work well with the geocode program.  Version 1.10 is supposed to use
-# geocode-2.0 and work a lot better.)
-# (NOTE: Well, it doesn't seem to work any better with geocode-2.0.  Still
-# doesn't really work when you are offline.  So I am leaving it hard coded for
-# now.)
-redshift-gtk -l 35:140 &
-
 # stalonetray
 stalonetray &
 
@@ -60,6 +50,12 @@ xterm -e ssh-add &
 ssh-add "$HOME/.ssh/awsworkprivatekeypair2.pem" &
 
 eval `gpg-agent --daemon`
+
+#xrandr-setup-screens --startup
+xrandr --verbose \
+	--output LVDS-1 --mode 1920x1080 \
+	--output HDMI-1 --auto --above LVDS-1 \
+	--output DVI-I-1 --off
 
 xmonad &
 windowmanagerpid=$!
