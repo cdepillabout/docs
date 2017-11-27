@@ -80,7 +80,7 @@ then
 	fi
 fi
 
-xmonadExe="${XMONAD_LOCAL_BIN_PATH}/taffybar"
+xmonadExe="${XMONAD_LOCAL_BIN_PATH}/xmonad"
 
 # Install xmonad its executable doesn't exist, or if the settings files are
 # newer than the xmonad executable.
@@ -90,7 +90,7 @@ then
 	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
 		--resolver "${XMONAD_STACK_RESOLVER}" \
 		--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
-		--install-ghc -v --cabal-verbose \
+		--install-ghc \
 		xmonad
 
 	if [ "$?" -ne 0 ]
@@ -114,16 +114,6 @@ then
 	rm -rf "${XMONAD_DIR}/xmonad.hi" "${XMONAD_DIR}/xmonad.o"
 
 	# Build our xmonad config.
-	# PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
-	# 	--resolver "${XMONAD_STACK_RESOLVER}" \
-	# 	--install-ghc \
-	# 	--package dbus \
-	# 	--package gtk-traymanager \
-	# 	--package libxml-sax \
-	# 	--package taffybar \
-	# 	--package xmonad \
-	# 	--package xmonad-contrib \
-	# 	-- --make xmonad.hs -fno-PIC -i -ilib -fforce-recomp -main-is main -o "${xmonadBin}"
 	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
 		--resolver "${XMONAD_STACK_RESOLVER}" \
 		--install-ghc \
