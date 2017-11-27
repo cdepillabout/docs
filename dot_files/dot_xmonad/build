@@ -20,65 +20,113 @@ function die ()
 
 cd ~/.xmonad
 
-# Source the xmonad build variables, like the LTS version to use.
-source ./xmonad_build_vars.sh
+# Input file paths
+build_file_path="./build"
+xmonad_build_vars_file_path="./xmonad_build_vars.sh"
+xmonad_hs_file_path="./xmonad.hs"
 
-if [ "$?" -ne 0 ] ; then
+# Source the xmonad build variables, like the LTS version to use.
+source "${xmonad_build_vars_file_path}"
+
+if [ "$?" -ne 0 ]
+then
 	die "Failed to source the xmonad_build_vars.sh file."
+fi
+
+# The input file with the newest modified time.
+newest_settings_file="./build"
+
+if [ "${xmonad_build_vars_file_path}" -nt "${newest_settings_file}" ]
+then
+	newest_settings_file="${xmonad_build_vars_file_path}"
+fi
+
+if [ "${xmonad_hs_file_path}" -nt "${newest_settings_file}" ]
+then
+	newest_settings_file="${xmonad_hs_file_path}"
 fi
 
 # Create the binary directory for things like taffybar and gtk2hs build tools.
 mkdir -p "${XMONAD_LOCAL_BIN_PATH}"
 
-# Install gtk2hs-buildtools for taffybar.
-PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
-	--resolver "${XMONAD_STACK_RESOLVER}" \
-	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
-	gtk2hs-buildtools
+gtkExe="${XMONAD_LOCAL_BIN_PATH}/gtk2hsC2hs"
 
-if [ "$?" -ne 0 ] ; then
-	die "Failed to install gtk2hs-buildtools (for taffybar)."
+# Install gtk2hs-buildtools (for taffybar) if the binary it produces doesn't
+# exist, or if the settings files are newer than the gtk2hs-buildtools binary
+# files.
+if [[ ( ! -x "${gtkExe}" ) || ( "${newest_settings_file}" -nt "${gtkExe}" ) ]]
+then
+	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
+		--resolver "${XMONAD_STACK_RESOLVER}" \
+		--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
+		gtk2hs-buildtools
+
+	if [ "$?" -ne 0 ]
+	then
+		die "Failed to install gtk2hs-buildtools (for taffybar)."
+	fi
 fi
 
-# Install taffybar.
-PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
-	--resolver "${XMONAD_STACK_RESOLVER}" \
-	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
-	dbus \
-	gtk-traymanager \
-	libxml-sax \
-	taffybar
+taffybarExe="${XMONAD_LOCAL_BIN_PATH}/taffybar"
 
-if [ "$?" -ne 0 ] ; then
-	die "Failed to install taffybar."
+# Install taffybar if its executable doesn't exist, or if the settings files
+# are newer than the taffybar executable.
+if [[ ( ! -x "${taffybarExe}" ) || ( "${newest_settings_file}" -nt "${taffybarExe}" ) ]]
+then
+	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
+		--resolver "${XMONAD_STACK_RESOLVER}" \
+		--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
+		dbus \
+		gtk-traymanager \
+		libxml-sax \
+		taffybar
+
+	if [ "$?" -ne 0 ]
+	then
+		die "Failed to install taffybar."
+	fi
 fi
 
-# Install xmonad.
-PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
-	--resolver "${XMONAD_STACK_RESOLVER}" \
-	--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
-	xmonad
+xmonadExe="${XMONAD_LOCAL_BIN_PATH}/taffybar"
 
-if [ "$?" -ne 0 ] ; then
-	die "Failed to install xmonad."
+# Install xmonad its executable doesn't exist, or if the settings files are
+# newer than the xmonad executable.
+if [[ ( ! -x "${xmonadExe}" ) || ( "${newest_settings_file}" -nt "${xmonadExe}" ) ]]
+then
+	# Install xmonad.
+	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
+		--resolver "${XMONAD_STACK_RESOLVER}" \
+		--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
+		xmonad
+
+	if [ "$?" -ne 0 ]
+	then
+		die "Failed to install xmonad."
+	fi
 fi
-
-# delete old xmonad output files
-rm -rf "${XMONAD_DIR}/xmonad.hi" "${XMONAD_DIR}/xmonad.o"
 
 # Figure out what the binary name is for the output xmonad binary.
-xmonad_binary="${1}"
-if [ "${xmonad_binary}" == "" ] ; then
-	xmonad_binary="xmonad-x86_64-linux"
+xmonadBin="${1}"
+if [ "${xmonadBin}" == "" ]
+then
+	xmonadBin="xmonad-x86_64-linux"
 fi
 
-# Build our xmonad config.
-PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
-	--resolver "${XMONAD_STACK_RESOLVER}" \
-	--package dbus \
-	--package gtk-traymanager \
-	--package libxml-sax \
-	--package taffybar \
-	--package xmonad \
-	--package xmonad-contrib \
-	-- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -o "${xmonad_binary}"
+# Build my xmonad executable it doesn't exist, or if the settings files are
+# newer than the existing executable.
+if [[ ( ! -x "${xmonadBin}" ) || ( "${newest_settings_file}" -nt "${xmonadBin}" ) ]]
+then
+	# delete old xmonad output files
+	rm -rf "${XMONAD_DIR}/xmonad.hi" "${XMONAD_DIR}/xmonad.o"
+
+	# Build our xmonad config.
+	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
+		--resolver "${XMONAD_STACK_RESOLVER}" \
+		--package dbus \
+		--package gtk-traymanager \
+		--package libxml-sax \
+		--package taffybar \
+		--package xmonad \
+		--package xmonad-contrib \
+		-- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -o "${xmonad_binary}"
+fi
