@@ -412,6 +412,10 @@ you should place your code here."
 
    ;; Make sure that html indentation is set to 2 by default.
    web-mode-markup-indent-offset 2
+
+   ;; Make sure that '_' and '^' are not interpreted as sub and super scripts in
+   ;; org-mode unless the value is surrounded with {}.
+   org-use-sub-superscripts '{}
    )
 
   ;; Set the global default value of buffer-local variables.
