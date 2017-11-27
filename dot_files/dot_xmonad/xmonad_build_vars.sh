@@ -4,4 +4,4 @@
 
 export XMONAD_DIR="${HOME}/.xmonad"
 export XMONAD_LOCAL_BIN_PATH="${XMONAD_DIR}/local-bin"
-export XMONAD_STACK_RESOLVER="lts-8.13"
+export XMONAD_STACK_RESOLVER="lts-9.14"

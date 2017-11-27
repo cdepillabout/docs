@@ -50,6 +50,7 @@ then
 	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
 		--resolver "${XMONAD_STACK_RESOLVER}" \
 		--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
+		--install-ghc \
 		gtk2hs-buildtools
 
 	if [ "$?" -ne 0 ]
@@ -67,6 +68,7 @@ then
 	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
 		--resolver "${XMONAD_STACK_RESOLVER}" \
 		--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
+		--install-ghc \
 		dbus \
 		gtk-traymanager \
 		libxml-sax \
@@ -88,6 +90,7 @@ then
 	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack install \
 		--resolver "${XMONAD_STACK_RESOLVER}" \
 		--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
+		--install-ghc -v --cabal-verbose \
 		xmonad
 
 	if [ "$?" -ne 0 ]
@@ -100,7 +103,7 @@ fi
 xmonadBin="${1}"
 if [ "${xmonadBin}" == "" ]
 then
-	xmonadBin="xmonad-x86_64-linux"
+	xmonadBin="./xmonad-x86_64-linux"
 fi
 
 # Build my xmonad executable it doesn't exist, or if the settings files are
@@ -111,13 +114,24 @@ then
 	rm -rf "${XMONAD_DIR}/xmonad.hi" "${XMONAD_DIR}/xmonad.o"
 
 	# Build our xmonad config.
+	# PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
+	# 	--resolver "${XMONAD_STACK_RESOLVER}" \
+	# 	--install-ghc \
+	# 	--package dbus \
+	# 	--package gtk-traymanager \
+	# 	--package libxml-sax \
+	# 	--package taffybar \
+	# 	--package xmonad \
+	# 	--package xmonad-contrib \
+	# 	-- --make xmonad.hs -fno-PIC -i -ilib -fforce-recomp -main-is main -o "${xmonadBin}"
 	PATH="${XMONAD_LOCAL_BIN_PATH}:${PATH}" stack ghc \
 		--resolver "${XMONAD_STACK_RESOLVER}" \
+		--install-ghc \
 		--package dbus \
 		--package gtk-traymanager \
 		--package libxml-sax \
 		--package taffybar \
 		--package xmonad \
 		--package xmonad-contrib \
-		-- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -o "${xmonad_binary}"
+		-- xmonad.hs -o "${xmonadBin}"
 fi
