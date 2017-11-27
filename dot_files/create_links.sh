@@ -20,6 +20,9 @@ function super_link {
 	file_name=$1
 	link_target=$2
 
+	# TODO: This function should also check to make sure that the $link_target
+	# isn't pointing somewhere else (before overwriting it).
+
 	[ ! -e "${link_target}" -o -L "${link_target}" ] || \
 		die "ERROR! $link_target is not a link, so exiting."
 
