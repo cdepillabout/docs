@@ -2,15 +2,6 @@
 #
 #
 
-# TODO: This file should only be run on the following conditions:
-#  1. If the `.xmonad/xmonad-x86_64-linux` binary doesn't exist.
-#  2. If the `.xmonad/local-bin/taffybar` binary doesn't exist.
-#  3. If the `.xmonad/local-bin/xmonad` binary doesn't exist.
-#  4. If the timestamp of any of the "build", "xmonad_build_vars.sh", or
-#     "xmonad.hs" files is newer than the timestamp of the
-#     `.xmonad/xmonad-x86_64-linux`, `.xmonad/local-bin/taffybar`, or
-#     `.xmonad/local-bin/xmonad` binaries.
-
 function die ()
 {
 	local msg="${1}"
