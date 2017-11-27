@@ -49,7 +49,7 @@ nm-applet &
 redshift-gtk -l 35:140 &
 
 # Start pnmixer.  This lets us control the audio volume from the system tray.
-pnmixer &
+# pnmixer &
 
 # Start screen-saver.
 /usr/bin/xscreensaver -no-splash &
