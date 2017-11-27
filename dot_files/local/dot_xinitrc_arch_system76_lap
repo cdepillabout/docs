@@ -45,7 +45,6 @@ nm-applet &
 
 eval `ssh-agent`
 xterm -e ssh-add &
-ssh-add "$HOME/.ssh/awsworkprivatekeypair2.pem" &
 
 eval `gpg-agent --daemon`
 
