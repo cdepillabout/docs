@@ -54,7 +54,11 @@ xrandr --verbose \
 	--output HDMI-1 --auto --above LVDS-1 \
 	--output DVI-I-1 --off &
 
-# Source xmonad settings for xmonad and taffybar
+# Source xmonad settings for xmonad and taffybar.
+# XXX: This must be run using `.` and not `source` on systems where `sh` is
+# not `bash`, because xinit always runs this file with `sh` (even if a
+# different hashbang is specified).  Some versions of `sh` do know know the
+# `source` alias for `.`.
 . "${HOME}/.xmonad/xmonad_build_vars.sh"
 
 # Start taffybar.

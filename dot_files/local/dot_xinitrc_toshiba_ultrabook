@@ -62,7 +62,11 @@ xterm -e ssh-add &
 # Setup keyboard keymap based on what which keyboards are available
 (sleep 3 && setup-keyboard) &
 
-# Source xmonad settings for xmonad and taffybar
+# Source xmonad settings for xmonad and taffybar.
+# XXX: This must be run using `.` and not `source` on systems where `sh` is
+# not `bash`, because xinit always runs this file with `sh` (even if a
+# different hashbang is specified).  Some versions of `sh` do know know the
+# `source` alias for `.`.
 source "${HOME}/.xmonad/xmonad_build_vars.sh"
 
 # Start taffybar.
