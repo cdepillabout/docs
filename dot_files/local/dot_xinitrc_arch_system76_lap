@@ -52,10 +52,10 @@ eval `gpg-agent --daemon`
 xrandr --verbose \
 	--output LVDS-1 --mode 1920x1080 \
 	--output HDMI-1 --auto --above LVDS-1 \
-	--output DVI-I-1 --off
+	--output DVI-I-1 --off &
 
 # Source xmonad settings for xmonad and taffybar
-source "${HOME}/.xmonad/xmonad_build_vars.sh"
+. "${HOME}/.xmonad/xmonad_build_vars.sh"
 
 # Start taffybar.
 PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
