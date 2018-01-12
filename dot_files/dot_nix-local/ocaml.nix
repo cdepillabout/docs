@@ -27,6 +27,7 @@ stdenv.mkDerivation rec {
       camlp4
     ]) ++ 
     [
+      curl
       # this is for conf-gmp
       gmp
       # this is for the ocaml compiler
