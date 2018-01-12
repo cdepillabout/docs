@@ -7,8 +7,12 @@ let () =
 #use "topfind";;
 #thread;;
 #camlp4o;;
+#require "async";;
 #require "core.top";;
 #require "core.syntax";;
+#require "ppx_deriving";;
+#require "ppx_let";;
+#require "ppx_sexp_conv";;
 
 (* Use Core as the standard library *)
 open Core
