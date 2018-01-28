@@ -1,6 +1,12 @@
 #!/bin/sh
 # $Xorg: xinitrc.cpp,v 1.3 2000/08/17 19:54:30 cpqbld Exp $
 
+# Make sure that the X environment can see my local programs.
+if [ -d "${HOME}/docs/code/" ]; then
+	. "${HOME}/docs/code/library.sh"
+	append_to_path PATH "$HOME/docs/code/bin"
+fi
+
 # Setup dbus.
 # This is needed for gtk applications like evince.
 # Test for an existing bus daemon, just to be safe.
