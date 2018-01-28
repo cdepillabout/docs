@@ -618,7 +618,7 @@ append_to_path_nocheck CLASSPATH "/usr/share/hamcrest-core/lib/hamcrest-core.jar
 # add default browser
 export BROWSER=`get_correct_filename_from_choices "firefox-bin" "firefox"`
 
-export EDITOR=`get_correct_filename_from_choices "/usr/bin/vim" "/usr/local/bin/vim"`
+export EDITOR=`get_correct_filename_from_choices "/usr/bin/vim" "/usr/local/bin/vim" "vim"`
 
 # XDG Base Directory Specification
 export XDG_DATA_HOME="$HOME/.local/share"
