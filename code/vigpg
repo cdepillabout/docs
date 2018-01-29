@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Edit a file that has been encoded with gpg.
 
 # this gets us some functions and variables needed by various programs
