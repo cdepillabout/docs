@@ -375,7 +375,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" This adds text selection/movement commands for working
 	" with similarly indented blocks of code.
 	" It depends on the following plugin:
-	Bundle 'kana/vim-textobj-user'
+	"Bundle 'kana/vim-textobj-user'
 	" Here is the plugin itself:
 	"Bundle 'kana/vim-textobj-indent'
 	" This adds text objects for Haskell top-level definitions (ih).
@@ -384,11 +384,11 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" gqih
 	" (Actually, the (ap) text object seems to work for Haskell, so I might
 	" not really need this.)
-	Bundle 'gilligan/vim-textobj-haskell'
+	"Bundle 'gilligan/vim-textobj-haskell'
 	" autocommand to create mapping to format the entire haskell file
-	autocmd FileType haskell nnoremap <leader>hh mngggqG`n
+	"autocmd FileType haskell nnoremap <leader>hh mngggqG`n
 	" autocommand to create mapping to format the current haskell text object
-	autocmd FileType haskell nnoremap <leader>hf mngqap`n
+	"autocmd FileType haskell nnoremap <leader>hf mngqap`n
 
 
 	" Clever-f.
