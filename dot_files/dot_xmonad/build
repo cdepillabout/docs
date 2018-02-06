@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 #
-#
+# Build my XMonad and Taffybar binaries.
 
+# Exit with an error message.
 function die ()
 {
 	local msg="${1}"
 	echo "${msg}" >&2
-    exit 1
+	exit 1
 }
 
+# Make sure we are in the ~/.xmonad/ directory, so that relative paths can
+# be used in the following variables.
 cd ~/.xmonad
 
 # Input file paths

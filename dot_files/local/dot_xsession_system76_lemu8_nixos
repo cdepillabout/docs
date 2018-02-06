@@ -15,12 +15,6 @@ if test -z "$DBUS_SESSION_BUS_ADDRESS" ; then
 	eval `dbus-launch --sh-syntax`
 fi
 
-# load in user resources
-userresources=$HOME/.Xresources
-if [ -f $userresources ]; then
-	xrdb -merge $userresources
-fi
-
 # swap ctrl and caps with xmodmap
 #swap_caps_ctrl_xmodmap="$HOME/.Xmodmap_swap_ctrl_caps"
 #if [ -f "$swap_caps_ctrl_xmodmap" ]; then
@@ -72,7 +66,7 @@ export PATH="${HOME}/.local/bin:${PATH}"
 # Source xmonad settings for xmonad and taffybar.
 # XXX: This must be run using `.` and not `source` on systems where `sh` is
 # not `bash`, because xinit always runs this file with `sh` (even if a
-# different hashbang is specified).  Some versions of `sh` do know know the
+# different hashbang is specified).  Some versions of `sh` do know the
 # `source` alias for `.`.
 . "${HOME}/.xmonad/xmonad_build_vars.sh"
 
