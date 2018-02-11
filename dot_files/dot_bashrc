@@ -424,9 +424,19 @@ function gcamp ()
 	ssh-gas -q ; git commit -a -m "$*" ; git push
 }
 
+function gcampu ()
+{
+	ssh-gas -q ; git commit -a -m "update" ; git push
+}
+
 function gcAmp ()
 {
 	ssh-gas -q ; git add -A ; git commit -m "$*" ; git push
+}
+
+function gcAmpu ()
+{
+	ssh-gas -q ; git add -A ; git commit -m "update" ; git push
 }
 
 function gst ()
