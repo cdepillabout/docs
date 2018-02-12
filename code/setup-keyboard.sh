@@ -2,6 +2,8 @@
 
 # Setup the keyboard map based on what keyboard I have plugged in.
 
+echo "xauth file: $XAUTHORITY" >> /tmp/trying-to-setup-keyboard
+
 setxkbmap us
 
 if [ -f "$HOME/.Xmodmap_swap_ctrl_caps" ]; then
