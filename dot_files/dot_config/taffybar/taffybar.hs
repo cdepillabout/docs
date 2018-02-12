@@ -9,6 +9,7 @@ import System.Taffybar
        (barHeight, defaultTaffybar, defaultTaffybarConfig, endWidgets,
         startWidgets)
 import System.Taffybar.Battery (batteryBarNew, defaultBatteryConfig)
+import System.Taffybar.CommandRunner (commandRunnerNew)
 -- import System.Taffybar.DiskIOMonitor (dioMonitorNew)
 import System.Taffybar.FreedesktopNotifications
        (defaultNotificationConfig, notifyAreaNew)
@@ -84,9 +85,16 @@ main = do
       -- disk = dioMonitorNew diskCfg 2 "sda"
       battery = batteryBarNew defaultBatteryConfig 2
       temp = cpuTempNew 5
+      hostname =
+        commandRunnerNew
+          (60 * 60)
+          "uname"
+          ["--nodename"]
+          "<hostname error>"
+          "red"
   defaultTaffybar
     defaultTaffybarConfig
       { barHeight = 20
       , startWidgets = [pager, note]
-      , endWidgets = [tray, clock, battery, temp, cpu, mem]
+      , endWidgets = [tray, clock, hostname, battery, temp, cpu, mem]
       }
