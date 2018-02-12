@@ -74,7 +74,7 @@ export PATH="${HOME}/.local/bin:${PATH}"
 PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
 	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
 	--resolver="${XMONAD_STACK_RESOLVER}" \
-	-- taffybar >> /tmp/try-start-taffybar &
+	-- taffybar &
 
 # Remove old xmonad.state file because it keeps around monitor dimensions that
 # we might not want.
