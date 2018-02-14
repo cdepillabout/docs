@@ -1,0 +1,3 @@
+
+-- Make sure the pager does not come on.
+\pset pager off

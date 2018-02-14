@@ -148,6 +148,9 @@ super_link $SCRIPT_DIR/dot_lambda-term-inputrc $HOME/.lambda-term-inputrc
 make_directory $HOME/.nix-local
 super_link $SCRIPT_DIR/dot_nix-local/ocaml.nix $HOME/.nix-local/ocaml.nix
 
+# postgres rc files
+super_link $SCRIPT_DIR/dot_psqlrc $HOME/.psqlrc
+
 #########################
 ## files under .config ##
 #########################
