@@ -13,6 +13,7 @@ import System.Taffybar.CommandRunner (commandRunnerNew)
 -- import System.Taffybar.DiskIOMonitor (dioMonitorNew)
 import System.Taffybar.FreedesktopNotifications
        (defaultNotificationConfig, notifyAreaNew)
+-- import System.Taffybar.HostName (defaultHostNameConfig, hostNameNew)
 import System.Taffybar.Systray (systrayNew)
 import System.Taffybar.SimpleClock (textClockNew)
 import System.Taffybar.TaffyPager
@@ -92,6 +93,7 @@ main = do
           ["--nodename"]
           "<hostname error>"
           "red"
+      -- hostname = hostNameNew defaultHostNameConfig
   defaultTaffybar
     defaultTaffybarConfig
       { barHeight = 20
