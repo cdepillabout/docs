@@ -157,6 +157,10 @@ super_link $SCRIPT_DIR/dot_psqlrc $HOME/.psqlrc
 
 make_directory $HOME/.config
 
+# nix
+make_directory $HOME/.config/nixpkgs
+super_link $SCRIPT_DIR/dot_config/nixpkgs/config.nix $HOME/.config/nixpkgs/config.nix
+
 # taffybar
 make_directory $HOME/.config/taffybar
 super_link $SCRIPT_DIR/dot_config/taffybar/taffybar.hs $HOME/.config/taffybar/taffybar.hs
