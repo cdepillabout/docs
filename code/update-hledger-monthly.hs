@@ -1,5 +1,8 @@
 #!/usr/bin/env stack
--- stack --verbose --resolver lts-9.21 --install-ghc --no-system-ghc runghc --package classy-prelude --package hledger-lib --package hledger --package pretty-simple --package from-sum --package optparse-applicative -- -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates -fwarn-monomorphism-restriction
+-- stack --verbose --resolver lts-10.7 --nix --no-nix-pure script --package classy-prelude --package hledger-lib --package hledger --package parsec --package pretty-simple --package from-sum --package optparse-applicative --ghc-options -Wall --ghc-options -fwarn-incomplete-uni-patterns --ghc-options -fwarn-incomplete-record-updates --ghc-options -fwarn-monomorphism-restriction
+
+-- TODO: Ideally, the `--nix` flag in the command line above shouldn't have to be used:
+-- https://github.com/commercialhaskell/stack/issues/3705
 
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -17,7 +20,7 @@ import ClassyPrelude
 
 import Control.FromSum (fromEitherOrM, fromMaybeOrM)
 import Data.Data (Data)
-import Hledger.Cli.Add
+import Hledger.Cli.Commands.Add
        (journalAddTransaction, transactionsSimilarTo)
 import Hledger.Cli.CliOptions (CliOpts(..))
 import Hledger.Cli.Main (argsToCliOpts)
