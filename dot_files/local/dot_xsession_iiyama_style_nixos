@@ -1,0 +1,87 @@
+#!/bin/sh
+# $Xorg: xinitrc.cpp,v 1.3 2000/08/17 19:54:30 cpqbld Exp $
+
+# Make sure that the X environment can see my local programs.
+if [ -d "${HOME}/docs/code/" ]; then
+	. "${HOME}/docs/code/library.sh"
+	append_to_path PATH "$HOME/docs/code/bin"
+fi
+
+# Setup dbus.
+# This is needed for gtk applications like evince.
+# Test for an existing bus daemon, just to be safe.
+if test -z "$DBUS_SESSION_BUS_ADDRESS" ; then
+	# if not found, launch a new one
+	eval `dbus-launch --sh-syntax`
+fi
+
+# swap ctrl and caps with xmodmap
+#swap_caps_ctrl_xmodmap="$HOME/.Xmodmap_swap_ctrl_caps"
+#if [ -f "$swap_caps_ctrl_xmodmap" ]; then
+#	( sleep 3 && xmodmap "$swap_caps_ctrl_xmodmap" ) &
+#fi
+
+# swap left control and caps lock
+#setxkbmap -option ctrl:swapcaps
+# make caps lock a control key
+#setxkbmap -option ctrl:nocaps
+
+# set some environment variables
+export TERM="xterm-256color"
+#export LC_ALL="ja_JP.UTF-8"
+#export LANG="ja_JP.UTF-8"
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+
+# Start fcitx (Japanese IME)
+export XMODIFIERS="@im=fcitx"
+export XMODIFIER="@im=fcitx"
+export GTK_IM_MODULE="fcitx"
+export QT_IM_MODULE="fcitx"
+fcitx &
+
+# Start NetworkManager applet
+nm-applet &
+
+# Start redshift.  Reduces blue in screen when it gets late at night.
+# (NOTE: doesn't really work when you are offline.  So I am leaving the
+# lattitude and logitue hard coded for now.)
+redshift-gtk -l 35:140 &
+
+# Start screen-saver.
+/usr/bin/xscreensaver -no-splash &
+
+# Add ssh keys.
+eval `ssh-agent`
+xterm -e ssh-add &
+#ssh-add "$HOME/.ssh/awsworkprivatekeypair2.pem" &
+
+# Setup keyboard keymap based on what which keyboards are available
+(sleep 3 && setup-keyboard) &
+
+# Make sure to add ~/.local/bin to the PATH because that is where `stack` is.
+# We use `stack` to run `taffybar`.
+export PATH="${HOME}/.local/bin:${PATH}"
+
+# Source xmonad settings for xmonad and taffybar.
+# XXX: This must be run using `.` and not `source` on systems where `sh` is
+# not `bash`, because xinit always runs this file with `sh` (even if a
+# different hashbang is specified).  Some versions of `sh` do know the
+# `source` alias for `.`.
+. "${HOME}/.xmonad/xmonad_build_vars.sh"
+
+# Start taffybar.
+PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
+	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
+	--resolver="${XMONAD_STACK_RESOLVER}" \
+	-- taffybar &
+
+# Remove old xmonad.state file because it keeps around monitor dimensions that
+# we might not want.
+rm -f "${XMONAD_DIR}/xmonad.state"
+
+# Start xmonad.
+${XMONAD_LOCAL_BIN_PATH}/xmonad &
+#fluxbox &
+windowmanagerpid=$!
+wait $windowmanagerpid
