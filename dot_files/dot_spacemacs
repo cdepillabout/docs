@@ -592,5 +592,6 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :background "yellow1" :foreground "black"))))
  '(org-done ((t (:inherit bold :background "#000000" :foreground "#86dc2f"))))
  '(org-todo ((t (:inherit bold :background "#000000" :foreground "#dc752f")))))
