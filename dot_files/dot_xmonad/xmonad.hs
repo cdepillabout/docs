@@ -4,7 +4,8 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Default (def)
 import Data.Map (Map)
 import qualified Data.Map as M
-import Graphics.X11.ExtraTypes.XF86 (xF86XK_MonBrightnessUp)
+import Graphics.X11.ExtraTypes.XF86
+       (xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp)
 import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.Taffybar.Hooks.PagerHints (pagerHints)
@@ -171,17 +172,9 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     , ((modm, xK_i), spawn "gemacs")
 
     -- control monitor brightness
-    , ((noModMask, xK_XF86MonBrightnessDown), spawn "xbacklight -10")
-    -- , ((0, xK_XF86MonBrightnessUp), spawn "xbacklight +10")
-    , ((noModMask, xF86XK_MonBrightnessUp), spawn "dmenu run")
-    , ((noModMask, xK_F7), spawn "dmenu run")
+    , ((noModMask, xF86XK_MonBrightnessDown), spawn "xbacklight -10")
+    , ((noModMask, xF86XK_MonBrightnessUp), spawn "xbacklight +10")
     ]
-
-xK_XF86MonBrightnessDown :: KeySym
-xK_XF86MonBrightnessDown = 0x1008ff03
-
-xK_XF86MonBrightnessUp :: KeySym
-xK_XF86MonBrightnessUp = 0x1008ff02
 
 -- Switch to the previously focused workspace that is visible on a Xinerama
 -- screen.
