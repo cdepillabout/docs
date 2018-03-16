@@ -4,6 +4,7 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Default (def)
 import Data.Map (Map)
 import qualified Data.Map as M
+import Graphics.X11.ExtraTypes.XF86 (xF86XK_MonBrightnessUp)
 import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.Taffybar.Hooks.PagerHints (pagerHints)
@@ -62,7 +63,7 @@ myLayout
 myLayout = avoidStruts . smartBorders $ layoutHook def
 
 -- Key bindings. Add, modify or remove key bindings here.
-myKeys :: XConfig Layout -> Map (ButtonMask, KeySym) (X ())
+myKeys :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     -- launch a terminal
     [ ((modm .|. shiftMask, xK_Return), spawn $ terminal conf)
@@ -157,7 +158,7 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
 
     -- Use printscreen key for taking screenshot and copying it to the
     -- clipboard.
-    , ((0, xK_Print), spawn "screenshot-to-clipboard")
+    , ((noModMask, xK_Print), spawn "screenshot-to-clipboard")
 
     -- Use Ctrl-F12 to re-setup the keyboard.
     , ((controlMask, xK_F12), spawn "setup-keyboard")
@@ -168,7 +169,19 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
 
     -- open graphical emacs
     , ((modm, xK_i), spawn "gemacs")
+
+    -- control monitor brightness
+    , ((noModMask, xK_XF86MonBrightnessDown), spawn "xbacklight -10")
+    -- , ((0, xK_XF86MonBrightnessUp), spawn "xbacklight +10")
+    , ((noModMask, xF86XK_MonBrightnessUp), spawn "dmenu run")
+    , ((noModMask, xK_F7), spawn "dmenu run")
     ]
+
+xK_XF86MonBrightnessDown :: KeySym
+xK_XF86MonBrightnessDown = 0x1008ff03
+
+xK_XF86MonBrightnessUp :: KeySym
+xK_XF86MonBrightnessUp = 0x1008ff02
 
 -- Switch to the previously focused workspace that is visible on a Xinerama
 -- screen.
