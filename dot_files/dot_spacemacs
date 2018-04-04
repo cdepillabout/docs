@@ -65,7 +65,7 @@ values."
             shell-default-position 'bottom)
      (spell-checking :variables spell-checking-enable-by-default nil)
      sql
-     syntax-checking
+     (syntax-checking :variables syntax-checking-enable-by-default nil)
      version-control
      yaml
      )
