@@ -401,42 +401,42 @@ function glg ()
 
 function gcm ()
 {
-	ssh-gas -q ; git commit -m "$*"
+	ssh-gas -q ; GPG_TTY="$(tty)" git commit -m "$*"
 }
 
 function gcam ()
 {
-	ssh-gas -q ; git commit -a -m "$*"
+	ssh-gas -q ; GPG_TTY="$(tty)" git commit -a -m "$*"
 }
 
 function gcAm ()
 {
-	ssh-gas -q ; git add -A ; git commit -m "$*"
+	ssh-gas -q ; git add -A ; GPG_TTY="$(tty)" git commit -m "$*"
 }
 
 function gcmp ()
 {
-	ssh-gas -q ; git commit -m "$*" ; git push
+	ssh-gas -q ; GPG_TTY="$(tty)" git commit -m "$*" ; git push
 }
 
 function gcamp ()
 {
-	ssh-gas -q ; git commit -a -m "$*" ; git push
+	ssh-gas -q ; GPG_TTY="$(tty)" git commit -a -m "$*" ; git push
 }
 
 function gcampu ()
 {
-	ssh-gas -q ; git commit -a -m "update" ; git push
+	ssh-gas -q ; GPG_TTY="$(tty)" git commit -a -m "update" ; git push
 }
 
 function gcAmp ()
 {
-	ssh-gas -q ; git add -A ; git commit -m "$*" ; git push
+	ssh-gas -q ; git add -A ; GPG_TTY="$(tty)" git commit -m "$*" ; git push
 }
 
 function gcAmpu ()
 {
-	ssh-gas -q ; git add -A ; git commit -m "update" ; git push
+	ssh-gas -q ; git add -A ; GPG_TTY="$(tty)" git commit -m "update" ; git push
 }
 
 function gst ()
