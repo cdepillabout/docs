@@ -401,50 +401,42 @@ function glg ()
 
 function gcm ()
 {
-	local USE_SIG="$(git config user.signingkey > /dev/null && echo '-S')"
-	ssh-gas -q ; git commit ${USE_SIG} -m "$*"
+	ssh-gas -q ; git commit -m "$*"
 }
 
 function gcam ()
 {
-	local USE_SIG="$(git config user.signingkey > /dev/null && echo '-S')"
-	ssh-gas -q ; git commit ${USE_SIG} -a -m "$*"
+	ssh-gas -q ; git commit -a -m "$*"
 }
 
 function gcAm ()
 {
-	local USE_SIG="$(git config user.signingkey > /dev/null && echo '-S')"
-	ssh-gas -q ; git add -A ; git commit ${USE_SIG} -m "$*"
+	ssh-gas -q ; git add -A ; git commit -m "$*"
 }
 
 function gcmp ()
 {
-	local USE_SIG="$(git config user.signingkey > /dev/null && echo '-S')"
-	ssh-gas -q ; git commit ${USE_SIG} -m "$*" ; git push
+	ssh-gas -q ; git commit -m "$*" ; git push
 }
 
 function gcamp ()
 {
-	local USE_SIG="$(git config user.signingkey > /dev/null && echo '-S')"
-	ssh-gas -q ; git commit ${USE_SIG} -a -m "$*" ; git push
+	ssh-gas -q ; git commit -a -m "$*" ; git push
 }
 
 function gcampu ()
 {
-	local USE_SIG="$(git config user.signingkey > /dev/null && echo '-S')"
-	ssh-gas -q ; git commit ${USE_SIG} -a -m "update" ; git push
+	ssh-gas -q ; git commit -a -m "update" ; git push
 }
 
 function gcAmp ()
 {
-	local USE_SIG="$(git config user.signingkey > /dev/null && echo '-S')"
-	ssh-gas -q ; git add -A ; git commit ${USE_SIG} -m "$*" ; git push
+	ssh-gas -q ; git add -A ; git commit -m "$*" ; git push
 }
 
 function gcAmpu ()
 {
-	local USE_SIG="$(git config user.signingkey > /dev/null && echo '-S')"
-	ssh-gas -q ; git add -A ; git commit ${USE_SIG} -m "update" ; git push
+	ssh-gas -q ; git add -A ; git commit -m "update" ; git push
 }
 
 function gst ()
