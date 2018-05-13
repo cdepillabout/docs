@@ -1,0 +1,5 @@
+
+# The following two settings make it so that keys cached by gpg-agent basically
+# never expire.  This is similar to how to ssh-agent works by default.
+default-cache-ttl 34560000
+max-cache-ttl 34560000
