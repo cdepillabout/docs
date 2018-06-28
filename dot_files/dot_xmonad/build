@@ -73,9 +73,9 @@ then
 		--local-bin-path "${XMONAD_LOCAL_BIN_PATH}" \
 		--install-ghc \
 		dbus \
-		gtk-traymanager \
+		"${XMONAD_GTK_TRAYMANAGER_VERSION}" \
 		libxml-sax \
-		taffybar
+		"${XMONAD_TAFFYBAR_VERSION}"
 
 	if [ "$?" -ne 0 ]
 	then
@@ -121,9 +121,9 @@ then
 		--resolver "${XMONAD_STACK_RESOLVER}" \
 		--install-ghc \
 		--package dbus \
-		--package gtk-traymanager \
+		--package "${XMONAD_GTK_TRAYMANAGER_VERSION}" \
 		--package libxml-sax \
-		--package taffybar \
+		--package "${XMONAD_TAFFYBAR_VERSION}" \
 		--package xmonad \
 		--package xmonad-contrib \
 		-- xmonad.hs -o "${xmonadBin}"

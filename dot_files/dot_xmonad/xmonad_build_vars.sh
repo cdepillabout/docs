@@ -10,3 +10,7 @@ export XMONAD_LOCAL_BIN_PATH="${XMONAD_DIR}/local-bin"
 
 # The lts resolver we will use for building with stack.
 export XMONAD_STACK_RESOLVER="lts-9.14"
+
+export XMONAD_TAFFYBAR_VERSION="taffybar-0.4.6"
+
+export XMONAD_GTK_TRAYMANAGER_VERSION="gtk-traymanager-0.1.6"
