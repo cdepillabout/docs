@@ -91,3 +91,5 @@ Taffybar
 X11
 VirtualBox
 GHCi
+OAuth
+JWT
