@@ -193,7 +193,7 @@ get_virtualenv()
 # put the current sandbox in our prompt
 get_nixshell()
 {
-	if [[ "$IN_NIX_SHELL" = "1" ]] ; then
+	if [[ "$IN_NIX_SHELL" = "1" || "$IN_NIX_SHELL" = "pure" || "$IN_NIX_SHELL" = "impure" ]] ; then
 		echo -n "${PS1_nixshell_color}NS "
 		return
 	fi
