@@ -39,7 +39,7 @@ main = do
     , logHook = myLogHook
     , manageHook = manageDocks
     , modMask = myModMask
-    , terminal = "roxterm"
+    , terminal = "termonad"
     }
 
 myLogHook :: X ()
