@@ -428,6 +428,10 @@ you should place your code here."
    show-trailing-whitespace t
    )
 
+  ;; Make sure that the magit diff buffers don't show up when you try to switch
+  ;; to a different buffer with Space-Tab.
+  (push "^magit-diff: .+" spacemacs-useless-buffers-regexp)
+
   ;; Make sure that "*" does evil's normal search forward instead of going into
   ;; Spacemacs "Symbol Highlight Transient State".
   ;; https://emacs.stackexchange.com/questions/36590/make-in-spacemacs-work-like-it-does-in-vim
