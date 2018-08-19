@@ -248,6 +248,8 @@ if [[ $EUID -ne 0 ]] ; then
 		source "/etc/profile.d/autojump.bash"
 	elif [ -e "/usr/share/autojump/autojump.bash" ] ;  then
 		source "/usr/share/autojump/autojump.bash"
+	elif command -v autojump-share >/dev/null 2>&1 ; then
+		source "$(autojump-share)"/autojump.bash > /dev/null
 	fi
 fi
 
