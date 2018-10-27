@@ -248,8 +248,14 @@ if [[ $EUID -ne 0 ]] ; then
 		source "/etc/profile.d/autojump.bash"
 	elif [ -e "/usr/share/autojump/autojump.bash" ] ;  then
 		source "/usr/share/autojump/autojump.bash"
+	# This is how autojump used to work on NixOS before 18.09.
 	elif command -v autojump-share >/dev/null 2>&1 ; then
 		source "$(autojump-share)"/autojump.bash > /dev/null
+	# Autoloading of autojump support broke on bash in 18.09, so it has to be loaded directly.
+	# https://github.com/NixOS/nixpkgs/pull/40725#issuecomment-424511109
+	# This will hopefully be fixed in a later NixOS version.
+	elif [ -e "/run/current-system/sw/share/bash-completion/completions/autojump.bash" ] ;  then
+		source "/run/current-system/sw/share/bash-completion/completions/autojump.bash"
 	fi
 fi
 
