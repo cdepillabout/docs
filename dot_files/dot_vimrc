@@ -91,40 +91,6 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:syntastic_ocaml_checkers = ['merlin']
 
 
-	if version >= 701
-		Bundle 'Shougo/vimproc'
-		if isdirectory(expand("~/.vim/bundle/vimproc/.git")) &&
-				\ !(filereadable(expand("~/.vim/bundle/vimproc/lib/vimproc_unix.so")) ||
-				\   filereadable(expand("~/.vim/bundle/vimproc/lib/vimproc_linux64.so")) ||
-				\   filereadable(expand("~/.vim/bundle/vimproc/lib/vimproc_linux32.so")))
-			echo "You must run `(cd \"$HOME/.vim/bundle/vimproc/\" && make)` in order to install vimproc (for ghc-mod). You also might need t o update all vim bundles."
-		endif
-
-
-		" Must `cabal install ghc-mod` to be able to use this.
-		" :GhcModType		- Show the type of an expression (can be used multiple
-		"					  times to show bigger and bigger expressions)
-		" :GhcModTypeClear  - Clear subexpression's highlight
-		" :GhcModCheck      - Show compiler error/warnings in quickfix window
-		" :GhcModLint       - Show suggestions by ghc-mod lint
-		" :GhcModInfo       - Show the type of an expression
-		" :GhcModTypeInsert - Insert the type of a function
-		"
-		" Only load this plugin if ghc-mod exists on the PATH.
-		" (This plugin throws up a really annoying warning if
-		" it is loaded and ghc-mod doesn't exist.)
-		if executable('ghc-mod')
-			Bundle 'eagletmt/ghcmod-vim'
-			let g:ghcmod_type_highlight='ghcmodType'
-			" TODO: Only use these when in haskell mode...
-			map <Leader>gt :GhcModType<CR>
-			map <Leader>gc :GhcModTypeClear<CR>
-			map <Leader>gi :GhcModTypeInsert<CR>
-			map <Leader>gn :GhcModInfo<CR>
-		endif
-	endif
-
-
 	" Use neocomplete (works with necoghc)
 	if version >= 704 && has("lua")
 		" This turns on autocoompletion all the time.  It's really annoying.
