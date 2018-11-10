@@ -8,15 +8,15 @@ with (import <nixpkgs> {});
   packageOverrides = pkgs: with pkgs; rec {
     # This python environment is used for running the copy-image-to-clipboard
     # program, which is called by the screenshot-to-clipboard program.
-    copyImageToClipboardEnv = python27.withPackages (ps: with ps; [
+    copy-image-to-clipboard-env = python27.withPackages (ps: with ps; [
         pygtk
       ]);
 
     # This environment is used for running the screenshot-to-clipboard program.
-    screenshotToClipboardEnv = pkgs.buildEnv {
+    screenshot-to-clipboard-env = pkgs.buildEnv {
       name = "screenshot-to-clipboard-env";
       paths = [
-        copyImageToClipboardEnv
+        copy-image-to-clipboard-env
         imagemagick
         gimp
       ];
