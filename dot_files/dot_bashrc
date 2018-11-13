@@ -69,6 +69,7 @@ elif [[ "$(uname)" == "OpenBSD" ]]; then
 elif [[ "$(uname)" == "Darwin" ]]; then
 	export CLICOLOR=1
 	export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+	export LS_COLORS=ExGxBxDxCxEgEdxbxgxcxd
 fi
 
 alias lsr="ls -rt"
