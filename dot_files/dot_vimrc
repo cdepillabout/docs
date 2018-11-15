@@ -91,63 +91,6 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:syntastic_ocaml_checkers = ['merlin']
 
 
-	" Use neocomplete (works with necoghc)
-	if version >= 704 && has("lua")
-		" This turns on autocoompletion all the time.  It's really annoying.
-		" let g:neocomplete#enable_at_startup=1
-		Bundle 'Shougo/neocomplete'
-	endif
-
-
-	" Must `cabal install ghc-mod` to be able to use this.
-	" Use omnicompletion for haskell.
-	" See :help compl-omni for details on omni-completion.
-	" Enable with :setlocal omnifunc=necoghc#omnifunc (set below...)
-	" Can be used with Ctrl-X Ctrl-O
-	let g:haskellmode_completion_ghc = 1
-	Bundle 'eagletmt/neco-ghc'
-	autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-
-
-	" Must run `cabal install hoogle && hoogle data` before using.
-	" Look up things through hoogle.
-	" See :help hoogle for help.
-	" :Hoogle         - run hoogle on the word under the cursor
-	Bundle 'Twinside/vim-hoogle'
-
-
-	" Must `cabal install hdevtools` to be able to use this.
-	" This is basically the same as ghc-mod
-	" :HdevtoolsInfo	- get info about a type
-	" :HdevtoolsType	- get short type information
-	"Bundle 'bitc/vim-hdevtools'
-
-
-	" You can use keys like _i to automatically import stuff that
-	" has not yet been imported.
-	" But before you use this functionality, you must run :ExportDocIndex
-	" Bundle 'lukerandall/haskellmode-vim'
-	let g:haddock_browser="/usr/bin/firefox"
-	let g:haddock_indexfiledir=$HOME . "/.vim/"
-
-
-	" must `cabal install hlint` to be able to use hlint stuff.
-	" This does some cool things with syntax highlighting for you.
-	" It also does some really nice folding for us.
-	" :HLint	-- run file through hlint
-	" However, the haskell-vim plugin is better.
-	" Bundle 'dag/vim2hs'
-	" disable all conceals, including the simple ones like
-	" lambda and composition
-	" let g:haskell_conceal = 0
-	" disable concealing of "enumerations": commatized lists like
-	" deriving clauses and LANGUAGE pragmas,
-	" otherwise collapsed into a single ellipsis
-	" let g:haskell_conceal_enumerations = 0
-	" Also disable conceal for jmacro.
-	" let g:jmacro_conceal = 0
-
-
 	" Haskell syntax highlighting.
 	Bundle 'neovimhaskell/haskell-vim'
 	"
@@ -177,49 +120,12 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:cabal_indent_section = 2  " indentation of sections in cabal file
 
 
-	" EasyMotion.
-	Bundle 'Lokaltog/vim-easymotion'
-
-
-	" This uses :sign to show changed areas of code a la `git diff`.
-	" Haven't really looked into this one yet either...
-	"Bundle 'mhinz/vim-signify'
-
-
-	" Nerdtree.  Need to enable this and make some mappings...
-	Bundle 'scrooloose/nerdtree'
-	nnoremap <F3> :NERDTreeToggle<CR>
-
-
-	" Use multiple cursors just like Sublime text.  I almost feel
-	" like this isn't needed because macros are so convenient...
-	"Bundle 'terryma/vim-multiple-cursors'
-
-
 	" Get more commands for doing things to surrounding text.
 	Bundle 'tpope/vim-surround'
 
 
 	" Get the ability to repeat these surround commands.
 	Bundle 'tpope/vim-repeat'
-
-
-	" This allows to write really short html.
-	" You can convert the sparkup syntax to html with
-	" Ctrl-E in insert mode, and then move to the next
-	" empty element with Ctrl-N in insert mode.
-	" Some examples of syntax are below:
-	" https://github.com/rstacruz/sparkup
-	" Other examples of syntax:
-	" http://code.google.com/p/zen-coding/
-	Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-
-
-	" nicer statusline
-	" This seems like it would be nice, but I would have to configure it
-	" not to look ugly.  Also, it doesn't seem like it would be too helpful
-	" without the fugitive git plugin.
-	"Bundle 'bling/vim-airline'
 
 
 	" Shows git-diff stuff in the sign column and allows you to stage/revert
@@ -239,79 +145,6 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" By default, gitgutter make the signcolumn highlighting match the line
 	" number highlighting.  This tells it not to do that.
 	let g:gitgutter_override_sign_column_highlight = 0
-
-
-	" Does various git commands.
-	Bundle 'tpope/vim-fugitive'
-
-
-	if version >= 701
-		" Vim plugin for browsing tags of source code.  It opens up a sidebar that
-		" displays ctags-generated gtags of the current file.
-		Bundle 'majutsushi/tagbar'
-		" F2 for turning on and off tag list
-		nnoremap <F2> :TagbarToggle<CR>
-		let g:tagbar_type_scala = {
-			\ 'ctagstype' : 'Scala',
-			\ 'kinds'     : [
-				\ 'p:packages:1',
-				\ 'V:values',
-				\ 'v:variables',
-				\ 'T:types',
-				\ 't:traits',
-				\ 'o:objects',
-				\ 'a:aclasses',
-				\ 'c:classes',
-				\ 'r:cclasses',
-				\ 'm:methods'
-			\ ]
-		\ }
-	endif
-
-
-	" Syntax files for puppet.
-	Bundle 'puppetlabs/puppet-syntax-vim'
-
-
-	" Scala syntax
-	Bundle 'derekwyatt/vim-scala'
-
-
-	" Rainbow parentheses
-	" This doesn't play well with haskell files, so we need to disable it :-(
-	" Bundle 'eapache/rainbow_parentheses.vim'
-	" let g:rbpt_colorpairs = [
-	"     \ ['darkred',     'DarkOrchid3'],
-	"     \ ['darkgray',    'DarkOrchid3'],
-	"     \ ['darkmagenta', 'DarkOrchid3'],
-	"     \ ['darkgreen',   'RoyalBlue3'],
-	"     \ ['red',         'firebrick3'],
-	"     \ ['brown',       'RoyalBlue3'],
-	"     \ ['darkmagenta', 'DarkOrchid3'],
-	"     \ ['gray',        'RoyalBlue3'],
-	"     \ ['darkcyan',    'SeaGreen3'],
-	"     \ ['darkblue',    'SeaGreen3'],
-	"     \ ['darkred',     'SeaGreen3'],
-	"     \ ['darkgreen',   'firebrick3'],
-	"     \ ['darkcyan',    'RoyalBlue3'],
-	"     \ ['blue',        'firebrick3'],
-	"     \ ['brown',       'firebrick3'],
-	"     \ ['darkmagenta', 'DarkOrchid3'],
-	"     \ ['darkgreen',   'RoyalBlue3'],
-	"     \ ['red',         'firebrick3'],
-	"     \ ]
-	" " Turn off bold parenthesis
-	" "let g:bold_parentheses = 0
-	" autocmd VimEnter * if exists(":RainbowParenthesesActivate") |
-	" 	\ exec ":RainbowParenthesesActivate" | endif
-	" autocmd BufEnter * if exists(":RainbowParenthesesLoadRound") |
-	" 	\ exec ":RainbowParenthesesLoadRound" | endif
-	" autocmd BufEnter * if exists(":RainbowParenthesesLoadSquare") |
-	" 	\ exec ":RainbowParenthesesLoadSquare" | endif
-	" autocmd BufEnter * if exists(":RainbowParenthesesLoadBraces") |
-	" 	\ exec ":RainbowParenthesesLoadBraces" | endif
-	" "autocmd BufEnter * if exists(":RainbowParenthesesLoadChevrons") |
-	" "	\ exec ":RainbowParenthesesLoadChevrons" | endif
 
 
 	" This adds mappings like the following:
@@ -338,167 +171,17 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	autocmd FileType puppet set commentstring=#%s
 
 
-	" This adds text selection/movement commands for working
-	" with similarly indented blocks of code.
-	" It depends on the following plugin:
-	"Bundle 'kana/vim-textobj-user'
-	" Here is the plugin itself:
-	"Bundle 'kana/vim-textobj-indent'
-	" This adds text objects for Haskell top-level definitions (ih).
-	" The current Haskell function can be formatted with the following key
-	" combination:
-	" gqih
-	" (Actually, the (ap) text object seems to work for Haskell, so I might
-	" not really need this.)
-	"Bundle 'gilligan/vim-textobj-haskell'
-	" autocommand to create mapping to format the entire haskell file
-	"autocmd FileType haskell nnoremap <leader>hh mngggqG`n
-	" autocommand to create mapping to format the current haskell text object
-	"autocmd FileType haskell nnoremap <leader>hf mngqap`n
-
-
-	" Clever-f.
-	" This makes the 'f' key be able to be repeated in order to jump
-	" to the next match.  'F' is used to jump to previous matches.
-	" This makes the ';' and ',' key free to be able to be used for other
-	" things.
-	"Bundle 'rhysd/clever-f.vim'
-
-
-	" Haskell syntax for shakespearean templates.
-	" Hamlet, Lucius, Julius.
-	Bundle 'pbrisbin/vim-syntax-shakespeare'
-	" Don't highlight trailing space on the end of the line.
-	" I do this myself.
-	let g:hamlet_highlight_trailing_space = 0
-
-	if version >= 703
-		" A shell for vim.
-		" :VimShell                           Open the shell.  It can be used like
-		"                                     bash.
-		" :VimShellInteractive idris          Run another program in the shell.
-		"                                     For example, we can run ghci.
-		Bundle 'Shougo/vimshell.vim'
-	endif
-
-	" Idris mode for vim.
-	Bundle 'idris-hackers/idris-vim'
-
 	" Ledger syntax for vim
 	let g:ledger_bin = 'hledger'
 	Bundle 'ledger/vim-ledger'
 	autocmd BufEnter .hledger.journal setlocal filetype=ledger
+
 
 	" JSON syntax highlighting
 	Bundle 'elzr/vim-json'
 	" Don't let the plugin conceal double quotes
 	let g:vim_json_syntax_conceal = 0
 
-	" Elm mode.
-	"   Available Commands:
-	"     :ElmMakeCurrentFile    compiles the current file.
-	"     :ElmMakeMain           compiles an assumed Main.elm file.
-	"     :ElmPrintTypes         displays the types of the current
-	"                            file in a new split window.
-	"     :ElmEvalLine           evaluates the current line and puts
-	"                            the result as a comment in a new line below it.
-	"     :ElmEvalSelection      evaluates a visual mode selection.
-	"   Suggested Mappings:
-	"     :nnoremap <leader>el :ElmEvalLine<CR>
-	"     :vnoremap <leader>es :<C-u>ElmEvalSelection<CR>
-	"     nnoremap <leader>ep :ElmPrintTypes<CR>
-	"     nnoremap <leader>em :ElmMakeCurrentFile<CR>
-	"   Suggested Autocommands:
-	"     Compile Main.elm when writing any elm file.  The autocommand can be
-	"     cleared with `:au! BufWritePost *.elm`.
-	"       :au BufWritePost *.elm ElmMakeFile("Main.elm")
-	Bundle 'lambdatoast/elm.vim'
-
-	" Align code.
-	"   Available Commands:
-	"     :Align        basic alignment command
-	"     :AlignCtrl    provide options for next call to :Align
-	"   Mappings:
-	"     \t=           align assignments (don't count logic, like == or !=)
-	"     \t,           align on commas
-	"     \t|           align on vertical bars (|)
-	"     \tsp          align on whitespace
-	"   Examples:
-	"     :5,10Align =
-	"         Align on '=' signs
-	"     :'<,'>Align = + - \* /
-	"         Align on any of the five separator characters shown.
-	"         Note that visual block mode was used to fire off Align.
-	"     :AlignCtrl =lp1P1I
-	"         which means:
-	"           =   all separators are equivalent
-	"           l   fields will be left-justified
-	"           p1  pad one space before each separator
-	"           P1  pad one space after each separator
-	"           I   preserve and apply the first line's leading white space
-	"               to all Align'd lines
-	"     :help align
-	"         open help file
-	Bundle 'vim-scripts/Align'
-
-	" Ocaml syntax.
-	" Bundle 'rgrinberg/vim-ocaml'
-
-	" Purescript syntax.
-	Bundle 'raichoo/purescript-vim'
-
-	" hsimport
-	" Bundle 'dan-t/vim-hsimport'
-
-	" align code
-	Bundle 'godlygeek/tabular'
-	" With the following mappings, we are able to align stuff in visual mode.
-	" For instance, if we had the following code:
-	"        What -> pure 1
-	"        Who -> pure 2
-	"        Whomever -> pure 3
-	" And you highlighted it and hit 'a-', it would make it look like this:
-	"        What     -> pure 1
-	"        Who      -> pure 2
-	"        Whomever -> pure 3
-	vmap a= :Tabularize /=<CR>
-	vmap a; :Tabularize /::<CR>
-	vmap a- :Tabularize /-><CR>
-	vmap ac :Tabularize /--<CR>
-
-	" Markdown support.  Required to be run after the "tabular" plugin.
-	" The folding in this doesn't work correctly.
-	"Bundle 'plasticboy/vim-markdown'
-
-	" Folding for markdown.
-	" This folding doesn't work correctly either.
-	"Bundle 'nelstrom/vim-markdown-folding'
-
-	" Haskell code formatting with hindent.
-	" (This doesn't really have a formatter that I like.)
-	"Bundle 'octol/vim-hindent'
-	"let g:hindent_style = 'cramer'
-
-	" Erlang plugin for syntax checking and omnicomplete.
-	Bundle 'vim-erlang/vim-erlang-compiler'
-	Bundle 'vim-erlang/vim-erlang-omnicomplete'
-
-	" Snippets.
-	" The snippet engine, and the repo of snippets.
-	Plugin 'SirVer/ultisnips'
-	Plugin 'honza/vim-snippets'
-	" Trigger configuration.
-	let g:UltiSnipsExpandTrigger="<c-g>"
-	let g:UltiSnipsJumpForwardTrigger="<c-j>"
-	let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-	" If you want :UltiSnipsEdit to split your window.
-	" let g:UltiSnipsEditSplit="vertical"
-
-	" Pug file highlighting
-	Bundle 'digitaltoad/vim-pug'
-
-	" Terraform
-	Bundle 'hashivim/vim-terraform'
 
 	" Nix
 	Bundle 'LnL7/vim-nix'
