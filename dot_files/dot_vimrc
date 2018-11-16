@@ -85,7 +85,12 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 
 	" Haskell syntax highlighting.
-	Bundle 'neovimhaskell/haskell-vim'
+	"
+	" Don't use this because of this annoying bug:
+	"
+	" https://github.com/neovimhaskell/haskell-vim/issues/97
+	"
+	" Bundle 'neovimhaskell/haskell-vim'
 	"
 	" Commands
 	" :HaskellAddModuleComment  " Adds an empty module comment to the top of
