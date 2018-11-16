@@ -39,9 +39,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	set runtimepath+=~/.vim/bundle/vundle/
 	call vundle#rc()
 
-	" let Vundle manage Vundle
-	" required!
-	Bundle 'gmarik/vundle'
+	" Vundle
+	"
 	" Brief help
 	" :BundleList          - list configured bundles
 	" :BundleInstall(!)    - install (update) bundles
@@ -49,9 +48,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" :BundleClean(!)      - confirm (or auto-approve) removal of unused bundles
 	"
 	" see :h vundle for more details or wiki for FAQ
-	" NOTE: comments after Bundle commands are not allowed.
-
-
+	"
 	" These are the types of repos you add with Vundle:
 	" (1) original repos on GitHub
 	"Bundle 'tpope/vim-rails.git'
@@ -61,19 +58,15 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	"Bundle 'git://git.wincent.com/command-t.git'
 	" (4) Git repos on your local machine (i.e. when working on your own plugin)
 	"Bundle 'file:///Users/gmarik/path/to/plugin'
+	Bundle 'gmarik/vundle'
 
 
-	" Here are some more good haskell-related plugins
-	" http://blog.mno2.org/blog/2011/11/17/vim-plugins-for-haskell-programmers/
-	" http://comments.gmane.org/gmane.comp.lang.haskell.cafe/108152?set_cite=hide
-	" http://haskelllive.com/environment.html
-
-
+	" Syntasic
+	"
 	" :help syntastic to get more help
+	Bundle 'scrooloose/syntastic'
 	" To toggle between active/passive type checking we can enable the following key bindings
 	"map <silent> <Leader>e :Errors<CR>
-	Bundle 'scrooloose/syntastic'
-	" map <Leader>s :SyntasticToggleMode<CR>
 	" Always populate the location list even if :Errors is not run.
 	" (This is disabled by default to reduce conflicts with other plugins.)
 	" With this enabled, you can jump to different errors
