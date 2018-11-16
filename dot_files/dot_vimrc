@@ -204,7 +204,12 @@ filetype plugin indent on
 set fileencodings=utf-8
 setglobal fileencoding=utf-8
 set encoding=utf-8
-set ttymouse=xterm2   " mouse scrolling in vim
+
+" nvim should work without this
+if !has('nvim')
+	set ttymouse=xterm2   " mouse scrolling in vim
+endif
+
 set mouse=a
 set foldenable
 set tabstop=4         " 4-space tab indent width
@@ -227,7 +232,13 @@ endif
 "  :20 : up to 20 lines of command-line history will be remembered
 "  % : saves and restores the buffer list
 "  n... : where to save the viminfo files
-set viminfo='100,\"100,:20,%,n~/.viminfo
+"
+" nvim appears to have problems with this
+if has('nvim')
+	set viminfo='100,\"100,:20,%,n~/.neoviminfo
+else
+	set viminfo='100,\"100,:20,%,n~/.viminfo
+endif
 
 set wildmode=list:longest   " When autocompleting things, do it like the shell
 set wildmenu                " Autocomplete things on the menu?
