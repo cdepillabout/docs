@@ -374,13 +374,19 @@ alias screen='screen -R '
 # function for listing the available screen sessions
 function screens ()
 {
-	# alias screens='screen -ls | sed '\''$ d'\''| tail -n +2 | sed -e '"'"'s/\s\+[1234567890]\+.//'"'"' | column -t | sort | sed -e '"'"'s/Attached/\x1b[1;32mAttached\x1b[0m/'"'"' | sed -e '"'"'s/Detached/\x1b[1;34mDetached\x1b[0m/'"'"
-
-	# screen output with
+	# remove the first and last line of the list of running screens
 	local screen_output="$(screen -ls | sed '$ d' | tail -n +2)"
+
+	# remove the screen number
 	local screen_output_no_nums="$(echo "${screen_output}" | sed -e 's/^[[:space:]][0123456789]*.//')"
+
+	# sort the screens by name
 	local screen_output_sort="$(echo "${screen_output_no_nums}" | column -t | sort)"
+
+	# highlight attached screens in green
 	local screen_output_attch="$(echo "${screen_output_sort}" | sed -e 's/Attached/'$'\033''[1;32mAttached'$'\033''[0m/')"
+
+	# highlight detached screens in blue
 	local screen_output_dettch="$(echo "${screen_output_attch}" | sed -e 's/Detached/'$'\033''[1;34mDetached'$'\033''[0m/')"
 
 	echo "$screen_output_dettch"
