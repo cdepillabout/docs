@@ -371,8 +371,19 @@ alias dwn='darcs whatsnew'
 # screen automatically connects to a running session
 alias screen='screen -R '
 
-# an alias for listing the available screen sessions
-alias screens='screen -ls | sed '\''$ d'\''| tail -n +2 | sed -e '"'"'s/\s\+[1234567890]\+.//'"'"' | column -t | sort | sed -e '"'"'s/Attached/\x1b[1;32mAttached\x1b[0m/'"'"' | sed -e '"'"'s/Detached/\x1b[1;34mDetached\x1b[0m/'"'"
+# function for listing the available screen sessions
+function screens ()
+{
+	# alias screens='screen -ls | sed '\''$ d'\''| tail -n +2 | sed -e '"'"'s/\s\+[1234567890]\+.//'"'"' | column -t | sort | sed -e '"'"'s/Attached/\x1b[1;32mAttached\x1b[0m/'"'"' | sed -e '"'"'s/Detached/\x1b[1;34mDetached\x1b[0m/'"'"
+
+	# screen output with
+	local screen_output="$(screen -ls | sed '$ d' | tail -n +2)"
+	local screen_output_no_nums="$(echo "${screen_output}" | sed -e 's/\s\+[0-9]\+.//')"
+	local screen_output_sort="$(echo "${screen_output_no_nums}" | column -t | sort)"
+	local screen_output_attch="$(echo "${screen_output_sort}" | sed -e 's/Attached/\x1b[1;32mAttached\x1b[0m/')"
+
+	echo "$screen_output_attch"
+}
 
 # make sure Anki 2 uses the ~/.anki2/ directory to store the decks and its config files
 # instead of the default (which is ~/Anki/).
