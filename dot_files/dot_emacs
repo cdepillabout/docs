@@ -35,7 +35,11 @@
     (global-evil-surround-mode))
 
   (use-package evil-magit
-    :ensure t))
+    :ensure t)
+  
+  (evil-define-key 'normal org-mode-map
+    ",t" 'org-todo)
+  )
 
 (use-package evil-org
   :ensure t
@@ -71,7 +75,85 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Org-mode options ;;
 ;;;;;;;;;;;;;;;;;;;;;;
+
+;; Make sure org files are always indented.
 (setq org-startup-indented t)
+
+   ;; Make sure that we can perform command when selecting blocks of text in
+   ;; visual mode in org mode.
+(setq org-support-shift-select t)
+
+;; Always use org-agenda-log-mode in new agenda views. Can be toggled with
+;; 'L'.
+(setq org-agenda-start-with-log-mode t)
+
+;; Always use org-agenda-clockreport-mode in new agenda views. Can be toggled
+;; with 'R'.
+(setq org-agenda-start-with-clockreport-mode t)
+
+;; Don't use the org-agenda time grid.
+(setq org-agenda-use-time-grid nil)
+
+;; Make sure the task that is currently being clocked is shown in the clock
+;; report.
+(setq org-clock-report-include-clocking-task t)
+
+;; Make sure that '_' and '^' are not interpreted as sub and super scripts in
+;; org-mode unless the value is surrounded with {}.
+(setq org-use-sub-superscripts '{})
+
+;; Setup my GTD stuff.
+(with-eval-after-load "org"
+  (when (file-directory-p "~/gtd")
+
+    ;; Set which files are checked for agendas.
+    (setq
+     org-agenda-files
+     '("~/gtd/inbox.org"
+       "~/gtd/projects.org"
+       "~/gtd/projects.org_archive"))
+
+    ;; Define capture templates for use with org-capture.
+    (setq
+     org-capture-templates
+     '(("t"
+        "Todo [inbox]"
+        entry
+        (file+headline "~/gtd/inbox.org" "Inbox")
+        "* TODO %i%?")
+       ("T"
+        "Tickler"
+        entry
+        (file+headline "~/gtd/tickler.org" "Tickler")
+        "* %i%? \n %U")))
+
+    ;; Create the refile targets for moving around tasks.
+    (setq
+     org-refile-targets
+     '(("~/gtd/projects.org" :maxlevel . 3)
+       ("~/gtd/someday.org" :level . 1)
+       ("~/gtd/tickler.org" :maxlevel . 2)))
+
+    ;; Setup the todo keywords.
+    ;;
+    ;; "TODO"      -- The task has yet to be done.
+    ;; "NEXT"      -- The task is the next to be done in the current project
+    ;;                (or is currently being done).
+    ;; "WAITING"   -- I am waiting for someone else to finish something or
+    ;;             -- get back to me before I continue with this task.
+    ;; "ONHOLD"    -- This task is on hold for some other reason and will not
+    ;;             -- be worked on.  I may be trying to figure out whether or
+    ;;             -- not it will ever be done.
+    ;; "DONE"      -- The task has been finished.
+    ;; "CANCELLED" -- The task has been cancelled and will not be done.
+    (setq
+     org-todo-keywords
+     '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "ONHOLD(o)" "|" "DONE(d)" "CANCELLED(c)")))
+
+    ;; Setup the default column format if it doesn't appear in the file.
+    (setq
+     org-columns-default-format
+     "%4TODO %55ITEM(Task) %7Effort(Effort){:} %7CLOCKSUM(Clock){:} %TAGS")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Default Emacs stuff ;;
