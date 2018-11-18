@@ -25,7 +25,9 @@
   (use-package evil-leader
     :ensure t
     :config
-    (global-evil-leader-mode))
+    (global-evil-leader-mode)
+	(evil-leader/set-leader "<SPC>")
+	(evil-leader/set-key "gs" 'magit-status))
 
   (use-package evil-surround
     :ensure t
