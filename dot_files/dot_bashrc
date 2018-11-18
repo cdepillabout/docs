@@ -378,11 +378,12 @@ function screens ()
 
 	# screen output with
 	local screen_output="$(screen -ls | sed '$ d' | tail -n +2)"
-	local screen_output_no_nums="$(echo "${screen_output}" | sed -e 's/\s\+[0-9]\+.//')"
+	local screen_output_no_nums="$(echo "${screen_output}" | sed -e 's/^[[:space:]][0123456789]*.//')"
 	local screen_output_sort="$(echo "${screen_output_no_nums}" | column -t | sort)"
-	local screen_output_attch="$(echo "${screen_output_sort}" | sed -e 's/Attached/\x1b[1;32mAttached\x1b[0m/')"
+	local screen_output_attch="$(echo "${screen_output_sort}" | sed -e 's/Attached/'$'\033''[1;32mAttached'$'\033''[0m/')"
+	local screen_output_dettch="$(echo "${screen_output_attch}" | sed -e 's/Detached/'$'\033''[1;34mDetached'$'\033''[0m/')"
 
-	echo "$screen_output_attch"
+	echo "$screen_output_dettch"
 }
 
 # make sure Anki 2 uses the ~/.anki2/ directory to store the decks and its config files
