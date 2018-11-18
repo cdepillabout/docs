@@ -372,7 +372,7 @@ alias dwn='darcs whatsnew'
 alias screen='screen -R '
 
 # an alias for listing the available screen sessions
-alias screens='screen -ls | head -n -1 | tail -n +2 | sed -e '"'"'s/\s\+[1234567890]\+.//'"'"' | column -t | sort | sed -e '"'"'s/Attached/\x1b[1;32mAttached\x1b[0m/'"'"' | sed -e '"'"'s/Detached/\x1b[1;34mDetached\x1b[0m/'"'"
+alias screens='screen -ls | sed '\''$ d'\''| tail -n +2 | sed -e '"'"'s/\s\+[1234567890]\+.//'"'"' | column -t | sort | sed -e '"'"'s/Attached/\x1b[1;32mAttached\x1b[0m/'"'"' | sed -e '"'"'s/Detached/\x1b[1;34mDetached\x1b[0m/'"'"
 
 # make sure Anki 2 uses the ~/.anki2/ directory to store the decks and its config files
 # instead of the default (which is ~/Anki/).
