@@ -1,0 +1,87 @@
+
+;; Make sure we can load packages.
+(require 'package)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
+(setq package-enable-at-startup nil)
+(package-initialize)
+
+;; Load the "use-package" package manager if does not already exist.
+(unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+(eval-when-compile
+    (require 'use-package))
+
+
+;; Load evil.
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1)
+
+  (use-package evil-leader
+    :ensure t
+    :config
+    (global-evil-leader-mode))
+
+  (use-package evil-surround
+    :ensure t
+    :config
+    (global-evil-surround-mode))
+
+  (use-package evil-magit
+    :ensure t))
+
+(use-package evil-org
+  :ensure t
+  :after org
+  :hook ((org-mode . evil-org-mode)
+         (evil-org-mode . evil-org-set-key-theme))
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+
+;; Load magit.
+(use-package magit
+  :ensure t
+  :defer t
+  :bind (("C-x g" . magit-status)))
+
+;;;;;;;;;;;;;;;;;;;
+;; Other options ;;
+;;;;;;;;;;;;;;;;;;;
+
+;; Don't show the startup screen.
+(setq inhibit-startup-screen t)
+
+(load-theme 'manoj-dark)
+
+;; Set the default font.
+(set-face-attribute 'default nil
+  :family "Source Code Pro"
+  :height 130
+  :weight 'normal
+  :width 'normal)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Default Emacs stuff ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (evil-magit use-package magit evil-surround evil-leader))))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
