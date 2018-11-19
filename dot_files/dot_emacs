@@ -27,7 +27,8 @@
     :config
     (global-evil-leader-mode)
 	(evil-leader/set-leader "<SPC>")
-	(evil-leader/set-key "gs" 'magit-status))
+	(evil-leader/set-key "gs" 'magit-status)
+	)
 
   (use-package evil-surround
     :ensure t
@@ -37,8 +38,19 @@
   (use-package evil-magit
     :ensure t)
   
+  ;; Evil keys for org-mode.
   (evil-define-key 'normal org-mode-map
-    ",t" 'org-todo)
+    ",t" 'org-todo
+	",a" 'org-agenda
+    ",t" 'org-todo
+    ",I" 'org-clock-in
+    ",O" 'org-clock-out
+    ",G" 'org-clock-goto
+	)
+
+  ;; Global evil mappings.
+  (evil-define-key nil evil-normal-state-map
+    (kbd "SPC TAB") 'mode-line-other-buffer)
   )
 
 (use-package evil-org
@@ -54,7 +66,12 @@
 (use-package magit
   :ensure t
   :defer t
-  :bind (("C-x g" . magit-status)))
+  :config
+  ;; Make sure magit will prune when fetching.
+  (setq magit-fetch-arguments '("--prune"))
+
+  ;; Make sure magit will give us pretty graphs when viewing the log.
+  (setq magit-log-arguments '("--graph" "--color" "--decorate" "-n256")))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; Other options ;;
@@ -62,6 +79,22 @@
 
 ;; Don't show the startup screen.
 (setq inhibit-startup-screen t)
+
+;; Always follow symlinks when opening files.  This helps with making sure
+;; that we are editing files in projects.  Especially dot files.
+(setq vc-follow-symlinks t)
+
+;; This is similar to vim's scrolloff.  It makes the screen scroll when you
+;; are 3 lines from the top or bottom.
+(setq scroll-margin 3)
+
+;; Make sure that shift-insert will actually insert what is on the X
+;; clipboard.
+(setq select-enable-primary t)
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; Colors and Fonts ;;
+;;;;;;;;;;;;;;;;;;;;;;
 
 (load-theme 'manoj-dark)
 
