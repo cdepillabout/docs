@@ -22,6 +22,10 @@
   :config
   (evil-mode 1)
 
+  ;;;;;;;;;;;;;;;;;;;;;
+  ;; Evil - Packages ;;
+  ;;;;;;;;;;;;;;;;;;;;;
+
   (use-package evil-leader
     :ensure t
     :config
@@ -37,7 +41,23 @@
 
   (use-package evil-magit
     :ensure t)
-  
+
+  ;;;;;;;;;;;;;;;;;;;;;;
+  ;; Evil - Functions ;;
+  ;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun insert-space-above (count)
+    (interactive "p")
+    (dotimes (_ count) (save-excursion (evil-insert-newline-above))))
+
+  (defun insert-space-below (count)
+    (interactive "p")
+    (dotimes (_ count) (save-excursion (evil-insert-newline-below))))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Evil - Key Mappings ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
   ;; Evil keys for org-mode.
   (evil-define-key 'normal org-mode-map
     ",t" 'org-todo
@@ -50,7 +70,10 @@
 
   ;; Global evil mappings.
   (evil-define-key nil evil-normal-state-map
-    (kbd "SPC TAB") 'mode-line-other-buffer)
+    (kbd "SPC TAB") 'mode-line-other-buffer
+    (kbd "[ SPC") 'insert-space-above
+    (kbd "] SPC") 'insert-space-below
+    )
   )
 
 (use-package evil-org
