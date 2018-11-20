@@ -60,12 +60,11 @@ super_link $SCRIPT_DIR/dot_bashrc $HOME/.bashrc
 super_link $SCRIPT_DIR/dot_screenrc $HOME/.screenrc
 
 # emacs files
-# no longer install emacs files
-# super_link $SCRIPT_DIR/dot_emacs $HOME/.emacs
-make_directory $HOME/.emacs-backups/
+super_link $SCRIPT_DIR/dot_emacs $HOME/.emacs
 make_directory $HOME/.emacs.d/
+make_directory $HOME/.emacs.d/backups/
 # super_link $SCRIPT_DIR/dot_emacs.d/local.el $HOME/.emacs.d/local.el
-super_link $SCRIPT_DIR/dot_spacemacs $HOME/.spacemacs
+# super_link $SCRIPT_DIR/dot_spacemacs $HOME/.spacemacs
 
 
 # xmonad files
