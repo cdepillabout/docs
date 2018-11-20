@@ -61,12 +61,12 @@
   ;; Evil keys for org-mode.
   (evil-define-key 'normal org-mode-map
     (kbd "TAB") 'org-cycle
-    ",t" 'org-todo
+    ",A" 'org-archive-subtree
     ",a" 'org-agenda
-    ",t" 'org-todo
+    ",G" 'org-clock-goto
     ",I" 'org-clock-in
     ",O" 'org-clock-out
-    ",G" 'org-clock-goto
+    ",t" 'org-todo
   )
 
   ;; Global evil mappings.
@@ -116,6 +116,14 @@
 ;; clipboard.
 (setq select-enable-primary t)
 
+;; Set the global default value of buffer-local variables.
+(setq-default
+  ;; Always show trailing whitespace.
+  ;; TODO: This shouldn't be enabled for all buffers, but just for select
+  ;; buffers (including org-mode).
+  show-trailing-whitespace t
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors and Fonts ;;
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -129,6 +137,9 @@
   :weight 'normal
   :width 'normal)
 
+;; Set the default font for Japanese characters.
+(set-fontset-font t 'japanese-jisx0208 (font-spec :family "IPAPGothic"))
+
 (with-eval-after-load "org"
   (if (display-graphic-p)
 
@@ -138,6 +149,7 @@
       (set-face-attribute 'org-level-3 nil :foreground "firebrick" :weight 'bold)
       (set-face-attribute 'org-special-keyword nil :foreground "color-95" :weight 'light)
       (set-face-attribute 'org-date nil :foreground "dark magenta" :underline nil :weight 'normal)
+      (set-face-attribute 'org-tag nil :foreground "cornflower blue" :weight 'light)
     )
 
     ;; faces to set if we are in the CUI
