@@ -97,6 +97,12 @@
   ;; Make sure magit will give us pretty graphs when viewing the log.
   (setq magit-log-arguments '("--graph" "--color" "--decorate" "-n256")))
 
+;; Load haskell-mode.
+(use-package haskell-mode
+  :ensure t
+  :defer t
+  )
+
 ;;;;;;;;;;;;;;;;;;;
 ;; Other options ;;
 ;;;;;;;;;;;;;;;;;;;
