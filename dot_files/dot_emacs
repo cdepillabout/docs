@@ -30,9 +30,9 @@
     :ensure t
     :config
     (global-evil-leader-mode)
-	(evil-leader/set-leader "<SPC>")
-	(evil-leader/set-key "gs" 'magit-status)
-	)
+    (evil-leader/set-leader "<SPC>")
+    (evil-leader/set-key "gs" 'magit-status)
+  )
 
   (use-package evil-surround
     :ensure t
@@ -60,13 +60,14 @@
 
   ;; Evil keys for org-mode.
   (evil-define-key 'normal org-mode-map
+    (kbd "TAB") 'org-cycle
     ",t" 'org-todo
-	",a" 'org-agenda
+    ",a" 'org-agenda
     ",t" 'org-todo
     ",I" 'org-clock-in
     ",O" 'org-clock-out
     ",G" 'org-clock-goto
-	)
+  )
 
   ;; Global evil mappings.
   (evil-define-key nil evil-normal-state-map
@@ -127,6 +128,26 @@
   :height 140
   :weight 'normal
   :width 'normal)
+
+(with-eval-after-load "org"
+  (if (display-graphic-p)
+
+    ;; faces to set if we are in the GUI
+    (progn
+      (set-face-attribute 'org-level-2 nil :foreground "dark goldenrod" :weight 'bold)
+      (set-face-attribute 'org-level-3 nil :foreground "firebrick" :weight 'bold)
+      (set-face-attribute 'org-special-keyword nil :foreground "color-95" :weight 'light)
+      (set-face-attribute 'org-date nil :foreground "dark magenta" :underline nil :weight 'normal)
+    )
+
+    ;; faces to set if we are in the CUI
+    (set-face-attribute 'org-level-2 nil :foreground "color-116" :weight 'bold)
+    (set-face-attribute 'org-level-3 nil :foreground "color-41" :weight 'bold)
+    (set-face-attribute 'org-level-4 nil :weight 'bold)
+    (set-face-attribute 'org-level-5 nil :weight 'bold)
+    (set-face-attribute 'org-special-keyword nil :foreground "color-95" :weight 'light)
+  )
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Org-mode options ;;
