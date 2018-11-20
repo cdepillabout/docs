@@ -179,6 +179,13 @@
 ;; org-mode unless the value is surrounded with {}.
 (setq org-use-sub-superscripts '{})
 
+;; Don't create lockfiles that start with '.#'.  This is slightly unsafe, but
+;; having those files around is very annoying.
+(setq create-lockfiles nil)
+
+;; Make sure the backup files go to a specific directory.
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+
 ;; Setup my GTD stuff.
 (with-eval-after-load "org"
   (when (file-directory-p "~/gtd")
