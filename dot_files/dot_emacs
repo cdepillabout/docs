@@ -42,6 +42,12 @@
   (use-package evil-magit
     :ensure t)
 
+  (use-package evil-commentary
+    :ensure t
+    :config
+    (setq evil-commentary-mode t)
+    )
+
   ;;;;;;;;;;;;;;;;;;;;;;
   ;; Evil - Functions ;;
   ;;;;;;;;;;;;;;;;;;;;;;
