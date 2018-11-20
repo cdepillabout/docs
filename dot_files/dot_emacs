@@ -112,7 +112,7 @@
 
 ;; Always follow symlinks when opening files.  This helps with making sure
 ;; that we are editing files in projects.  Especially dot files.
-(setq vc-follow-symlinks t)
+(setq vc-follow-symlinks nil)
 
 ;; This is similar to vim's scrolloff.  It makes the screen scroll when you
 ;; are 3 lines from the top or bottom.
