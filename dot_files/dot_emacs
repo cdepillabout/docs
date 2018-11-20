@@ -127,6 +127,9 @@
 ;; Smooth scrolling like vim.
 (setq scroll-step 1)
 
+;; Make sure the column number is always shown.
+(setq column-number-mode t)
+
 ;; Set the global default value of buffer-local variables.
 (setq-default
   ;; Always show trailing whitespace.
