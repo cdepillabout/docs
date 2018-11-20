@@ -101,6 +101,8 @@
 (use-package haskell-mode
   :ensure t
   :defer t
+  :config
+  (setq haskell-indentation-where-pre-offset 0)
   )
 
 ;;;;;;;;;;;;;;;;;;;
