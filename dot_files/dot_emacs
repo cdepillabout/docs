@@ -122,6 +122,9 @@
 ;; clipboard.
 (setq select-enable-primary t)
 
+;; Smooth scrolling like vim.
+(setq scroll-step 1)
+
 ;; Set the global default value of buffer-local variables.
 (setq-default
   ;; Always show trailing whitespace.
