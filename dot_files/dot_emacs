@@ -144,6 +144,15 @@
   show-trailing-whitespace t
 )
 
+;; Disable the menu bar.
+(menu-bar-mode -1)
+
+;; If we are using graphical emacs, disable the tool bar and the scroll bar.
+(if window-system
+  (progn
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)))
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors and Fonts ;;
 ;;;;;;;;;;;;;;;;;;;;;;
