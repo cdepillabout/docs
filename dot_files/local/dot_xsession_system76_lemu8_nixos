@@ -49,7 +49,7 @@ nm-applet &
 redshift-gtk -l 35:140 &
 
 # Start screen-saver.
-/usr/bin/xscreensaver -no-splash &
+# xscreensaver -no-splash &
 
 # Add ssh keys.
 eval `ssh-agent`
