@@ -220,6 +220,10 @@
 ;; org-mode unless the value is surrounded with {}.
 (setq org-use-sub-superscripts '{})
 
+;; Any time an entry is turned from TODO to DONE, a CLOSED timestamp
+;; will be inserted just after the headline.
+(setq org-log-done 'time)
+
 ;; Don't create lockfiles that start with '.#'.  This is slightly unsafe, but
 ;; having those files around is very annoying.
 (setq create-lockfiles nil)
