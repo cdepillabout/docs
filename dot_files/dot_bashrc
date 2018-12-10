@@ -643,7 +643,9 @@ function mytake_and_ls() {
 	[ "$?" = "0" ] && ls
 }
 function mytake() {
-	take "$@"
+	# This needs to be escaped, because otherwise it will be alias-expanded to
+	# `mytake`, which will just go into an infinite loop.
+	\take "$@"
 	ret="$?"
 	if [ "${ret}" != "0" ] ; then
 		return "${ret}"
