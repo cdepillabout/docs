@@ -691,7 +691,11 @@ append_to_path_nocheck CLASSPATH "/usr/share/hamcrest-core/lib/hamcrest-core.jar
 # add default browser
 export BROWSER=`get_correct_filename_from_choices "firefox-bin" "firefox"`
 
+# Make sure EDITOR is set to the correct path for vim.
 export EDITOR=`get_correct_filename_from_choices "/usr/bin/vim" "/usr/local/bin/vim" "vim"`
+
+# Set the R library path for downloading new R libraries.
+export R_LIBS_USER="${HOME}/.r"
 
 # XDG Base Directory Specification
 export XDG_DATA_HOME="$HOME/.local/share"
