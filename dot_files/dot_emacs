@@ -224,6 +224,14 @@
 ;; will be inserted just after the headline.
 (setq org-log-done 'time)
 
+;; Set the latex options for rendering equations in org-mode when
+;; using the preview with C-c C-x C-l.
+(setq
+ org-format-latex-options
+ '(:foreground default :background default :scale 2.0
+   :html-foreground "Black" :html-background "Transparent" :html-scale 2.0
+   :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+
 ;; Don't create lockfiles that start with '.#'.  This is slightly unsafe, but
 ;; having those files around is very annoying.
 (setq create-lockfiles nil)
