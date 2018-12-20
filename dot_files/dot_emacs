@@ -228,7 +228,7 @@
 ;; using the preview with C-c C-x C-l.
 (setq
  org-format-latex-options
- '(:foreground default :background default :scale 2.0
+ '(:foreground default :background default :scale 2.25
    :html-foreground "Black" :html-background "Transparent" :html-scale 2.0
    :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
 
