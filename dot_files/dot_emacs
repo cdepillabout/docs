@@ -75,6 +75,14 @@
     ",t" 'org-todo
   )
 
+  ;; Evil keys for org-mode in insert mode.
+  (evil-define-key 'insert org-mode-map
+    (kbd "M-h") 'org-metaleft
+    (kbd "M-j") 'org-metadown
+    (kbd "M-k") 'org-metaup
+    (kbd "M-l") 'org-metaright
+  )
+
   ;; Global evil mappings.
   (evil-define-key nil evil-normal-state-map
     (kbd "SPC TAB") 'mode-line-other-buffer
