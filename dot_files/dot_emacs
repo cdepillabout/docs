@@ -64,7 +64,7 @@
   ;; Evil - Key Mappings ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  ;; Evil keys for org-mode.
+  ;; Evil keys for org-mode in normal mode.
   (evil-define-key 'normal org-mode-map
     (kbd "TAB") 'org-cycle
     ",A" 'org-archive-subtree
