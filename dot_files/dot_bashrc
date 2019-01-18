@@ -166,11 +166,11 @@ get_git_or_hg_branch()
 	fi
 
 	# now try to see if it is a mercurial branch
-	mercurial_branch=`hg branch 2>/dev/null`
-	if [ -n "${mercurial_branch}" ] ; then
-		echo -n "${PS1_mercurial_branch_color}${mercurial_branch} "
-		return
-	fi
+	# mercurial_branch=`hg branch 2>/dev/null`
+	# if [ -n "${mercurial_branch}" ] ; then
+	# 	echo -n "${PS1_mercurial_branch_color}${mercurial_branch} "
+	# 	return
+	# fi
 }
 
 # put the current sandbox in our prompt
