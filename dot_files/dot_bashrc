@@ -68,8 +68,14 @@ elif [[ "$(uname)" == "OpenBSD" ]]; then
 	fi
 elif [[ "$(uname)" == "Darwin" ]]; then
 	export CLICOLOR=1
-	export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
-	export LS_COLORS=ExGxBxDxCxEgEdxbxgxcxd
+	# I think that if we are not using ls from nix, then these should work.
+	#export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+	#export LS_COLORS=ExGxBxDxCxEgEdxbxgxcxd
+
+	# I think if we are using ls from nix, then these should work.
+	alias ls="ls --color=auto"
+	alias grep="grep --color=auto"
+	alias xgrep="xgrep --color=auto"
 fi
 
 alias lsr="ls -rt"
