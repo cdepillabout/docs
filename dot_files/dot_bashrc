@@ -292,7 +292,7 @@ alias java='java -server -ea '
 # When using rsync to copy directories, make sure not to put a
 # "/" after the SRC directory name, otherwise everything in
 # the directory will be copied, but not the directory itself.
-alias rsyncp='rsync -a -P '
+alias rsyncp='rsync -a -P'
 
 # this is a safe version of dd.  It doesn't overwrite the output file.
 alias dd='safe-dd '
