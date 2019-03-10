@@ -48,6 +48,9 @@ nm-applet &
 # lattitude and logitue hard coded for now.)
 redshift-gtk -l 35:140 &
 
+# Volume control
+pnmixer &
+
 # Start screen-saver.
 # xscreensaver -no-splash &
 
