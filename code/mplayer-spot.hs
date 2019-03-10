@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --resolver=lts-4.0 runghc --package=async --package=filepath --package=directory --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit-combinators
+-- stack --resolver=lts-4.0 runghc --package=async --package=filepath --package=directory --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit-combinators --package=tagged --package=semigroupoids
 
 -- This gives us an experience similar to @ghci@.  Raw values (1 and
 -- 10 below) that implement the 'Num' type class will be defaulted to 'Int'
