@@ -470,6 +470,21 @@ function gcmp ()
 	git push
 }
 
+function gcmpu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	ssh-gas -q
+	git commit -m "$msg"
+	git push
+}
+
 function gcamp ()
 {
 	export GPG_TTY="$(tty)"
@@ -483,8 +498,14 @@ function gcampu ()
 {
 	export GPG_TTY="$(tty)"
 
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
 	ssh-gas -q
-	git commit -a -m "update"
+	git commit -a -m "$msg"
 	git push
 }
 
