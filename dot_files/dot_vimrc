@@ -358,6 +358,9 @@ highlight TabLine term=bold,reverse cterm=bold ctermfg=black ctermbg=white
 highlight TabLineFill term=bold,reverse cterm=bold ctermfg=white ctermbg=white
 highlight TabLineSel term=reverse ctermfg=white ctermbg=lightblue
 
+" highlight the status line for the current terminal darker than by default
+highlight StatusLine ctermfg=5
+
 " highlight the popup menu a little differently
 highlight PmenuSel ctermbg=lightblue
 
@@ -1038,6 +1041,7 @@ call Add_eol_whitespace_highlighting("php")
 call Add_eol_whitespace_highlighting("puppet")
 call Add_eol_whitespace_highlighting("purescript")
 call Add_eol_whitespace_highlighting("python")
+call Add_eol_whitespace_highlighting("r")
 call Add_eol_whitespace_highlighting("ruby")
 call Add_eol_whitespace_highlighting("scala")
 call Add_eol_whitespace_highlighting("sh")
@@ -1099,6 +1103,13 @@ autocmd FileType cs set foldmethod=marker
 autocmd FileType cs set foldmarker={,}
 autocmd FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
 autocmd FileType cs set foldlevelstart=2
+
+" settings for R
+autocmd FileType r setlocal tabstop=2
+autocmd FileType r setlocal shiftwidth=2
+autocmd FileType r setlocal softtabstop=2
+autocmd FileType r setlocal expandtab
+" autocmd FileType r setlocal foldmethod=syntax
 
 " settings for ruby
 let ruby_no_expensive=1
