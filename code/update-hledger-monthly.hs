@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --verbose --resolver lts-12.14 --nix --no-nix-pure script --package classy-prelude --package hledger-lib --package hledger --package parsec --package pretty-simple --package from-sum --package optparse-applicative --ghc-options -Wall --ghc-options -fwarn-incomplete-uni-patterns --ghc-options -fwarn-incomplete-record-updates --ghc-options -fwarn-monomorphism-restriction
+-- stack --verbose --resolver lts-13.10 --nix --no-nix-pure script --package classy-prelude --package hledger-lib --package hledger --package parsec --package pretty-simple --package from-sum --package optparse-applicative --ghc-options -Wall --ghc-options -fwarn-incomplete-uni-patterns --ghc-options -fwarn-incomplete-record-updates --ghc-options -fwarn-monomorphism-restriction
 
 -- TODO: Ideally, the `--nix` flag in the command line above shouldn't have to be used:
 -- https://github.com/commercialhaskell/stack/issues/3705
