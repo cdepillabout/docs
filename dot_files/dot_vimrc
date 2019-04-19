@@ -195,6 +195,17 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:idris_indent_where = 2
 	let g:idris_indent_do = 2
 	let g:idris_indent_rewrite = 2
+
+	" PureScript
+	Bundle 'purescript-contrib/purescript-vim'
+	let g:purescript_indent_if = 2
+	let g:purescript_indent_case = 2
+	let g:purescript_indent_let = 4
+	let g:purescript_indent_where = 2
+	let g:purescript_indent_do = 2
+	let g:purescript_indent_in = 0
+	" https://github.com/purescript-contrib/purescript-vim/issues/65
+	autocmd FileType purescript setlocal complete=.,w,b,u,t
 endif
 
 
