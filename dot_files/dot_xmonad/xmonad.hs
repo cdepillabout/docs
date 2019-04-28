@@ -8,7 +8,6 @@ import Graphics.X11.ExtraTypes.XF86
        (xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp)
 import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
-import System.Taffybar.Hooks.PagerHints (pagerHints)
 import XMonad
        (ChangeLayout(NextLayout), Dimension, KeyMask, Layout,
         Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
@@ -19,12 +18,13 @@ import XMonad
         terminal, tileWindow, windows, windowset, withFocused,
         withWindowSet, whenJust, workspaces, xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
-import XMonad.Layout (Choose, Full, Mirror, Tall)
-import XMonad.Layout.LayoutModifier (ModifiedLayout)
-import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
+import XMonad.Hooks.DynamicLog (xmobar)
 import XMonad.Hooks.ManageDocks
        (AvoidStruts, ToggleStruts(ToggleStruts), avoidStruts, docks,
         manageDocks)
+import XMonad.Layout (Choose, Full, Mirror, Tall)
+import XMonad.Layout.LayoutModifier (ModifiedLayout)
+import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Hooks.EwmhDesktops (ewmh)
 import XMonad.Hooks.WorkspaceHistory
        (workspaceHistory, workspaceHistoryHook)
@@ -32,7 +32,23 @@ import qualified XMonad.StackSet as W
 
 main :: IO ()
 main = do
-  xmonad . ewmh . pagerHints . docks $ def
+  configWithXMobar <- xmobar . ewmh $ docks myXMonadConfig
+  xmonad configWithXMobar
+
+myXMonadConfig
+  :: XConfig
+      (ModifiedLayout
+        AvoidStruts
+        (ModifiedLayout
+          SmartBorder
+            (Choose
+              Tall
+              (Choose (Mirror Tall) Full)
+            )
+        )
+      )
+myXMonadConfig =
+  def
     { borderWidth = myBorderWidth
     , keys = myKeys
     , layoutHook = myLayout

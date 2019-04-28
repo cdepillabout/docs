@@ -74,7 +74,10 @@ super_link $SCRIPT_DIR/dot_xmonad/build $HOME/.xmonad/build
 super_link $SCRIPT_DIR/dot_xmonad/xmonad_build_vars.sh $HOME/.xmonad/xmonad_build_vars.sh
 
 # xmobar files
-#super_link $SCRIPT_DIR/dot_xmobarrc $HOME/.xmobarrc
+super_link $SCRIPT_DIR/dot_xmobarrc $HOME/.xmobarrc
+
+# stalonetray files
+super_link $SCRIPT_DIR/dot_stalonetrayrc $HOME/.stalonetrayrc
 
 # mplayer files
 make_directory $HOME/.mplayer

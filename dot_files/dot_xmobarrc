@@ -1,0 +1,57 @@
+Config
+  { font = "xft:Bitstream Vera Sans:size=9:bold:antialias=true"
+  , position = TopP 0 200
+  , commands =
+      [ Run
+	      Cpu
+		  [ "--template", "cpu <total>%"
+          , "--Low", "50" -- units: %
+          , "--High", "85"
+          , "--low", "darkgreen"
+          , "--normal", "darkorange"
+          , "--high", "darkred"
+          ]
+		  10
+      , Run
+	      CoreTemp
+		  [ "--template", "temp <core0>°C"
+          , "--Low", "70" -- units: °C
+          , "--High", "80"
+          , "--low", "darkgreen"
+          , "--normal", "darkorange"
+          , "--high", "darkred"
+          ]
+		  50
+      , Run
+	      Memory
+		  [ "--template", "mem <usedratio>%"
+          , "--Low", "20" -- units: %
+          , "--High", "90"
+          , "--low", "darkgreen"
+          , "--normal", "darkorange"
+          , "--high", "darkred"
+          ]
+		  10
+      , Run
+	      Battery
+		  [ "--template" , "batt <acstatus>"
+          , "--Low", "10" -- units: %
+          , "--High", "80"
+          , "--low", "darkred"
+          , "--normal", "darkorange"
+          , "--high", "darkgreen"
+          , "--" -- battery specific options
+          -- discharging status
+          , "-o", "<left>% (<timeleft>)"
+          -- AC "on" status
+          , "-O", "<fc=#dAA520>Charging</fc>"
+          -- charged status
+          , "-i", "<fc=#006000>Charged</fc>"
+          ]
+		  50
+      , Run Date "<fc=#ABABAB>%F (%a) %T</fc>" "date" 10
+	  , Run Com "uname" ["-n"] "" 0
+	  ]
+  , template =
+      "%StdinReader% }{ %uname%  |  %battery%  |  %cpu%  |  %coretemp%  |  %memory%  |  <fc=#ee9a00>%date%</fc> "
+  }
