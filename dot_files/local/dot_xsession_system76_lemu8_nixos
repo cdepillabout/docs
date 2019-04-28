@@ -57,8 +57,8 @@ stretchly &
 # Start screen-saver.
 # xscreensaver -no-splash &
 
-# stalone tray
-stalonetray &
+# Tray for system icons.
+trayer --edge top --align right --widthtype pixel --width 150 --height 18 --transparent true --alpha 0 --tint 0 &
 
 # Add ssh keys.
 eval `ssh-agent`

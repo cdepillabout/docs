@@ -1,6 +1,6 @@
 Config
   { font = "xft:Bitstream Vera Sans:size=9:bold:antialias=true"
-  , position = TopP 0 200
+  , position = TopP 0 150
   , commands =
       [ Run
 	      Cpu
@@ -51,6 +51,7 @@ Config
 		  50
       , Run Date "<fc=#ABABAB>%F (%a) %T</fc>" "date" 10
 	  , Run Com "uname" ["-n"] "" 0
+	  , Run StdinReader
 	  ]
   , template =
       "%StdinReader% }{ %uname%  |  %battery%  |  %cpu%  |  %coretemp%  |  %memory%  |  <fc=#ee9a00>%date%</fc> "
