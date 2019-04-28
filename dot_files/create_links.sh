@@ -70,8 +70,6 @@ make_directory $HOME/.emacs.d/backups/
 # xmonad files
 make_directory $HOME/.xmonad
 super_link $SCRIPT_DIR/dot_xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs
-super_link $SCRIPT_DIR/dot_xmonad/build $HOME/.xmonad/build
-super_link $SCRIPT_DIR/dot_xmonad/xmonad_build_vars.sh $HOME/.xmonad/xmonad_build_vars.sh
 
 # xmobar files
 super_link $SCRIPT_DIR/dot_xmobarrc $HOME/.xmobarrc
