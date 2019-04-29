@@ -1,5 +1,5 @@
 Config
-  { font = "xft:Bitstream Vera Sans:size=9:bold:antialias=true"
+  { font = "xft:Dejavu Sans Mono:size=9:bold:antialias=true"
   , position = TopP 0 150
   , commands =
       [ Run
@@ -11,7 +11,7 @@ Config
           , "--normal", "darkorange"
           , "--high", "darkred"
           ]
-		  10
+		  20
       , Run
 	      CoreTemp
 		  [ "--template", "temp <core0>°C"
@@ -49,10 +49,10 @@ Config
           , "-i", "<fc=#006000>Charged</fc>"
           ]
 		  50
-      , Run Date "<fc=#ABABAB>%F (%a) %T</fc>" "date" 10
+      , Run Date "<fc=#ABABAB>%F (%a) %H:%M</fc>" "date" 10
 	  , Run Com "uname" ["-n"] "" 0
 	  , Run StdinReader
 	  ]
   , template =
-      "%StdinReader% }{ %uname%  |  %battery%  |  %cpu%  |  %coretemp%  |  %memory%  |  <fc=#ee9a00>%date%</fc> "
+      "%StdinReader% }{ %cpu%  |  %memory% | %coretemp%  | %battery% |  <fc=#ee9a00>%date%</fc> | %uname% "
   }
