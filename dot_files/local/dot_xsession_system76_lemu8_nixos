@@ -55,7 +55,10 @@ pnmixer &
 stretchly &
 
 # Start screen-saver.
-# xscreensaver -no-splash &
+#xscreensaver -no-splash &
+
+# Start the bluetooth applet.
+#blueman-applet &
 
 # Tray for system icons.
 trayer --edge top --align right --widthtype pixel --width 150 --height 18 --transparent true --alpha 0 --tint 0 &

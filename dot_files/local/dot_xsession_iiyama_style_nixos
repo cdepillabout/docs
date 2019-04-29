@@ -48,11 +48,20 @@ nm-applet &
 # lattitude and logitue hard coded for now.)
 redshift-gtk -l 35:140 &
 
+# Volume control
+pnmixer &
+
+# Stretchly (regularly reminds to take a break)
+#stretchly &
+
 # Start screen-saver.
 #xscreensaver -no-splash &
 
 # Start the bluetooth applet.
 blueman-applet &
+
+# Tray for system icons.
+trayer --edge top --align right --widthtype pixel --width 150 --height 18 --transparent true --alpha 0 --tint 0 &
 
 # Add ssh keys.
 eval `ssh-agent`
@@ -62,29 +71,12 @@ xterm -e ssh-add &
 # Setup keyboard keymap based on what which keyboards are available
 (sleep 3 && setup-keyboard) &
 
-# Make sure to add ~/.local/bin to the PATH because that is where `stack` is.
-# We use `stack` to run `taffybar`.
-export PATH="${HOME}/.local/bin:${PATH}"
-
-# Source xmonad settings for xmonad and taffybar.
-# XXX: This must be run using `.` and not `source` on systems where `sh` is
-# not `bash`, because xinit always runs this file with `sh` (even if a
-# different hashbang is specified).  Some versions of `sh` do know the
-# `source` alias for `.`.
-. "${HOME}/.xmonad/xmonad_build_vars.sh"
-
-# Start taffybar.
-PATH="${XMONAD_LOCAL_BIN_PATH}:$PATH" stack exec \
-	--local-bin-path="${XMONAD_LOCAL_BIN_PATH}" \
-	--resolver="${XMONAD_STACK_RESOLVER}" \
-	-- taffybar &
-
 # Remove old xmonad.state file because it keeps around monitor dimensions that
 # we might not want.
 rm -f "${XMONAD_DIR}/xmonad.state"
 
 # Start xmonad.
-${XMONAD_LOCAL_BIN_PATH}/xmonad &
+xmonad &
 #fluxbox &
 windowmanagerpid=$!
 wait $windowmanagerpid
