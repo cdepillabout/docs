@@ -470,6 +470,20 @@ function gcmp ()
 	git push
 }
 
+function gcmu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	ssh-gas -q
+	git commit -m "$msg"
+}
+
 function gcmpu ()
 {
 	export GPG_TTY="$(tty)"
@@ -492,6 +506,20 @@ function gcamp ()
 	ssh-gas -q
 	git commit -a -m "$*"
 	git push
+}
+
+function gcamu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	ssh-gas -q
+	git commit -a -m "$msg"
 }
 
 function gcampu ()
@@ -519,13 +547,34 @@ function gcAmp ()
 	git push
 }
 
+function gcAmu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	ssh-gas -q
+	git add -A
+	git commit -m "$msg"
+}
+
 function gcAmpu ()
 {
 	export GPG_TTY="$(tty)"
 
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
 	ssh-gas -q
 	git add -A
-	git commit -m "update"
+	git commit -m "$msg"
 	git push
 }
 
