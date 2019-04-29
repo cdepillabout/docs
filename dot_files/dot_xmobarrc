@@ -10,6 +10,8 @@ Config
           , "--low", "darkgreen"
           , "--normal", "darkorange"
           , "--high", "darkred"
+		  , "--minwidth", "2"
+		  , "--padchars", "0"
           ]
 		  20
       , Run
@@ -30,21 +32,23 @@ Config
           , "--low", "darkgreen"
           , "--normal", "darkorange"
           , "--high", "darkred"
+		  , "--minwidth", "2"
+		  , "--padchars", "0"
           ]
 		  10
       , Run
 	      Battery
 		  [ "--template" , "batt <acstatus>"
-          , "--Low", "10" -- units: %
-          , "--High", "80"
+          , "--Low", "15" -- units: %
+          , "--High", "70"
           , "--low", "darkred"
           , "--normal", "darkorange"
           , "--high", "darkgreen"
           , "--" -- battery specific options
           -- discharging status
-          , "-o", "<left>% (<timeleft>)"
+          , "-o", "<fc=#dd0000>Battery</fc> <left>% (<timeleft>)"
           -- AC "on" status
-          , "-O", "<fc=#dAA520>Charging</fc>"
+          , "-O", "<fc=#dAA520>Charging</fc> <left>% (<timeleft>)"
           -- charged status
           , "-i", "<fc=#006000>Charged</fc>"
           ]
