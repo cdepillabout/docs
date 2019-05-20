@@ -83,6 +83,10 @@
     (kbd "M-l") 'org-metaright
   )
 
+  ;; Evil keys for markdown mode.
+  (evil-define-key 'normal markdown-mode-map
+    (kbd "TAB") 'markdown-cycle)
+
   ;; Global evil mappings.
   (evil-define-key nil evil-normal-state-map
     (kbd "SPC TAB") 'mode-line-other-buffer
@@ -99,6 +103,16 @@
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init
+  (setq markdown-command "multimarkdown")
+  )
 
 ;; Load magit.
 (use-package magit
