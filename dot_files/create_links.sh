@@ -165,6 +165,10 @@ super_link $SCRIPT_DIR/dot_config/nixpkgs/config.nix $HOME/.config/nixpkgs/confi
 make_directory $HOME/.config/taffybar
 super_link $SCRIPT_DIR/dot_config/taffybar/taffybar.hs $HOME/.config/taffybar/taffybar.hs
 
+# termonad
+make_directory $HOME/.config/termonad
+super_link $SCRIPT_DIR/dot_config/termonad/termonad.hs $HOME/.config/termonad/termonad.hs
+
 # xdg user-dirs file
 super_link $SCRIPT_DIR/dot_config/user-dirs.dirs $HOME/.config/user-dirs.dirs
 
