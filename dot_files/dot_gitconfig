@@ -24,3 +24,5 @@
 	ps = push
 [fetch]
 	prune = true
+[submodule]
+	recurse = true
