@@ -63,6 +63,10 @@ stretchly &
 # Tray for system icons.
 trayer --edge top --align right --widthtype pixel --width 150 --height 18 --transparent true --alpha 0 --tint 0 &
 
+# Arbtt time tracker to keep track of how much time I spend on the computer
+# everyday.
+arbtt-capture &
+
 # Add ssh keys.
 eval `ssh-agent`
 xterm -e ssh-add &
