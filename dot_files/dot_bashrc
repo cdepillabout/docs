@@ -733,6 +733,10 @@ function mytake() {
 alias take='mytake'
 alias t='mytake_and_ls'
 
+# Aliases for getting arbtt data for only today and yesterday
+alias arbtt-stats-today="arbtt-stats --filter='\$date >= '\`date '+%Y-%m-%d'\`"
+alias arbtt-stats-yesterday="arbtt-stats --filter='\$date >= '\`date --date=yesterday '+%Y-%m-%d'\`' && \$date < '\`date '+%Y-%m-%d'\`"
+
 # don't record duplicate items in history or
 # lines starting with a space ('$  ls -la')
 export HISTCONTROL='ignoreboth'
