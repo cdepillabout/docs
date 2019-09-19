@@ -4,11 +4,11 @@
   # The package sets defined here can be installed with `nix-env` like the
   # following:
   # $ nix-env -f '<nixpkgs>' -iA screenshotToClipboardEnv
-  packageOverrides = pkgs: with pkgs; rec {
+  packageOverrides = pkgs: rec {
 
     # This python environment is used for running the copy-image-to-clipboard
     # program, which is called by the screenshot-to-clipboard program.
-    copy-image-to-clipboard-env = python27.withPackages (ps: with ps; [
+    copy-image-to-clipboard-env = pkgs.python27.withPackages (ps: with ps; [
         pygtk
       ]);
 
@@ -17,16 +17,16 @@
       name = "screenshot-to-clipboard-env";
       paths = [
         copy-image-to-clipboard-env
-        imagemagick
-        gimp
+        pkgs.imagemagick
+        pkgs.gimp
       ];
     };
 
     # This is my pretty-simple Haskell library with the CLI enabled to build.
     pretty-simple-cli =
-      with haskell.lib;
+      with pkgs.haskell.lib;
       addBuildDepend
-        (appendConfigureFlag haskellPackages.pretty-simple "-fbuildexe")
-        haskellPackages.optparse-applicative;
+        (appendConfigureFlag pkgs.haskellPackages.pretty-simple "-fbuildexe")
+        pkgs.haskellPackages.optparse-applicative;
   };
 }
