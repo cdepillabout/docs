@@ -19,7 +19,7 @@ main = do
           { cursorBgColour = Set $ createColour 204 0 0
           , palette =
               let myStandardColors =
-                    setAtVec (fin_ (sing :: Sing N4)) (createColour 90 90 250) $
+                    setAtVec (fin_ (sing :: Sing N4)) (createColour 120 120 250) $
                     defaultStandardColours
                   myLightCols =
                     setAtVec (fin_ (sing :: Sing N4)) (createColour 150 150 250) $
