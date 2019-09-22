@@ -209,6 +209,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Dhall
 	Bundle 'vmchale/dhall-vim'
+
+	" Rust
+	Bundle 'rust-lang/rust.vim'
 endif
 
 
