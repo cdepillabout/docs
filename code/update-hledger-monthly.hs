@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --verbose --resolver lts-13.19 --nix --no-nix-pure script --package classy-prelude --package hledger-lib --package hledger --package parsec --package pretty-simple --package from-sum --package optparse-applicative --ghc-options -Wall --ghc-options -fwarn-incomplete-uni-patterns --ghc-options -fwarn-incomplete-record-updates --ghc-options -fwarn-monomorphism-restriction
+-- stack --verbose --resolver lts-14.7 --nix --no-nix-pure script --package classy-prelude --package hledger-lib --package hledger --package parsec --package pretty-simple --package from-sum --package optparse-applicative --ghc-options -Wall --ghc-options -fwarn-incomplete-uni-patterns --ghc-options -fwarn-incomplete-record-updates --ghc-options -fwarn-monomorphism-restriction
 
 -- TODO: Ideally, the `--nix` flag in the command line above shouldn't have to be used:
 -- https://github.com/commercialhaskell/stack/issues/3705
@@ -58,7 +58,9 @@ main = do
   hledgerCliOpts <- getHledgerCliOptsWithJournal
   options <- parseCmdLineOptions
   datedInputEntries <- readDatedEntries options
-  withJournalDo hledgerCliOpts (writeTransactions datedInputEntries)
+  withJournalDo
+    hledgerCliOpts
+    (writeTransactions datedInputEntries hledgerCliOpts)
 
 -- | Get the most recent 'Transaction' that is the most similar to the
 -- description.
