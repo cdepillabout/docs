@@ -268,8 +268,7 @@
     ;; Set which files are checked for agendas.
     (setq
      org-agenda-files
-     '("~/gtd/inbox.org"
-       "~/gtd/projects.org"
+     '("~/gtd/projects.org"
        "~/gtd/projects.org_archive"))
 
     ;; Define capture templates for use with org-capture.
