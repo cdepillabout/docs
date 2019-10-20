@@ -212,6 +212,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Rust
 	Bundle 'rust-lang/rust.vim'
+
+	" Typescript
+	Bundle 'leafgarland/typescript-vim'
 endif
 
 
