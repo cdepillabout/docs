@@ -188,8 +188,8 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     , ((modm, xK_i), spawn "gemacs")
 
     -- control monitor brightness
-    , ((noModMask, xF86XK_MonBrightnessDown), spawn "xbacklight -10")
-    , ((noModMask, xF86XK_MonBrightnessUp), spawn "xbacklight +10")
+    , ((noModMask, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-")
+    , ((noModMask, xF86XK_MonBrightnessUp), spawn "brightnessctl set 10%+")
     ]
 
 -- Switch to the previously focused workspace that is visible on a Xinerama
