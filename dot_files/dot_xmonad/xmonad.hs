@@ -187,6 +187,12 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     -- open graphical emacs
     , ((modm, xK_i), spawn "gemacs")
 
+    -- open firefox
+    , ((modm, xK_f), spawn "firefox")
+
+    -- open chromium
+    , ((modm, xK_g), spawn "chromium")
+
     -- control monitor brightness
     , ((noModMask, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-")
     , ((noModMask, xF86XK_MonBrightnessUp), spawn "brightnessctl set 10%+")
