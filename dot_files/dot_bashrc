@@ -374,6 +374,10 @@ alias Irigrep='grep -I -r -i '
 alias dst='darcs status'
 alias dwn='darcs whatsnew'
 
+# du alias for showing size of files in current directory
+alias du-here='sudo du -sh * .[A-Za-z0-9]* 2>/dev/null | sort -h | tail -15'
+alias du-here-all='sudo du -sh * .[A-Za-z0-9]* 2>/dev/null | sort -h'
+
 # screen automatically connects to a running session
 alias screen='screen -R '
 
