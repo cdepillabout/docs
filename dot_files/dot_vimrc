@@ -491,8 +491,14 @@ map q :q<CR>
 "nmap <c-s> :w<CR>
 "imap <c-s> <Esc>:w<CR>a
 
-" in input mode, what about we try using jj as escape
-inoremap jj <Esc>
+" In input mode, what about we try using jj as escape?
+"
+" Note: This doesn't work well when pasting text to a vim buffer when running
+" vim over ssh.  If I go into input mode and try to paste a string with jj in it, vim goes back into
+" normal mode, when really it should paste the whole string.  This
+" occasionally occurs when pasting hashes, which sometimes have the string jj
+" in them.
+"inoremap jj <Esc>
 
 " I want to jump to the exact position in the line
 nnoremap '' ``
