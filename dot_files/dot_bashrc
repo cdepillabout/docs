@@ -541,6 +541,21 @@ function gcampu ()
 	git push
 }
 
+function gcampw ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="wip"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	ssh-gas -q
+	git commit -a -m "$msg"
+	git push
+}
+
 function gcAmp ()
 {
 	export GPG_TTY="$(tty)"
