@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --resolver=lts-4.0 runghc --package=async --package=filepath --package=directory --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit-combinators --package=tagged --package=semigroupoids
+-- stack --verbose --nix-packages "zlib" --resolver=lts-14.20 script --package=async --package=filepath --package=directory --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit --package=tagged --package=semigroupoids --package=attoparsec --package=streaming-commons
 
 -- This gives us an experience similar to @ghci@.  Raw values (1 and
 -- 10 below) that implement the 'Num' type class will be defaulted to 'Int'
@@ -26,7 +26,7 @@
 
 -- import Prelude hiding (takeWhile)
 
-import Conduit (iterMC)
+import Conduit (ConduitT, awaitForever, iterMC, runConduit, yield, (.|))
 import Control.Applicative ((<|>))
 import Control.Concurrent.Async (Concurrently(..))
 import Control.Concurrent.MVar (MVar, modifyMVar_, newMVar, tryReadMVar)
@@ -39,19 +39,18 @@ import Data.Attoparsec.ByteString.Char8
     )
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Char8 as C8
-import Data.Conduit
-    ( (=$=), ($$), Conduit, Producer, Sink, Source, awaitForever, yield )
 import Data.Conduit.Combinators (stderr, stdin, stdout)
 import Data.Conduit.Process (streamingProcess, waitForStreamingProcess)
 import Data.Monoid ((<>))
 import Data.Streaming.Process (StreamingProcessHandle)
 import Data.Text (unpack)
 import qualified Data.Text as T
-import Data.Text.Encoding (decodeUtf8)
+import Data.Text.Encoding (decodeUtf8, encodeUtf8)
+import Data.Void (Void)
 import System.Directory (createDirectoryIfMissing, getHomeDirectory, removeFile)
 import System.Environment (getArgs)
 import System.Exit (exitWith)
-import System.FilePath ((</>))
+import System.FilePath (takeFileName, (</>))
 import System.IO (BufferMode(..), hSetBuffering)
 import qualified System.IO as IO
 import System.Process (proc)
@@ -96,9 +95,9 @@ defaultMediaInfo = MediaInfo { mediaInfoLength = Nothing
                              }
 
 -- | Datatype to hold mplayer's stdin, stdout, etc conduits.
-data MPlayer = MPlayer { mplayerStdin :: Sink ByteString IO ()
-                       , mplayerStdout :: Source IO ByteString
-                       , mplayerStderr :: Source IO ByteString
+data MPlayer = MPlayer { mplayerStdin :: ConduitT ByteString Void IO ()
+                       , mplayerStdout :: ConduitT () ByteString IO ()
+                       , mplayerStderr :: ConduitT () ByteString IO ()
                        , mplayerProcHandle :: StreamingProcessHandle
                        }
 
@@ -106,9 +105,23 @@ data MPlayer = MPlayer { mplayerStdin :: Sink ByteString IO ()
 createMPlayerProcess :: [String] -> IO MPlayer
 createMPlayerProcess programArgs = do
     let mplayerArgs = ["-identify", "-slave"] <> programArgs
-    (processStdin, processStdout, processStderr, processHandle) <-
+    ( processStdin :: ConduitT ByteString Void IO ()
+      , processStdout :: ConduitT () ByteString IO ()
+      , processStderr :: ConduitT () ByteString IO ()
+      , processHandle) <-
         streamingProcess (proc "mplayer" mplayerArgs)
     return $! MPlayer processStdin processStdout processStderr processHandle
+
+-- streamingProcess :: (MonadIO m, InputSource stdin, OutputSink stdout, OutputSink stderr) => CreateProcess -> m (stdin, stdout, stderr, StreamingProcessHandle)
+--
+-- (r ~ (), r' ~ (), MonadIO m, MonadIO n, i ~ ByteString) => InputSource (ConduitM i o m r, n r')
+-- (r ~ (), r' ~ (), MonadIO m, MonadIO n, o ~ ByteString) => OutputSink (ConduitM i o m r, n r')
+-- InputSource (ConduitM ByteString o IO ())
+-- OutputSink (ConduitM i ByteString IO ())
+--
+--
+
+
 
 -- | Parser for a value prefixed by a bytestring.  Uses skipWhile to make it
 -- faster.
@@ -191,10 +204,10 @@ processMPlayerStdout mediaInfoMVar mplayerLine = do
 --
 -- In order for this to work right when hooked up to stdin, stdin should be set
 -- to 'NoBuffering'.
-sendMPlayerCommands :: Conduit ByteString IO ByteString
+sendMPlayerCommands :: ConduitT ByteString ByteString IO ()
 sendMPlayerCommands = awaitForever go
   where
-    go :: ByteString -> Conduit ByteString IO ByteString
+    go :: ByteString -> ConduitT ByteString ByteString IO ()
     go inputChar
         | inputChar == "q"       = yield "quit\n"
         | inputChar == "p"       = yield "pause\n"
@@ -208,19 +221,24 @@ sendMPlayerCommands = awaitForever go
         | otherwise =
             liftIO $ print $ "got keypress " <> inputChar <> " but don't know what to do with it"
 
+calculateFullSpotsPath :: Config -> ByteString -> FilePath
+calculateFullSpotsPath (Config _ spotsDir _) filename =
+    spotsDir </> takeFileName (unpack (decodeUtf8 filename))
+
 -- | Producer that tries to read the filename from the @'MVar' 'MediaInfo'@,
 -- and if it succeeds, tries to open the spot file and read in the saved
 -- position.  Produce it as a value.
-setOldLocation :: Config -> MVar MediaInfo -> Producer IO ByteString
-setOldLocation config@(Config _ spotsDir _) mediaInfoMVar = do
+setOldLocation :: Config -> MVar MediaInfo -> ConduitT i ByteString IO ()
+setOldLocation config mediaInfoMVar = do
     maybeMediaInfo <- liftIO $ tryReadMVar mediaInfoMVar
     case maybeMediaInfo of
         Just (MediaInfo _ _ _ True) -> pure ()
         Just (MediaInfo _ (Just filename) _ False) -> do
-            filecontents <- liftIO $ try $ readFile $ spotsDir </> unpack (decodeUtf8 filename)
+            let fullPath = calculateFullSpotsPath config filename
+            filecontents <- liftIO $ try $ readFile fullPath
             case filecontents of
                 Right oldLocation -> do
-                    yield $ "seek " <> C8.pack oldLocation <> "\n"
+                    yield $ "seek " <> encodeUtf8 (T.pack oldLocation) <> "\n"
                 Left (_ :: IOException) -> pure ()
             liftIO $ modifyMVar_ mediaInfoMVar $ \mediaInfo -> pure mediaInfo { mediaInfoAlreadySetOldLocation = True }
         _ -> setOldLocation config mediaInfoMVar
@@ -240,21 +258,25 @@ runMPlayerUpdateMediaInfo config mplayer mediaInfoMVar = do
 
     -- a conduit for sending the old location to mplayer
     let oldLocationToMplayerStdin =
-            setOldLocation config mediaInfoMVar $$ mplayerStdin mplayer
+            runConduit $ setOldLocation config mediaInfoMVar .| mplayerStdin mplayer
 
     -- Read keypresses from stdin, translate to mplayer commands, and pipe to mplayer.
-    let stdinToMplayerStdin = stdin $$
-                              sendMPlayerCommands =$=
-                              mplayerStdin mplayer
+    let stdinToMplayerStdin =
+          runConduit $
+            stdin .|
+            sendMPlayerCommands .|
+            mplayerStdin mplayer
 
     -- Process mplayer's stdout to find filename, length, and current position.
     -- Print mplayer's stdout to our stdout.
-    let mplayerStdoutToStdout = mplayerStdout mplayer $$
-                                iterMC (processMPlayerStdout mediaInfoMVar) =$=
-                                stdout
+    let mplayerStdoutToStdout =
+          runConduit $
+            mplayerStdout mplayer .|
+            iterMC (processMPlayerStdout mediaInfoMVar) .|
+            stdout
 
     -- Print mplayer's stderr to our stderr.
-    let mplayerStderrToStderr = mplayerStderr mplayer $$ stderr
+    let mplayerStderrToStderr = runConduit $ mplayerStderr mplayer .| stderr
 
     -- Handle for controlling the mplayer process.
     let mplayerHandle = mplayerProcHandle mplayer
@@ -277,11 +299,11 @@ createMPlayerSpotsDir (Config rcDir spotsDir _) = do
 -- have been filled in the MediaInfo, and if our current position in the media
 -- file is not too early or not too late.
 writeSpotFile :: Config -> MVar MediaInfo -> IO ()
-writeSpotFile (Config _ spotsDir ignoreLength) mediaInfoMVar = do
+writeSpotFile config@(Config _ spotsDir ignoreLength) mediaInfoMVar = do
     maybeMediaInfo <- tryReadMVar mediaInfoMVar
     case maybeMediaInfo of
         Just (MediaInfo (Just mediaLength) (Just filename) (Just exitPos) _) -> do
-            let spotFilename = spotsDir </> unpack (decodeUtf8 filename)
+            let spotFilename = calculateFullSpotsPath config filename
             writeSpotFile' mediaLength spotFilename exitPos
         _ -> putStrLn "When exiting, do not currently have all fields of media info, so cannot write out spot file."
   where
@@ -295,7 +317,7 @@ writeSpotFile (Config _ spotsDir ignoreLength) mediaInfoMVar = do
             putStrLn $ "exit position is " <> show exitPos <> " seconds so not writing spot file (too close to end)"
             removeOldSpotFile spotFilename
         | otherwise =
-            writeFloatToFile spotFilename exitPos
+            writeFloatToFile spotFilename (max (exitPos - 10) 0)
 
     -- | Write a Float to a FilePath.
     writeFloatToFile :: FilePath -> Float -> IO ()
