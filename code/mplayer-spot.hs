@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --verbose --nix-packages "zlib" --resolver=lts-14.20 script --package=async --package=filepath --package=directory --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit --package=tagged --package=semigroupoids --package=attoparsec --package=streaming-commons
+-- stack --verbose --nix-packages "mplayer zlib" --resolver=lts-14.20 script --package=async --package=filepath --package=directory --package=process --package=bytestring --package=text --package=conduit-extra --package=conduit --package=tagged --package=semigroupoids --package=attoparsec --package=streaming-commons
 
 -- This gives us an experience similar to @ghci@.  Raw values (1 and
 -- 10 below) that implement the 'Num' type class will be defaulted to 'Int'
@@ -299,7 +299,7 @@ createMPlayerSpotsDir (Config rcDir spotsDir _) = do
 -- have been filled in the MediaInfo, and if our current position in the media
 -- file is not too early or not too late.
 writeSpotFile :: Config -> MVar MediaInfo -> IO ()
-writeSpotFile config@(Config _ spotsDir ignoreLength) mediaInfoMVar = do
+writeSpotFile config@(Config _ _ ignoreLength) mediaInfoMVar = do
     maybeMediaInfo <- tryReadMVar mediaInfoMVar
     case maybeMediaInfo of
         Just (MediaInfo (Just mediaLength) (Just filename) (Just exitPos) _) -> do
