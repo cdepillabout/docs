@@ -1068,6 +1068,7 @@ call Add_eol_whitespace_highlighting("puppet")
 call Add_eol_whitespace_highlighting("purescript")
 call Add_eol_whitespace_highlighting("python")
 call Add_eol_whitespace_highlighting("r")
+call Add_eol_whitespace_highlighting("rust")
 call Add_eol_whitespace_highlighting("ruby")
 call Add_eol_whitespace_highlighting("scala")
 call Add_eol_whitespace_highlighting("sh")
@@ -1244,11 +1245,17 @@ autocmd FileType purescript setlocal formatoptions+=1crq formatoptions-=t
 autocmd FileType purescript setlocal commentstring=--%s
 autocmd FileType purescript setlocal comments=:--
 
-" settings for purescript files
+" settings for javascript files
 autocmd FileType javascript set expandtab
 autocmd FileType javascript set tabstop=2
 autocmd FileType javascript set shiftwidth=2
 autocmd FileType javascript set softtabstop=2
+
+" settings for rust files
+autocmd FileType rust set expandtab
+autocmd FileType rust set tabstop=4
+autocmd FileType rust set shiftwidth=4
+autocmd FileType rust set softtabstop=4
 
 " settings for erlang files
 autocmd FileType erlang set expandtab
