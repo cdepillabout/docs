@@ -503,6 +503,21 @@ function gcmpu ()
 	git push
 }
 
+function gcmpw ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="wip"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	ssh-gas -q
+	git commit -m "$msg"
+	git push
+}
+
 function gcamp ()
 {
 	export GPG_TTY="$(tty)"
