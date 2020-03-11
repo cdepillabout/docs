@@ -152,8 +152,10 @@
 ;; clipboard.
 (setq select-enable-primary t)
 
-;; Smooth scrolling like vim.
+;; Smooth scrolling like vim.  Without scroll-conservatively, emacs still
+;; sometimes jumps the cursor around the screen when scrolling up.
 (setq scroll-step 1)
+(setq scroll-conservatively 1000)
 
 ;; Make sure the column number is always shown.
 (setq column-number-mode t)
