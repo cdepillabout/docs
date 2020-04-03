@@ -161,6 +161,10 @@ super_link $SCRIPT_DIR/dot_docker/config.json $HOME/.docker/config.json
 
 make_directory $HOME/.config
 
+# neovim (nvim)
+make_directory $HOME/.config/nvim
+super_link $SCRIPT_DIR/dot_config/nvim/init.vim $HOME/.config/nvim/init.vim
+
 # nix
 make_directory $HOME/.config/nixpkgs
 super_link $SCRIPT_DIR/dot_config/nixpkgs/config.nix $HOME/.config/nixpkgs/config.nix
