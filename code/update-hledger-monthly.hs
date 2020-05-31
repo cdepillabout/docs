@@ -1,8 +1,7 @@
-#!/usr/bin/env stack
--- stack --verbose --resolver lts-14.7 --nix --no-nix-pure script --package classy-prelude --package hledger-lib --package hledger --package parsec --package pretty-simple --package from-sum --package optparse-applicative --ghc-options -Wall --ghc-options -fwarn-incomplete-uni-patterns --ghc-options -fwarn-incomplete-record-updates --ghc-options -fwarn-monomorphism-restriction
+#!/usr/bin/env nix-shell
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/48723f48ab92381f0afd50143f38e45cf3080405.tar.gz -p "haskellPackages.ghcWithPackages (pkgs: with pkgs; [classy-prelude from-sum hledger hledger-lib optparse-applicative parsec ])" -i runhaskell
 
--- TODO: Ideally, the `--nix` flag in the command line above shouldn't have to be used:
--- https://github.com/commercialhaskell/stack/issues/3705
+-- The above uses nixpkgs release-20.03 as of 2020-05-31.
 
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -15,6 +14,13 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TupleSections #-}
+
+{-# OPTIONS_GHC -Wall #-}
+{-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-}
+{-# OPTIONS_GHC -fwarn-incomplete-record-updates #-}
+{-# OPTIONS_GHC -fwarn-monomorphism-restriction #-}
+
+
 
 import ClassyPrelude
 
