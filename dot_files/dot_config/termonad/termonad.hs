@@ -5,11 +5,9 @@ module Main where
 
 import Control.Lens ((&), set)
 import Data.Colour.SRGB (sRGB24)
-import Data.Singletons (sing)
 import Termonad.App (defaultMain)
 import Termonad.Config
 import Termonad.Config.Colour
-import Termonad.Config.Vec (Fin, N4, Sing, fin_, setAtVec)
 
 main :: IO ()
 main = do
@@ -19,10 +17,10 @@ main = do
           { cursorBgColour = Set $ createColour 204 0 0
           , palette =
               let myStandardColors =
-                    setAtVec (fin_ (sing :: Sing N4)) (createColour 120 120 250) $
+                    setAtList8 4 (createColour 120 120 250) $
                     defaultStandardColours
                   myLightCols =
-                    setAtVec (fin_ (sing :: Sing N4)) (createColour 150 150 250) $
+                    setAtList8 4 (createColour 150 150 250) $
                     defaultLightColours
               in ExtendedPalette myStandardColors myLightCols
           -- , foregroundColour = Set (createColour 220 50 50)
