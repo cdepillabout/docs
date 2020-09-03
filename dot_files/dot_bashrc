@@ -489,6 +489,21 @@ function gcmu ()
 	git commit -m "$msg"
 }
 
+function gcmw ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="wip"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	ssh-gas -q
+	git commit -m "$msg"
+}
+
+
 function gcmpu ()
 {
 	export GPG_TTY="$(tty)"
