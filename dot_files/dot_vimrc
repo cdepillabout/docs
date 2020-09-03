@@ -1230,6 +1230,7 @@ autocmd FileType nix set tabstop=2
 autocmd FileType nix set shiftwidth=2
 autocmd FileType nix set softtabstop=2
 autocmd FileType nix setlocal commentstring=#%s
+autocmd FileType nix setlocal indentexpr=
 
 " settings for ledger files
 autocmd FileType ledger set expandtab
