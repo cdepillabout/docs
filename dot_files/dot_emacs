@@ -60,6 +60,14 @@
     (interactive "p")
     (dotimes (_ count) (save-excursion (evil-insert-newline-below))))
 
+  (defun move-tab-back ()
+    (interactive)
+    (tab-bar-move-tab -1))
+
+  (defun move-tab-forward ()
+    (interactive)
+    (tab-bar-move-tab 1))
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Evil - Key Mappings ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -92,6 +100,10 @@
     (kbd "SPC TAB") 'mode-line-other-buffer
     (kbd "[ SPC") 'insert-space-above
     (kbd "] SPC") 'insert-space-below
+    (kbd "C-h") 'tab-bar-switch-to-prev-tab
+    (kbd "C-l") 'tab-bar-switch-to-next-tab
+    (kbd "C-y") 'move-tab-back
+    (kbd "C-u") 'move-tab-forward
     )
   )
 
