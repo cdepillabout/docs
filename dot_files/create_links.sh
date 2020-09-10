@@ -151,10 +151,6 @@ super_link $SCRIPT_DIR/dot_nix-local/ocaml.nix $HOME/.nix-local/ocaml.nix
 # postgres rc files
 super_link $SCRIPT_DIR/dot_psqlrc $HOME/.psqlrc
 
-# docker
-make_directory $HOME/.docker
-super_link $SCRIPT_DIR/dot_docker/config.json $HOME/.docker/config.json
-
 #########################
 ## files under .config ##
 #########################
