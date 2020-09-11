@@ -68,6 +68,32 @@
     (interactive)
     (tab-bar-move-tab 1))
 
+  (evil-define-command my-tabo (filename)
+    "Open a file in a new tab."
+    :repeat nil
+    (interactive "<f>")
+    (let ((value (find-file-noselect filename nil nil t)))
+      ;; (message "my-tabo, value: %s, nreverse value: %s" value (nreverse value))
+
+      ;; TODO: If the filename passed to find-file-noselect contains
+      ;; wildcards, then value is returned as a list.  However, extra
+      ;; files are opened as buffers, not tabs.  This should be modified
+      ;; to instead open ALL files returned as tabs.
+      ;;
+      ;; Also, it should be modified to be able to operate on files
+      ;; that don't exist, and create them new.  Take a look at how
+      ;; the command evil-edit works, since it is able to create new
+      ;; files.
+      (if (listp value)
+	  (progn
+	    (setq value (nreverse value))
+	    (switch-to-buffer-other-tab (car value))
+	    (mapc 'switch-to-buffer (cdr value))
+	    value)
+	(switch-to-buffer-other-tab value))
+      )
+    )
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Evil - Key Mappings ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -105,6 +131,9 @@
     (kbd "C-y") 'move-tab-back
     (kbd "C-u") 'move-tab-forward
     )
+
+  ;; Ex commands
+  (evil-ex-define-cmd "tabo" 'my-tabo)
   )
 
 (use-package evil-org
