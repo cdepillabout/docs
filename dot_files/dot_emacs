@@ -68,7 +68,7 @@
     (interactive)
     (tab-bar-move-tab 1))
 
-  (evil-define-command my-tabo (filename)
+  (evil-define-command my-rt (filename)
     "Open a file in a new tab."
     :repeat nil
     (interactive "<f>")
@@ -85,12 +85,12 @@
       ;; the command evil-edit works, since it is able to create new
       ;; files.
       (if (listp value)
-	  (progn
-	    (setq value (nreverse value))
-	    (switch-to-buffer-other-tab (car value))
-	    (mapc 'switch-to-buffer (cdr value))
-	    value)
-	(switch-to-buffer-other-tab value))
+        (progn
+          (setq value (nreverse value))
+          (switch-to-buffer-other-tab (car value))
+          (mapc 'switch-to-buffer (cdr value))
+          value)
+        (switch-to-buffer-other-tab value))
       )
     )
 
@@ -133,7 +133,7 @@
     )
 
   ;; Ex commands
-  (evil-ex-define-cmd "tabo" 'my-tabo)
+  (evil-ex-define-cmd "rt" 'my-rt)
   )
 
 (use-package evil-org
