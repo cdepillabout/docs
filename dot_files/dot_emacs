@@ -221,6 +221,9 @@
 ;; Enable Tab Bar Mode.
 (setq tab-bar-show t)
 
+;; Don't show the close button on tabs.
+(setq tab-bar-close-button-show nil)
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors and Fonts ;;
 ;;;;;;;;;;;;;;;;;;;;;;
