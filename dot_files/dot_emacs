@@ -79,11 +79,6 @@
       ;; wildcards, then value is returned as a list.  However, extra
       ;; files are opened as buffers, not tabs.  This should be modified
       ;; to instead open ALL files returned as tabs.
-      ;;
-      ;; Also, it should be modified to be able to operate on files
-      ;; that don't exist, and create them new.  Take a look at how
-      ;; the command evil-edit works, since it is able to create new
-      ;; files.
       (if (listp value)
         (progn
           (setq value (nreverse value))
