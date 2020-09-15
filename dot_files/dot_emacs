@@ -264,6 +264,14 @@ minibuffer.el in the emacs source code."
   (setq haskell-indentation-where-pre-offset 0)
   )
 
+;; Load purescript-mode.
+(use-package purescript-mode
+  :ensure t
+  :defer t
+  :config
+  (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation)
+  )
+
 ;;;;;;;;;;;;;;;;;;;
 ;; Other options ;;
 ;;;;;;;;;;;;;;;;;;;
