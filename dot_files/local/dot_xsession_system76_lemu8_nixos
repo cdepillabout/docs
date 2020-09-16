@@ -51,9 +51,6 @@ redshift-gtk -l 35:140 &
 # Volume control
 pnmixer &
 
-# Stretchly (regularly reminds to take a break)
-stretchly &
-
 # Start screen-saver.
 #xscreensaver -no-splash &
 
