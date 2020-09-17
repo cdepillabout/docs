@@ -335,6 +335,13 @@ minibuffer.el in the emacs source code."
   :weight 'normal
   :width 'normal)
 
+;; Set the cursor color to red to match Vim in the terminal.
+(set-cursor-color "red")
+
+;; Set the EOL whitespace to be colored in white.
+(set-face-attribute 'trailing-whitespace nil
+   :background "white")
+
 ;; Set the default font for Japanese characters.
 (set-fontset-font t 'japanese-jisx0208 (font-spec :family "IPAPGothic"))
 
