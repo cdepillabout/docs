@@ -73,75 +73,93 @@
 
 This is basically the `completion-file-name-table' function from
 minibuffer.el in the emacs source code."
-    (progn
-      (message "tabo-completion-file-name-table, string: %s, pred: %s, action: %s" string pred action)
-      (condition-case nil
-	  (cond
-	   ((eq action 'metadata) '(metadata (category . file)))
+    (message "tabo-completion-file-name-table, string: %s, pred: %s, action: %s" string pred action)
+    ;; Documentation relevant to filename completion:
+    ;; - https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Completion.html#File-Name-Completion
+    ;; Documentation relevant to programmable completion:
+    ;; - https://www.gnu.org/software/emacs/manual/html_node/elisp/Programmed-Completion.html
+    (condition-case nil
+        (cond
+         ((eq action 'metadata) '(metadata (category . file)))
 
-	   ((string-match-p "\\`~[^/\\]*\\'" string)
-	    (completion-table-with-context "~"
-					   (mapcar (lambda (u) (concat u "/"))
-						   (system-users))
-					   (substring string 1)
-					   pred action))
+         ((string-match-p "\\`~[^/\\]*\\'" string)
+          (completion-table-with-context "~"
+                                         (mapcar (lambda (u) (concat u "/"))
+                                                 (system-users))
+                                         (substring string 1)
+                                         pred
+					 action))
 
-	   ((eq (car-safe action) 'boundaries)
-	    (let ((start (length (file-name-directory string)))
-		  (end (string-match-p "/" (cdr action))))
-	      `(boundaries
-		;; if `string' is "C:" in w32, (file-name-directory string)
-		;; returns "C:/", so `start' is 3 rather than 2.
-		;; Not quite sure what is The Right Fix, but clipping it
-		;; back to 2 will work for this particular case.  We'll
-		;; see if we can come up with a better fix when we bump
-		;; into more such problematic cases.
-		,(min start (length string)) . ,end)))
+	 ;; This has something to do with what port of the string to
+	 ;; use when making matches, but I am not really sure.
+         ((eq (car-safe action) 'boundaries)
+          (let ((start (length (file-name-directory string)))
+                (end (string-match-p "/" (cdr action))))
+            `(boundaries
+              ;; if `string' is "C:" in w32, (file-name-directory string)
+              ;; returns "C:/", so `start' is 3 rather than 2.
+              ;; Not quite sure what is The Right Fix, but clipping it
+              ;; back to 2 will work for this particular case.  We'll
+              ;; see if we can come up with a better fix when we bump
+              ;; into more such problematic cases.
+              ,(min start (length string)) . ,end)))
 
-	   ((eq action 'lambda)
-	    (if (zerop (length string))
-		nil          ;Not sure why it's here, but it probably doesn't harm.
-	      (funcall (or pred 'file-exists-p) string)))
+	 ;; TODO: This file-exists-p here does completion from the
+	 ;; `default-directory'.  We should instead use something like
+	 ;; `expand-file-name' that allows to pass a default directory
+	 ;; as an argument.
+         ((eq action 'lambda)
+          (if (zerop (length string))
+              nil          ;Not sure why it's here, but it probably doesn't harm.
+            (funcall (or pred 'file-exists-p) string)))
 
-	   (t
-	    (let* ((name (file-name-nondirectory string))
-		   (specdir (file-name-directory string))
-		   (realdir (or specdir default-directory)))
+         (t
+          (let* ((name (file-name-nondirectory string))
+                 (specdir (file-name-directory string))
+                 (realdir (or specdir default-directory)))
 
-	      (cond
-	       ((null action)
-		(let ((comp (file-name-completion name realdir pred)))
-		  (if (stringp comp)
-		      (concat specdir comp)
-		    comp)))
+            (cond
+	     ;; This specifies a try-completion operation. The
+	     ;; function should return nil if there are no matches; it
+	     ;; should return t if the specified string is a unique
+	     ;; and exact match; and it should return the longest
+	     ;; common prefix substring of all matches otherwise.
+             ((null action)
+              (let ((comp (file-name-completion name realdir pred)))
+                (if (stringp comp)
+                    (concat specdir comp)
+                  comp)))
 
-	       ((eq action t)
-		(let ((all (file-name-all-completions name realdir)))
+	     ;; This specifies an all-completions operation. The
+	     ;; function should return a list of all possible
+	     ;; completions of the specified string.
+             ((eq action t)
+              (let ((all (file-name-all-completions name realdir)))
 
-		  ;; Check the predicate, if necessary.
-		  (unless (memq pred '(nil file-exists-p))
-		    (let ((comp ())
-			  (pred
-			   (if (eq pred 'file-directory-p)
-			       ;; Brute-force speed up for directory checking:
-			       ;; Discard strings which don't end in a slash.
-			       (lambda (s)
-				 (let ((len (length s)))
-				   (and (> len 0) (eq (aref s (1- len)) ?/))))
-			     ;; Must do it the hard (and slow) way.
-			     pred)))
-		      (let ((default-directory (expand-file-name realdir)))
-			(dolist (tem all)
-			  (if (funcall pred tem) (push tem comp))))
-		      (setq all (nreverse comp))))
+                ;; Check the predicate, if necessary.
+                (unless (memq pred '(nil file-exists-p))
+                  (let ((comp ())
+                        (pred
+                         (if (eq pred 'file-directory-p)
+                             ;; Brute-force speed up for directory checking:
+                             ;; Discard strings which don't end in a slash.
+                             (lambda (s)
+                               (let ((len (length s)))
+                                 (and (> len 0) (eq (aref s (1- len)) ?/))))
+                           ;; Must do it the hard (and slow) way.
+                           pred)))
+                    (let ((default-directory (expand-file-name realdir)))
+                      (dolist (tem all)
+                        (if (funcall pred tem) (push tem comp))))
+                    (setq all (nreverse comp))))
 
-		  all))))))
-	(file-error nil))))               ;PCM often calls with invalid directories.
+                all))))))
+      (file-error nil))) ;PCM often calls with invalid directories.
 
   (defalias 'tabo-completion--file-name-table
     (completion-table-with-quoting #'tabo-completion-file-name-table
-				   #'substitute-in-file-name
-				   #'completion--sifn-requote)
+                                   #'substitute-in-file-name
+                                   #'completion--sifn-requote)
     "This is basically `completion--file-name-table' from
 minibuffer.el in the emacs source code."
     )
@@ -306,6 +324,9 @@ minibuffer.el in the emacs source code."
   ;; buffers (including org-mode).
   show-trailing-whitespace t
 )
+
+;; Show matching parentheses.
+(show-paren-mode 1)
 
 ;; Disable the menu bar.
 (menu-bar-mode -1)
