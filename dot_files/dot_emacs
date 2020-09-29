@@ -379,6 +379,12 @@ minibuffer.el in the emacs source code."
   :foreground "white"
   :box 'nil
   :weight 'bold)
+(set-face-attribute 'tab-bar-tab-inactive nil
+  ;; :background "deep sky blue"
+  :foreground "black"
+  :box 'nil
+  :weight 'normal
+  )
 
 (with-eval-after-load "org"
   (if (display-graphic-p)
