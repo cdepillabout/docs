@@ -68,97 +68,110 @@
     (interactive)
     (tab-bar-move-tab 1))
 
+  (defvar tabo-cwd default-directory
+    "The directory to use as the relative directory for the :tabo
+    command.")
+
+
+;;   (defun tabo-completion-file-name-table (string pred action)
+;;     "Completion table for file names.
+
+;; This is basically the `completion-file-name-table' function from
+;; minibuffer.el in the emacs source code."
+;;     (message "tabo-completion-file-name-table, string: %s, pred: %s, action: %s" string pred action)
+;;     ;; Documentation relevant to filename completion:
+;;     ;; - https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Completion.html#File-Name-Completion
+;;     ;; Documentation relevant to programmable completion:
+;;     ;; - https://www.gnu.org/software/emacs/manual/html_node/elisp/Programmed-Completion.html
+
+;;     ;; XXX: This dynamic binding looks like an easy hack I can use to
+;;     ;; get the default-directory to temporarily point somewhere else.
+;;     (let ((default-directory "/home/illabout/gtd/"))
+;;     (condition-case nil
+;;         (cond
+;;          ((eq action 'metadata) '(metadata (category . file)))
+
+;;          ((string-match-p "\\`~[^/\\]*\\'" string)
+;;           (completion-table-with-context "~"
+;;                                          (mapcar (lambda (u) (concat u "/"))
+;;                                                  (system-users))
+;;                                          (substring string 1)
+;;                                          pred
+;; 					 action))
+
+;; 	 ;; This has something to do with what port of the string to
+;; 	 ;; use when making matches, but I am not really sure.
+;;          ((eq (car-safe action) 'boundaries)
+;;           (let ((start (length (file-name-directory string)))
+;;                 (end (string-match-p "/" (cdr action))))
+;;             `(boundaries
+;;               ;; if `string' is "C:" in w32, (file-name-directory string)
+;;               ;; returns "C:/", so `start' is 3 rather than 2.
+;;               ;; Not quite sure what is The Right Fix, but clipping it
+;;               ;; back to 2 will work for this particular case.  We'll
+;;               ;; see if we can come up with a better fix when we bump
+;;               ;; into more such problematic cases.
+;;               ,(min start (length string)) . ,end)))
+
+;; 	 ;; TODO: This file-exists-p here does completion from the
+;; 	 ;; `default-directory'.  We should instead use something like
+;; 	 ;; `expand-file-name' that allows to pass a default directory
+;; 	 ;; as an argument.
+;;          ((eq action 'lambda)
+;;           (if (zerop (length string))
+;;               nil          ;Not sure why it's here, but it probably doesn't harm.
+;;             (funcall (or pred 'file-exists-p) string)))
+
+;;          (t
+;;           (let* ((name (file-name-nondirectory string))
+;;                  (specdir (file-name-directory string))
+;;                  (realdir (or specdir default-directory)))
+
+;;             (cond
+;; 	     ;; This specifies a try-completion operation. The
+;; 	     ;; function should return nil if there are no matches; it
+;; 	     ;; should return t if the specified string is a unique
+;; 	     ;; and exact match; and it should return the longest
+;; 	     ;; common prefix substring of all matches otherwise.
+;;              ((null action)
+;;               (let ((comp (file-name-completion name realdir pred)))
+;;                 (if (stringp comp)
+;;                     (concat specdir comp)
+;;                   comp)))
+
+;; 	     ;; This specifies an all-completions operation. The
+;; 	     ;; function should return a list of all possible
+;; 	     ;; completions of the specified string.
+;;              ((eq action t)
+;;               (let ((all (file-name-all-completions name realdir)))
+
+;;                 ;; Check the predicate, if necessary.
+;;                 (unless (memq pred '(nil file-exists-p))
+;;                   (let ((comp ())
+;;                         (pred
+;;                          (if (eq pred 'file-directory-p)
+;;                              ;; Brute-force speed up for directory checking:
+;;                              ;; Discard strings which don't end in a slash.
+;;                              (lambda (s)
+;;                                (let ((len (length s)))
+;;                                  (and (> len 0) (eq (aref s (1- len)) ?/))))
+;;                            ;; Must do it the hard (and slow) way.
+;;                            pred)))
+;;                     (let ((default-directory (expand-file-name realdir)))
+;;                       (dolist (tem all)
+;;                         (if (funcall pred tem) (push tem comp))))
+;;                     (setq all (nreverse comp))))
+
+;;                 all))))))
+;;       (file-error nil)))) ; PCM often calls with invalid directories.
+
   (defun tabo-completion-file-name-table (string pred action)
     "Completion table for file names.
 
 This is basically the `completion-file-name-table' function from
 minibuffer.el in the emacs source code."
-    (message "tabo-completion-file-name-table, string: %s, pred: %s, action: %s" string pred action)
-    ;; Documentation relevant to filename completion:
-    ;; - https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Completion.html#File-Name-Completion
-    ;; Documentation relevant to programmable completion:
-    ;; - https://www.gnu.org/software/emacs/manual/html_node/elisp/Programmed-Completion.html
-
-    ;; XXX: This dynamic binding looks like an easy hack I can use to
-    ;; get the default-directory to temporarily point somewhere else.
-    (let ((default-directory "/home/illabout/gtd/"))
-    (condition-case nil
-        (cond
-         ((eq action 'metadata) '(metadata (category . file)))
-
-         ((string-match-p "\\`~[^/\\]*\\'" string)
-          (completion-table-with-context "~"
-                                         (mapcar (lambda (u) (concat u "/"))
-                                                 (system-users))
-                                         (substring string 1)
-                                         pred
-					 action))
-
-	 ;; This has something to do with what port of the string to
-	 ;; use when making matches, but I am not really sure.
-         ((eq (car-safe action) 'boundaries)
-          (let ((start (length (file-name-directory string)))
-                (end (string-match-p "/" (cdr action))))
-            `(boundaries
-              ;; if `string' is "C:" in w32, (file-name-directory string)
-              ;; returns "C:/", so `start' is 3 rather than 2.
-              ;; Not quite sure what is The Right Fix, but clipping it
-              ;; back to 2 will work for this particular case.  We'll
-              ;; see if we can come up with a better fix when we bump
-              ;; into more such problematic cases.
-              ,(min start (length string)) . ,end)))
-
-	 ;; TODO: This file-exists-p here does completion from the
-	 ;; `default-directory'.  We should instead use something like
-	 ;; `expand-file-name' that allows to pass a default directory
-	 ;; as an argument.
-         ((eq action 'lambda)
-          (if (zerop (length string))
-              nil          ;Not sure why it's here, but it probably doesn't harm.
-            (funcall (or pred 'file-exists-p) string)))
-
-         (t
-          (let* ((name (file-name-nondirectory string))
-                 (specdir (file-name-directory string))
-                 (realdir (or specdir default-directory)))
-
-            (cond
-	     ;; This specifies a try-completion operation. The
-	     ;; function should return nil if there are no matches; it
-	     ;; should return t if the specified string is a unique
-	     ;; and exact match; and it should return the longest
-	     ;; common prefix substring of all matches otherwise.
-             ((null action)
-              (let ((comp (file-name-completion name realdir pred)))
-                (if (stringp comp)
-                    (concat specdir comp)
-                  comp)))
-
-	     ;; This specifies an all-completions operation. The
-	     ;; function should return a list of all possible
-	     ;; completions of the specified string.
-             ((eq action t)
-              (let ((all (file-name-all-completions name realdir)))
-
-                ;; Check the predicate, if necessary.
-                (unless (memq pred '(nil file-exists-p))
-                  (let ((comp ())
-                        (pred
-                         (if (eq pred 'file-directory-p)
-                             ;; Brute-force speed up for directory checking:
-                             ;; Discard strings which don't end in a slash.
-                             (lambda (s)
-                               (let ((len (length s)))
-                                 (and (> len 0) (eq (aref s (1- len)) ?/))))
-                           ;; Must do it the hard (and slow) way.
-                           pred)))
-                    (let ((default-directory (expand-file-name realdir)))
-                      (dolist (tem all)
-                        (if (funcall pred tem) (push tem comp))))
-                    (setq all (nreverse comp))))
-
-                all))))))
-      (file-error nil)))) ; PCM often calls with invalid directories.
+    (let ((default-directory tabo-cwd))
+      (completion-file-name-table string pred action)))
 
   (defalias 'tabo-completion--file-name-table
     (completion-table-with-quoting #'tabo-completion-file-name-table
@@ -173,7 +186,7 @@ minibuffer.el in the emacs source code."
     :collection tabo-completion--file-name-table)
 
   (evil-define-interactive-code "<tf>"
-    "Ex tabo file argument."
+    "Ex mode :tabo file argument."
     :ex-arg tabo-file
     (list (when (evil-ex-p) evil-ex-argument)))
 
@@ -182,6 +195,24 @@ minibuffer.el in the emacs source code."
     :repeat nil
     (interactive "<tf>")
     (message "my-tabo, filename: %s" filename)
+    )
+
+  (evil-define-command my-pwd-ex-cmd
+    "Show the current `tabo-cwd' value.  This is used in the
+:tabo and :my-cd ex commands."
+    (interactive)
+    (message "%s" tabo-cwd))
+
+  (evil-define-command my-cd-ex-cmd (path)
+    "Set `tabo-cwd' to a new path.  This affects the relative
+path used for the :tabo command."
+    :repeat nil
+    (interactive "<tf>")
+    ;; (message "my-cd-ex-cmd, path: %s" path)
+    ;; (message "my-cd-ex-cmd, current tabo-cwd value before setting: %s" tabo-cwd)
+    (let ((new-path (expand-file-name path tabo-cwd)))
+	(setq tabo-cwd new-path))
+    ;; (message "my-cd-ex-cmd, current tabo-cwd value after setting: %s" tabo-cwd)
     )
 
   (evil-define-command my-rt (filename)
@@ -246,6 +277,8 @@ minibuffer.el in the emacs source code."
   ;; Ex commands
   (evil-ex-define-cmd "rt" 'my-rt)
   (evil-ex-define-cmd "tabo" 'my-tabo)
+  (evil-ex-define-cmd "my-cd" 'my-cd-ex-cmd)
+  (evil-ex-define-cmd "my-pwd" 'my-pwd-ex-cmd)
   )
 
 (use-package evil-org
