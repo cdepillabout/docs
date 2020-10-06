@@ -104,7 +104,7 @@ minibuffer.el in the emacs source code."
     :repeat nil
     (interactive "<tf>")
     (let ((full-path (expand-file-name filename tabo-cwd)))
-	(my-rt full-path))
+        (my-rt full-path))
     )
 
   (evil-define-command my-pwd-ex-cmd
@@ -119,7 +119,7 @@ path used for the :tabo command."
     :repeat nil
     (interactive "<tf>")
     (let ((new-path (expand-file-name path tabo-cwd)))
-	(setq tabo-cwd new-path))
+        (setq tabo-cwd new-path))
     )
 
   (evil-define-command my-rt (filename)
@@ -151,26 +151,26 @@ for the last window in each frame."
     (interactive "<b><!>")
     (with-current-buffer (or buffer (current-buffer))
       (when bang
-	(set-buffer-modified-p nil)
-	(dolist (process (process-list))
-	  (when (eq (process-buffer process) (current-buffer))
-	    (set-process-query-on-exit-flag process nil))))
+        (set-buffer-modified-p nil)
+        (dolist (process (process-list))
+          (when (eq (process-buffer process) (current-buffer))
+            (set-process-query-on-exit-flag process nil))))
       ;; get all windows that show this buffer
       (let ((wins (get-buffer-window-list (current-buffer) nil t)))
-	;; if the buffer which was initiated by emacsclient,
-	;; call `server-edit' from server.el to avoid
-	;; "Buffer still has clients" message
-	(if (and (fboundp 'server-edit)
-		 (boundp 'server-buffer-clients)
-		 server-buffer-clients)
-	    (server-edit)
-	  (kill-buffer nil))
-	;; close all windows that showed this buffer
-	(mapc #'(lambda (w)
-		  (condition-case nil
-		      (delete-window w)
-		    (error nil)))
-	      wins))))
+        ;; if the buffer which was initiated by emacsclient,
+        ;; call `server-edit' from server.el to avoid
+        ;; "Buffer still has clients" message
+        (if (and (fboundp 'server-edit)
+                 (boundp 'server-buffer-clients)
+                 server-buffer-clients)
+            (server-edit)
+          (kill-buffer nil))
+        ;; close all windows that showed this buffer
+        (mapc #'(lambda (w)
+                  (condition-case nil
+                      (delete-window w)
+                    (error nil)))
+              wins))))
 
 ;;   (evil-define-command evil-quit (&optional force)
 ;;     "Closes the current window, current frame, Emacs.
@@ -179,21 +179,21 @@ for the last window in each frame."
 ;;     :repeat nil
 ;;     (interactive "<!>")
 ;;     (condition-case nil
-;; 	(delete-window)
+;;      (delete-window)
 ;;       (error
 ;;        (if (and (boundp 'server-buffer-clients)
-;; 		(fboundp 'server-edit)
-;; 		(fboundp 'server-buffer-done)
-;; 		server-buffer-clients)
-;; 	   (if force
-;; 	       (server-buffer-done (current-buffer))
-;; 	     (server-edit))
-;; 	 (condition-case nil
-;; 	     (delete-frame)
-;; 	   (error
-;; 	    (if force
-;; 		(kill-emacs)
-;; 	      (save-buffers-kill-emacs))))))))
+;;              (fboundp 'server-edit)
+;;              (fboundp 'server-buffer-done)
+;;              server-buffer-clients)
+;;         (if force
+;;             (server-buffer-done (current-buffer))
+;;           (server-edit))
+;;       (condition-case nil
+;;           (delete-frame)
+;;         (error
+;;          (if force
+;;              (kill-emacs)
+;;            (save-buffers-kill-emacs))))))))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Evil - Key Mappings ;;
