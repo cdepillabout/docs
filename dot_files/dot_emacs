@@ -144,6 +144,57 @@ the file opened in the currently focused buffer."
       )
     )
 
+  (evil-define-command evil-delete-buffer (buffer &optional bang)
+    "Deletes a buffer.
+All windows currently showing this buffer will be closed except
+for the last window in each frame."
+    (interactive "<b><!>")
+    (with-current-buffer (or buffer (current-buffer))
+      (when bang
+	(set-buffer-modified-p nil)
+	(dolist (process (process-list))
+	  (when (eq (process-buffer process) (current-buffer))
+	    (set-process-query-on-exit-flag process nil))))
+      ;; get all windows that show this buffer
+      (let ((wins (get-buffer-window-list (current-buffer) nil t)))
+	;; if the buffer which was initiated by emacsclient,
+	;; call `server-edit' from server.el to avoid
+	;; "Buffer still has clients" message
+	(if (and (fboundp 'server-edit)
+		 (boundp 'server-buffer-clients)
+		 server-buffer-clients)
+	    (server-edit)
+	  (kill-buffer nil))
+	;; close all windows that showed this buffer
+	(mapc #'(lambda (w)
+		  (condition-case nil
+		      (delete-window w)
+		    (error nil)))
+	      wins))))
+
+;;   (evil-define-command evil-quit (&optional force)
+;;     "Closes the current window, current frame, Emacs.
+;; If the current frame belongs to some client the client connection
+;; is closed."
+;;     :repeat nil
+;;     (interactive "<!>")
+;;     (condition-case nil
+;; 	(delete-window)
+;;       (error
+;;        (if (and (boundp 'server-buffer-clients)
+;; 		(fboundp 'server-edit)
+;; 		(fboundp 'server-buffer-done)
+;; 		server-buffer-clients)
+;; 	   (if force
+;; 	       (server-buffer-done (current-buffer))
+;; 	     (server-edit))
+;; 	 (condition-case nil
+;; 	     (delete-frame)
+;; 	   (error
+;; 	    (if force
+;; 		(kill-emacs)
+;; 	      (save-buffers-kill-emacs))))))))
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Evil - Key Mappings ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -180,6 +231,8 @@ the file opened in the currently focused buffer."
     (kbd "C-l") 'tab-bar-switch-to-next-tab
     (kbd "C-y") 'move-tab-back
     (kbd "C-u") 'move-tab-forward
+    (kbd "Q") 'evil-record-macro
+    (kbd "q") 'evil-quit
     )
 
   ;; Ex commands
@@ -287,6 +340,13 @@ the file opened in the currently focused buffer."
 
 ;; Don't show the close button on tabs.
 (setq tab-bar-close-button-show nil)
+
+;; Hooks to add to emacs lisp mode.
+(add-hook 'emacs-lisp-mode-hook
+	  (lambda ()
+	    ;; Make sure that tabs are never used.  Spaces are used
+	    ;; for indentation.
+	    (setq indent-tabs-mode nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors and Fonts ;;
