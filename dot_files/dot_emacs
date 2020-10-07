@@ -314,6 +314,13 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 ;; Display line numbers for each window.
 (global-display-line-numbers-mode)
 
+;; Don't create lockfiles that start with '.#'.  This is slightly unsafe, but
+;; having those files around is very annoying.
+(setq create-lockfiles nil)
+
+;; Make sure the backup files go to a specific directory.
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors and Fonts ;;
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -416,12 +423,7 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
    :html-foreground "Black" :html-background "Transparent" :html-scale 2.0
    :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
 
-;; Don't create lockfiles that start with '.#'.  This is slightly unsafe, but
-;; having those files around is very annoying.
-(setq create-lockfiles nil)
 
-;; Make sure the backup files go to a specific directory.
-(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 
 ;; Setup my GTD stuff.
 (with-eval-after-load "org"
@@ -473,7 +475,10 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     ;; Setup the default column format if it doesn't appear in the file.
     (setq
      org-columns-default-format
-     "%4TODO %55ITEM(Task) %7Effort(Effort){:} %7CLOCKSUM(Clock){:} %TAGS")))
+     "%4TODO %55ITEM(Task) %7Effort(Effort){:} %7CLOCKSUM(Clock){:} %TAGS")
+
+    )
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Default Emacs stuff ;;
