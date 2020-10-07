@@ -423,7 +423,16 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
    :html-foreground "Black" :html-background "Transparent" :html-scale 2.0
    :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
 
+;; Setup org-roam directory
+(setq org-roam-directory "~/gtd/roam")
 
+(defun my-initialize-org-roam ()
+  "Enable `org-roam-mode' if ~/gtd/roam exists."
+  (when (file-directory-p "~/gtd/roam")
+    (org-roam-mode)))
+
+;; Enable a global org-roam-mode minor mode.
+(add-hook 'after-init-hook 'my-initialize-org-roam)
 
 ;; Setup my GTD stuff.
 (with-eval-after-load "org"
