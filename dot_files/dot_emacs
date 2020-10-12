@@ -311,6 +311,19 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 	    ;; for indentation.
 	    (setq indent-tabs-mode nil)))
 
+;; Only allow the space allocated for line numbers in a file to grow
+;; wider, never shrink, even if you scroll up to where line numbers
+;; are less than 100.
+(setq display-line-numbers-grow-only t)
+
+;; Calculate the max line number width when opening a file by counting
+;; all the lines in the file.  This is slow, but along with
+;; `display-line-numbers-grow-only' it prevents a weird bug where the
+;; current line number gets an extra space before and makes it jump
+;; around:
+;; https://lists.gnu.org/archive/html/bug-gnu-emacs/2017-09/msg00743.html
+(setq display-line-numbers-width-start t)
+
 ;; Display line numbers for each window.
 (global-display-line-numbers-mode)
 
