@@ -431,6 +431,10 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 ;; will be inserted just after the headline.
 (setq org-log-done 'time)
 
+;; When storing a link to an Org file, use an entry ID property
+;; (instead of just a headline).
+(setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+
 ;; Set the latex options for rendering equations in org-mode when
 ;; using the preview with C-c C-x C-l.
 (setq
