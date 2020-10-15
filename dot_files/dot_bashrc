@@ -428,223 +428,6 @@ function pgrep ()
 	echo "${ps_output}" | grep "$@"
 }
 
-# git command for pretty printing graph with specified commits for when gitk is not available
-function glga ()
-{
-	ssh-gas -q
-	git log --show-signature --graph --decorate --color --all "$@" | less -R
-}
-
-function glg ()
-{
-	ssh-gas -q
-	git log --show-signature --graph --decorate --color "$@" | less -R
-}
-
-function gcm ()
-{
-	export GPG_TTY="$(tty)"
-
-	ssh-gas -q
-	git commit -m "$*"
-}
-
-function gcam ()
-{
-	export GPG_TTY="$(tty)"
-
-	ssh-gas -q
-	git commit -a -m "$*"
-}
-
-function gcAm ()
-{
-	export GPG_TTY="$(tty)"
-
-	ssh-gas -q
-	git add -A
-	git commit -m "$*"
-}
-
-function gcmp ()
-{
-	export GPG_TTY="$(tty)"
-
-	ssh-gas -q
-	git commit -m "$*"
-	git push
-}
-
-function gcmu ()
-{
-	export GPG_TTY="$(tty)"
-
-	local msg="update"
-
-	if [ -n "$*" ] ; then
-		msg="$*"
-	fi
-
-	ssh-gas -q
-	git commit -m "$msg"
-}
-
-function gcmw ()
-{
-	export GPG_TTY="$(tty)"
-
-	local msg="wip"
-
-	if [ -n "$*" ] ; then
-		msg="$*"
-	fi
-
-	ssh-gas -q
-	git commit -m "$msg"
-}
-
-
-function gcmpu ()
-{
-	export GPG_TTY="$(tty)"
-
-	local msg="update"
-
-	if [ -n "$*" ] ; then
-		msg="$*"
-	fi
-
-	ssh-gas -q
-	git commit -m "$msg"
-	git push
-}
-
-function gcmpw ()
-{
-	export GPG_TTY="$(tty)"
-
-	local msg="wip"
-
-	if [ -n "$*" ] ; then
-		msg="$*"
-	fi
-
-	ssh-gas -q
-	git commit -m "$msg"
-	git push
-}
-
-function gcamp ()
-{
-	export GPG_TTY="$(tty)"
-
-	ssh-gas -q
-	git commit -a -m "$*"
-	git push
-}
-
-function gcamu ()
-{
-	export GPG_TTY="$(tty)"
-
-	local msg="update"
-
-	if [ -n "$*" ] ; then
-		msg="$*"
-	fi
-
-	ssh-gas -q
-	git commit -a -m "$msg"
-}
-
-function gcampu ()
-{
-	export GPG_TTY="$(tty)"
-
-	local msg="update"
-
-	if [ -n "$*" ] ; then
-		msg="$*"
-	fi
-
-	ssh-gas -q
-	git commit -a -m "$msg"
-	git push
-}
-
-function gcampw ()
-{
-	export GPG_TTY="$(tty)"
-
-	local msg="wip"
-
-	if [ -n "$*" ] ; then
-		msg="$*"
-	fi
-
-	ssh-gas -q
-	git commit -a -m "$msg"
-	git push
-}
-
-function gcAmp ()
-{
-	export GPG_TTY="$(tty)"
-
-	ssh-gas -q
-	git add -A
-	git commit -m "$*"
-	git push
-}
-
-function gcAmu ()
-{
-	export GPG_TTY="$(tty)"
-
-	local msg="update"
-
-	if [ -n "$*" ] ; then
-		msg="$*"
-	fi
-
-	ssh-gas -q
-	git add -A
-	git commit -m "$msg"
-}
-
-function gcAmpu ()
-{
-	export GPG_TTY="$(tty)"
-
-	local msg="update"
-
-	if [ -n "$*" ] ; then
-		msg="$*"
-	fi
-
-	ssh-gas -q
-	git add -A
-	git commit -m "$msg"
-	git push
-}
-
-function gst ()
-{
-	ssh-gas -q
-
-	# run git status
-	git status
-
-	# See if there are any uninitialized submodules.
-	git submodule status | cut -c1 | grep -- '-' &> /dev/null
-	local ret="$?"
-
-	if [ "$ret" = 0 ] ; then
-		echo
-		echo "Uninitialized submodules.  Run \`git submodule update --init\`"
-	fi
-}
-
 # SSH Get Auth Sock.
 # This is a command to automatically update the SSH_AUTH_SOCK env var.
 # If "-q" is passed, then nothing will be output on error.
@@ -692,6 +475,211 @@ function ssh-gas ()
 	local auth_sock="$(echo "$agent_files" | tail -1)"
 	[ "$VERBOSE" ] && echo "using auth sock: $auth_sock"
 	export SSH_AUTH_SOCK="$auth_sock"
+}
+
+# Call ssh-gas and then git.
+function git-gas ()
+{
+	ssh-gas -q
+	git "$@"
+}
+
+# git command for pretty printing graph with specified commits for when gitk is not available
+function glga ()
+{
+	git-gas log --show-signature --graph --decorate --color --all "$@" | less -R
+}
+
+function glg ()
+{
+	git-gas log --show-signature --graph --decorate --color "$@" | less -R
+}
+
+function gcm ()
+{
+	export GPG_TTY="$(tty)"
+
+	git-gas commit -m "$*"
+}
+
+function gcam ()
+{
+	export GPG_TTY="$(tty)"
+
+	git-gas commit -a -m "$*"
+}
+
+function gcAm ()
+{
+	export GPG_TTY="$(tty)"
+
+	git-gas add -A
+	git commit -m "$*"
+}
+
+function gcmp ()
+{
+	export GPG_TTY="$(tty)"
+
+	git-gas commit -m "$*"
+	git push
+}
+
+function gcmu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	git-gas commit -m "$msg"
+}
+
+function gcmw ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="wip"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	git-gas commit -m "$msg"
+}
+
+
+function gcmpu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	git-gas commit -m "$msg"
+	git push
+}
+
+function gcmpw ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="wip"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	git-gas commit -m "$msg"
+	git push
+}
+
+function gcamp ()
+{
+	export GPG_TTY="$(tty)"
+
+	git-gas commit -a -m "$*"
+	git push
+}
+
+function gcamu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	git-gas commit -a -m "$msg"
+}
+
+function gcampu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	git-gas commit -a -m "$msg"
+	git push
+}
+
+function gcampw ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="wip"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	git-gas commit -a -m "$msg"
+	git push
+}
+
+function gcAmp ()
+{
+	export GPG_TTY="$(tty)"
+
+	git-gas add -A
+	git commit -m "$*"
+	git push
+}
+
+function gcAmu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	git-gas add -A
+	git commit -m "$msg"
+}
+
+function gcAmpu ()
+{
+	export GPG_TTY="$(tty)"
+
+	local msg="update"
+
+	if [ -n "$*" ] ; then
+		msg="$*"
+	fi
+
+	git-gas add -A
+	git commit -m "$msg"
+	git push
+}
+
+function gst ()
+{
+	# run git status
+	git-gas status
+
+	# See if there are any uninitialized submodules.
+	git submodule status | cut -c1 | grep -- '-' &> /dev/null
+	local ret="$?"
+
+	if [ "$ret" = 0 ] ; then
+		echo
+		echo "Uninitialized submodules.  Run \`git submodule update --init\`"
+	fi
 }
 
 # these are aliases for cd'ing and ls'ing at the same time
