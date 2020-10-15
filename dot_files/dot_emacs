@@ -251,6 +251,10 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
   (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation)
   )
 
+(use-package helm
+  :ensure t
+  )
+
 ;;;;;;;;;;;;;;;;;;;
 ;; Other options ;;
 ;;;;;;;;;;;;;;;;;;;
@@ -446,6 +450,9 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 ;; Setup org-roam directory
 (setq org-roam-directory "~/gtd/roam")
 
+;; Make sure helm is used as the completion system for org-roam.
+(setq org-roam-completion-system 'helm)
+
 (defun my-initialize-org-roam ()
   "Enable `org-roam-mode' if ~/gtd/roam exists."
   (when (file-directory-p "~/gtd/roam")
@@ -519,7 +526,7 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(org-roam purescript-mode yaml-mode nix-mode evil evil-commentary evil-org haskell-mode use-package evil-magit magit evil-surround evil-leader)))
+   '(helm org-roam purescript-mode yaml-mode nix-mode evil evil-commentary evil-org haskell-mode use-package evil-magit magit evil-surround evil-leader)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
