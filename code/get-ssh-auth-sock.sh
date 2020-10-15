@@ -14,8 +14,8 @@
 # previous one we were using.  We need a new updated one
 # for this new connection.
 
-local QUIET=""
-local VERBOSE=""
+QUIET=""
+VERBOSE=""
 
 for arg in "$@" ; do
 	if [[ "$arg" == '-h' || "$arg" == "--help" ]] ; then
