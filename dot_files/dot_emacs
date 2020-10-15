@@ -233,7 +233,16 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
   (setq magit-fetch-arguments '("--prune"))
 
   ;; Make sure magit will give us pretty graphs when viewing the log.
-  (setq magit-log-arguments '("--graph" "--color" "--decorate" "-n256")))
+  (setq magit-log-arguments '("--graph" "--color" "--decorate" "-n256"))
+
+  (defun pick-git-exe ()
+    "Pick a command to use for git.  Use emacs-git-gas if it is available."
+    (let ((my-git-exe (executable-find "emacs-git-gas")))
+      (if my-git-exe my-git-exe "git")))
+
+  (setq magit-git-executable (pick-git-exe))
+
+  )
 
 ;; Load haskell-mode.
 (use-package haskell-mode
