@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 #
-# This is a script to easily call the bash function git-gas.
+# This is a script to set the SSH_AUTH_SOCK environment variable
+# before running git.  See the documentation in get-ssh-auth-sock
+# for why this is necessary.
+#
+# This command is called from the emacs plugin magit.
 
-if type git-gas >/dev/null 2>/dev/null ; then
-	git-gas "$@"
-else
-	echo "WARNING: emacs-git-gas could not find the git-gas bash function. This "
-	echo "means that emacs-git-gas was probably not run from a shell where ~/.bashrc "
-	echo "has been sourced. Running normal git executable instead..."
-	git "$@"
+auth_sock="$(get-ssh-auth-sock -q)"
+ret="$?"
+
+if [ "$ret" = 0 ] ; then
+	export SSH_AUTH_SOCK="$auth_sock"
 fi
+
+git "$@"
