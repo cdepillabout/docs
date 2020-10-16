@@ -236,9 +236,12 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
   (setq magit-log-arguments '("--graph" "--color" "--decorate" "-n256"))
 
   (defun pick-git-exe ()
-    "Pick a command to use for git.  Use emacs-git-gas if it is available."
-    (let ((my-git-exe (executable-find "emacs-git-gas")))
-      (if my-git-exe my-git-exe "git")))
+    "Pick a command to use for git.  Use emacs-git-gas if it is available.
+However, calling emacs-git-gas appears to be very slow for some reason,
+so only use this if we opening emacs over an SSH session."
+    (let ((ssh-conn-env-var (getenv "SSH_CONNECTION"))
+          (my-git-exe (executable-find "emacs-git-gas")))
+      (if (and ssh-conn-env-var my-git-exe) my-git-exe "git")))
 
   (setq magit-git-executable (pick-git-exe))
 
