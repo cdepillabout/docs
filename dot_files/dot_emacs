@@ -21,9 +21,7 @@
   :ensure t
   :config
 
-  ;;;;;;;;;;;;;;;;;;;;;
-  ;; Evil - Packages ;;
-  ;;;;;;;;;;;;;;;;;;;;;
+  ;; Evil - Packages
 
   (use-package evil-leader
     :ensure t
@@ -53,9 +51,7 @@
   ;; https://emacs.stackexchange.com/questions/30332/evil-leader-stops-working-when-i-eval-buffer.
   (evil-mode 1)
 
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;; Evil - Functions ;;
-  ;;;;;;;;;;;;;;;;;;;;;;
+  ;; Evil - Functions
 
   (defun insert-space-above (count)
     (interactive "p")
@@ -158,9 +154,7 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
             (tab-bar-close-tab)
           (evil-quit)))))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; Evil - Key Mappings ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Evil - Key Mappings
 
   ;; Evil keys for org-mode in normal mode.
   (evil-define-key 'normal org-mode-map
@@ -421,8 +415,16 @@ so only use this if we opening emacs over an SSH session."
 ;; Make sure org files are always indented.
 (setq org-startup-indented t)
 
-   ;; Make sure that we can perform command when selecting blocks of text in
-   ;; visual mode in org mode.
+;; Make sure that org files wrap long lines (so they don't scroll off
+;; the side of the screen).
+;;
+;; This is generally what I want, but it doesn't look good for tables
+;; to be wrapped.  If I want to view a table clearly, I should use the
+;; command `toggle-truncate-lines' in an org file.
+(setq org-startup-truncated nil)
+
+;; Make sure that we can perform command when selecting blocks of text in
+;; visual mode in org mode.
 (setq org-support-shift-select t)
 
 ;; Always use org-agenda-log-mode in new agenda views. Can be toggled with
