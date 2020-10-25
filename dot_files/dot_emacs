@@ -19,6 +19,14 @@
 ;; Load evil.
 (use-package evil
   :ensure t
+
+  ;; Code to run before evil is loaded.
+  :init
+
+  ;; Use evil's built-in search instead of emac's default isearch.
+  (setq evil-search-module 'evil-search)
+
+  ;; Code to run after evil is loaded.
   :config
 
   ;; Evil - Packages
@@ -44,6 +52,8 @@
     :config
     (setq evil-commentary-mode t)
     )
+
+  ;; Evil - Additional Options
 
   ;; Enable evil mode.  This needs to come after the evil- packages
   ;; above, since they may add hooks that need to get run when
@@ -191,6 +201,7 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     (kbd "Q") 'evil-record-macro
     (kbd "q") 'my-quit
     (kbd ",u") 'universal-argument
+    (kbd "<f5>") 'evil-ex-nohighlight
     )
 
   ;; Ex commands
