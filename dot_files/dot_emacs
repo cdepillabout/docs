@@ -201,6 +201,7 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     (kbd "q") 'my-quit
     (kbd ",u") 'universal-argument
     (kbd "<f5>") 'evil-ex-nohighlight
+    (kbd "<f7>") 'whitespace-mode
     )
 
   ;; Ex commands
