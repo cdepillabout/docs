@@ -15,7 +15,6 @@
 (eval-when-compile
     (require 'use-package))
 
-
 ;; Load evil.
 (use-package evil
   :ensure t
@@ -226,6 +225,8 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
+  ;; Don't ever use tabs for indentation in markdown-mode.
+  :hook (markdown-mode . (lambda () (setq indent-tabs-mode nil)))
   :init
   (setq markdown-command "multimarkdown")
   )
