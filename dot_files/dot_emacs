@@ -168,12 +168,12 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
   ;; Evil keys for org-mode in normal mode.
   (evil-define-key 'normal org-mode-map
     (kbd "TAB") 'org-cycle
-    ",A" 'org-archive-subtree
-    ",a" 'org-agenda
-    ",G" 'org-clock-goto
-    ",I" 'org-clock-in
-    ",O" 'org-clock-out
-    ",t" 'org-todo
+    (kbd ",A") 'org-archive-subtree
+    (kbd ",a") 'org-agenda
+    (kbd ",G") 'org-clock-goto
+    (kbd ",I") 'org-clock-in
+    (kbd ",O") 'org-clock-out
+    (kbd ",t") 'org-todo
   )
 
   ;; Evil keys for org-mode in insert mode.
