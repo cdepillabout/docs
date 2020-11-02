@@ -184,6 +184,16 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     (kbd "M-l") 'org-metaright
   )
 
+  ;; Evil keys for org-roam in normal mode.
+  (evil-define-key 'normal org-roam-mode-map
+    (kbd ",ri" 'org-roam-insert
+  )
+
+  ;; Evil keys for org-roam in insert mode.
+  (evil-define-key 'insert org-roam-mode-map
+    (kbd "C-c i") 'org-roam-insert
+  )
+
   ;; Evil keys for markdown mode.
   (evil-define-key 'normal markdown-mode-map
     (kbd "TAB") 'markdown-cycle)
@@ -202,6 +212,9 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     (kbd ",u") 'universal-argument
     (kbd "<f5>") 'evil-ex-nohighlight
     (kbd "<f7>") 'whitespace-mode
+    (kbd ",rr") 'org-roam
+    (kbd ",rc") 'org-roam-capture
+    (kbd ",rf" 'org-roam-find-file
     )
 
   ;; Ex commands
