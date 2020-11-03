@@ -191,7 +191,7 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 
   ;; Evil keys for org-roam in normal mode.
   (evil-define-key 'normal org-roam-mode-map
-    (kbd ",ri" 'org-roam-insert
+    (kbd ",ri") 'org-roam-insert
   )
 
   ;; Evil keys for org-roam in insert mode.
@@ -205,21 +205,35 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 
   ;; Global evil mappings.
   (evil-define-key nil evil-normal-state-map
+    ;; Switch to other-buffer.
     (kbd "SPC TAB") 'mode-line-other-buffer
+
+    ;; Insert space above or below.
     (kbd "[ SPC") 'insert-space-above
     (kbd "] SPC") 'insert-space-below
+
+    ;; Move around tabs.
     (kbd "C-h") 'tab-bar-switch-to-prev-tab
     (kbd "C-l") 'tab-bar-switch-to-next-tab
     (kbd "C-y") 'move-tab-back
     (kbd "C-u") 'move-tab-forward
+
+    ;; Use Q to record macros, and q to quit.
     (kbd "Q") 'evil-record-macro
     (kbd "q") 'my-quit
+
+    ;; Use ,u for the universal argument.
     (kbd ",u") 'universal-argument
+
+    ;; F-X commands
     (kbd "<f5>") 'evil-ex-nohighlight
     (kbd "<f7>") 'whitespace-mode
+
+    ;; org-roam commands that can be used in any buffer.
     (kbd ",rr") 'org-roam
     (kbd ",rc") 'org-roam-capture
-    (kbd ",rf" 'org-roam-find-file
+    (kbd ",rf") 'org-roam-find-file
+
     ;; Reload ~/.emacs
     (kbd ",l") 'load-dot-emacs
 
