@@ -163,6 +163,11 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
             (tab-bar-close-tab)
           (evil-quit)))))
 
+  (evil-define-command load-dot-emacs
+    "Reload the .emacs file."
+    (interactive)
+    (load-file user-init-file))
+
   ;; Evil - Key Mappings
 
   ;; Evil keys for org-mode in normal mode.
@@ -215,6 +220,9 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     (kbd ",rr") 'org-roam
     (kbd ",rc") 'org-roam-capture
     (kbd ",rf" 'org-roam-find-file
+    ;; Reload ~/.emacs
+    (kbd ",l") 'load-dot-emacs
+
     )
 
   ;; Ex commands
