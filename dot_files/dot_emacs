@@ -290,6 +290,24 @@ so only use this if we opening emacs over an SSH session."
 
   (setq magit-git-executable (pick-git-exe))
 
+  (defun my-magit-commit-update ()
+    "Run git commit with a message of update."
+    (interactive)
+    (magit-commit-create '("--message" "update")))
+
+  (defun my-magit-commit-wip ()
+    "Run git commit with a message of wip."
+    (interactive)
+    (magit-commit-create '("--message" "wip")))
+
+  ;; Add some magit-commit commands for creating commit with commit
+  ;; message "wip".
+  (transient-append-suffix 'magit-commit "c"
+     '("z" "Commit with msg \"wip\"" my-magit-commit-wip))
+  ;; Add some magit-commit commands for creating commit with commit
+  ;; message "update".
+  (transient-append-suffix 'magit-commit "c"
+    '("u" "Commit with msg \"update\"" my-magit-commit-update))
   )
 
 ;; Load haskell-mode.
