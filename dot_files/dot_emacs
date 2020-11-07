@@ -315,7 +315,9 @@ so only use this if we opening emacs over an SSH session."
   :ensure t
   :defer t
   :config
-  (setq haskell-indentation-where-pre-offset 0)
+  ;; This gives no indentation before where, which isn't good.
+  ;; I don't know why I originally set this.
+  ;; (setq haskell-indentation-where-pre-offset 0)
   )
 
 ;; Load purescript-mode.
