@@ -21,6 +21,12 @@
   (apply fun args)
   )
 
+(defun magit-status-in-tab (&optional arg)
+  (interactive "P")
+  (let ((current-prefix-arg arg) ;; emulate C-u
+        (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
+    (run-in-new-tab 'call-interactively 'magit-status)))
+
 ;; Load evil.
 (use-package evil
   :ensure t
@@ -41,7 +47,7 @@
     :config
     (global-evil-leader-mode)
     (evil-leader/set-leader "<SPC>")
-    (evil-leader/set-key "gs" 'magit-status)
+    (evil-leader/set-key "gs" 'magit-status-in-tab)
   )
 
   (use-package evil-surround
@@ -50,7 +56,10 @@
     (global-evil-surround-mode))
 
   (use-package evil-magit
-    :ensure t)
+    :ensure t
+    :config
+    (define-key magit-mode-map "q" 'my-quit)
+    )
 
   (use-package evil-commentary
     :ensure t
@@ -306,11 +315,12 @@ so only use this if we opening emacs over an SSH session."
     (interactive)
     (magit-commit-create '("--message" "wip")))
 
-  ;; Add some magit-commit commands for creating commit with commit
+  ;; Add a magit-commit command for creating commit with commit
   ;; message "wip".
   (transient-append-suffix 'magit-commit "c"
      '("z" "Commit with msg \"wip\"" my-magit-commit-wip))
-  ;; Add some magit-commit commands for creating commit with commit
+
+  ;; Add a magit-commit command for creating commit with commit
   ;; message "update".
   (transient-append-suffix 'magit-commit "c"
     '("u" "Commit with msg \"update\"" my-magit-commit-update))
