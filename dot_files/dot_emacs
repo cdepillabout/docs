@@ -15,6 +15,12 @@
 (eval-when-compile
     (require 'use-package))
 
+(defun run-in-new-tab (fun &rest args)
+  "Run a given function FUN in a new tab and pass it the supplied ARGS."
+  (tab-bar-new-tab)
+  (apply fun args)
+  )
+
 ;; Load evil.
 (use-package evil
   :ensure t
