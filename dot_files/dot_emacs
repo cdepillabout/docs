@@ -28,6 +28,17 @@
         (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
     (run-in-new-tab 'call-interactively 'magit-status)))
 
+(use-package evil-leader
+  :ensure t
+  :init
+  ;; global-evil-leader-mode needs to be called before evil is
+  ;; initialized.
+  (global-evil-leader-mode)
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key "gs" 'magit-status-in-tab)
+  (evil-leader/set-key "wgs" 'magit-status)
+)
+
 ;; Load evil.
 (use-package evil
   :ensure t
@@ -42,15 +53,6 @@
   :config
 
   ;; Evil - Packages
-
-  (use-package evil-leader
-    :ensure t
-    :config
-    (global-evil-leader-mode)
-    (evil-leader/set-leader "<SPC>")
-    (evil-leader/set-key "gs" 'magit-status-in-tab)
-    (evil-leader/set-key "wgs" 'magit-status)
-  )
 
   (use-package evil-surround
     :ensure t
