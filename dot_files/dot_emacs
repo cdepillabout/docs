@@ -27,12 +27,12 @@
   (apply fun args)
   )
 
-(defun magit-status-in-tab (&optional arg)
+(defun magit-status-in-tab (&optional directory cache)
   "Run `magit-status' in a new tab."
-  (interactive "P")
-  (let ((current-prefix-arg arg) ;; emulate C-u
-        (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
-    (run-in-new-tab 'call-interactively 'magit-status)))
+  ;; This takes the interactive value directly from magit-status.
+  (interactive (eval (cadr (interactive-form 'magit-status))))
+  (let ((magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
+    (run-in-new-tab 'magit-status directory cache)))
 
 (use-package evil-leader
   :ensure t
