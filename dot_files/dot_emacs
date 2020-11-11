@@ -560,6 +560,9 @@ so only use this if we opening emacs over an SSH session."
 ;; Make sure helm is used as the completion system for org-roam.
 (setq org-roam-completion-system 'helm)
 
+;; Make org-roam-find-file open files in a new tab.
+(setq org-roam-find-file-function 'find-file-other-tab)
+
 (defun my-initialize-org-roam ()
   "Enable `org-roam-mode' if ~/gtd/roam exists."
   (when (file-directory-p "~/gtd/roam")
