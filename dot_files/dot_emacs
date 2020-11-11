@@ -15,6 +15,12 @@
 (eval-when-compile
     (require 'use-package))
 
+;; Here are some settings for displaying any sort of new buffer in a
+;; new tab.  However, this doesn't work well for things like `help'
+;; and `magit-status', so it can't be set by default.
+;; (setq display-buffer-overriding-action '(display-buffer-in-tab))
+;; (setq display-buffer-base-action '(display-buffer-in-tab))
+
 (defun run-in-new-tab (fun &rest args)
   "Run a given function FUN in a new tab and pass it the supplied ARGS."
   (tab-bar-new-tab)
