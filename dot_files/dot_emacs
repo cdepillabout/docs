@@ -441,6 +441,23 @@ so only use this if we opening emacs over an SSH session."
 ;; Don't show the close button on tabs.
 (setq tab-bar-close-button-show nil)
 
+(defun tab-bar-tab-name-truncated-show-modified ()
+  "Similar to `tab-bar-tab-name-truncated', but also show if the
+buffer in the tab has currently been modified and needs saving."
+  (let ((tab-name-ellipsized (tab-bar-tab-name-truncated))
+        (buffer (window-buffer (minibuffer-selected-window))))
+
+    (if (and (buffer-modified-p buffer)
+             (not (s-starts-with-p "*" (buffer-name buffer))))
+        (concat "+ " tab-name-ellipsized)
+      tab-name-ellipsized)))
+
+;; Set the function that displays the file name in the tab bar.
+(setq tab-bar-tab-name-function #'tab-bar-tab-name-truncated-show-modified)
+
+;; Show 35 characters of the tab-bar name before truncating it.
+(setq tab-bar-tab-name-truncated-max 35)
+
 ;; Hooks to add to emacs lisp mode.
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
