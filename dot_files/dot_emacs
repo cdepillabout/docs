@@ -588,6 +588,15 @@ so only use this if we opening emacs over an SSH session."
 ;; Make org-roam-find-file open files in a new tab.
 (setq org-roam-find-file-function 'find-file-other-tab)
 
+;; Set a capture template that also provides space for roam aliases
+;; and links to other notes.
+(setq org-roam-capture-templates
+  '(("d" "default" plain (function org-roam-capture--get-point)
+     "%?"
+     :file-name "%<%Y%m%d%H%M%S>-${slug}"
+     :head "#+title: ${title}\n#+roam_alias:\nlinks:\n\n"
+     :unnarrowed t)))
+
 (defun my-initialize-org-roam ()
   "Enable `org-roam-mode' if ~/gtd/roam exists."
   (when (file-directory-p "~/gtd/roam")
