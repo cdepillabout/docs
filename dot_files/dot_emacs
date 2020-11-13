@@ -34,6 +34,14 @@
   (let ((magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
     (run-in-new-tab 'magit-status directory cache)))
 
+(defun take-window-to-new-tab ()
+  "Take a window to a new tab, closing the window in the existing tab."
+  (interactive)
+  (let ((buffer (current-buffer)))
+    (delete-window)
+    (tab-bar-new-tab)
+    (switch-to-buffer buffer)))
+
 (use-package evil-leader
   :ensure t
   :init
@@ -595,6 +603,7 @@ so only use this if we opening emacs over an SSH session."
      "%?"
      :file-name "%<%Y%m%d%H%M%S>-${slug}"
      :head "#+title: ${title}\n#+roam_alias:\nlinks:\n\n"
+     :jump-to-captured t
      :unnarrowed t)))
 
 (defun my-initialize-org-roam ()
@@ -628,6 +637,10 @@ so only use this if we opening emacs over an SSH session."
         entry
         (file+headline "~/gtd/tickler.org" "Tickler")
         "* %i%? \n %U")))
+
+    ;; Open up the org-capture buffer in a new tab.
+    ;; I use this for the org-roam capture buffer.
+    (add-hook 'org-capture-mode-hook 'take-window-to-new-tab)
 
     ;; Create the refile targets for moving around tasks.
     (setq
