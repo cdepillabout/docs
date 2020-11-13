@@ -268,6 +268,7 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     (kbd ",rr") 'org-roam
     (kbd ",rc") 'org-roam-capture
     (kbd ",rf") 'org-roam-find-file
+    (kbd ",wrf") 'org-roam-find-file-window
 
     ;; Reload ~/.emacs
     (kbd ",l") 'load-dot-emacs
@@ -592,6 +593,17 @@ so only use this if we opening emacs over an SSH session."
 
 ;; Make sure helm is used as the completion system for org-roam.
 (setq org-roam-completion-system 'helm)
+
+;; Make org-roam-find-file open files in a new tab.
+(setq org-roam-find-file-function 'find-file-other-tab)
+
+(defun org-roam-find-file-window ()
+  "Just like `org-roam-find-file', but set
+`org-roam-find-file-function' so that the new file pops up in a
+window instead of a tab."
+  (interactive)
+  (let ((org-roam-find-file-function 'find-file-other-window))
+    (org-roam-find-file)))
 
 ;; Make org-roam-find-file open files in a new tab.
 (setq org-roam-find-file-function 'find-file-other-tab)
