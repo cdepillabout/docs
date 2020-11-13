@@ -365,13 +365,15 @@ so only use this if we opening emacs over an SSH session."
   ;;
   ;; TODO:
   ;;
-  ;; - I would ideally also like to be able to run C-x b and have it
-  ;;   open a buffer in the current window, instead of create a new tab.
+  ;; - I would ideally also like to be able to run C-x b and use Helm,
+  ;;   but have it open a buffer in the current window, instead of
+  ;;   create a new tab.
   ;;
   ;; - When I create a NEW buffer with `helm-buffers-list', it opens
   ;;   the new buffer in the current window instead of opening it in a
   ;;   new tab.
-  (define-key helm-buffer-map (kbd "<RET>") #'helm-buffers-switch-to-buffer-new-tab)
+  (with-eval-after-load "helm-buffers"
+    (define-key helm-buffer-map (kbd "<RET>") #'helm-buffers-switch-to-buffer-new-tab))
 
   ;; Remap the C-x t b command to use Helm.
   (define-key tab-prefix-map "b" 'helm-buffers-list)
