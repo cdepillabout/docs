@@ -448,7 +448,7 @@ buffer in the tab has currently been modified and needs saving."
         (buffer (window-buffer (minibuffer-selected-window))))
 
     (if (and (buffer-modified-p buffer)
-             (not (s-starts-with-p "*" (buffer-name buffer))))
+             (not (string-prefix-p "*" (buffer-name buffer))))
         (concat "+ " tab-name-ellipsized)
       tab-name-ellipsized)))
 
