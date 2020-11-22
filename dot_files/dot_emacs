@@ -79,6 +79,7 @@
     ;; Make sure that "q" correctly quits in magit-status, instead of
     ;; just switching back to the old buffer.
     (evil-magit-define-key 'normal 'magit-mode-map "q" 'my-quit)
+    (evil-magit-define-key 'normal 'magit-mode-map "Q" 'magit-mode-bury-buffer)
     )
 
   (use-package evil-commentary
