@@ -311,6 +311,30 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
   :ensure t
   :defer t
   :config
+
+  ;; Styling for the current HEAD git branch.  This is needed because
+  ;; by default it is styled with a single box around it in the GUI,
+  ;; but that doesn't show up in the CLI.
+  ;;
+  ;; `face-spec-set' is the function to use to set different a
+  ;; different face style depending on whether we are in the GUI or on
+  ;; console.
+  (face-spec-set 'magit-branch-current
+    '(
+      ( ;; Only apply this style when we are in the console
+       ((type tty))
+       (:inherit magit-branch-local
+        :foreground "yellow"
+        :weight extra-bold
+        )
+      )
+      ( ;; Apply this style in all other cases (not in console)
+       t
+       (:inherit magit-branch-local :box 1)
+      )
+     )
+    )
+
   ;; Make sure magit will prune when fetching.
   (setq magit-fetch-arguments '("--prune"))
 
