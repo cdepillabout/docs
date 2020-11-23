@@ -271,6 +271,9 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     (kbd ",rf") 'org-roam-find-file
     (kbd ",wrf") 'org-roam-find-file-window
 
+    ;; projectile with helm
+    (kbd ",pf") 'helm-projectile-find-file
+
     ;; Reload ~/.emacs
     (kbd ",l") 'load-dot-emacs
 
@@ -417,6 +420,24 @@ so only use this if we opening emacs over an SSH session."
 
   ;; Remap the C-x t b command to use Helm.
   (define-key tab-prefix-map "b" 'helm-buffers-list)
+  )
+
+(use-package helm-projectile
+  :ensure t
+  :config
+
+  (defun my-helm-files-find-file-other-tab ()
+    "Open a file in a new tab and exit helm menu."
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action 'find-file-other-tab)))
+
+  ;; When in `helm-projectile-find-file' menu, RET opens a file in a new tab.
+  (define-key helm-projectile-find-file-map (kbd "<RET>") #'my-helm-files-find-file-other-tab)
+  )
+
+(use-package projectile
+  :ensure t
   )
 
 ;;;;;;;;;;;;;;;;;;;
@@ -743,7 +764,23 @@ window instead of a tab."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(helm org-roam purescript-mode yaml-mode nix-mode evil evil-commentary evil-org haskell-mode use-package evil-magit magit evil-surround evil-leader)))
+   '(evil
+     evil-commentary
+     evil-leader
+     evil-magit
+     evil-org
+     evil-surround
+     haskell-mode
+     helm
+     helm-projectile
+     magit
+     nix-mode
+     org-roam
+     projectile
+     purescript-mode
+     use-package
+     yaml-mode
+     )))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
