@@ -1,3 +1,4 @@
+;; -*- mode: emacs-lisp; -*-
 
 ;; Make sure we can load packages.
 (require 'package)
@@ -563,6 +564,11 @@ buffer in the tab has currently been modified and needs saving."
 
 ;; Completions are ordered in vertical columns instead of horizontal rows
 (setq completions-format 'vertical)
+
+;; When opening files that are softlinks, open the actual file (not the softlink).
+;; This is necessary so that when I edit .emacs, Magit knows that it is actually
+;; looking at ~/docs/dot_emacs, so it should look for the Git repo in ~/docs.
+(setq find-file-visit-truename t)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors and Fonts ;;
