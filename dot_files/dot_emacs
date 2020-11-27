@@ -12,6 +12,27 @@
     (package-refresh-contents)
     (package-install 'use-package))
 
+;; Packages to use.
+(setq package-selected-packages
+      '(evil
+        evil-commentary
+        evil-leader
+        evil-magit
+        evil-org
+        evil-surround
+        haskell-mode
+        helm
+        helm-projectile
+        magit
+        nix-mode
+        org-roam
+        projectile
+        purescript-mode
+        racket-mode
+        use-package
+        yaml-mode
+        ))
+
 (eval-when-compile
     (require 'use-package))
 
@@ -763,24 +784,7 @@ window instead of a tab."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(evil
-     evil-commentary
-     evil-leader
-     evil-magit
-     evil-org
-     evil-surround
-     haskell-mode
-     helm
-     helm-projectile
-     magit
-     nix-mode
-     org-roam
-     projectile
-     purescript-mode
-     use-package
-     yaml-mode
-     )))
+ )
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
