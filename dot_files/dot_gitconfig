@@ -5,11 +5,9 @@
 [rebase]
 	autosquash = true
 [push]
-	# git has deprecated "tracking" and it will be called
-	# "upstream" in future git releases.  "tracking" is still
-	# currently working though.  Old versions of git don't
-	# know about "upstream".
-	default = tracking
+	# When running git push with no remote or refspec, always push the current
+	# branch to a branch of the same name on the remote.
+	default = current
 [merge]
 	defaultToUpstream = true
 	ff = only
