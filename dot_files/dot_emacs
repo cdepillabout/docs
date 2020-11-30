@@ -118,6 +118,10 @@
   ;; https://emacs.stackexchange.com/questions/30332/evil-leader-stops-working-when-i-eval-buffer.
   (evil-mode 1)
 
+  ;; This makes it so that "*" key searches for full symbols
+  ;; (including - and _ in variable names).
+  (setq evil-symbol-word-search t)
+
   ;; Evil - Functions
 
   (defun insert-space-above (count)
