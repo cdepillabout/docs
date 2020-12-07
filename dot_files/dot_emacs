@@ -466,6 +466,11 @@ so only use this if we opening emacs over an SSH session."
   :ensure t
   )
 
+(use-package yaml-mode
+  :ensure t
+  :defer t
+  )
+
 ;;;;;;;;;;;;;;;;;;;
 ;; Other options ;;
 ;;;;;;;;;;;;;;;;;;;
