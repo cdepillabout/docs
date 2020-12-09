@@ -425,6 +425,12 @@ so only use this if we opening emacs over an SSH session."
   (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation)
   )
 
+;; Load nix-mode
+(use-package nix-mode
+  :ensure t
+  :defer t
+  )
+
 (use-package helm
   :ensure t
   :config
