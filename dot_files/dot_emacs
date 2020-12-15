@@ -299,6 +299,7 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 
     ;; projectile with helm
     (kbd ",pf") 'helm-projectile-find-file
+    (kbd ",pg") 'helm-projectile-grep
 
     ;; Reload ~/.emacs
     (kbd ",l") 'load-dot-emacs
@@ -470,6 +471,8 @@ so only use this if we opening emacs over an SSH session."
 
 (use-package projectile
   :ensure t
+  :config
+  (setq projectile-use-git-grep t)
   )
 
 (use-package yaml-mode
