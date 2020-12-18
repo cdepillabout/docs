@@ -15,7 +15,8 @@
 
 ;; Packages to use.
 (setq package-selected-packages
-      '(evil
+      '(dockerfile-mode
+        evil
         evil-commentary
         evil-leader
         evil-magit
@@ -63,6 +64,11 @@
     (delete-window)
     (tab-bar-new-tab)
     (switch-to-buffer buffer)))
+
+(use-package dockerfile-mode
+  :ensure t
+  :defer t
+  )
 
 (use-package evil-leader
   :ensure t
