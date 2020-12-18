@@ -324,6 +324,60 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
 
+
+;; Load haskell-mode.
+(use-package haskell-mode
+  :ensure t
+  :defer t
+  :hook (haskell-mode
+         . (lambda ()
+             ;; Make sure the '>>' key in evil mode only indents by
+             ;; two spaces.
+             (setq evil-shift-width 2)
+             ))
+  :config
+  ;; This gives no indentation before where, which isn't good.
+  ;; I don't know why I originally set this.
+  ;; (setq haskell-indentation-where-pre-offset 0)
+  )
+
+(use-package helm
+  :ensure t
+  :config
+  ;; When running the helm buffer list commands (like
+  ;; `helm-buffers-list'), use RET to open a new tab (instead of
+  ;; opening the buffer in the current window).
+  ;;
+  ;; TODO:
+  ;;
+  ;; - I would ideally also like to be able to run C-x b and use Helm,
+  ;;   but have it open a buffer in the current window, instead of
+  ;;   create a new tab.
+  ;;
+  ;; - When I create a NEW buffer with `helm-buffers-list', it opens
+  ;;   the new buffer in the current window instead of opening it in a
+  ;;   new tab.
+  (with-eval-after-load "helm-buffers"
+    (define-key helm-buffer-map (kbd "<RET>") #'helm-buffers-switch-to-buffer-new-tab))
+
+  ;; Remap the C-x t b command to use Helm.
+  (define-key tab-prefix-map "b" 'helm-buffers-list)
+  )
+
+(use-package helm-projectile
+  :ensure t
+  :config
+
+  (defun my-helm-files-find-file-other-tab ()
+    "Open a file in a new tab and exit helm menu."
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action 'find-file-other-tab)))
+
+  ;; When in `helm-projectile-find-file' menu, RET opens a file in a new tab.
+  (define-key helm-projectile-find-file-map (kbd "<RET>") #'my-helm-files-find-file-other-tab)
+  )
+
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
@@ -402,20 +456,10 @@ so only use this if we opening emacs over an SSH session."
     '("u" "Commit with msg \"update\"" my-magit-commit-update))
   )
 
-;; Load haskell-mode.
-(use-package haskell-mode
+;; Load nix-mode
+(use-package nix-mode
   :ensure t
   :defer t
-  :hook (haskell-mode
-         . (lambda ()
-             ;; Make sure the '>>' key in evil mode only indents by
-             ;; two spaces.
-             (setq evil-shift-width 2)
-             ))
-  :config
-  ;; This gives no indentation before where, which isn't good.
-  ;; I don't know why I originally set this.
-  ;; (setq haskell-indentation-where-pre-offset 0)
   )
 
 ;; Load purescript-mode.
@@ -424,49 +468,6 @@ so only use this if we opening emacs over an SSH session."
   :defer t
   :config
   (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation)
-  )
-
-;; Load nix-mode
-(use-package nix-mode
-  :ensure t
-  :defer t
-  )
-
-(use-package helm
-  :ensure t
-  :config
-  ;; When running the helm buffer list commands (like
-  ;; `helm-buffers-list'), use RET to open a new tab (instead of
-  ;; opening the buffer in the current window).
-  ;;
-  ;; TODO:
-  ;;
-  ;; - I would ideally also like to be able to run C-x b and use Helm,
-  ;;   but have it open a buffer in the current window, instead of
-  ;;   create a new tab.
-  ;;
-  ;; - When I create a NEW buffer with `helm-buffers-list', it opens
-  ;;   the new buffer in the current window instead of opening it in a
-  ;;   new tab.
-  (with-eval-after-load "helm-buffers"
-    (define-key helm-buffer-map (kbd "<RET>") #'helm-buffers-switch-to-buffer-new-tab))
-
-  ;; Remap the C-x t b command to use Helm.
-  (define-key tab-prefix-map "b" 'helm-buffers-list)
-  )
-
-(use-package helm-projectile
-  :ensure t
-  :config
-
-  (defun my-helm-files-find-file-other-tab ()
-    "Open a file in a new tab and exit helm menu."
-    (interactive)
-    (with-helm-alive-p
-      (helm-exit-and-execute-action 'find-file-other-tab)))
-
-  ;; When in `helm-projectile-find-file' menu, RET opens a file in a new tab.
-  (define-key helm-projectile-find-file-map (kbd "<RET>") #'my-helm-files-find-file-other-tab)
   )
 
 (use-package projectile
