@@ -39,6 +39,7 @@ main = do
                 , showScrollbar = ShowScrollbarAlways
                 , showTabBar = ShowTabBarAlways
                 , scrollbackLen = 20000
+                , boldIsBright = False
                 -- , confirmExit = False
                 }
           }
