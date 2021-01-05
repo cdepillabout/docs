@@ -373,6 +373,36 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 
 (use-package helm-grep
   :preface
+  (defun my-helm-grep-run-other-tab-action ()
+    "Run grep goto other frame action from `helm-do-grep-1'."
+    (interactive)
+    (with-helm-alive-p
+      ;; TODO: need to setup my-helm-grep-other-tab as action
+      (message "my-helm-grep-run-other-tab-action, helm-grep-actions %S" helm-grep-actions)
+      (helm-exit-and-execute-action 'my-helm-grep-other-tab)))
+
+  (defun my-helm-grep-other-tab (candidate)
+    "Jump to result in other frame from helm grep."
+    ;; Required for `flet'.
+    (require 'cl)
+    (message "YO IN RET FROM helm-grep-map")
+    (flet ((find-file-other-frame (fname) (message "called find-file-other-frame %s" fname)))
+      (helm-grep-action candidate 'other-frame)))
+
+  ;; (setq helm-grep-actions (cons '("Find file other tab" . 'my-helm-grep-other-tab) helm-grep-actions))
+  :init
+
+  (eval-after-load "helm-grep"
+    '(progn
+       (setq helm-grep-actions
+             (append helm-grep-actions
+                     '(("Tab tab tab" . my-helm-grep-other-tab))))))
+  )
+
+  ;; ;; When in `helm-projectile-grep' menu, RET opens a file in a new
+  ;; ;; tab.
+  ;; ;; (define-key helm-grep-map (kbd "<RET>") #'my-helm-find-file-other-tab)
+  ;; (define-key helm-grep-map (kbd "<RET>") 'my-helm-grep-run-other-tab-action)
 
 (use-package helm-projectile
   :ensure t
@@ -389,11 +419,11 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
   ;;        ))
 
 
-  (eval-after-load "helm-grep"
-    '(progn
-       (setq helm-grep-actions
-             (append helm-grep-actions
-                     '(("Tab tab tab" . my-helm-grep-other-tab))))))
+  ;; (eval-after-load "helm-grep"
+  ;;   '(progn
+  ;;      (setq helm-grep-actions
+  ;;            (append helm-grep-actions
+  ;;                    '(("Tab tab tab" . my-helm-grep-other-tab))))))
   :config
 
   ;; When in `helm-projectile-find-file' menu, RET opens a file in a
@@ -414,6 +444,7 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 ;; (flet ((my-xxx () (message "THIS IS NEW THING")))
 ;;   (my-using-my-xxx))
 ;;     (with-helm-alive-p
+
 ;;       (helm-exit-and-execute-action 'my-helm-grep-other-tab)))
   (defun my-helm-grep-run-other-tab-action ()
     "Run grep goto other frame action from `helm-do-grep-1'."
@@ -428,14 +459,16 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     ;; Required for `flet'.
     (require 'cl)
     (message "YO IN RET FROM helm-grep-map")
+    ;; TODO: This is finally working!!  Need to clean all this up!
     (flet ((find-file-other-frame (fname) (message "called find-file-other-frame %s" fname)))
       (helm-grep-action candidate 'other-frame)))
 
-  (setq helm-grep-actions (cons '("Find file other tab" . 'my-helm-grep-other-tab) helm-grep-actions))
+  (setq helm-grep-actions (cons '("Find file other tab" . my-helm-grep-other-tab) helm-grep-actions))
+  (setq helm-projectile-grep-or-ack-actions (append '("Find file other tab"  my-helm-grep-other-tab) helm-projectile-grep-or-ack-actions))
 
-  ;; When in `helm-projectile-grep' menu, RET opens a file in a new
-  ;; tab.
-  ;; (define-key helm-grep-map (kbd "<RET>") #'my-helm-find-file-other-tab)
+  ;; ;; When in `helm-projectile-grep' menu, RET opens a file in a new
+  ;; ;; tab.
+  ;; ;; (define-key helm-grep-map (kbd "<RET>") #'my-helm-find-file-other-tab)
   (define-key helm-grep-map (kbd "<RET>") 'my-helm-grep-run-other-tab-action)
 
     ;; (lambda ()
@@ -895,7 +928,12 @@ window instead of a tab."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(helm-grep-actions
+   '(("Find File" . helm-grep-action)
+     ("Find file other frame" . helm-grep-other-frame)
+     ("Save results in grep buffer" . helm-grep-save-results)
+     ("Find file other window (C-u vertically)" . helm-grep-other-window)
+     ("tab stuff whoooooo" . my-helm-grep-other-tab))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
