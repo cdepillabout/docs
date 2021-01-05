@@ -371,23 +371,80 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
   (define-key tab-prefix-map "b" 'helm-buffers-list)
   )
 
+(use-package helm-grep
+  :preface
+
 (use-package helm-projectile
   :ensure t
-  :config
+  :init
+  ;;
+  ;; (setq helm-grep-actions (cons '("Find file other tab" . my-helm-grep-other-tab) helm-grep-actions))
+  ;; (setq helm-grep-actions
+  ;;       (helm-make-actions
+  ;;        "Find File" 'helm-grep-action
+  ;;        "Find file other frame" 'helm-grep-other-frame
+  ;;        "Save results in grep buffer" 'helm-grep-save-results
+  ;;        "Find file other window (C-u vertically)" 'helm-grep-other-window
+  ;;        "Find file other tab" 'my-helm-grep-other-tab
+  ;;        ))
 
-  (defun my-helm-find-file-other-tab ()
-    "Open a file in a new tab and exit helm menu."
-    (interactive)
-    (with-helm-alive-p
-      (helm-exit-and-execute-action 'find-file-other-tab)))
+
+  (eval-after-load "helm-grep"
+    '(progn
+       (setq helm-grep-actions
+             (append helm-grep-actions
+                     '(("Tab tab tab" . my-helm-grep-other-tab))))))
+  :config
 
   ;; When in `helm-projectile-find-file' menu, RET opens a file in a
   ;; new tab.
-  (define-key helm-projectile-find-file-map (kbd "<RET>") #'my-helm-find-file-other-tab)
+  (define-key helm-projectile-find-file-map (kbd "<RET>") #'helm-ff-find-file-other-tab)
+
+
+;;   (defun my-helm-grep-other-tab (candidate)
+;;     "Jump to result in other frame from helm grep."
+;;     (helm-grep-action candidate 'other-frame))
+
+;;   (defun my-helm-grep-run-other-tab-action ()
+;;     "Run grep goto other frame action from `helm-do-grep-1'."
+;;     (interactive)
+;;     ;; Required for `flet'.
+;;     (require 'cl)
+;;     (flet ((
+;; (flet ((my-xxx () (message "THIS IS NEW THING")))
+;;   (my-using-my-xxx))
+;;     (with-helm-alive-p
+;;       (helm-exit-and-execute-action 'my-helm-grep-other-tab)))
+  (defun my-helm-grep-run-other-tab-action ()
+    "Run grep goto other frame action from `helm-do-grep-1'."
+    (interactive)
+    (with-helm-alive-p
+      ;; TODO: need to setup my-helm-grep-other-tab as action
+      (message "my-helm-grep-run-other-tab-action, helm-grep-actions %S" helm-grep-actions)
+      (helm-exit-and-execute-action 'my-helm-grep-other-tab)))
+
+  (defun my-helm-grep-other-tab (candidate)
+    "Jump to result in other frame from helm grep."
+    ;; Required for `flet'.
+    (require 'cl)
+    (message "YO IN RET FROM helm-grep-map")
+    (flet ((find-file-other-frame (fname) (message "called find-file-other-frame %s" fname)))
+      (helm-grep-action candidate 'other-frame)))
+
+  (setq helm-grep-actions (cons '("Find file other tab" . 'my-helm-grep-other-tab) helm-grep-actions))
 
   ;; When in `helm-projectile-grep' menu, RET opens a file in a new
   ;; tab.
-  (define-key helm-grep-map (kbd "<RET>") #'my-helm-find-file-other-tab)
+  ;; (define-key helm-grep-map (kbd "<RET>") #'my-helm-find-file-other-tab)
+  (define-key helm-grep-map (kbd "<RET>") 'my-helm-grep-run-other-tab-action)
+
+    ;; (lambda ()
+    ;;   (interactive)
+    ;;   ;; Required for `flet'.
+    ;;   (require 'cl)
+    ;;   (message "YO IN RET FROM helm-grep-map")
+    ;;   (flet ((find-file-other-frame (fname) (message "called find-file-other-frame %s" fname)))
+    ;;     (helm-grep-run-other-frame-action))))
   )
 
 (use-package markdown-mode
