@@ -27,6 +27,7 @@
         helm-projectile
         magit
         nix-mode
+        origami
         org-roam
         projectile
         purescript-mode
@@ -313,6 +314,18 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 
     ;; Show Help
     (kbd ",h") 'help
+
+    ;; Folding-related commands
+    ;; (evil-define-key 'normal prog-mode-map (kbd "TAB") 'aeh/origami-toggle-node)
+    (kbd "za") 'origami-forward-toggle-node
+    (kbd "zR") 'origami-close-all-nodes
+    (kbd "zM") 'origami-open-all-nodes
+    (kbd "zr") 'origami-close-node-recursively
+    (kbd "zm") 'origami-open-node-recursively
+    (kbd "zo") 'origami-show-node
+    (kbd "zc") 'origami-close-node
+    (kbd "zj") 'origami-forward-fold
+    (kbd "zk") 'origami-previous-fold
     )
 
   ;; Ex commands
@@ -493,6 +506,12 @@ so only use this if we opening emacs over an SSH session."
 
 ;; Load nix-mode
 (use-package nix-mode
+  :ensure t
+  :defer t
+  )
+
+;; Origami (for code folding)
+(use-package origami
   :ensure t
   :defer t
   )
