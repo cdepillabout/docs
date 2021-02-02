@@ -756,6 +756,9 @@ export HISTCONTROL='ignoreboth'
 export HISTFILESIZE=40000
 export HISTSIZE=20000
 
+# show date in bash history
+export HISTTIMEFORMAT="%F %T "
+
 # Use external file for bash history.
 export HISTFILE="$HOME/.bash_eternal_history"
 
