@@ -72,15 +72,37 @@
   :defer t
   )
 
+;; The leader-based keymaps are for key combinations that aren't
+;; related to a specific mode, but can be used in any mode.
 (use-package evil-leader
   :ensure t
   :init
   ;; global-evil-leader-mode needs to be called before evil is
   ;; initialized.
   (global-evil-leader-mode)
+
+  ;; Set the leader key to space.
   (evil-leader/set-leader "<SPC>")
+
+  ;; Open magit status.
   (evil-leader/set-key "gs" 'magit-status-in-tab)
   (evil-leader/set-key "wgs" 'magit-status)
+
+  ;; Switch to other-buffer.
+  (evil-leader/set-key "TAB" 'mode-line-other-buffer)
+
+  ;; Use "u" for the universal argument.
+  (evil-leader/set-key "u" 'universal-argument)
+
+  ;; projectile with helm
+  (evil-leader/set-key "pf" 'helm-projectile-find-file)
+  (evil-leader/set-key "pg" 'helm-projectile-grep)
+
+  ;; Reload ~/.emacs
+  (evil-leader/set-key "l" 'load-dot-emacs)
+
+  ;; Show Help
+  (evil-leader/set-key "h" 'help)
 )
 
 ;; Load evil.
@@ -275,9 +297,6 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 
   ;; Global evil mappings.
   (evil-define-key nil evil-normal-state-map
-    ;; Switch to other-buffer.
-    (kbd "SPC TAB") 'mode-line-other-buffer
-
     ;; Insert space above or below.
     (kbd "[ SPC") 'insert-space-above
     (kbd "] SPC") 'insert-space-below
@@ -292,9 +311,6 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     (kbd "Q") 'evil-record-macro
     (kbd "q") 'my-quit
 
-    ;; Use ,u for the universal argument.
-    (kbd ",u") 'universal-argument
-
     ;; F-X commands
     (kbd "<f5>") 'evil-ex-nohighlight
     (kbd "<f7>") 'whitespace-mode
@@ -304,16 +320,6 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
     (kbd ",rc") 'org-roam-capture
     (kbd ",rf") 'org-roam-find-file
     (kbd ",wrf") 'org-roam-find-file-window
-
-    ;; projectile with helm
-    (kbd ",pf") 'helm-projectile-find-file
-    (kbd ",pg") 'helm-projectile-grep
-
-    ;; Reload ~/.emacs
-    (kbd ",l") 'load-dot-emacs
-
-    ;; Show Help
-    (kbd ",h") 'help
 
     ;; Folding-related commands
     ;; (evil-define-key 'normal prog-mode-map (kbd "TAB") 'aeh/origami-toggle-node)
