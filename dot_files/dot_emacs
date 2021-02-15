@@ -17,9 +17,9 @@
 (setq package-selected-packages
       '(dockerfile-mode
         evil
+        evil-collection
         evil-commentary
         evil-leader
-        evil-magit
         evil-org
         evil-surround
         haskell-mode
@@ -71,6 +71,11 @@
   :ensure t
   :defer t
   )
+
+;; This controls whether or not to load a set of keybindings for
+;; evil for various emacs modes.  Needs to be set to `nil' before
+;; loading evil-collection.
+(setq evil-want-keybinding nil)
 
 ;; The leader-based keymaps are for key combinations that aren't
 ;; related to a specific mode, but can be used in any mode.
@@ -125,13 +130,26 @@
     :config
     (global-evil-surround-mode))
 
-  (use-package evil-magit
+  ;; This is a collection of keybindings for various emacs modes.
+  (use-package evil-collection
     :ensure t
     :config
-    ;; Make sure that "q" correctly quits in magit-status, instead of
-    ;; just switching back to the old buffer.
-    (evil-magit-define-key 'normal 'magit-mode-map "q" 'my-quit)
-    (evil-magit-define-key 'normal 'magit-mode-map "Q" 'magit-mode-bury-buffer)
+    ;; Register all bindings
+    (evil-collection-init)
+
+    ;; I don't know why this is needed, but it appears that the "q"
+    ;; keybinding is overwritten when magit is loaded.  So we have to
+    ;; explicitly set the "q" keybinding after magit has already been
+    ;; loaded.
+    (with-eval-after-load 'magit
+      (progn
+        ;; Make sure that "q" correctly quits in magit-status, instead of
+        ;; just switching back to the old buffer.
+        (evil-collection-define-key 'normal 'magit-mode-map "q" 'my-quit)
+        ;; (evil-define-key evil-collection-magit-state magit-mode-map "q" 'my-quit)
+        (evil-collection-define-key 'normal 'magit-mode-map "Q" 'magit-mode-bury-buffer)
+        )
+      )
     )
 
   (use-package evil-commentary
