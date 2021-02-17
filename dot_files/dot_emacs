@@ -574,6 +574,13 @@ so only use this if we opening emacs over an SSH session."
 (use-package yaml-mode
   :ensure t
   :defer t
+  ;; Make sure the `_' character is counted as a word character.  This
+  ;; makes commands like `evil-search-forward' correctly search for full
+  ;; words (with underscores).
+  ;;
+  ;; Note that this needs to be run after entering the given mode
+  ;; because the mode overwrites the syntax entry table.
+  :hook ((yaml-mode . (lambda () (modify-syntax-entry ?_ "w"))))
   )
 
 ;;;;;;;;;;;;;;;;;;;
