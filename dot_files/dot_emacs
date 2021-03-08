@@ -341,15 +341,18 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
 
     ;; Folding-related commands
     ;; (evil-define-key 'normal prog-mode-map (kbd "TAB") 'aeh/origami-toggle-node)
-    (kbd "za") 'origami-forward-toggle-node
-    (kbd "zR") 'origami-close-all-nodes
-    (kbd "zM") 'origami-open-all-nodes
-    (kbd "zr") 'origami-close-node-recursively
-    (kbd "zm") 'origami-open-node-recursively
-    (kbd "zo") 'origami-show-node
-    (kbd "zc") 'origami-close-node
-    (kbd "zj") 'origami-forward-fold
-    (kbd "zk") 'origami-previous-fold
+
+    ;; TODO: These don't interact well with the folding that is
+    ;; built-in to markdown mode.
+    ;; (kbd "za") 'origami-forward-toggle-node
+    ;; (kbd "zR") 'origami-close-all-nodes
+    ;; (kbd "zM") 'origami-open-all-nodes
+    ;; (kbd "zr") 'origami-close-node-recursively
+    ;; (kbd "zm") 'origami-open-node-recursively
+    ;; (kbd "zo") 'origami-show-node
+    ;; (kbd "zc") 'origami-close-node
+    ;; (kbd "zj") 'origami-forward-fold
+    ;; (kbd "zk") 'origami-previous-fold
     )
 
   ;; Ex commands
