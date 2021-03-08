@@ -91,6 +91,7 @@
 
   ;; Open magit status.
   (evil-leader/set-key "gs" 'magit-status-in-tab)
+  (evil-leader/set-key "gb" 'magit-blame)
   (evil-leader/set-key "wgs" 'magit-status)
 
   ;; Switch to other-buffer.
