@@ -382,6 +382,13 @@ the tab was closed.  Run `evil-quit' if the last tab was closed."
              ;; Make sure the '>>' key in evil mode only indents by
              ;; two spaces.
              (setq evil-shift-width 2)
+             ;; Make sure the `_' character is counted as a word character.  This
+             ;; makes commands like `evil-search-forward' correctly search for full
+             ;; words (with underscores).
+             ;;
+             ;; Note that this needs to be run after entering the given mode
+             ;; because the mode overwrites the syntax entry table.
+             (modify-syntax-entry ?_ "w")
              ))
   :config
   ;; This gives no indentation before where, which isn't good.
