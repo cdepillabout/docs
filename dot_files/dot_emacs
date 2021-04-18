@@ -760,6 +760,13 @@ buffer in the tab has currently been modified and needs saving."
     (set-face-attribute 'org-level-5 nil :weight 'bold)
     (set-face-attribute 'org-special-keyword nil :foreground "color-95" :weight 'light)
   )
+
+  ;; Set colors for org priorities.
+  (setq org-priority-faces
+        '((?A . (:foreground "red" :weight bold))
+          (?B . (:foreground "yellow"))
+          (?C . (:foreground "lightblue"))
+          (?D . (:foreground "green"))))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;
