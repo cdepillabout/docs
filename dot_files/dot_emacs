@@ -899,8 +899,7 @@ window instead of a tab."
     ;; Setup the todo keywords.
     ;;
     ;; "TODO"      -- The task has yet to be done.
-    ;; "NEXT"      -- The task is the next to be done in the current project
-    ;;                (or is currently being done).
+    ;; "DOING"     -- The task that I am currently working on in the in the project.
     ;; "WAITING"   -- I am waiting for someone else to finish something or
     ;;             -- get back to me before I continue with this task.
     ;; "ONHOLD"    -- This task is on hold for some other reason and will not
@@ -910,7 +909,7 @@ window instead of a tab."
     ;; "CANCELLED" -- The task has been cancelled and will not be done.
     (setq
      org-todo-keywords
-     '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "ONHOLD(o)" "|" "DONE(d)" "CANCELLED(c)")))
+     '((sequence "TODO(t)" "DOING(n)" "WAITING(w)" "ONHOLD(o)" "|" "DONE(d)" "CANCELLED(c)")))
 
     ;; Setup the default column format if it doesn't appear in the file.
     (setq
