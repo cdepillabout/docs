@@ -709,11 +709,18 @@ buffer in the tab has currently been modified and needs saving."
 (load-theme 'manoj-dark)
 
 ;; Set the default font.
-(set-face-attribute 'default nil
-  :family "Source Code Pro"
-  :height 140
-  :weight 'normal
-  :width 'normal)
+(cond ((eq system-type 'windows-nt)
+       (set-face-attribute 'default nil
+                           :family "Consolas"
+                           :height 140
+                           :weight 'normal
+                           :width 'normal))
+      ((eq system-type 'gnu/linux)
+       (set-face-attribute 'default nil
+                           :family "Source Code Pro"
+                           :height 140
+                           :weight 'normal
+                           :width 'normal)))
 
 ;; Set the cursor color to red to match Vim in the terminal.
 (set-cursor-color "red")
@@ -863,6 +870,31 @@ window instead of a tab."
 
 ;; Setup my GTD stuff.
 (with-eval-after-load "org"
+
+  ;; Open up the org-capture buffer in a new tab.
+  ;; I use this for the org-roam capture buffer.
+  (add-hook 'org-capture-mode-hook 'take-window-to-new-tab)
+
+  ;; Setup the todo keywords.
+  ;;
+  ;; "TODO"      -- The task has yet to be done.
+  ;; "DOING"     -- The task that I am currently working on in the in the project.
+  ;; "WAITING"   -- I am waiting for someone else to finish something or
+  ;;             -- get back to me before I continue with this task.
+  ;; "ONHOLD"    -- This task is on hold for some other reason and will not
+  ;;             -- be worked on.  I may be trying to figure out whether or
+  ;;             -- not it will ever be done.
+  ;; "DONE"      -- The task has been finished.
+  ;; "CANCELLED" -- The task has been cancelled and will not be done.
+  (setq
+   org-todo-keywords
+   '((sequence "TODO(t)" "DOING(n)" "WAITING(w)" "ONHOLD(o)" "|" "DONE(d)" "CANCELLED(c)")))
+
+  ;; Setup the default column format if it doesn't appear in the file.
+  (setq
+   org-columns-default-format
+   "%4TODO %55ITEM(Task) %7Effort(Effort){:} %7CLOCKSUM(Clock){:} %TAGS")
+
   (when (file-directory-p "~/gtd")
 
     ;; Set which files are checked for agendas.
@@ -885,37 +917,12 @@ window instead of a tab."
         (file+headline "~/gtd/tickler.org" "Tickler")
         "* %i%? \n %U")))
 
-    ;; Open up the org-capture buffer in a new tab.
-    ;; I use this for the org-roam capture buffer.
-    (add-hook 'org-capture-mode-hook 'take-window-to-new-tab)
-
     ;; Create the refile targets for moving around tasks.
     (setq
      org-refile-targets
      '(("~/gtd/projects.org" :maxlevel . 3)
        ("~/gtd/someday.org" :level . 1)
        ("~/gtd/tickler.org" :maxlevel . 2)))
-
-    ;; Setup the todo keywords.
-    ;;
-    ;; "TODO"      -- The task has yet to be done.
-    ;; "DOING"     -- The task that I am currently working on in the in the project.
-    ;; "WAITING"   -- I am waiting for someone else to finish something or
-    ;;             -- get back to me before I continue with this task.
-    ;; "ONHOLD"    -- This task is on hold for some other reason and will not
-    ;;             -- be worked on.  I may be trying to figure out whether or
-    ;;             -- not it will ever be done.
-    ;; "DONE"      -- The task has been finished.
-    ;; "CANCELLED" -- The task has been cancelled and will not be done.
-    (setq
-     org-todo-keywords
-     '((sequence "TODO(t)" "DOING(n)" "WAITING(w)" "ONHOLD(o)" "|" "DONE(d)" "CANCELLED(c)")))
-
-    ;; Setup the default column format if it doesn't appear in the file.
-    (setq
-     org-columns-default-format
-     "%4TODO %55ITEM(Task) %7Effort(Effort){:} %7CLOCKSUM(Clock){:} %TAGS")
-
     )
   )
 
