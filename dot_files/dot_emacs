@@ -774,6 +774,14 @@ buffer in the tab has currently been modified and needs saving."
           (?B . (:foreground "yellow"))
           (?C . (:foreground "lightblue"))
           (?D . (:foreground "green"))))
+
+  (setq org-todo-keyword-faces
+        '(("TODO" :foreground "PaleGreen" :weight semi-bold)
+          ("DOING" :foreground "DeepSkyBlue" :weight bold)
+          ("WAITING" :foreground "Orange" :weight bold)
+          ("ONHOLD" :foreground "Yellow" :weight semi-bold)
+          ("FINISHED" :foreground "Purple" :weight semi-bold)
+          ("CANCELLED" :foreground "LightBrown" :weight semi-bold)))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -884,11 +892,11 @@ window instead of a tab."
   ;; "ONHOLD"    -- This task is on hold for some other reason and will not
   ;;             -- be worked on.  I may be trying to figure out whether or
   ;;             -- not it will ever be done.
-  ;; "DONE"      -- The task has been finished.
+  ;; "FINISHED"  -- The task has been finished.
   ;; "CANCELLED" -- The task has been cancelled and will not be done.
   (setq
    org-todo-keywords
-   '((sequence "TODO(t)" "DOING(n)" "WAITING(w)" "ONHOLD(o)" "|" "DONE(d)" "CANCELLED(c)")))
+   '((sequence "TODO(t)" "DOING(d)" "WAITING(w)" "ONHOLD(o)" "|" "FINISHED(f)" "CANCELLED(c)")))
 
   ;; Setup the default column format if it doesn't appear in the file.
   (setq
