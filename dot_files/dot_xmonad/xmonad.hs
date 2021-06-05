@@ -12,8 +12,8 @@ import XMonad
        (ChangeLayout(NextLayout), Dimension, KeyMask, Layout,
         Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
         ScreenDetail, WindowSet, WorkspaceId, X,
-        XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.),
-        float, get, kill, layoutHook, manageHook, refresh, restart,
+        XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.), (<+>),
+        float, get, handleEventHook, kill, layoutHook, manageHook, refresh, restart,
         screenRect, screenWorkspace, sendMessage, setLayout, spawn,
         terminal, tileWindow, windows, windowset, withFocused,
         withWindowSet, whenJust, workspaces, xmonad)
@@ -25,7 +25,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Layout (Choose, Full, Mirror, Tall)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
-import XMonad.Hooks.EwmhDesktops (ewmh)
+import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.WorkspaceHistory
        (workspaceHistory, workspaceHistoryHook)
 import qualified XMonad.StackSet as W
@@ -56,6 +56,7 @@ myXMonadConfig =
     , manageHook = manageDocks
     , modMask = myModMask
     , terminal = "termonad"
+    , handleEventHook = handleEventHook def <+> fullscreenEventHook
     }
 
 myLogHook :: X ()
