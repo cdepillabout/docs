@@ -702,6 +702,9 @@ buffer in the tab has currently been modified and needs saving."
 ;; looking at ~/docs/dot_emacs, so it should look for the Git repo in ~/docs.
 (setq find-file-visit-truename t)
 
+;; Prefer UTF-8 encoding with Unix line endings.
+(prefer-coding-system 'utf-8-unix)
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors and Fonts ;;
 ;;;;;;;;;;;;;;;;;;;;;;
