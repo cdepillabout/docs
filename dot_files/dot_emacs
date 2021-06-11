@@ -666,10 +666,25 @@ buffer in the tab has currently been modified and needs saving."
 
 ;; Hooks to add to emacs lisp mode.
 (add-hook 'emacs-lisp-mode-hook
-	  (lambda ()
-	    ;; Make sure that tabs are never used.  Spaces are used
-	    ;; for indentation.
-	    (setq indent-tabs-mode nil)))
+          (lambda ()
+            ;; Make sure that tabs are never used.  Spaces are used
+            ;; for indentation.
+            (setq indent-tabs-mode nil)))
+
+;; Hooks to add to shell script mode.
+(add-hook 'sh-mode-hook
+          (lambda ()
+            ;; Make sure that tabs are never used.  Spaces are used
+            ;; for indentation.
+            (setq indent-tabs-mode nil)
+
+            ;; Make sure the `_' character is counted as a word character.  This
+            ;; makes commands like `evil-search-forward' correctly search for full
+            ;; words (with underscores).
+            ;;
+            ;; Note that this needs to be run after entering the given mode
+            ;; because the mode overwrites the syntax entry table.
+            (modify-syntax-entry ?_ "w")))
 
 ;; Only allow the space allocated for line numbers in a file to grow
 ;; wider, never shrink, even if you scroll up to where line numbers
