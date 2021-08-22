@@ -720,6 +720,14 @@ buffer in the tab has currently been modified and needs saving."
 ;; Prefer UTF-8 encoding with Unix line endings.
 (prefer-coding-system 'utf-8-unix)
 
+;; Make sure the `_' character is counted as a word character.  This
+;; makes commands like `evil-search-forward' correctly search for full
+;; words (with underscores).
+;;
+;; Note that this needs to be run after entering the given mode
+;; because the mode overwrites the syntax entry table.
+(add-hook 'python-mode-hook '(lambda ( ) (modify-syntax-entry ?_ "w")))
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors and Fonts ;;
 ;;;;;;;;;;;;;;;;;;;;;;
