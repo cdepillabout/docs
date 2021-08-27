@@ -22,13 +22,6 @@
       ];
     };
 
-    # This is my pretty-simple Haskell library with the CLI enabled to build.
-    pretty-simple-cli =
-      with pkgs.haskell.lib;
-      addBuildDepend
-        (appendConfigureFlag pkgs.haskellPackages.pretty-simple "-fbuildexe")
-        pkgs.haskellPackages.optparse-applicative;
-
     # Change arbtt so it doesn't record window titles.
     arbtt =
       pkgs.haskell.lib.overrideCabal pkgs.haskellPackages.arbtt (oldAttrs: {
