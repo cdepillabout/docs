@@ -154,11 +154,11 @@ PS1_white="\[\033[01;37m\]"
 PS1_normal_text="\[\033[00;00m\]"
 
 PS1_git_branch_color="${PS1_yellow}"
-PS1_mercurial_branch_color="${PS1_magenta}"
 
 PS1_sandbox_color="${PS1_cyan}"
 PS1_virtualenv_color="${PS1_white}"
 PS1_nixshell_color="${PS1_green}"
+PS1_newnixshell_color="${PS1_cyan}"
 
 
 # put the git branch in our prompt
@@ -170,13 +170,6 @@ get_git_or_hg_branch()
 		echo -n "${PS1_git_branch_color}${git_branch} "
 		return
 	fi
-
-	# now try to see if it is a mercurial branch
-	# mercurial_branch=`hg branch 2>/dev/null`
-	# if [ -n "${mercurial_branch}" ] ; then
-	# 	echo -n "${PS1_mercurial_branch_color}${mercurial_branch} "
-	# 	return
-	# fi
 }
 
 # put the current sandbox in our prompt
@@ -184,7 +177,6 @@ get_sandbox()
 {
 	if [[ -d .cabal-sandbox ]] ; then
 		echo -n "${PS1_sandbox_color}. "
-		return
 	fi
 }
 
@@ -193,16 +185,21 @@ get_virtualenv()
 {
 	if [[ -n "$VIRTUAL_ENV" ]] ; then
 		echo -n "${PS1_virtualenv_color}, "
-		return
 	fi
 }
 
-# put the current sandbox in our prompt
+# Put whether or not we are in a nix-shell or nix shell.
 get_nixshell()
 {
+	# This tests for whether or not we are in a nix-shell
 	if [[ "$IN_NIX_SHELL" = "1" || "$IN_NIX_SHELL" = "pure" || "$IN_NIX_SHELL" = "impure" ]] ; then
 		echo -n "${PS1_nixshell_color}NS "
-		return
+	# This tests for whether or no twe are in a nix shell.  Unfortunately there is no IN_NIX_SHELL
+	# envvar, so we fall back to testing whether or not we have /nix/store paths in PATH.
+	# https://github.com/NixOS/nix/issues/3862#issuecomment-707320241
+	# TODO: I wonder if it would also be a good idea to check $SHLVL is greater than 1.
+	elif echo "$PATH" | grep -qc '/nix/store' > /dev/null 2>&1; then
+		echo -n "${PS1_newnixshell_color}NS "
 	fi
 }
 
