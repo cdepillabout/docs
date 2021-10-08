@@ -1051,6 +1051,7 @@ endfunction
 
 call Add_eol_whitespace_highlighting("bash")
 call Add_eol_whitespace_highlighting("c")
+call Add_eol_whitespace_highlighting("cmake")
 call Add_eol_whitespace_highlighting("cpp")
 call Add_eol_whitespace_highlighting("css")
 call Add_eol_whitespace_highlighting("dockerfile")
