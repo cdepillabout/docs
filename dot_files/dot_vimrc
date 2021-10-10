@@ -1096,6 +1096,15 @@ autocmd FileType cs set foldmarker={,}
 autocmd FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
 autocmd FileType cs set foldlevelstart=2
 
+""""""""
+"" Dhall
+""""""""
+
+autocmd FileType dhall set expandtab
+autocmd FileType dhall set tabstop=2
+autocmd FileType dhall set shiftwidth=2
+autocmd FileType dhall set softtabstop=2
+
 """""""""""""
 "" Dockerfile
 """""""""""""
