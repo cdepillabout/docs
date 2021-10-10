@@ -1096,6 +1096,21 @@ autocmd FileType cs set foldmarker={,}
 autocmd FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
 autocmd FileType cs set foldlevelstart=2
 
+"""""""""""""
+"" Dockerfile
+"""""""""""""
+
+autocmd FileType dockerfile setlocal expandtab
+
+"""""""""
+"" Erlang
+"""""""""
+
+autocmd FileType erlang set expandtab
+autocmd FileType erlang set tabstop=2
+autocmd FileType erlang set shiftwidth=2
+autocmd FileType erlang set softtabstop=2
+
 """"""""""
 "" Haskell
 """"""""""
@@ -1138,6 +1153,15 @@ autocmd FileType html setlocal shiftwidth=2
 autocmd FileType html setlocal softtabstop=2
 "autocmd FileType html setlocal expandtab
 autocmd FileType html setlocal foldmethod=indent
+
+"""""""""""""
+"" JavaScript
+"""""""""""""
+
+autocmd FileType javascript set expandtab
+autocmd FileType javascript set tabstop=2
+autocmd FileType javascript set shiftwidth=2
+autocmd FileType javascript set softtabstop=2
 
 """""""""
 "" Ledger
@@ -1195,6 +1219,12 @@ autocmd FileType markdown setlocal expandtab
 autocmd FileType markdown setlocal foldexpr=MarkdownFoldLevel()
 autocmd FileType markdown setlocal foldmethod=expr
 
+"""""""""
+"" Matlab
+"""""""""
+
+autocmd FileType matlab setlocal commentstring=%%s
+
 """"""
 "" Nix
 """"""
@@ -1211,131 +1241,13 @@ autocmd FileType nix set softtabstop=2
 autocmd FileType nix setlocal commentstring=#%s
 autocmd FileType nix setlocal indentexpr=
 
-"""""""""
-"" Puppet
-"""""""""
-
-autocmd FileType puppet setlocal tabstop=2
-autocmd FileType puppet setlocal shiftwidth=2
-autocmd FileType puppet setlocal softtabstop=2
-autocmd FileType puppet setlocal expandtab
-autocmd FileType puppet setlocal foldmethod=indent
-
-"""""""""
-"" Python
-"""""""""
-
-" Python needs spaces instead of tabs.
-autocmd BufRead,BufNewFile *.py set expandtab
-" maybe this could also be done with
-autocmd FileType python set expandtab
-" set autocomplete for python from the neocomplete plugin
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-
-" SConscript and SConstruct files are python files
-autocmd BufRead,BufNewFile SConstruct set ft=python
-autocmd BufRead,BufNewFile SConscript set ft=python
-
-""""
-"" R
-""""
-
-autocmd FileType r setlocal tabstop=2
-autocmd FileType r setlocal shiftwidth=2
-autocmd FileType r setlocal softtabstop=2
-autocmd FileType r setlocal expandtab
-" autocmd FileType r setlocal foldmethod=syntax
-
-"""""""
-"" Ruby
-"""""""
-
-let ruby_no_expensive=1
-autocmd FileType ruby setlocal tabstop=2
-autocmd FileType ruby setlocal shiftwidth=2
-autocmd FileType ruby setlocal softtabstop=2
-autocmd FileType ruby setlocal expandtab
-autocmd FileType ruby setlocal foldmethod=syntax
-
-""""""
-"" SAS
-""""""
-
-autocmd FileType sas set tabstop=3			" 3-space tab indent width
-autocmd FileType sas set shiftwidth=3		" allows you to use < and > to indent/unindent blocks
-autocmd FileType sas set softtabstop=3		" see multiple space characters as a tab
-
 """"""""
-"" Scala
+"" OCaml
 """"""""
-
-autocmd FileType scala setlocal tabstop=2
-autocmd FileType scala setlocal shiftwidth=2
-autocmd FileType scala setlocal softtabstop=2
-autocmd FileType scala setlocal expandtab
-autocmd FileType scala setlocal foldmethod=indent
-
-" settings for matlab files
-autocmd FileType matlab setlocal commentstring=%%s
 
 " settings for ocaml files.
 " For some reason this doesn't work if we don't use "BufEnter".
 " autocmd! BufRead,BufNewFile,BufEnter *.ml,*.mli,*mll,*.mly set filetype=ocaml
-
-" settings for purescript files
-autocmd FileType purescript set expandtab
-autocmd FileType purescript set tabstop=2
-autocmd FileType purescript set shiftwidth=2
-autocmd FileType purescript set softtabstop=2
-autocmd FileType purescript setlocal formatoptions+=1crq formatoptions-=t
-autocmd FileType purescript setlocal commentstring=--%s
-autocmd FileType purescript setlocal comments=:--
-
-" settings for javascript files
-autocmd FileType javascript set expandtab
-autocmd FileType javascript set tabstop=2
-autocmd FileType javascript set shiftwidth=2
-autocmd FileType javascript set softtabstop=2
-
-" settings for rust files
-autocmd FileType rust set expandtab
-autocmd FileType rust set tabstop=4
-autocmd FileType rust set shiftwidth=4
-autocmd FileType rust set softtabstop=4
-
-" settings for erlang files
-autocmd FileType erlang set expandtab
-autocmd FileType erlang set tabstop=2
-autocmd FileType erlang set shiftwidth=2
-autocmd FileType erlang set softtabstop=2
-
-" settings for pug files
-autocmd FileType pug set expandtab
-autocmd FileType pug set tabstop=2
-autocmd FileType pug set shiftwidth=2
-autocmd FileType pug set softtabstop=2
-
-" settings for terraform files
-autocmd FileType terraform setlocal tabstop=2
-autocmd FileType terraform setlocal shiftwidth=2
-autocmd FileType terraform setlocal softtabstop=2
-autocmd FileType terraform setlocal expandtab
-autocmd FileType terraform setlocal commentstring=#%s
-autocmd FileType terraform setlocal comments=:#
-autocmd FileType terraform setlocal formatoptions+=r formatoptions+=o
-
-" settings for Dockerfiles
-autocmd FileType dockerfile setlocal expandtab
-
-" settings for YAML files
-autocmd FileType yaml setlocal expandtab
-autocmd FileType yaml setlocal tabstop=2
-autocmd FileType yaml setlocal shiftwidth=2
-autocmd FileType yaml setlocal softtabstop=2
-
-"""""""""""""""""""""""""""
-" OCaml Specific Settings "
-"""""""""""""""""""""""""""
 
 " Load in the merlin vim settings and ocp-indent settings.
 if executable('opam')
@@ -1363,6 +1275,120 @@ autocmd FileType ocaml setlocal shiftwidth=2
 autocmd FileType ocaml setlocal softtabstop=2
 autocmd FileType ocaml setlocal expandtab
 autocmd FileType ocaml setlocal commentstring=(*%s*)
+
+""""""
+"" Pug
+""""""
+
+autocmd FileType pug set expandtab
+autocmd FileType pug set tabstop=2
+autocmd FileType pug set shiftwidth=2
+autocmd FileType pug set softtabstop=2
+
+"""""""""
+"" Puppet
+"""""""""
+
+autocmd FileType puppet setlocal tabstop=2
+autocmd FileType puppet setlocal shiftwidth=2
+autocmd FileType puppet setlocal softtabstop=2
+autocmd FileType puppet setlocal expandtab
+autocmd FileType puppet setlocal foldmethod=indent
+
+"""""""""""""
+"" PureScript
+"""""""""""""
+
+autocmd FileType purescript set expandtab
+autocmd FileType purescript set tabstop=2
+autocmd FileType purescript set shiftwidth=2
+autocmd FileType purescript set softtabstop=2
+autocmd FileType purescript setlocal formatoptions+=1crq formatoptions-=t
+autocmd FileType purescript setlocal commentstring=--%s
+autocmd FileType purescript setlocal comments=:--
+
+"""""""""
+"" Python
+"""""""""
+
+" Python needs spaces instead of tabs.
+autocmd BufRead,BufNewFile *.py set expandtab
+" maybe this could also be done with
+autocmd FileType python set expandtab
+" set autocomplete for python from the neocomplete plugin
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+
+" SConscript and SConstruct files are python files
+autocmd BufRead,BufNewFile SConstruct set ft=python
+autocmd BufRead,BufNewFile SConscript set ft=python
+
+""""
+"" R
+""""
+
+autocmd FileType r setlocal tabstop=2
+autocmd FileType r setlocal shiftwidth=2
+autocmd FileType r setlocal softtabstop=2
+autocmd FileType r setlocal expandtab
+
+"""""""
+"" Ruby
+"""""""
+
+let ruby_no_expensive=1
+autocmd FileType ruby setlocal tabstop=2
+autocmd FileType ruby setlocal shiftwidth=2
+autocmd FileType ruby setlocal softtabstop=2
+autocmd FileType ruby setlocal expandtab
+autocmd FileType ruby setlocal foldmethod=syntax
+
+"""""""
+"" Rust
+"""""""
+
+autocmd FileType rust set expandtab
+autocmd FileType rust set tabstop=4
+autocmd FileType rust set shiftwidth=4
+autocmd FileType rust set softtabstop=4
+
+""""""
+"" SAS
+""""""
+
+autocmd FileType sas set tabstop=3			" 3-space tab indent width
+autocmd FileType sas set shiftwidth=3		" allows you to use < and > to indent/unindent blocks
+autocmd FileType sas set softtabstop=3		" see multiple space characters as a tab
+
+""""""""
+"" Scala
+""""""""
+
+autocmd FileType scala setlocal tabstop=2
+autocmd FileType scala setlocal shiftwidth=2
+autocmd FileType scala setlocal softtabstop=2
+autocmd FileType scala setlocal expandtab
+autocmd FileType scala setlocal foldmethod=indent
+
+""""""""""""
+"" Terraform
+""""""""""""
+
+autocmd FileType terraform setlocal tabstop=2
+autocmd FileType terraform setlocal shiftwidth=2
+autocmd FileType terraform setlocal softtabstop=2
+autocmd FileType terraform setlocal expandtab
+autocmd FileType terraform setlocal commentstring=#%s
+autocmd FileType terraform setlocal comments=:#
+autocmd FileType terraform setlocal formatoptions+=r formatoptions+=o
+
+"""""""
+"" YAML
+"""""""
+
+autocmd FileType yaml setlocal expandtab
+autocmd FileType yaml setlocal tabstop=2
+autocmd FileType yaml setlocal shiftwidth=2
+autocmd FileType yaml setlocal softtabstop=2
 
 """""""""""""""""
 " Extra Options "
