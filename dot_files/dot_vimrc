@@ -1140,6 +1140,78 @@ autocmd FileType html setlocal softtabstop=2
 autocmd FileType html setlocal foldmethod=indent
 
 """""""""
+"" Ledger
+"""""""""
+
+autocmd FileType ledger set expandtab
+
+"""""""""""
+"" Markdown
+"""""""""""
+
+let b:markdownFoldLevelInSyntaxBlock=0
+" This function returns the appropriate indentation level for the current
+" line.  It is used with the &foldexpr setting for markdown files.  It folds
+" code blocks appropriately.
+function! MarkdownFoldLevel()
+	let h = matchstr(getline(v:lnum), '^\s*```')
+
+	" If we are already in a markdown syntax block, and there is not "```" on
+	" the current line, then just keep the indentation the same.
+	if b:markdownFoldLevelInSyntaxBlock && empty(h)
+		return "="
+	endif
+
+
+	" If we are already in a markdown syntax block, and there is a closing
+	" "```" on the current line, then close the syntax block and decrease the
+	" indentation by one.
+	if b:markdownFoldLevelInSyntaxBlock && !empty(h)
+		let b:markdownFoldLevelInSyntaxBlock=0
+		return "s1"
+	endif
+
+	" If we are not already in a markdown syntax block, and there is an
+	" opening "```" on the current line, then set that we are in a syntax
+	" block and increase the indentation by one.
+	if !empty(h)
+		let b:markdownFoldLevelInSyntaxBlock=1
+		return "a1"
+	endif
+
+	" If we are not in a markdown syntax block, and there is not a "```" on
+	" the current line, then check if this is a header line, and increase the
+	" indentation by that amount.
+	let g = matchstr(getline(v:lnum), '^#\+')
+	if empty(g)
+		return "="
+	else
+		return ">" . len(g)
+	endif
+endfunction
+
+autocmd BufNewFile,BufRead *.md set filetype=markdown
+autocmd FileType markdown setlocal expandtab
+autocmd FileType markdown setlocal foldexpr=MarkdownFoldLevel()
+autocmd FileType markdown setlocal foldmethod=expr
+
+""""""
+"" Nix
+""""""
+
+autocmd BufRead,BufNewFile *.nix set expandtab
+autocmd BufRead,BufNewFile *.nix set tabstop=2
+autocmd BufRead,BufNewFile *.nix set shiftwidth=2
+autocmd BufRead,BufNewFile *.nix set softtabstop=2
+autocmd BufRead,BufNewFile *.nix setlocal commentstring=#%s
+autocmd FileType nix set expandtab
+autocmd FileType nix set tabstop=2
+autocmd FileType nix set shiftwidth=2
+autocmd FileType nix set softtabstop=2
+autocmd FileType nix setlocal commentstring=#%s
+autocmd FileType nix setlocal indentexpr=
+
+"""""""""
 "" Puppet
 """""""""
 
@@ -1202,69 +1274,6 @@ autocmd FileType scala setlocal shiftwidth=2
 autocmd FileType scala setlocal softtabstop=2
 autocmd FileType scala setlocal expandtab
 autocmd FileType scala setlocal foldmethod=indent
-
-let b:markdownFoldLevelInSyntaxBlock=0
-" This function returns the appropriate indentation level for the current
-" line.  It is used with the &foldexpr setting for markdown files.  It folds
-" code blocks appropriately.
-function! MarkdownFoldLevel()
-	let h = matchstr(getline(v:lnum), '^\s*```')
-
-	" If we are already in a markdown syntax block, and there is not "```" on
-	" the current line, then just keep the indentation the same.
-	if b:markdownFoldLevelInSyntaxBlock && empty(h)
-		return "="
-	endif
-
-
-	" If we are already in a markdown syntax block, and there is a closing
-	" "```" on the current line, then close the syntax block and decrease the
-	" indentation by one.
-	if b:markdownFoldLevelInSyntaxBlock && !empty(h)
-		let b:markdownFoldLevelInSyntaxBlock=0
-		return "s1"
-	endif
-
-	" If we are not already in a markdown syntax block, and there is an
-	" opening "```" on the current line, then set that we are in a syntax
-	" block and increase the indentation by one.
-	if !empty(h)
-		let b:markdownFoldLevelInSyntaxBlock=1
-		return "a1"
-	endif
-
-	" If we are not in a markdown syntax block, and there is not a "```" on
-	" the current line, then check if this is a header line, and increase the
-	" indentation by that amount.
-	let g = matchstr(getline(v:lnum), '^#\+')
-	if empty(g)
-		return "="
-	else
-		return ">" . len(g)
-	endif
-endfunction
-
-" settings for markdown
-autocmd BufNewFile,BufRead *.md set filetype=markdown
-autocmd FileType markdown setlocal expandtab
-autocmd FileType markdown setlocal foldexpr=MarkdownFoldLevel()
-autocmd FileType markdown setlocal foldmethod=expr
-
-" settings for nix files
-autocmd BufRead,BufNewFile *.nix set expandtab
-autocmd BufRead,BufNewFile *.nix set tabstop=2
-autocmd BufRead,BufNewFile *.nix set shiftwidth=2
-autocmd BufRead,BufNewFile *.nix set softtabstop=2
-autocmd BufRead,BufNewFile *.nix setlocal commentstring=#%s
-autocmd FileType nix set expandtab
-autocmd FileType nix set tabstop=2
-autocmd FileType nix set shiftwidth=2
-autocmd FileType nix set softtabstop=2
-autocmd FileType nix setlocal commentstring=#%s
-autocmd FileType nix setlocal indentexpr=
-
-" settings for ledger files
-autocmd FileType ledger set expandtab
 
 " settings for matlab files
 autocmd FileType matlab setlocal commentstring=%%s
