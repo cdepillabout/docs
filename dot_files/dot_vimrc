@@ -1086,14 +1086,21 @@ call Add_eol_whitespace_highlighting("yaml")
 " Make sure I can get spell checking when the file I am editing does not have
 " a syntax associated with it.
 
-" Python needs spaces instead of tabs.
-autocmd BufRead,BufNewFile *.py set expandtab
-" maybe this could also be done with
-autocmd FileType python set expandtab
-" set autocomplete for python from the neocomplete plugin
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"""""
+"" C#
+"""""
 
-" Haskell also needs spaces instead of tabs.
+autocmd FileType cs set omnifunc=syntaxcomplete#Complete
+autocmd FileType cs set foldmethod=marker
+autocmd FileType cs set foldmarker={,}
+autocmd FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
+autocmd FileType cs set foldlevelstart=2
+
+""""""""""
+"" Haskell
+""""""""""
+
+" Haskell needs spaces instead of tabs.
 autocmd BufRead,BufNewFile *.hs setlocal expandtab
 autocmd BufRead,BufNewFile *.lhs setlocal expandtab
 " maybe this could also be done with
@@ -1122,30 +1129,55 @@ autocmd BufRead,BufNewFile *.cabal set expandtab
 autocmd FileType cabal set expandtab
 autocmd BufRead,BufNewFile *.cabal setlocal filetype=cabal
 
+"""""""
+"" HTML
+"""""""
+
+autocmd FileType html setlocal tabstop=2
+autocmd FileType html setlocal shiftwidth=2
+autocmd FileType html setlocal softtabstop=2
+"autocmd FileType html setlocal expandtab
+autocmd FileType html setlocal foldmethod=indent
+
+"""""""""
+"" Puppet
+"""""""""
+
+autocmd FileType puppet setlocal tabstop=2
+autocmd FileType puppet setlocal shiftwidth=2
+autocmd FileType puppet setlocal softtabstop=2
+autocmd FileType puppet setlocal expandtab
+autocmd FileType puppet setlocal foldmethod=indent
+
+"""""""""
+"" Python
+"""""""""
+
+" Python needs spaces instead of tabs.
+autocmd BufRead,BufNewFile *.py set expandtab
+" maybe this could also be done with
+autocmd FileType python set expandtab
+" set autocomplete for python from the neocomplete plugin
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+
 " SConscript and SConstruct files are python files
 autocmd BufRead,BufNewFile SConstruct set ft=python
 autocmd BufRead,BufNewFile SConscript set ft=python
 
-" special settings for sas files
-autocmd FileType sas set tabstop=3			" 3-space tab indent width
-autocmd FileType sas set shiftwidth=3		" allows you to use < and > to indent/unindent blocks
-autocmd FileType sas set softtabstop=3		" see multiple space characters as a tab
+""""
+"" R
+""""
 
-" settings for c#
-autocmd FileType cs set omnifunc=syntaxcomplete#Complete
-autocmd FileType cs set foldmethod=marker
-autocmd FileType cs set foldmarker={,}
-autocmd FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
-autocmd FileType cs set foldlevelstart=2
-
-" settings for R
 autocmd FileType r setlocal tabstop=2
 autocmd FileType r setlocal shiftwidth=2
 autocmd FileType r setlocal softtabstop=2
 autocmd FileType r setlocal expandtab
 " autocmd FileType r setlocal foldmethod=syntax
 
-" settings for ruby
+"""""""
+"" Ruby
+"""""""
+
 let ruby_no_expensive=1
 autocmd FileType ruby setlocal tabstop=2
 autocmd FileType ruby setlocal shiftwidth=2
@@ -1153,26 +1185,23 @@ autocmd FileType ruby setlocal softtabstop=2
 autocmd FileType ruby setlocal expandtab
 autocmd FileType ruby setlocal foldmethod=syntax
 
-" settings for puppet
-autocmd FileType puppet setlocal tabstop=2
-autocmd FileType puppet setlocal shiftwidth=2
-autocmd FileType puppet setlocal softtabstop=2
-autocmd FileType puppet setlocal expandtab
-autocmd FileType puppet setlocal foldmethod=indent
+""""""
+"" SAS
+""""""
 
-" settings for scala
+autocmd FileType sas set tabstop=3			" 3-space tab indent width
+autocmd FileType sas set shiftwidth=3		" allows you to use < and > to indent/unindent blocks
+autocmd FileType sas set softtabstop=3		" see multiple space characters as a tab
+
+""""""""
+"" Scala
+""""""""
+
 autocmd FileType scala setlocal tabstop=2
 autocmd FileType scala setlocal shiftwidth=2
 autocmd FileType scala setlocal softtabstop=2
 autocmd FileType scala setlocal expandtab
 autocmd FileType scala setlocal foldmethod=indent
-
-" settings for html
-autocmd FileType html setlocal tabstop=2
-autocmd FileType html setlocal shiftwidth=2
-autocmd FileType html setlocal softtabstop=2
-"autocmd FileType html setlocal expandtab
-autocmd FileType html setlocal foldmethod=indent
 
 let b:markdownFoldLevelInSyntaxBlock=0
 " This function returns the appropriate indentation level for the current
