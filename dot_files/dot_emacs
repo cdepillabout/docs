@@ -26,12 +26,14 @@
         helm
         helm-projectile
         magit
+        markdown-mode
         nix-mode
         origami
         org-roam
         projectile
+        proof-general
         purescript-mode
-        racket-mode
+        ;; racket-mode
         undo-tree
         use-package
         yaml-mode
@@ -974,7 +976,9 @@ window instead of a tab."
      ("Find file other frame" . helm-grep-other-frame)
      ("Save results in grep buffer" . helm-grep-save-results)
      ("Find file other window (C-u vertically)" . helm-grep-other-window)
-     ("tab stuff whoooooo" . my-helm-grep-other-tab))))
+     ("tab stuff whoooooo" . my-helm-grep-other-tab)))
+ '(helm-minibuffer-history-key "M-p")
+ )
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
