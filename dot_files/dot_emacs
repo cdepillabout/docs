@@ -559,6 +559,17 @@ so only use this if we opening emacs over an SSH session."
   (setq projectile-use-git-grep t)
   )
 
+(use-package proof-general
+  :ensure t
+  :defer t
+  :init
+  ;; Disable splash screen
+  (setq proof-splash-enable nil)
+
+  ;; Make sure that comments are ignored.
+  (setq proof-script-fly-past-comments t)
+  )
+
 ;; Load purescript-mode.
 (use-package purescript-mode
   :ensure t
