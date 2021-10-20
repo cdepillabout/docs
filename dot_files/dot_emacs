@@ -553,18 +553,18 @@ so only use this if we opening emacs over an SSH session."
   :defer t
   )
 
+(use-package projectile
+  :ensure t
+  :config
+  (setq projectile-use-git-grep t)
+  )
+
 ;; Load purescript-mode.
 (use-package purescript-mode
   :ensure t
   :defer t
   :config
   (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation)
-  )
-
-(use-package projectile
-  :ensure t
-  :config
-  (setq projectile-use-git-grep t)
   )
 
 ;; This is necessary for "redo" functionality in evil-mode.
