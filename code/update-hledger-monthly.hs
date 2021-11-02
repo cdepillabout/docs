@@ -1,7 +1,7 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/48723f48ab92381f0afd50143f38e45cf3080405.tar.gz -p "haskellPackages.ghcWithPackages (pkgs: with pkgs; [classy-prelude from-sum hledger hledger-lib optparse-applicative parsec ])" -i runhaskell
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/f0869b1a2c0b150aac26e10bb5c2364ffb2e804f.tar.gz -p "haskellPackages.ghcWithPackages (pkgs: with pkgs; [classy-prelude from-sum hledger hledger-lib optparse-applicative parsec ])" -i runhaskell
 
--- The above uses nixpkgs release-20.03 as of 2020-05-31.
+-- The above uses nixpkgs release-21.05 as of 2021-11-02.
 
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -26,19 +26,19 @@ import ClassyPrelude
 
 import Control.FromSum (fromEitherOrM, fromMaybeOrM)
 import Data.Data (Data)
-import Hledger.Cli.Commands.Add
-       (journalAddTransaction, transactionsSimilarTo)
+import Hledger.Cli.Commands.Add (journalAddTransaction)
 import Hledger.Cli.CliOptions (CliOpts(..))
 import Hledger.Cli.Main (argsToCliOpts)
 import Hledger.Cli.Utils (withJournalDo)
 import Hledger.Data.Dates (getCurrentDay)
 import Hledger.Data.Amount (num)
+import Hledger.Data.Journal (journalTransactionsSimilarTo)
 import Hledger.Data.Posting (nullposting)
 import Hledger.Data.Transaction (nulltransaction)
 import Hledger.Data.Types
        (AccountName, Amount, Journal, MixedAmount(Mixed), Posting(..),
         Quantity, Transaction(..))
-import Hledger.Reports.ReportOptions (queryFromOptsOnly)
+import Hledger.Reports.ReportOptions (queryFromFlags, rsOpts)
 import Options.Applicative
        (Parser, ParserInfo, argument, execParser, fullDesc, header,
         helper, info, metavar, progDesc, str)
@@ -78,10 +78,10 @@ getSimilarTransaction
   -> Journal
   -> Text -- ^ Description to use to search in the journal.
   -> Maybe Transaction
-getSimilarTransaction today hledgerCliOpts journal desc =
-  let reportOpts = reportopts_ hledgerCliOpts
-      query = queryFromOptsOnly today reportOpts
-      historyMatches = transactionsSimilarTo journal query desc
+getSimilarTransaction _today hledgerCliOpts journal desc =
+  let reportOpts = rsOpts $ reportspec_ hledgerCliOpts
+      query = queryFromFlags reportOpts
+      historyMatches = journalTransactionsSimilarTo journal query desc 5
       bestMatch = listToMaybe historyMatches
   in fmap snd bestMatch
 
