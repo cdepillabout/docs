@@ -1120,6 +1120,13 @@ autocmd FileType erlang set tabstop=2
 autocmd FileType erlang set shiftwidth=2
 autocmd FileType erlang set softtabstop=2
 
+"""""""""
+"" Expect
+"""""""""
+
+autocmd FileType expect setlocal commentstring=#%s
+autocmd FileType expect setlocal comments=:#
+
 """"""""""
 "" Haskell
 """"""""""
