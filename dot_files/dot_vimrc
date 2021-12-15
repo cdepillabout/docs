@@ -899,8 +899,8 @@ command! -nargs=+ LGrep execute 'silent lgrep! <args>' | tab copen
 map <Leader>f :execute("Grep -I -r ".expand("<cword>")." .")<CR>
 
 " Create command for curl'ing a file into the current buffer
-command! -nargs=+ Curl execute 'read !curl <args> 2>/dev/null'
-cabbrev curl Curl
+" command! -nargs=+ Curl execute 'read !curl <args> 2>/dev/null'
+" cabbrev curl Curl
 
 " Autocommand to change what <CR> does on quickfix buffer.
 " (It changes <CR> to open the first result in a new tab).
