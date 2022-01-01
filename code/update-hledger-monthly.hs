@@ -1,7 +1,7 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/f0869b1a2c0b150aac26e10bb5c2364ffb2e804f.tar.gz -p "haskellPackages.ghcWithPackages (pkgs: with pkgs; [classy-prelude from-sum hledger hledger-lib optparse-applicative parsec ])" -i runhaskell
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/8a053bc2255659c5ca52706b9e12e76a8f50dbdd.tar.gz -p "haskellPackages.ghcWithPackages (pkgs: with pkgs; [classy-prelude from-sum hledger hledger-lib optparse-applicative parsec])" -i runhaskell
 
--- The above uses nixpkgs release-21.05 as of 2021-11-02.
+-- The above uses nixpkgs release-21.11 as of 2022-01-01.
 
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
