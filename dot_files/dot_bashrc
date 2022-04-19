@@ -743,7 +743,7 @@ alias arbtt-stats-today="arbtt-stats --filter='\$date >= '\`date '+%Y-%m-%d'\`"
 alias arbtt-stats-yesterday="arbtt-stats --filter='\$date >= '\`date --date=yesterday '+%Y-%m-%d'\`' && \$date < '\`date '+%Y-%m-%d'\`"
 
 # Aliases for building with nix-build but allowing broken packages
-alias nix-broken="nix-build --arg config '{allowBroken=true;}' "
+alias nix-broken="NIXPKGS_ALLOW_BROKEN=1 nix-build"
 
 # don't record duplicate items in history or
 # lines starting with a space ('$  ls -la')
