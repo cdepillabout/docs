@@ -217,6 +217,40 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'leafgarland/typescript-vim'
 endif
 
+" Key mappings for coc-nvim
+
+map <Leader>ggd <Plug>(coc-definition)
+map <Leader>ggi <Plug>(coc-implementation)
+map <Leader>ggt <Plug>(coc-type-definition)
+map <Leader>gh :call CocActionAsync('doHover')<cr>
+map <Leader>gn <Plug>(coc-diagnostic-next)
+map <Leader>gp <Plug>(coc-diagnostic-prev)
+map <Leader>gr <Plug>(coc-references)
+
+map <Leader>rn <Plug>(coc-rename)
+map <Leader>rf <Plug>(coc-refactor)
+map <Leader>rj <Plug>(coc-fix-current)
+
+map <Leader>al <Plug>(coc-codeaction-line)
+map <Leader>ac <Plug>(coc-codeaction-cursor)
+map <Leader>ao <Plug>(coc-codelens-action)
+
+nnoremap <Leader>kd :<C-u>CocList diagnostics<Cr>
+nnoremap <Leader>kc :<C-u>CocList commands<Cr>
+nnoremap <Leader>ko :<C-u>CocList outline<Cr>
+nnoremap <Leader>kr :<C-u>CocListResume<Cr>
+
+" inoremap <silent><expr> <c-space> coc#refresh()
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
+
+" Highlighting for coc-nvim.
+"
+" See :help coc-highlights for all possible highlighting values.
+
+" highlight FgCocErrorFloatBgCocFloating ctermfg=
+" highlight FgCocHintFloatBgCocFloating ctermfg=black
+highlight CocFloating ctermbg=white
+
 
 """""""""""""""""""""""""""""""""""""""""""""
 """"""""""""" General Settings """"""""""""""
