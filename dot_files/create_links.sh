@@ -160,6 +160,7 @@ make_directory $HOME/.config
 # neovim (nvim)
 make_directory $HOME/.config/nvim
 super_link $SCRIPT_DIR/dot_config/nvim/init.vim $HOME/.config/nvim/init.vim
+super_link $SCRIPT_DIR/dot_config/nvim/coc-settings.json $HOME/.config/nvim/coc-settings.json
 
 # taffybar
 make_directory $HOME/.config/taffybar
