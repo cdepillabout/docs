@@ -11,6 +11,7 @@
 [merge]
 	defaultToUpstream = true
 	ff = only
+	conflictStyle = diff3
 [status]
 	submoduleSummary = true
 [diff]
