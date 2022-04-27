@@ -19,13 +19,15 @@
     "snippetsSupport": false
   },
   "diagnostic": {
-    "virtualText": false,
+    "virtualText": true,
     "virtualTextCurrentLineOnly": false,
     "virtualTextLines": 1,
     "virtualTextPrefix": " —— "
   },
   "list.height": 20,
   "codeLens.enable": true,
+  "codeLens.position": "eol",
+  "codeLens.separator": " —— ",
   "coc.preferences.enableMarkdown": true,
   "coc.preferences.jumpCommand": "tab drop"
 }
