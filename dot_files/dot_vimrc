@@ -247,9 +247,16 @@ nnoremap <Leader>kr :<C-u>CocListResume<Cr>
 "
 " See :help coc-highlights for all possible highlighting values.
 
-" highlight FgCocErrorFloatBgCocFloating ctermfg=
-" highlight FgCocHintFloatBgCocFloating ctermfg=black
-highlight CocFloating ctermbg=white
+" Background color of all floating message boxes.  Dark blue.
+highlight CocFloating ctermbg=17
+
+" highlight CocInfoFloat ctermfg=Brown
+
+" Color of all "codelens" things that popup around the code.  These are
+" things like computed types for functions without type signatures.
+"
+" This is dark grey.
+highlight CocCodeLens ctermfg=239
 
 
 """""""""""""""""""""""""""""""""""""""""""""
@@ -354,7 +361,7 @@ set laststatus=1
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience for coc-nvim.
-set updatetime=300
+set updatetime=600
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved for coc-nvim.
