@@ -223,9 +223,13 @@ map <Leader>ggd <Plug>(coc-definition)
 map <Leader>ggi <Plug>(coc-implementation)
 map <Leader>ggt <Plug>(coc-type-definition)
 map <Leader>gh :call CocActionAsync('doHover')<cr>
+map <Leader>gd <Plug>(coc-diagnostic-info)
 map <Leader>gn <Plug>(coc-diagnostic-next)
 map <Leader>gp <Plug>(coc-diagnostic-prev)
 map <Leader>gr <Plug>(coc-references)
+
+vmap <Leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
 
 map <Leader>rn <Plug>(coc-rename)
 map <Leader>rf <Plug>(coc-refactor)
@@ -950,7 +954,7 @@ command! -nargs=+ Vlgrep execute 'silent lgrep! <args>' | vert copen 30
 " use command Grep to list files in a new tab
 command! -nargs=+ Grep execute 'silent grep! <args>' | tab copen
 command! -nargs=+ LGrep execute 'silent lgrep! <args>' | tab copen
-map <Leader>f :execute("Grep -I -r ".expand("<cword>")." .")<CR>
+" map <Leader>f :execute("Grep -I -r ".expand("<cword>")." .")<CR>
 
 " Create command for curl'ing a file into the current buffer
 " command! -nargs=+ Curl execute 'read !curl <args> 2>/dev/null'
