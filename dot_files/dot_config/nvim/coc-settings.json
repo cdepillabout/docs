@@ -16,9 +16,12 @@
   },
   "suggest": {
     "disableKind": true,
-    "snippetsSupport": false
+    "snippetsSupport": false,
+    "autoTrigger": "none"
   },
   "diagnostic": {
+    "enable": true,
+    "messageDelay": 9999999,
     "virtualText": true,
     "virtualTextCurrentLineOnly": false,
     "virtualTextLines": 1,
