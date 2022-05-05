@@ -1,7 +1,11 @@
 {-# OPTIONS_GHC -Wall #-}
 
+-- XMonad in NixOS-22.05 has some things that have been deprecated.  Ignore for now until all
+-- of my computers are on NixOS-22.05
+{-# OPTIONS_GHC -Wno-deprecations #-}
+
 import Control.Monad.IO.Class (liftIO)
-import Data.Default (def)
+import Data.Default.Class (def)
 import Data.Map (Map)
 import qualified Data.Map as M
 import Graphics.X11.ExtraTypes.XF86
