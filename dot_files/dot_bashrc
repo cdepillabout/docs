@@ -745,6 +745,9 @@ alias arbtt-stats-yesterday="arbtt-stats --filter='\$date >= '\`date --date=yest
 # Aliases for building with nix-build but allowing broken packages
 alias nix-broken="NIXPKGS_ALLOW_BROKEN=1 nix-build"
 
+# Same as above but for nom-build
+alias nom-broken="NIXPKGS_ALLOW_BROKEN=1 nom-build"
+
 # don't record duplicate items in history or
 # lines starting with a space ('$  ls -la')
 export HISTCONTROL='ignoreboth'
