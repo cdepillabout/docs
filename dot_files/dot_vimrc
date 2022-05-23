@@ -1456,6 +1456,19 @@ autocmd FileType terraform setlocal commentstring=#%s
 autocmd FileType terraform setlocal comments=:#
 autocmd FileType terraform setlocal formatoptions+=r formatoptions+=o
 
+""""""""""""
+"" TypeScript
+""""""""""""
+
+autocmd FileType typescript setlocal tabstop=2
+autocmd FileType typescript setlocal shiftwidth=2
+autocmd FileType typescript setlocal softtabstop=2
+autocmd FileType typescript setlocal expandtab
+autocmd FileType typescriptreact setlocal tabstop=2
+autocmd FileType typescriptreact setlocal shiftwidth=2
+autocmd FileType typescriptreact setlocal softtabstop=2
+autocmd FileType typescriptreact setlocal expandtab
+
 """""""
 "" YAML
 """""""
