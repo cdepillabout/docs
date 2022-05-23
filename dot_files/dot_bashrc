@@ -276,6 +276,7 @@ alias cemacs='emacs -nw '
 
 # make sure vim opens up tabs for multiple files
 alias nvim='nvim -p '
+alias nvimcoc='nvimcoc -p '
 alias vim='vim -p '
 alias gvim='gvim -p '
 
