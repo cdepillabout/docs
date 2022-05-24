@@ -958,7 +958,20 @@ command! -nargs=+ Vlgrep execute 'silent lgrep! <args>' | vert copen 30
 " use command Grep to list files in a new tab
 command! -nargs=+ Grep execute 'silent grep! <args>' | tab copen
 command! -nargs=+ LGrep execute 'silent lgrep! <args>' | tab copen
-map <Leader>gf :execute("Grep -I -r ".expand("<cword>")." .")<CR>
+" map <Leader>gf :execute("Grep -I -r ".expand("<cword>")." .")<CR>
+
+" Function for using `git grep` for searching instead of just `grep`.
+function! Ggrep(arg)
+  setlocal grepprg=git\ grep\ --no-color\ -n\ $*
+  silent execute ':grep! '.a:arg | tab copen
+  " setlocal grepprg=git\ --no-pager\ submodule\ --quiet\ foreach\ 'git\ grep\ --full-name\ -n\ --no-color\ $*\ ;true'
+  " silent execute ':grepadd! '.a:arg
+  " silent cwin
+  " redraw!
+endfunction
+
+command! -nargs=1 -complete=buffer Ggrep call Ggrep(<q-args>)
+map <Leader>gf :execute("Ggrep -I -r ".expand("<cword>")." .")<CR>
 
 " Create command for curl'ing a file into the current buffer
 " command! -nargs=+ Curl execute 'read !curl <args> 2>/dev/null'
