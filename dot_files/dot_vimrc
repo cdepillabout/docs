@@ -215,6 +215,9 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Typescript
 	Bundle 'leafgarland/typescript-vim'
+
+	" Fuzzy-finder for vim.  Needs the fzf binary installed on your system.
+	Bundle 'junegunn/fzf'
 endif
 
 " Key mappings for coc-nvim
