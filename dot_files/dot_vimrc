@@ -218,6 +218,8 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Fuzzy-finder for vim.  Needs the fzf binary installed on your system.
 	Bundle 'junegunn/fzf'
+	" Add abbreviation :fz for the :FZF command
+	cabbrev fz FZF
 endif
 
 " Key mappings for coc-nvim
