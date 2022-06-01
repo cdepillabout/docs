@@ -196,6 +196,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	let g:idris_indent_do = 2
 	let g:idris_indent_rewrite = 2
 
+
 	" PureScript
 	Bundle 'purescript-contrib/purescript-vim'
 	let g:purescript_indent_if = 2
@@ -207,19 +208,27 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	" https://github.com/purescript-contrib/purescript-vim/issues/65
 	autocmd FileType purescript setlocal complete=.,w,b,u,t
 
+
 	" Dhall
 	Bundle 'vmchale/dhall-vim'
+
 
 	" Rust
 	Bundle 'rust-lang/rust.vim'
 
+
 	" Typescript
 	Bundle 'leafgarland/typescript-vim'
+
 
 	" Fuzzy-finder for vim.  Needs the fzf binary installed on your system.
 	Bundle 'junegunn/fzf'
 	" Add abbreviation :fz for the :FZF command
 	cabbrev fz FZF
+
+
+	" Terraform
+	Bundle 'hashivim/vim-terraform'
 endif
 
 " Key mappings for coc-nvim
@@ -1473,6 +1482,7 @@ autocmd FileType terraform setlocal expandtab
 autocmd FileType terraform setlocal commentstring=#%s
 autocmd FileType terraform setlocal comments=:#
 autocmd FileType terraform setlocal formatoptions+=r formatoptions+=o
+autocmd FileType terraform setlocal foldmethod=syntax
 
 """"""""""""
 "" TypeScript
