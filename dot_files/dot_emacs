@@ -34,7 +34,7 @@
         ;; proof-general
         purescript-mode
         ;; racket-mode
-        undo-tree
+        undo-tree  ;; TODO: I can remove this as soon as all of my computers are on at least emacs-28
         use-package
         yaml-mode
         ))
@@ -172,6 +172,15 @@
   ;; This makes it so that "*" key searches for full symbols
   ;; (including - and _ in variable names).
   (setq evil-symbol-word-search t)
+
+
+  ;; This undo-redo functionality is only available in >=emacs-28
+  (if (version<= "28" emacs-version)
+      (progn
+        ;; This is needed to get "redo" functionality working in evil-mode.
+        (setq evil-undo-system 'undo-redo)
+        ;; I don't know why this is needed, but I needed this as well:
+        (evil-set-undo-system 'undo-redo)))
 
   ;; Evil - Functions
 
@@ -579,22 +588,21 @@ so only use this if we opening emacs over an SSH session."
   (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation)
   )
 
-;; This is necessary for "redo" functionality in evil-mode.
-(use-package undo-tree
-  :ensure t
-  :init
-  (global-undo-tree-mode 1)
+;; This undo-tree plugin for undo functionality in evil mode is only
+;; necessary for <emacs-28.  emacs-28 comes with "undo-redo", which
+;; is enabled above (but only in >=emacs-28).  This can be removed
+;; when all my computers are on emacs-28.
+(if (version< emacs-version "28")
+    (use-package undo-tree
+      :ensure t
+      :init
+      (global-undo-tree-mode 1)
 
-  ;; This is needed to get "redo" functionality working in evil-mode.
-  ;;
-  ;; Note that this can changed in emacs 28 to `\'undo-redo', which is
-  ;; built-in to emacs 28.  See the documentation on
-  ;; `evil-undo-system'.  If this is setup, then this use-package for
-  ;; undo-tree can be removed.
-  (setq evil-undo-system 'undo-tree)
-  ;; I don't know why this is needed, but I needed this as well:
-  (evil-set-undo-system 'undo-tree)
-  )
+      ;; This is needed to get "redo" functionality working in evil-mode.
+      (setq evil-undo-system 'undo-tree)
+      ;; I don't know why this is needed, but I needed this as well:
+      (evil-set-undo-system 'undo-tree)
+      ))
 
 (use-package yaml-mode
   :ensure t
