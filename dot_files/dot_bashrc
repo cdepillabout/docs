@@ -779,12 +779,6 @@ append_to_path PATH "/usr/local/sbin"
 
 # add my program directory
 append_to_path PATH "$HOME/docs/code/bin"
-append_to_path PATH "$HOME/my-conf/code/bin"
-
-# add classpath for java
-append_to_path_nocheck CLASSPATH "/usr/share/junit-4/lib/junit.jar"
-append_to_path_nocheck CLASSPATH "/usr/share/hamcrest-core/lib/hamcrest-core.jar"
-
 
 # add default browser
 export BROWSER=`get_correct_filename_from_choices "firefox-bin" "firefox"`
