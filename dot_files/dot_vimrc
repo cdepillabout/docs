@@ -370,9 +370,10 @@ if version >= 703
 	set undofile
 endif
 
-" Show relative line numbers.
+" Show line numbers.
 set number
-set relativenumber
+" Show relative line numbers.
+" set relativenumber
 
 " Only show the status bar when there are two or more windows on the screen.
 set laststatus=1
