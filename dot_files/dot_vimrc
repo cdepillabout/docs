@@ -225,6 +225,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	Bundle 'junegunn/fzf'
 	" Add abbreviation :fz for the :FZF command
 	cabbrev fz FZF
+	nnoremap <Leader>pf :FZF<cr>
 
 
 	" Terraform
