@@ -650,6 +650,50 @@ function gst ()
 	fi
 }
 
+# "git worktree add to"
+#
+# Add a new worktree based on another branch and change to that directory.
+#
+# Args
+#   $1: The name of the new branch to create.  Ex: "my-cool-branch"
+#   $2: Name of the branch to base this on. Ex: "origin/master"
+function gwtat () {
+    local worktree_name="$1"
+    local base_branch="$2"
+
+    # The name of the directory holding all the worktrees.  Normally set to
+    # something like "/path/to/my-repo/worktrees".
+    local worktree_dir
+
+    # Find the directory holding worktrees in the current path.
+    #
+    # If the current working directory has a parent directory called
+    # "worktrees", use that.
+    if [[ "$PWD" =~ ^.*worktrees.*$ ]]; then
+        worktree_dir="$(echo "$PWD" | sed -E 's/(.*)(worktrees)(.*)/\1\2/')"
+    # If the current working directory does not have a parent directory called
+    # "worktrees", then just use the "worktrees" directory in the current
+    # working directory.
+    else
+        if [ ! -d "$PWD/worktrees" ]; then
+            echo "ERROR! Current working directory does not have a parent directory "
+            echo "called \"worktrees\", nor does it have a child directory called "
+            echo "\"worktrees\".  Can't figure out where to create the new worktree."
+            return 1
+        fi
+
+        worktree_dir="$PWD/worktrees"
+    fi
+
+    # Directory of the new worktree.  Ends up being something like
+    # "/path/to/my-repo/worktrees/my-cool-branch".
+    local dir_for_new_worktree="${worktree_dir}/${worktree_name}"
+
+    git worktree add --no-track -b "$worktree_name" "$dir_for_new_worktree" "$base_branch"
+
+    cd "$dir_for_new_worktree" || return 1
+}
+
 # these are aliases for cd'ing and ls'ing at the same time
 function cd_and_ls_func(){
 	cd "$@" && ls
