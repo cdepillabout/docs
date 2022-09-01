@@ -1,17 +1,25 @@
+{-# LANGUAGE NumericUnderscores #-}
 {-# OPTIONS_GHC -Wall #-}
 
 -- XMonad in NixOS-22.05 has some things that have been deprecated.  Ignore for now until all
 -- of my computers are on NixOS-22.05
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
+import Control.Concurrent (threadDelay)
+import Control.Monad (when)
 import Control.Monad.IO.Class (liftIO)
 import Data.Default.Class (def)
+import Data.List (isInfixOf)
 import Data.Map (Map)
 import qualified Data.Map as M
 import Graphics.X11.ExtraTypes.XF86
        (xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp)
 import Graphics.X11.Xlib
 import System.Exit (ExitCode(ExitSuccess), exitWith)
+import System.IO (hGetContents')
+import System.Process
+       (CreateProcess(close_fds, std_in, std_out, std_err),
+        StdStream(CreatePipe, NoStream), shell, withCreateProcess)
 import XMonad
        (ChangeLayout(NextLayout), Dimension, KeyMask, Layout,
         Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
@@ -20,7 +28,7 @@ import XMonad
         float, get, handleEventHook, kill, layoutHook, manageHook, refresh, restart,
         screenRect, screenWorkspace, sendMessage, setLayout, spawn,
         terminal, tileWindow, windows, windowset, withFocused,
-        withWindowSet, whenJust, workspaces, xmonad)
+        withWindowSet, whenJust, workspaces, xmessage, xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Hooks.DynamicLog (xmobar)
 import XMonad.Hooks.ManageDocks
@@ -171,7 +179,7 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
   , ((modm .|. shiftMask, xK_o), shiftNextScreen)
 
   -- Spawn xscreensaver
-  , ((modm .|. shiftMask, xK_z), spawn "xscreensaver-command -lock")
+  , ((modm .|. shiftMask, xK_z), startXScreenSaverAndLock)
 
   -- Switch to the unfocused screen.  Does nothing if not exactly two
   -- screens.
@@ -226,7 +234,31 @@ setupWindowForScreenCast window = do
   tileWindow window (Rectangle (100 + screenX) 100 1280 720)
   float window
 
-
+startXScreenSaverAndLock :: X ()
+startXScreenSaverAndLock = do
+  let xscreensaverTimeCreateProc =
+        (shell "xscreensaver-command -time")
+          { close_fds = True
+          , std_in = CreatePipe
+          , std_out = CreatePipe
+          , std_err = CreatePipe
+          }
+  mIsXScreenSaverNotRunning <-
+    liftIO $ withCreateProcess xscreensaverTimeCreateProc $
+      \_ _ mHStderr procHandle -> do
+        case mHStderr of
+          Nothing -> pure Nothing
+          Just hStderr -> do
+            inputFromStderr <- hGetContents' hStderr
+            pure $ Just $ isInfixOf "no screensaver is running" inputFromStderr
+  case mIsXScreenSaverNotRunning of
+    Nothing -> xmessage "ERROR: When running `xscreensaver-command -time`, couldn't read from stderr"
+    Just isXScreenSaverNotRunning -> do
+      when isXScreenSaverNotRunning $ do
+        spawn "xscreensaver"
+        -- pause for a second to allow xscreensaver to fully start
+        liftIO $ threadDelay 1_000_000
+      spawn "xscreensaver-command -lock"
 
 -------------
 -- HELPERS --
