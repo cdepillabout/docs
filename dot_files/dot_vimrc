@@ -476,6 +476,12 @@ highlight Special ctermfg=red
 " different on Debian.  Set it here so it is the same on both.
 highlight SignColumn term=standout ctermfg=14 ctermbg=238
 
+" Recent versions of neovim (>= 0.8) have changed comments to be highlighted
+" in blue, so we force it to be dark red here.
+highlight Comment ctermfg=darkred
+
+" Highlight line numbers in dark grey
+highlight Comment ctermfg=darkgrey
 
 """""""""""""""""""""""""""""""""""""""""""""
 """""" Settings for specific syntaxes """""""
