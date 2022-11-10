@@ -11,7 +11,12 @@
         "hie.yaml"
       ],
       "filetypes": [ "hs", "lhs", "haskell" ],
-      "initializationOptions": { "languageServerHaskell": {} }
+      "initializationOptions": { "languageServerHaskell": {} },
+	  "settings": {
+		  "haskell": {
+			  "formattingProvider": "fourmolu"
+		  }
+	  }
     }
   },
   "suggest": {

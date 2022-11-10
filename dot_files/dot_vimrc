@@ -243,8 +243,10 @@ map <Leader>gn <Plug>(coc-diagnostic-next)
 map <Leader>gp <Plug>(coc-diagnostic-prev)
 map <Leader>gr <Plug>(coc-references)
 
-vmap <Leader>f <Plug>(coc-format-selected)
-nmap <leader>f <Plug>(coc-format-selected)
+xmap <Leader>ff <Plug>(coc-format)
+nmap <Leader>ff <Plug>(coc-format)
+xmap <leader>fs <Plug>(coc-format-selected)
+nmap <leader>fs <Plug>(coc-format-selected)
 
 map <Leader>rn <Plug>(coc-rename)
 map <Leader>rf <Plug>(coc-refactor)
