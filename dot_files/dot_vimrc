@@ -481,7 +481,7 @@ highlight SignColumn term=standout ctermfg=14 ctermbg=238
 highlight Comment ctermfg=darkred
 
 " Highlight line numbers in dark grey
-highlight Comment ctermfg=darkgrey
+highlight LineNr ctermfg=darkgrey
 
 """""""""""""""""""""""""""""""""""""""""""""
 """""" Settings for specific syntaxes """""""
