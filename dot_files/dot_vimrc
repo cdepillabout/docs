@@ -237,7 +237,7 @@ endif
 map <Leader>ggd <Plug>(coc-definition)
 map <Leader>ggi <Plug>(coc-implementation)
 map <Leader>ggt <Plug>(coc-type-definition)
-map <Leader>gh :call CocActionAsync('doHover')<cr>
+map <Leader>gh :call CocActionAsync('doHover')<CR>
 map <Leader>gd <Plug>(coc-diagnostic-info)
 map <Leader>gn <Plug>(coc-diagnostic-next)
 map <Leader>gp <Plug>(coc-diagnostic-prev)
@@ -248,6 +248,7 @@ nmap <Leader>ff <Plug>(coc-format)
 xmap <leader>fs <Plug>(coc-format-selected)
 nmap <leader>fs <Plug>(coc-format-selected)
 
+map <Leader>rr :CocRestart<CR>
 map <Leader>rn <Plug>(coc-rename)
 map <Leader>rf <Plug>(coc-refactor)
 map <Leader>rj <Plug>(coc-fix-current)
@@ -256,10 +257,10 @@ map <Leader>al <Plug>(coc-codeaction-line)
 map <Leader>ac <Plug>(coc-codeaction-cursor)
 map <Leader>ao <Plug>(coc-codelens-action)
 
-nnoremap <Leader>kd :<C-u>CocList diagnostics<Cr>
-nnoremap <Leader>kc :<C-u>CocList commands<Cr>
-nnoremap <Leader>ko :<C-u>CocList outline<Cr>
-nnoremap <Leader>kr :<C-u>CocListResume<Cr>
+nnoremap <Leader>kd :<C-u>CocList diagnostics<CR>
+nnoremap <Leader>kc :<C-u>CocList commands<CR>
+nnoremap <Leader>ko :<C-u>CocList outline<CR>
+nnoremap <Leader>kr :<C-u>CocListResume<CR>
 
 " inoremap <silent><expr> <c-space> coc#refresh()
 " inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
