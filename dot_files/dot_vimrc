@@ -460,7 +460,8 @@ highlight TabLineFill term=bold,reverse cterm=bold ctermfg=white ctermbg=white
 highlight TabLineSel term=reverse ctermfg=white ctermbg=lightblue
 
 " highlight the status line for the current terminal darker than by default
-highlight StatusLine ctermfg=5
+highlight StatusLine ctermfg=LightGrey
+highlight StatusLineNC ctermfg=DarkGrey
 
 " highlight the popup menu a little differently
 highlight PmenuSel ctermbg=lightblue
