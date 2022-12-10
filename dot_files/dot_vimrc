@@ -467,7 +467,7 @@ highlight StatusLineNC ctermbg=darkgrey
 highlight PmenuSel ctermbg=lightblue
 
 " make sure the normal background is black
-highlight Normal guibg=black
+highlight Normal guibg=black ctermbg=black
 
 " Make sure Special items are not Red.  The scala syntax highlighting makes
 " objects (strings that start with a captial letter) this "Special" value, and
