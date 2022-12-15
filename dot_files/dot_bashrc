@@ -904,56 +904,56 @@ do
 done
 
 # bash completions (only used if we are not root)
-if [[ $EUID -ne 0 ]] ; then
-	# load bash completions if we have them
-	filesystem_bash_completion_script="/usr/share/bash-completion/bash_completion"
-	[ -r "$filesystem_bash_completion_script" ] && . "$filesystem_bash_completion_script"
+#if [[ $EUID -ne 0 ]] ; then
+#	# load bash completions if we have them
+#	filesystem_bash_completion_script="/usr/share/bash-completion/bash_completion"
+#	[ -r "$filesystem_bash_completion_script" ] && . "$filesystem_bash_completion_script"
 
-	# load local bash completions
-	for local_bash_completion_dir in $HOME/filesystem/etc/bash_completion.d $HOME/filesystem/*/etc/bash_completion.d
-	do
-		if [ -d "$local_bash_completion_dir" ] ; then
-			if [ -f "$filesystem_bash_completion_script" ] ; then
-				# this have command gets unset at the end of /etc/bash_completion,
-				#so we need to put it back in
-				have()
-				{
-					unset -v have
-					# Completions for system administrator commands are installed as well in
-					# case completion is attempted via `sudo command ...'.
-					PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin type $1 &>/dev/null &&
-						have="yes"
-				}
+#	# load local bash completions
+#	for local_bash_completion_dir in $HOME/filesystem/etc/bash_completion.d $HOME/filesystem/*/etc/bash_completion.d
+#	do
+#		if [ -d "$local_bash_completion_dir" ] ; then
+#			if [ -f "$filesystem_bash_completion_script" ] ; then
+#				# this have command gets unset at the end of /etc/bash_completion,
+#				#so we need to put it back in
+#				have()
+#				{
+#					unset -v have
+#					# Completions for system administrator commands are installed as well in
+#					# case completion is attempted via `sudo command ...'.
+#					PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin type $1 &>/dev/null &&
+#						have="yes"
+#				}
 
-				for f in $(LC_ALL=C command ls "$local_bash_completion_dir"); do
-					source "${local_bash_completion_dir}/${f}"
-				done
-			fi
-		fi
-	done
+#				for f in $(LC_ALL=C command ls "$local_bash_completion_dir"); do
+#					source "${local_bash_completion_dir}/${f}"
+#				done
+#			fi
+#		fi
+#	done
 
-	# This doesn't work...
-	#if [ "$(func_exists __gitcomp_nl)" = "yes" ]; then
-	#	function _git_remotes_helper_function ()
-	#	{
-	#		local cur_="$cur" cmd="${words[1]}"
-	#		local i c=2 remote="" pfx="" lhs=1 no_complete_refspec=0
-	#		__gitcomp_nl "$(__git_remotes)" "$pfx" "$cur_"
-	#	}
-	#fi
+#	# This doesn't work...
+#	#if [ "$(func_exists __gitcomp_nl)" = "yes" ]; then
+#	#	function _git_remotes_helper_function ()
+#	#	{
+#	#		local cur_="$cur" cmd="${words[1]}"
+#	#		local i c=2 remote="" pfx="" lhs=1 no_complete_refspec=0
+#	#		__gitcomp_nl "$(__git_remotes)" "$pfx" "$cur_"
+#	#	}
+#	#fi
 
-	function completion_for_alias ()
-	{
-		if [ "$(func_exists $2)" = "yes" ]; then
-			complete -o bashdefault -o default -F "$2" "$1" 2>/dev/null
-		fi
-	}
+#	function completion_for_alias ()
+#	{
+#		if [ "$(func_exists $2)" = "yes" ]; then
+#			complete -o bashdefault -o default -F "$2" "$1" 2>/dev/null
+#		fi
+#	}
 
-	completion_for_alias "glg" "__git_complete_revlist"
-	completion_for_alias "gco" "__git_complete_revlist"
-	# This doesn't work...
-	#completion_for_alias "gfp" "_git_remotes_helper_function"
-fi
+#	completion_for_alias "glg" "__git_complete_revlist"
+#	completion_for_alias "gco" "__git_complete_revlist"
+#	# This doesn't work...
+#	#completion_for_alias "gfp" "_git_remotes_helper_function"
+#fi
 
 # Add cabal to path if it isn't there already
 prepend_to_path PATH "$HOME/.cabal/bin"
