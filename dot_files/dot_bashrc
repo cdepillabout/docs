@@ -655,11 +655,16 @@ function gst ()
 # Add a new worktree based on another branch and change to that directory.
 #
 # Args
-#   $1: The name of the new branch to create.  Ex: "my-cool-branch"
-#   $2: Name of the branch to base this on. Ex: "origin/master"
+#   $1: Name of the branch to base this on. Ex: "origin/master"
+#   $2: The name of the new branch to create.  If this is not passed, then just
+#       use the basename of the first argument. Ex: "my-cool-branch"
 function gwtat () {
-    local worktree_name="$1"
-    local base_branch="$2"
+    local base_branch="$1"
+    local worktree_name="${2}"
+
+    if [ -z "${worktree_name}" ]; then
+        worktree_name="$(basename "$base_branch")"
+    fi
 
     # The name of the directory holding all the worktrees.  Normally set to
     # something like "/path/to/my-repo/worktrees".
