@@ -694,7 +694,7 @@ function gwtat () {
     # "/path/to/my-repo/worktrees/my-cool-branch".
     local dir_for_new_worktree="${worktree_dir}/${worktree_name}"
 
-    git worktree add --no-track -b "$worktree_name" "$dir_for_new_worktree" "$base_branch"
+    git worktree add --no-track -b "$worktree_name" "$dir_for_new_worktree" "$base_branch" || return 1
 
     cd "$dir_for_new_worktree" || return 1
 }
