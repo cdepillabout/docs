@@ -886,6 +886,9 @@ buffer in the tab has currently been modified and needs saving."
    :html-foreground "Black" :html-background "Transparent" :html-scale 2.0
    :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
 
+;; Do not indent source code blocks in org-mode by two spaces by default.
+(setq org-src-preserve-indentation t)
+
 ;; Setup org-roam directory
 (setq org-roam-directory "~/gtd/roam")
 
