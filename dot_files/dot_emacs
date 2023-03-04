@@ -803,6 +803,7 @@ buffer in the tab has currently been modified and needs saving."
     (progn
       (set-face-attribute 'org-level-2 nil :foreground "dark goldenrod" :weight 'bold)
       (set-face-attribute 'org-level-3 nil :foreground "firebrick" :weight 'bold)
+      (set-face-attribute 'org-headline-done nil :foreground "light gray" :weight 'light)
       (set-face-attribute 'org-special-keyword nil :foreground "light gray" :weight 'light)
       (set-face-attribute 'org-date nil :foreground "dark magenta" :underline nil :weight 'normal)
       (set-face-attribute 'org-tag nil :foreground "cornflower blue" :weight 'light)
