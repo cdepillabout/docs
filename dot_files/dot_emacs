@@ -890,6 +890,10 @@ buffer in the tab has currently been modified and needs saving."
 ;; Do not indent source code blocks in org-mode by two spaces by default.
 (setq org-src-preserve-indentation t)
 
+;; When inserting a new heading in org-mode, don't leave an empty
+;; blank line at the end of the current heading.
+(setq org-blank-before-new-entry '((heading) (plain-list-item . auto)))
+
 ;; Setup org-roam directory
 (setq org-roam-directory "~/gtd/roam")
 

@@ -1348,12 +1348,14 @@ autocmd BufRead,BufNewFile *.nix set tabstop=2
 autocmd BufRead,BufNewFile *.nix set shiftwidth=2
 autocmd BufRead,BufNewFile *.nix set softtabstop=2
 autocmd BufRead,BufNewFile *.nix setlocal commentstring=#%s
+autocmd BufRead,BufNewFile *.nix setlocal foldmethod=indent
 autocmd FileType nix set expandtab
 autocmd FileType nix set tabstop=2
 autocmd FileType nix set shiftwidth=2
 autocmd FileType nix set softtabstop=2
 autocmd FileType nix setlocal commentstring=#%s
 autocmd FileType nix setlocal indentexpr=
+autocmd FileType nix setlocal foldmethod=indent
 
 """"""""
 "" OCaml
