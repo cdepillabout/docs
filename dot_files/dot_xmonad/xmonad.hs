@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE NumericUnderscores #-}
 {-# OPTIONS_GHC -Wall #-}
 
@@ -252,10 +253,10 @@ startXScreenSaverAndLock = do
         case mHStderr of
           Nothing -> pure Nothing
           Just hStderr -> do
-            inputFromStderr <- hGetContents hStderr
-            pure $ Just $ isInfixOf "no screensaver is running" inputFromStderr
+            !inputFromStderr <- hGetContents hStderr
+            pure $! Just $! isInfixOf "no screensaver is running" inputFromStderr
   case mIsXScreenSaverNotRunning of
-    Nothing ->
+    Nothing -> do
       xmessage "ERROR: When running `xscreensaver-command -time`, couldn't read from stderr"
       pure ()
     Just isXScreenSaverNotRunning -> do
