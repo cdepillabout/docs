@@ -6,17 +6,20 @@
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
 import Control.Concurrent (threadDelay)
-import Control.Monad (when)
-import Control.Monad.IO.Class (liftIO)
+import Control.Monad (void, when)
+import Control.Monad.IO.Class (MonadIO, liftIO)
 import Data.Default.Class (def)
 import Data.List (isInfixOf)
 import Data.Map (Map)
 import qualified Data.Map as M
+import Data.Maybe (fromMaybe)
 import Graphics.X11.ExtraTypes.XF86
        (xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp)
 import Graphics.X11.Xlib
+import System.Environment (lookupEnv)
 import System.Exit (ExitCode(ExitSuccess), exitWith)
-import System.IO (hGetContents')
+import System.IO (hGetContents, hClose)
+import System.Posix.Process (executeFile)
 import System.Process
        (CreateProcess(close_fds, std_in, std_out, std_err),
         StdStream(CreatePipe, NoStream), shell, withCreateProcess)
@@ -28,7 +31,7 @@ import XMonad
         float, get, handleEventHook, kill, layoutHook, manageHook, refresh, restart,
         screenRect, screenWorkspace, sendMessage, setLayout, spawn,
         terminal, tileWindow, windows, windowset, withFocused,
-        withWindowSet, whenJust, workspaces, xmessage, xmonad)
+        withWindowSet, whenJust, workspaces, xfork, {- xmessage, -} xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Hooks.DynamicLog (xmobar)
 import XMonad.Hooks.ManageDocks
@@ -249,10 +252,12 @@ startXScreenSaverAndLock = do
         case mHStderr of
           Nothing -> pure Nothing
           Just hStderr -> do
-            inputFromStderr <- hGetContents' hStderr
+            inputFromStderr <- hGetContents hStderr
             pure $ Just $ isInfixOf "no screensaver is running" inputFromStderr
   case mIsXScreenSaverNotRunning of
-    Nothing -> xmessage "ERROR: When running `xscreensaver-command -time`, couldn't read from stderr"
+    Nothing ->
+      xmessage "ERROR: When running `xscreensaver-command -time`, couldn't read from stderr"
+      pure ()
     Just isXScreenSaverNotRunning -> do
       when isXScreenSaverNotRunning $ do
         spawn "xscreensaver"
@@ -281,3 +286,15 @@ workspaceIdFromScreen = W.tag . W.workspace
 isWorkspaceOnScreen :: WorkspaceId -> Screen' -> Bool
 isWorkspaceOnScreen workspaceId screen =
   workspaceIdFromScreen screen == workspaceId
+
+-- TODO: This is available in xmonad-0.17, but not in xmonad-0.15.  One of my
+-- computers is still on xmonad-0.15.
+xmessage :: MonadIO m => String -> m ()
+xmessage msg = void . xfork $ do
+    xmessageBin <- fromMaybe "xmessage" <$> liftIO (lookupEnv "XMONAD_XMESSAGE")
+    executeFile xmessageBin True
+        [ "-default", "okay"
+        , "-xrm", "*international:true"
+        , "-xrm", "*fontSet:-*-fixed-medium-r-normal-*-18-*-*-*-*-*-*-*,-*-fixed-*-*-*-*-18-*-*-*-*-*-*-*,-*-*-*-*-*-*-18-*-*-*-*-*-*-*"
+        , msg
+        ] Nothing
