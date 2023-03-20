@@ -1258,6 +1258,12 @@ autocmd BufRead,BufNewFile *.cabal set expandtab
 autocmd FileType cabal set expandtab
 autocmd BufRead,BufNewFile *.cabal setlocal filetype=cabal
 
+""""""
+"" HCL
+""""""
+
+autocmd FileType hcl setlocal foldmethod=syntax
+
 """""""
 "" HTML
 """""""
@@ -1356,6 +1362,13 @@ autocmd FileType nix set softtabstop=2
 autocmd FileType nix setlocal commentstring=#%s
 autocmd FileType nix setlocal indentexpr=
 autocmd FileType nix setlocal foldmethod=indent
+
+""""""""
+"" Nomad
+""""""""
+
+" Make sure .nomad files are interpreted in hcl syntax.
+autocmd BufRead,BufNewFile *.nomad setlocal syntax=hcl
 
 """"""""
 "" OCaml
