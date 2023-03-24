@@ -694,7 +694,13 @@ function gwtat () {
     # "/path/to/my-repo/worktrees/my-cool-branch".
     local dir_for_new_worktree="${worktree_dir}/${worktree_name}"
 
-    git worktree add --no-track -b "$worktree_name" "$dir_for_new_worktree" "$base_branch" || return 1
+    if git rev-parse --verify "$worktree_name" > /dev/null 2>&1; then
+        # If the branch already exists, just create a new worktree dir for that branch.
+        git worktree add "$dir_for_new_worktree" "$worktree_name" || return 1
+    else
+        # If the branch doesn't already exist, then create a new worktree from the base branch.
+        git worktree add --no-track -b "$worktree_name" "$dir_for_new_worktree" "$base_branch" || return 1
+    fi
 
     cd "$dir_for_new_worktree" || return 1
 }
