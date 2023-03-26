@@ -210,6 +210,8 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
   -- open chromium
   , ((modm, xK_g), spawn "chromium")
 
+  , ((modm .|. shiftMask, xK_p), spawn "pavucontrol")
+
   -- control monitor brightness
   , ((noModMask, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-")
   , ((noModMask, xF86XK_MonBrightnessUp), spawn "brightnessctl set 10%+")
