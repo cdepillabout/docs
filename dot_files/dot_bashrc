@@ -705,6 +705,45 @@ function gwtat () {
     cd "$dir_for_new_worktree" || return 1
 }
 
+# "git worktree remove"
+#
+# Delete a git worktree, including its directory on disk and its git branch.
+#
+# Args
+#   $1: Path to the worktree to delete.  If this is not passed, then just use
+#       the current directory.
+function gwtr () {
+    local worktree_root_relpath="${1}"
+
+    if [ -z "${worktree_root_relpath}" ]; then
+        # The relative path of the root of the current worktree.
+        worktree_root_relpath="$(git rev-parse --show-cdup)"
+    fi
+
+    # The absolute path of the root of the current worktree.
+    local worktree_path
+    worktree_path="$(realpath "$worktree_root_relpath")"
+
+    # The path immediately above the specified worktree
+    local worktree_parent
+    worktree_parent="$(dirname "$worktree_path")"
+
+    local current_dir
+    current_dir="$(pwd)"
+
+    # Remove the worktree, exiting if we get an error
+    git worktree remove "$worktree_path" || return 1
+
+    # If the current directory is a child directory of the
+    # worktree parent directory, then cd to the worktree
+    # parent directory, since the current directory no longer
+    # exists.
+    if [[ "$current_dir" = "$worktree_parent"* ]] ; then
+        # Change to the parent directory of the worktree
+        cd "$worktree_parent" || return 1
+    fi
+}
+
 # these are aliases for cd'ing and ls'ing at the same time
 function cd_and_ls_func(){
 	cd "$@" && ls
