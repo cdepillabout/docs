@@ -717,13 +717,11 @@ function gwtr () {
 
     if [ -z "${worktree_root_relpath}" ]; then
         # The relative path of the root of the current worktree.
-        if ! worktree_root_relpath="$(git rev-parse --show-cdup)" ; then
+        if ! worktree_root_relpath="$(git rev-parse --show-toplevel)" ; then
             echo "ERROR: Could not find root of current worktree"
             return 1
         fi
     fi
-
-    local ret
 
     # The absolute path of the root of the current worktree.
     local worktree_path
@@ -752,8 +750,6 @@ function gwtr () {
     # Remove the worktree, exiting if we get an error
     git worktree remove "$worktree_path" || return 1
 
-    git branch -D "$worktree_branch_name"
-
     # If the current directory is a child directory of the
     # worktree parent directory, then cd to the worktree
     # parent directory, since the current directory no longer
@@ -762,6 +758,8 @@ function gwtr () {
         # Change to the parent directory of the worktree
         cd "$worktree_parent" || return 1
     fi
+
+    git branch -D "$worktree_branch_name"
 }
 
 # these are aliases for cd'ing and ls'ing at the same time
