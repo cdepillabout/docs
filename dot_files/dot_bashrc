@@ -717,22 +717,42 @@ function gwtr () {
 
     if [ -z "${worktree_root_relpath}" ]; then
         # The relative path of the root of the current worktree.
-        worktree_root_relpath="$(git rev-parse --show-cdup)"
+        if ! worktree_root_relpath="$(git rev-parse --show-cdup)" ; then
+            echo "ERROR: Could not find root of current worktree"
+            return 1
+        fi
     fi
+
+    local ret
 
     # The absolute path of the root of the current worktree.
     local worktree_path
-    worktree_path="$(realpath "$worktree_root_relpath")"
+    if ! worktree_path="$(realpath "$worktree_root_relpath")"; then
+        echo "ERROR: Could not find abs path of root of worktree"
+        return 1
+    fi
 
     # The path immediately above the specified worktree
     local worktree_parent
-    worktree_parent="$(dirname "$worktree_path")"
+    if ! worktree_parent="$(dirname "$worktree_path")" ; then
+        echo "ERROR: Could not find parent of root of worktree"
+        return 1
+    fi
 
     local current_dir
     current_dir="$(pwd)"
 
+    # The branch name checked out in the worktree
+    local worktree_branch_name
+    if ! worktree_branch_name="$(cd "$worktree_path" && git symbolic-ref --short HEAD)"; then
+        echo "ERROR: Could not find branch name of worktree"
+        return 1
+    fi
+
     # Remove the worktree, exiting if we get an error
     git worktree remove "$worktree_path" || return 1
+
+    git branch -D "$worktree_branch_name"
 
     # If the current directory is a child directory of the
     # worktree parent directory, then cd to the worktree
