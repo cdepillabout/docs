@@ -655,12 +655,21 @@ function gst ()
 # Add a new worktree based on another branch and change to that directory.
 #
 # Args
-#   $1: Name of the branch to base this on. Ex: "origin/master"
+#   $1: Name of the branch to base this on. If "." is passed as the base branch
+#       then use the currently checked-out branch name.
+#       Ex: "origin/master", "my-master", "."
 #   $2: The name of the new branch to create.  If this is not passed, then just
 #       use the basename of the first argument. Ex: "my-cool-branch"
 function gwtat () {
     local base_branch="$1"
     local worktree_name="${2}"
+
+    # If $base_branch is just ".", then just base this new worktree on top of
+    # the currently checked-out branch.
+    if [ "$base_branch" == "." ]; then
+        base_branch="$(git rev-parse --abbrev-ref HEAD)"
+        echo "Using \"${base_branch}\" as the base branch..."
+    fi
 
     if [ -z "${worktree_name}" ]; then
         worktree_name="$(basename "$base_branch")"
