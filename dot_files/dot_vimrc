@@ -239,6 +239,7 @@ map <Leader>ggi <Plug>(coc-implementation)
 map <Leader>ggt <Plug>(coc-type-definition)
 map <Leader>gh :call CocActionAsync('doHover')<CR>
 map <Leader>gd <Plug>(coc-diagnostic-info)
+map <Leader>ge <Plug>(coc-diagnostic-next-error)
 map <Leader>gn <Plug>(coc-diagnostic-next)
 map <Leader>gp <Plug>(coc-diagnostic-prev)
 map <Leader>gr <Plug>(coc-references)
