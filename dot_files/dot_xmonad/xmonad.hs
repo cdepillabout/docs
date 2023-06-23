@@ -1,4 +1,5 @@
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NumericUnderscores #-}
 {-# OPTIONS_GHC -Wall #-}
 
@@ -25,7 +26,7 @@ import System.Process
        (CreateProcess(close_fds, std_in, std_out, std_err),
         StdStream(CreatePipe, NoStream), shell, withCreateProcess)
 import XMonad
-       (ChangeLayout(NextLayout), Dimension, KeyMask, Layout,
+       (ChangeLayout(NextLayout), Dimension, KeyMask, Layout, LayoutClass,
         Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
         ScreenDetail, WindowSet, WorkspaceId, X,
         XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.), (<+>),
@@ -34,21 +35,43 @@ import XMonad
         terminal, tileWindow, windows, windowset, withFocused,
         withWindowSet, whenJust, workspaces, xfork, {- xmessage, -} xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
-import XMonad.Hooks.DynamicLog (xmobar)
+import XMonad.Hooks.DynamicLog (PP, ppCurrent, ppTitle, ppVisible, ppUrgent, shorten, statusBar, xmobarColor, wrap)
+import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageDocks
        (AvoidStruts, ToggleStruts(ToggleStruts), avoidStruts, docks,
         manageDocks)
+import XMonad.Hooks.WorkspaceHistory
+       (workspaceHistory, workspaceHistoryHook)
 import XMonad.Layout (Choose, Full, Mirror, Tall)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
-import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
-import XMonad.Hooks.WorkspaceHistory
-       (workspaceHistory, workspaceHistoryHook)
 import qualified XMonad.StackSet as W
+
+
+-- Need to override the default xmobar function in order to
+-- change how long the title is shortened to.  By default,
+-- the window title only allows 40 characters.
+myXmobar
+  :: LayoutClass l Window
+  => XConfig l  -- ^ The base config
+  -> IO (XConfig (ModifiedLayout AvoidStruts l))
+myXmobar = statusBar "xmobar" myXmobarPP toggleStrutsKey
+  where
+    toggleStrutsKey :: XConfig t -> (KeyMask, KeySym)
+    toggleStrutsKey XConfig{modMask = modm} = (modm, xK_b)
+
+    myXmobarPP :: PP
+    myXmobarPP =
+      def
+        { ppCurrent = xmobarColor "yellow" "" . wrap "[" "]"
+        , ppTitle   = xmobarColor "green" "" . shorten 110
+        , ppVisible = wrap "(" ")"
+        , ppUrgent  = xmobarColor "red" "yellow"
+        }
 
 main :: IO ()
 main = do
-  configWithXMobar <- xmobar . ewmh $ docks myXMonadConfig
+  configWithXMobar <- myXmobar . ewmh $ docks myXMonadConfig
   xmonad configWithXMobar
 
 myXMonadConfig
