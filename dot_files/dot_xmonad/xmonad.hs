@@ -64,7 +64,7 @@ myXmobar = statusBar "xmobar" myXmobarPP toggleStrutsKey
     myXmobarPP =
       def
         { ppCurrent = xmobarColor "yellow" "" . wrap "[" "]"
-        , ppTitle   = xmobarColor "green" "" . shorten 110
+        , ppTitle   = xmobarColor "green" "" . shorten 95
         , ppVisible = wrap "(" ")"
         , ppUrgent  = xmobarColor "red" "yellow"
         }
