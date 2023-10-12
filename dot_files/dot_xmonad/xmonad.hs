@@ -1,5 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NumericUnderscores #-}
 {-# OPTIONS_GHC -Wall #-}
 
@@ -10,6 +11,7 @@
 import Control.Concurrent (threadDelay)
 import Control.Monad (void, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
+import Data.Char (isAscii)
 import Data.Default.Class (def)
 import Data.List (isInfixOf)
 import Data.Map (Map)
@@ -20,11 +22,11 @@ import Graphics.X11.ExtraTypes.XF86
 import Graphics.X11.Xlib
 import System.Environment (lookupEnv)
 import System.Exit (ExitCode(ExitSuccess), exitWith)
-import System.IO (hGetContents, hClose)
+import System.IO (hGetContents)
 import System.Posix.Process (executeFile)
 import System.Process
        (CreateProcess(close_fds, std_in, std_out, std_err),
-        StdStream(CreatePipe, NoStream), shell, withCreateProcess)
+        StdStream(CreatePipe), shell, withCreateProcess)
 import XMonad
        (ChangeLayout(NextLayout), Dimension, KeyMask, Layout, LayoutClass,
         Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
@@ -35,7 +37,7 @@ import XMonad
         terminal, tileWindow, windows, windowset, withFocused,
         withWindowSet, whenJust, workspaces, xfork, {- xmessage, -} xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
-import XMonad.Hooks.DynamicLog (PP, ppCurrent, ppTitle, ppVisible, ppUrgent, shorten, statusBar, xmobarColor, wrap)
+import XMonad.Hooks.DynamicLog (PP, ppCurrent, ppTitle, ppVisible, ppUrgent, statusBar, xmobarColor, wrap)
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageDocks
        (AvoidStruts, ToggleStruts(ToggleStruts), avoidStruts, docks,
@@ -47,6 +49,12 @@ import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import qualified XMonad.StackSet as W
 
+
+
+main :: IO ()
+main = do
+  configWithXMobar <- myXmobar . ewmh $ docks myXMonadConfig
+  xmonad configWithXMobar
 
 -- Need to override the default xmobar function in order to
 -- change how long the title is shortened to.  By default,
@@ -68,11 +76,33 @@ myXmobar = statusBar "xmobar" myXmobarPP toggleStrutsKey
         , ppVisible = wrap "(" ")"
         , ppUrgent  = xmobarColor "red" "yellow"
         }
+      where
+        -- Limit a string to a certain length, adding "..." if truncated.
+        shorten :: Int -> String -> String
+        shorten = shorten' "..."
 
-main :: IO ()
-main = do
-  configWithXMobar <- myXmobar . ewmh $ docks myXMonadConfig
-  xmonad configWithXMobar
+        -- Limit a string to a certain length, adding @end@ if truncated.
+        shorten' :: String -> Int -> String -> String
+        shorten' end n xs | lengthNonAscii xs < n = xs
+                          | otherwise     = takeNonAscii (n - length end) xs ++ end
+
+-- | Just like `length`, but non-ASCII characters are counted as 2 characters.
+--
+-- This is because in most fonts, non-ASCII characters (like Japanese characters)
+-- have the width of about 2 ASCII characters.
+lengthNonAscii :: String -> Int
+lengthNonAscii = go 0
+  where
+    go :: Int -> String -> Int
+    go !acc = \case
+      [] -> acc
+      (h:t) -> if isAscii h then go (acc + 1) t else go (acc + 2) t
+
+-- | Just like `take`, but non-ASCII characters are counted as 2 characters.
+takeNonAscii :: Int -> String -> String
+takeNonAscii n _ | n < 0 = ""
+takeNonAscii n [] = ""
+takeNonAscii n (h : t) = h : if isAscii h then takeNonAscii (n - 1) t else takeNonAscii (n - 2) t
 
 myXMonadConfig
   :: XConfig
