@@ -19,7 +19,6 @@ import qualified Data.Map as M
 import Data.Maybe (fromMaybe)
 import Graphics.X11.ExtraTypes.XF86
        (xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp)
-import Graphics.X11.Xlib
 import System.Environment (lookupEnv)
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.IO (hGetContents)
@@ -28,14 +27,18 @@ import System.Process
        (CreateProcess(close_fds, std_in, std_out, std_err),
         StdStream(CreatePipe), shell, withCreateProcess)
 import XMonad
-       (ChangeLayout(NextLayout), Dimension, KeyMask, Layout, LayoutClass,
-        Resize(Expand, Shrink), IncMasterN(IncMasterN), ScreenId,
-        ScreenDetail, WindowSet, WorkspaceId, X,
-        XConfig(XConfig, borderWidth, keys, logHook, modMask), (.|.), (<+>),
-        float, get, handleEventHook, kill, layoutHook, manageHook, refresh, restart,
-        screenRect, screenWorkspace, sendMessage, setLayout, spawn,
-        terminal, tileWindow, windows, windowset, withFocused,
-        withWindowSet, whenJust, workspaces, xfork, {- xmessage, -} xmonad)
+       (ChangeLayout(NextLayout), Dimension, KeyMask, KeySym, Layout,
+        LayoutClass, Rectangle(Rectangle), Resize(Expand, Shrink),
+        IncMasterN(IncMasterN), ScreenId, ScreenDetail, Window, WindowSet,
+        WorkspaceId, X, XConfig(XConfig, borderWidth, keys, logHook, modMask),
+        (.|.), (<+>), controlMask, float, get, handleEventHook, kill,
+        layoutHook, manageHook, mod1Mask, mod4Mask, noModMask, refresh, rect_x,
+        restart, screenRect, screenWorkspace, sendMessage, setLayout, shiftMask,
+        spawn, terminal, tileWindow, windows, windowset, withFocused,
+        withWindowSet, whenJust, workspaces, xK_1, xK_9, xK_b, xK_c, xK_comma,
+        xK_e, xK_f, xK_F1, xK_F9, xK_F12, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l,
+        xK_m, xK_n, xK_o, xK_p, xK_Print, xK_q, xK_period, xK_r, xK_Return,
+        xK_s, xK_space, xK_t, xK_Tab, xK_w, xK_z, xfork, {- xmessage, -} xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Hooks.DynamicLog (PP, ppCurrent, ppTitle, ppVisible, ppUrgent, statusBar, xmobarColor, wrap)
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
@@ -101,7 +104,7 @@ lengthNonAscii = go 0
 -- | Just like `take`, but non-ASCII characters are counted as 2 characters.
 takeNonAscii :: Int -> String -> String
 takeNonAscii n _ | n < 0 = ""
-takeNonAscii n [] = ""
+takeNonAscii _ [] = ""
 takeNonAscii n (h : t) = h : if isAscii h then takeNonAscii (n - 1) t else takeNonAscii (n - 2) t
 
 myXMonadConfig
@@ -304,7 +307,7 @@ startXScreenSaverAndLock = do
           }
   mIsXScreenSaverNotRunning <-
     liftIO $ withCreateProcess xscreensaverTimeCreateProc $
-      \_ _ mHStderr procHandle -> do
+      \_ _ mHStderr _procHandle -> do
         case mHStderr of
           Nothing -> pure Nothing
           Just hStderr -> do
