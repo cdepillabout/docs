@@ -11,17 +11,15 @@ import Termonad.Config.Colour
 
 main :: IO ()
 main = do
-  print "running termonad from default file!!!"
+  print "running termonad from my own termonad.hs!!!"
   let colConf =
         defaultColourConfig
           { cursorBgColour = Set $ createColour 204 0 0
           , palette =
               let myStandardColors =
-                    setAtList8 4 (createColour 120 120 250) $
-                    defaultStandardColours
+                    setAtList8 4 (createColour 120 120 250) defaultStandardColours
                   myLightCols =
-                    setAtList8 4 (createColour 150 150 250) $
-                    defaultLightColours
+                    setAtList8 4 (createColour 150 150 250) defaultLightColours
               in ExtendedPalette myStandardColors myLightCols
           -- , foregroundColour = Set (createColour 220 50 50)
           -- , backgroundColour = Set (createColour 50 50 50)
