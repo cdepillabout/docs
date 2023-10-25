@@ -588,44 +588,6 @@ function gcampw ()
     git push
 }
 
-function gcAmp ()
-{
-    export GPG_TTY="$(tty)"
-
-    git-gas add -A
-    git commit -m "$*"
-    git push
-}
-
-function gcAmu ()
-{
-    export GPG_TTY="$(tty)"
-
-    local msg="update"
-
-    if [ -n "$*" ] ; then
-        msg="$*"
-    fi
-
-    git-gas add -A
-    git commit -m "$msg"
-}
-
-function gcAmpu ()
-{
-    export GPG_TTY="$(tty)"
-
-    local msg="update"
-
-    if [ -n "$*" ] ; then
-        msg="$*"
-    fi
-
-    git-gas add -A
-    git commit -m "$msg"
-    git push
-}
-
 function gst ()
 {
     # run git status
