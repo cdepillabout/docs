@@ -410,19 +410,19 @@ alias gdb='gdb -q'
 # for this new connection.)
 function ssh-gas ()
 {
-	local auth_sock="$(get-ssh-auth-sock "$@")"
-	local ret="$?"
+    local auth_sock="$(get-ssh-auth-sock "$@")"
+    local ret="$?"
 
-	if [ "$ret" = 0 ] ; then
-		export SSH_AUTH_SOCK="$auth_sock"
-	fi
+    if [ "$ret" = 0 ] ; then
+        export SSH_AUTH_SOCK="$auth_sock"
+    fi
 }
 
 # Call ssh-gas and then git.
 function git-gas ()
 {
-	ssh-gas -q
-	git "$@"
+    ssh-gas -q
+    git "$@"
 }
 
 # git command for pretty printing graph with specified commits for when gitk is not available
