@@ -535,6 +535,12 @@ function gcamw ()
     gcam "$msg"
 }
 
+function gcampv ()
+{
+    gcamv "$@"
+    git push
+}
+
 function gcampu ()
 {
     gcamu "$@"
