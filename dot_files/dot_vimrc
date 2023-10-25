@@ -676,47 +676,6 @@ endfunction
 nnoremap <silent> <C-J> :call Resize('C-J')<CR>
 nnoremap <silent> <C-K> :call Resize('C-K')<CR>
 
-" run glg from within vim
-function! Glg(...)
-	execute "silent !git log --decorate --graph --color " . join(a:000) . " | less -R"
-	redraw!
-endfunction
-command! -nargs=* Glg call Glg(<f-args>)
-cabbrev glg Glg
-
-" run git diff from within vim
-function! Gdf(...)
-	execute "silent !git diff --color " . join(a:000) . " | less -R"
-	redraw!
-endfunction
-command! -nargs=* Gdf call Gdf(<f-args>)
-cabbrev gdf Gdf
-
-" run git push from within vim
-function! Gpsh(...)
-	execute "!git push " . join(a:000)
-	redraw!
-endfunction
-command! -nargs=* Gpsh call Gpsh(<f-args>)
-cabbrev gpsh Gpsh
-
-" run git commit -a -m from within vim
-function! Gcam(...)
-	execute "!git commit -a -m \"" . join(a:000) . "\""
-	redraw!
-endfunction
-command! -nargs=* Gcam call Gcam(<f-args>)
-cabbrev gcam Gcam
-
-" run git commit -a -m from within vim
-function! Gcamp(...)
-	execute "!git commit -a -m \"" . join(a:000) . "\" && git push"
-	redraw!
-endfunction
-command! -nargs=* Gcamp call Gcamp(<f-args>)
-cabbrev gcamp Gcamp
-
-
 " Open a bunch of tabs at once.  Also interpret globbing characters.
 function! Tabopen_all_files(...)
 	let i = 1
