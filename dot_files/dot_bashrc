@@ -284,9 +284,6 @@ alias gvim='gvim -p '
 #alias rvim='vim --servername "vimserver" --remote-tab-silent '
 alias rgvim='gvim --remote-tab-silent '
 
-# make sure java runs in server mode and with assertions enabled
-alias java='java -server -ea '
-
 # a good rsync command that will work as a `cp` replacemnt.
 # When using rsync to copy directories, make sure not to put a
 # "/" after the SRC directory name, otherwise everything in
@@ -304,8 +301,6 @@ alias gadd='git add '
 alias gba='git branch -a '
 alias gbav='git branch -a -v '
 alias gb='git branch '
-#alias gcam='git commit -a -m '
-#alias gcm='git commit -m '
 alias gco='git checkout '
 alias gcv='git commit -v '
 alias gdcf='git diff-changed-files '
@@ -325,11 +320,7 @@ alias gfa='git fetch --tags --all '
 alias gfp='git fetch --tags --prune '
 alias gfap='git fetch --all --tags --prune '
 alias gfpa='git fetch --prune --all '
-#alias gitka='gitk HEAD ORIG_HEAD '
-# alias gitka='gitk HEAD HEAD@{1} '
 alias gitka='gitk --all '
-#alias gitkam='gitk HEAD ORIG_HEAD origin/master '
-# alias gitkam='gitk HEAD HEAD@{1} origin/master '
 alias glog='git log '
 alias glgp='glg -p '
 alias glgap='glga -p '
@@ -369,10 +360,6 @@ alias rIigrep='grep -r -I -i '
 alias Iirgrep='grep -I -i -r '
 alias Irigrep='grep -I -r -i '
 
-# darcs aliases
-alias dst='darcs status'
-alias dwn='darcs whatsnew'
-
 # du alias for showing size of files in current directory
 alias du-here='sudo du -sh * .[A-Za-z0-9]* 2>/dev/null | sort -h | tail -15'
 alias du-here-all='sudo du -sh * .[A-Za-z0-9]* 2>/dev/null | sort -h'
@@ -409,22 +396,8 @@ alias anki="anki --base=\"${HOME}/.anki2\""
 alias systemctl="systemctl --no-pager "
 alias journalctl="journalctl --no-pager "
 
-# This will setup a ftp server using twistd.  This is
-# much like the python http server one-liner.
-alias twistd-ftp="twistd --nodaemon ftp --port 23984 --root `pwd`"
-
 # This is an alias for gdb that hides the warranty and copyright info.
 alias gdb='gdb -q'
-
-# Alias for only listing listening ports.
-alias netlisten="netstat -lanp | egrep '^(tcp|udp).+LISTEN.+'"
-
-# function for `ps auwx | grep`
-function pgrep ()
-{
-	local ps_output="$(ps auwwx)"
-	echo "${ps_output}" | grep "$@"
-}
 
 # SSH Get Auth Sock.
 # This is a command to automatically update the SSH_AUTH_SOCK env var.
