@@ -445,8 +445,7 @@ function gcm ()
 function gcmv ()
 {
     export GPG_TTY="$(tty)"
-    local msg="$*"
-    git-gas commit -v -t <(echo "$msg")
+    git-gas commit -v -t <(echo "$*")
 }
 
 function gcam ()
@@ -458,8 +457,7 @@ function gcam ()
 function gcamv ()
 {
     export GPG_TTY="$(tty)"
-    local msg="$*"
-    git-gas commit -a -v -t <(echo "$msg")
+    git-gas commit -a -v -t <(echo "$*")
 }
 
 function gcAm ()
@@ -472,9 +470,8 @@ function gcAm ()
 function gcAmv ()
 {
     export GPG_TTY="$(tty)"
-    local msg="$*"
     git-gas add -A
-    git commit -v -t <(echo "$msg")
+    git commit -v -t <(echo "$*")
 }
 
 function gcmp ()
@@ -485,78 +482,54 @@ function gcmp ()
 
 function gcmu ()
 {
-    export GPG_TTY="$(tty)"
-
     local msg="update"
 
     if [ -n "$*" ] ; then
         msg="$*"
     fi
 
-    git-gas commit -m "$msg"
+    gcm "$msg"
 }
 
 function gcmw ()
 {
-    export GPG_TTY="$(tty)"
-
-    local msg="wip"
+    local msg="update"
 
     if [ -n "$*" ] ; then
         msg="$*"
     fi
 
-    git-gas commit -m "$msg"
+    gcm "$msg"
 }
 
 
 function gcmpu ()
 {
-    export GPG_TTY="$(tty)"
-
-    local msg="update"
-
-    if [ -n "$*" ] ; then
-        msg="$*"
-    fi
-
-    git-gas commit -m "$msg"
+    gcmu
     git push
 }
 
 function gcmpw ()
 {
-    export GPG_TTY="$(tty)"
+    gcmw
+    git push
+}
 
-    local msg="wip"
-
-    if [ -n "$*" ] ; then
-        msg="$*"
-    fi
-
-    git-gas commit -m "$msg"
+function gcmpv ()
+{
+    gcmv "$@"
     git push
 }
 
 function gcamp ()
 {
-    export GPG_TTY="$(tty)"
-    local msg="$*"
-
-    git-gas commit -a -v -t <(echo "$msg")
+    gcam "$@"
     git push
 }
 
 function gcamu ()
 {
-    export GPG_TTY="$(tty)"
-
-    local msg="update"
-
-    if [ -n "$*" ] ; then
-        msg="$*"
-    fi
-
+    gcam "update"
     git-gas commit -a -m "$msg"
 }
 
