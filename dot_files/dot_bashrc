@@ -448,24 +448,6 @@ function gcmv ()
     git-gas commit -v -t <(echo "$*")
 }
 
-function gcam ()
-{
-    export GPG_TTY="$(tty)"
-    git-gas commit -a -m "$*"
-}
-
-function gcamv ()
-{
-    export GPG_TTY="$(tty)"
-    git-gas commit -a -v -t <(echo "$*")
-}
-
-function gcmp ()
-{
-    gcm "$@"
-    git push
-}
-
 function gcmu ()
 {
     local msg="update"
@@ -488,6 +470,17 @@ function gcmw ()
     gcm "$msg"
 }
 
+function gcmp ()
+{
+    gcm "$@"
+    git push
+}
+
+function gcmpv ()
+{
+    gcmv "$@"
+    git push
+}
 
 function gcmpu ()
 {
@@ -501,16 +494,16 @@ function gcmpw ()
     git push
 }
 
-function gcmpv ()
+function gcam ()
 {
-    gcmv "$@"
-    git push
+    export GPG_TTY="$(tty)"
+    git-gas commit -a -m "$*"
 }
 
-function gcamp ()
+function gcamv ()
 {
-    gcam "$@"
-    git push
+    export GPG_TTY="$(tty)"
+    git-gas commit -a -v -t <(echo "$*")
 }
 
 function gcamu ()
@@ -533,6 +526,12 @@ function gcamw ()
     fi
 
     gcam "$msg"
+}
+
+function gcamp ()
+{
+    gcam "$@"
+    git push
 }
 
 function gcampv ()
