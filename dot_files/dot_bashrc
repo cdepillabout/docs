@@ -543,13 +543,7 @@ function gcampu ()
 
 function gcampw ()
 {
-    local msg="wip"
-
-    if [ -n "$*" ] ; then
-        msg="$*"
-    fi
-
-    gcam "$msg"
+    gcamw "$@"
     git push
 }
 
