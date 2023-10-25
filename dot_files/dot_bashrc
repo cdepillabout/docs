@@ -505,7 +505,7 @@ function gcmw ()
 
 function gcmpu ()
 {
-    gcmu
+    gcmu "$@"
     git push
 }
 
