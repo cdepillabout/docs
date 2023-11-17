@@ -750,6 +750,11 @@ buffer in the tab has currently been modified and needs saving."
 ;; because the mode overwrites the syntax entry table.
 (add-hook 'python-mode-hook '(lambda ( ) (modify-syntax-entry ?_ "w")))
 
+;; Make C-+ and C-- work like in other applications to increase and
+;; decrease the font size.
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Colors and Fonts ;;
 ;;;;;;;;;;;;;;;;;;;;;;
