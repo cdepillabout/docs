@@ -688,6 +688,31 @@ function gwtr () {
     git branch -D "$worktree_branch_name"
 }
 
+# "git branch --set-upstream-to="
+#
+# This automatically sets the upstream tracking information for the current
+# branch to origin/CURRENT_BRANCH_NAME
+#
+# Note that this command requires that the branch already exists on the remote.
+# If it doesn't yet exist, you should use `gpshuoh` to push the local branch to
+# the remote branch.  `gpshuoh` also sets up the remote branch as a tracking
+# branch.
+#
+# Args
+#   (none)
+function gbu () {
+    local current_branch_name
+
+    current_branch_name="$(git branch --show-current)"
+
+    if [ -z "$current_branch_name" ] ; then
+        echo "ERROR: Could not find the current branch name, so not setting the upstream tracking info"
+        return 1
+    fi
+
+    git branch --set-upstream-to "origin/${current_branch_name}"
+}
+
 # these are aliases for cd'ing and ls'ing at the same time
 function cd_and_ls_func(){
 	cd "$@" && ls
