@@ -14,7 +14,10 @@
       "initializationOptions": { "languageServerHaskell": {} },
 	  "settings": {
 		  "haskell": {
-			  "formattingProvider": "fourmolu"
+			  "formattingProvider": "fourmolu",
+			  "plugin": {
+				  "stan": { "globalOn": false }
+			  }
 		  }
 	  }
     }
