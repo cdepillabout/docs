@@ -342,6 +342,7 @@ alias gpshuoh='git push -u origin HEAD '
 alias gpshumh='git push -u mine HEAD '
 alias gr='git remote '
 alias grv='git remote -v '
+alias gwtl='git worktree list '
 
 # grep aliases
 alias rgrep='grep -r '
