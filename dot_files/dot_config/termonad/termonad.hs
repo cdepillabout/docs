@@ -5,7 +5,7 @@ module Main where
 
 import Control.Lens ((&), set)
 import Data.Colour.SRGB (sRGB24)
-import Termonad.App (defaultMain)
+import Termonad (defaultMain)
 import Termonad.Config
 import Termonad.Config.Colour
 
