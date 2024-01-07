@@ -389,10 +389,6 @@ function screens ()
 	echo "$screen_output_dettch"
 }
 
-# make sure Anki 2 uses the ~/.anki2/ directory to store the decks and its config files
-# instead of the default (which is ~/Anki/).
-alias anki="anki --base=\"${HOME}/.anki2\""
-
 # I hate when systemd uses a pager
 alias systemctl="systemctl --no-pager "
 alias journalctl="journalctl --no-pager "
