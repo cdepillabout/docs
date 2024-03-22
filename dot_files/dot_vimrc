@@ -37,7 +37,7 @@ let maplocalleader = "\r"
 " load vundles if we have any
 if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	set runtimepath+=~/.vim/bundle/vundle/
-	call vundle#rc()
+	call vundle#begin()
 
 	" Vundle
 	"
@@ -230,6 +230,22 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 	" Terraform
 	Bundle 'hashivim/vim-terraform'
+
+	" NERDTree filesystem explorer
+	Plugin 'preservim/nerdtree'
+
+	" Make the NERDTree window take up more space to show more files
+	let g:NERDTreeWinSize = 45
+
+	" Open NERDTree and focus on the file in the currently active buffer.
+	nnoremap <F2> :NERDTreeFind<CR>
+
+	" Toggle the NERDTree window open or close.
+	nnoremap <F3> :NERDTreeToggle<CR>
+
+
+	" End Vundle setup.
+	call vundle#end()
 endif
 
 " Key mappings for coc-nvim
