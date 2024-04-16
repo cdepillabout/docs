@@ -15,6 +15,7 @@
 	  "settings": {
 		  "haskell": {
 			  "formattingProvider": "fourmolu",
+			  "checkProject": false,
 			  "plugin": {
 				  "stan": { "globalOn": false }
 			  }
