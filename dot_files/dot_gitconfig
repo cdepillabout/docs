@@ -12,10 +12,11 @@
 	defaultToUpstream = true
 	ff = only
 	conflictStyle = diff3
+	tool = nvimdiff
 [status]
 	submoduleSummary = true
 [diff]
-	tool = vimdiff
+	tool = nvimdiff
 [alias]
 	br = branch
 	ci = commit
