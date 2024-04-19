@@ -28,17 +28,18 @@ import System.Process
         StdStream(CreatePipe), shell, withCreateProcess)
 import XMonad
        (ChangeLayout(NextLayout), Dimension, KeyMask, KeySym, Layout,
-        LayoutClass, Rectangle(Rectangle), Resize(Expand, Shrink),
+        LayoutClass, ManageHook, Rectangle(Rectangle), Resize(Expand, Shrink),
         IncMasterN(IncMasterN), ScreenId, ScreenDetail, Window, WindowSet,
         WorkspaceId, X, XConfig(XConfig, borderWidth, keys, logHook, modMask),
-        (.|.), (<+>), controlMask, float, get, handleEventHook, kill,
-        layoutHook, manageHook, mod1Mask, mod4Mask, noModMask, refresh, rect_x,
-        restart, screenRect, screenWorkspace, sendMessage, setLayout, shiftMask,
-        spawn, terminal, tileWindow, windows, windowset, withFocused,
-        withWindowSet, whenJust, workspaces, xK_1, xK_9, xK_b, xK_c, xK_comma,
-        xK_e, xK_f, xK_F1, xK_F9, xK_F12, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l,
-        xK_m, xK_n, xK_o, xK_p, xK_Print, xK_q, xK_period, xK_r, xK_Return,
-        xK_s, xK_space, xK_t, xK_Tab, xK_w, xK_z, xfork, {- xmessage, -} xmonad)
+        (.|.), (<+>), (-->), (<&&>), (=?), appName, className, composeAll,
+        controlMask, doFloat, float, get, handleEventHook, kill, layoutHook,
+        manageHook, mod1Mask, mod4Mask, noModMask, refresh, rect_x, restart,
+        screenRect, screenWorkspace, sendMessage, setLayout, shiftMask, spawn,
+        terminal, tileWindow, windows, windowset, withFocused, withWindowSet,
+        whenJust, workspaces, xK_1, xK_9, xK_b, xK_c, xK_comma, xK_e, xK_f,
+        xK_F1, xK_F9, xK_F12, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n,
+        xK_o, xK_p, xK_Print, xK_q, xK_period, xK_r, xK_Return, xK_s, xK_space,
+        xK_t, xK_Tab, xK_w, xK_z, xfork, {- xmessage, -} xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
 import XMonad.Hooks.DynamicLog (PP, ppCurrent, ppTitle, ppVisible, ppUrgent, statusBar, xmobarColor, wrap)
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
@@ -125,7 +126,7 @@ myXMonadConfig =
     , keys = myKeys
     , layoutHook = myLayout
     , logHook = myLogHook
-    , manageHook = manageDocks
+    , manageHook = composeAll [myManageHooks, manageDocks]
     , modMask = myModMask
     , terminal = "termonad"
     , handleEventHook = handleEventHook def <+> fullscreenEventHook
@@ -140,6 +141,15 @@ myBorderWidth = 5
 -- Make the mod key be the windows key
 myModMask :: KeyMask
 myModMask = mod4Mask
+
+myManageHooks :: ManageHook
+myManageHooks =
+  composeAll
+    [ -- Starting with around Firefox-125, alert notifications have started
+      -- being shown as a completely separate X window, instead of just floating
+      -- in the firefox process.
+      className =? "firefox" <&&> appName =? "Alert" --> doFloat
+    ]
 
 -- avoidStruts will make sure not avoid any sort of menu or status bar.
 -- smartBorders will only use a border where necessary.
