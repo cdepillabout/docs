@@ -32,7 +32,7 @@ import XMonad
         IncMasterN(IncMasterN), ScreenId, ScreenDetail, Window, WindowSet,
         WorkspaceId, X, XConfig(XConfig, borderWidth, keys, logHook, modMask),
         (.|.), (<+>), (-->), (<&&>), (=?), appName, className, composeAll,
-        controlMask, doFloat, float, get, handleEventHook, kill, layoutHook,
+        controlMask, doF, doFloat, float, get, handleEventHook, kill, layoutHook,
         manageHook, mod1Mask, mod4Mask, noModMask, refresh, rect_x, restart,
         screenRect, screenWorkspace, sendMessage, setLayout, shiftMask, spawn,
         terminal, tileWindow, windows, windowset, withFocused, withWindowSet,
@@ -147,9 +147,17 @@ myManageHooks =
   composeAll
     [ -- Starting with around Firefox-125, alert notifications have started
       -- being shown as a completely separate X window, instead of just floating
-      -- in the firefox process.
-      className =? "firefox" <&&> appName =? "Alert" --> doFloat
+      -- in the firefox process.  In order to deal with this, we float the window
+      -- so that it doesn't become a full tiled window (it just sits in the
+      -- side of the screen), and we unfocus it so that it doesn't grab the
+      -- current focus (which is annoying if you're actively typing in some
+      -- other window).
+      className =? "firefox" <&&> appName =? "Alert" -->
+        doFloat <> unfocus
     ]
+  where
+    unfocus :: ManageHook
+    unfocus = doF W.focusDown
 
 -- avoidStruts will make sure not avoid any sort of menu or status bar.
 -- smartBorders will only use a border where necessary.
