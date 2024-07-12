@@ -972,6 +972,29 @@ endfunction
 command! -nargs=1 -complete=buffer Ggrep call Ggrep(<q-args>)
 map <Leader>gf :execute("Ggrep -I -r ".expand("<cword>")." .")<CR>
 
+" Get the current visual selection when in Visual mode.
+function! s:get_visual_selection()
+    " Why is this not a built-in Vim script function?!
+    let [l:line_start, l:column_start] = getpos("'<")[1:2]
+    let [l:line_end, l:column_end] = getpos("'>")[1:2]
+    let l:lines = getline(l:line_start, l:line_end)
+    if len(l:lines) == 0
+        return ''
+    endif
+    let l:lines[-1] = l:lines[-1][: l:column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let l:lines[0] = l:lines[0][l:column_start - 1:]
+    return join(l:lines, "\n")
+endfunction
+
+" This is a version of Ggrep that is to be used when in Visual mode.
+" It looks for the current visual selection, and passes that to git grep.
+function! GgrepVisual()
+  let l:selection = s:get_visual_selection()
+  call Ggrep('-I -r ' . l:selection . ' .')
+endfunction
+
+vnoremap <Leader>gv :<C-u>call GgrepVisual()<CR>
+
 " Create command for curl'ing a file into the current buffer
 " command! -nargs=+ Curl execute 'read !curl <args> 2>/dev/null'
 " cabbrev curl Curl
