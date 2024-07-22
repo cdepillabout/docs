@@ -55,10 +55,10 @@ Config
 		  50
       , Run Date "<fc=#ABABAB>%F (%a) %H:%M</fc>" "date" 10
 	  , Run Com "uname" ["-n"] "" 0
-	  -- cut stands for computer use today
-	  , Run Com "xmobar-arbtt-stats-time-today" [] "cut" 1800
+	  -- distributed computer-use timer (dcut)
+	  , Run Com "dcut" [] "dcut" 1800
 	  , Run StdinReader
 	  ]
   , template =
-      "%StdinReader% }{ cut %cut% | %cpu% | %memory% | %coretemp% | %battery% | <fc=#ee9a00>%date%</fc> | %uname% "
+      "%StdinReader% }{ dcut %dcut% | %cpu% | %memory% | %coretemp% | %battery% | <fc=#ee9a00>%date%</fc> | %uname% "
   }
