@@ -287,7 +287,7 @@ nnoremap <Leader>kr :<C-u>CocListResume<CR>
 " See :help coc-highlights for all possible highlighting values.
 
 " Background color of all floating message boxes.  Dark blue.
-highlight CocFloating ctermbg=17
+highlight CocFloating ctermbg=17 guibg=#005fff
 
 " highlight CocInfoFloat ctermfg=Brown
 
@@ -295,7 +295,7 @@ highlight CocFloating ctermbg=17
 " things like computed types for functions without type signatures.
 "
 " This is dark grey.
-highlight CocCodeLens ctermfg=239
+highlight CocCodeLens ctermfg=239 guibg=#444444
 
 
 """""""""""""""""""""""""""""""""""""""""""""
@@ -460,28 +460,24 @@ set spelllang=en
 
 " Give us some additional colors for highlighting haskell code.
 " This is for vim2hs.
-highlight hsType ctermfg=green
-highlight hsStructure ctermfg=darkMagenta
-highlight hsExprKeyword ctermfg=3
-highlight hsConditional ctermfg=3
+highlight hsType ctermfg=green guifg=#3fff3f
+highlight hsStructure ctermfg=darkMagenta guifg=magenta
+highlight hsExprKeyword ctermfg=3 guifg=#f3f35b
+highlight hsConditional ctermfg=3 guifg=#f3f35b
 "highlight hsDelimiter ctermfg=...
-highlight hsOperator ctermfg=blue
-
-" This lets ghcmod give us nice yellow background highlighting when
-" looking at an expression's type. This is for the ghcmod plugin.
-highlight ghcmodType ctermfg=0 ctermbg=yellow guifg=black guibg=yellow
+highlight hsOperator ctermfg=blue guifg=#b6b6fa
 
 " highlight tab line differently
-highlight TabLine term=bold,reverse cterm=bold ctermfg=black ctermbg=white
-highlight TabLineFill term=bold,reverse cterm=bold ctermfg=white ctermbg=white
-highlight TabLineSel term=reverse ctermfg=white ctermbg=lightblue
+highlight TabLine cterm=bold ctermfg=black ctermbg=white gui=bold guifg=black guibg=white
+highlight TabLineFill cterm=bold ctermfg=white ctermbg=white gui=bold guifg=white guibg=white
+highlight TabLineSel ctermfg=white ctermbg=lightblue guifg=white guibg=blue
 
 " highlight the status line for the current terminal darker than by default
-highlight StatusLine ctermbg=lightgrey ctermfg=5
-highlight StatusLineNC ctermbg=darkgrey
+highlight StatusLine ctermbg=lightgrey ctermfg=5 guibg=lightgrey guifg=#c000c0
+highlight StatusLineNC ctermbg=darkgrey guibg=darkgrey
 
 " highlight the popup menu a little differently
-highlight PmenuSel ctermbg=lightblue
+highlight PmenuSel ctermbg=lightblue guibg=lightblue
 
 " make sure the normal background is black
 highlight Normal guibg=black ctermbg=black
@@ -490,19 +486,19 @@ highlight Normal guibg=black ctermbg=black
 " objects (strings that start with a captial letter) this "Special" value, and
 " it makes them dark red.  It makes them look like comments.  This makes them
 " a brighter red so they stand out from comments.
-highlight Special ctermfg=red
+highlight Special ctermfg=red guifg=red
 
 " Set highlighting for sign column.  This looks like it is the default on
 " Arch Linux and is set in the colorscheme file, but for some reason it is
 " different on Debian.  Set it here so it is the same on both.
-highlight SignColumn term=standout ctermfg=14 ctermbg=238
+highlight SignColumn ctermfg=14 ctermbg=238 guifg=#c0c000 guibg=#444444
 
 " Recent versions of neovim (>= 0.8) have changed comments to be highlighted
 " in blue, so we force it to be dark red here.
-highlight Comment ctermfg=darkred
+highlight Comment ctermfg=darkred guifg=red
 
 " Highlight line numbers in dark grey
-highlight LineNr ctermfg=darkgrey
+highlight LineNr ctermfg=darkgrey guifg=darkgrey
 
 """""""""""""""""""""""""""""""""""""""""""""
 """""" Settings for specific syntaxes """""""
