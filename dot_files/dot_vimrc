@@ -476,9 +476,6 @@ highlight TabLineSel ctermfg=white ctermbg=lightblue guifg=white guibg=blue
 highlight StatusLine ctermbg=lightgrey ctermfg=5 guibg=lightgrey guifg=#c000c0
 highlight StatusLineNC ctermbg=darkgrey guibg=darkgrey
 
-" highlight the popup menu a little differently
-highlight PmenuSel ctermbg=lightblue guibg=lightblue
-
 " make sure the normal background is black
 highlight Normal guibg=black ctermbg=black
 
@@ -495,10 +492,16 @@ highlight SignColumn ctermfg=14 ctermbg=238 guifg=#c0c000 guibg=#444444
 
 " Recent versions of neovim (>= 0.8) have changed comments to be highlighted
 " in blue, so we force it to be dark red here.
-highlight Comment ctermfg=darkred guifg=red
+highlight Comment ctermfg=darkred guifg=#b60000
 
 " Highlight line numbers in dark grey
 highlight LineNr ctermfg=darkgrey guifg=darkgrey
+
+" highlight the popup menu a little differently
+highlight PmenuSel ctermbg=lightblue
+
+" Coc floating popup
+highlight CocFloating guibg=blue
 
 """""""""""""""""""""""""""""""""""""""""""""
 """""" Settings for specific syntaxes """""""
