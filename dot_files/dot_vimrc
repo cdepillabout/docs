@@ -961,6 +961,7 @@ command! -nargs=+ LGrep execute 'silent lgrep! <args>' | tab copen
 " Function for using `git grep` for searching instead of just `grep`.
 function! Ggrep(arg)
   setlocal grepprg=git\ grep\ --no-color\ -n\ $*
+  setlocal grepformat=%f:%l:%m,%f:%l%m,%f\ \ %l%m
   silent execute ':grep! '.a:arg | tab copen
   " setlocal grepprg=git\ --no-pager\ submodule\ --quiet\ foreach\ 'git\ grep\ --full-name\ -n\ --no-color\ $*\ ;true'
   " silent execute ':grepadd! '.a:arg
