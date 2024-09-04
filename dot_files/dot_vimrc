@@ -1176,6 +1176,8 @@ call Add_eol_whitespace_highlighting("ruby")
 call Add_eol_whitespace_highlighting("scala")
 call Add_eol_whitespace_highlighting("sh")
 call Add_eol_whitespace_highlighting("terraform")
+call Add_eol_whitespace_highlighting("typescript")
+call Add_eol_whitespace_highlighting("typescriptreact")
 call Add_eol_whitespace_highlighting("vim")
 call Add_eol_whitespace_highlighting("yaml")
 
