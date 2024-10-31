@@ -11,16 +11,19 @@
         "hie.yaml"
       ],
       "filetypes": [ "hs", "lhs", "haskell" ],
+      // HLS might need to be restarted quite a few times before it makes
+      // enough progress in compiling everything to show diagnostics.
+      "maxRestartCount": 50,
       "initializationOptions": { "languageServerHaskell": {} },
-	  "settings": {
-		  "haskell": {
-			  "formattingProvider": "fourmolu",
-			  "checkProject": false,
-			  "plugin": {
-				  "stan": { "globalOn": false }
-			  }
-		  }
-	  }
+      "settings": {
+          "haskell": {
+              "formattingProvider": "fourmolu",
+              "checkProject": false,
+              "plugin": {
+                  "stan": { "globalOn": false }
+              }
+          }
+      }
     }
   },
   "suggest": {
