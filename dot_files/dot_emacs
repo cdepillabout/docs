@@ -769,11 +769,18 @@ buffer in the tab has currently been modified and needs saving."
                            :weight 'normal
                            :width 'normal))
       ((eq system-type 'gnu/linux)
-       (set-face-attribute 'default nil
-                           :family "Source Code Pro"
-                           :height 140
-                           :weight 'normal
-                           :width 'normal)))
+       (let
+         ;; Use the font Source Code Pro if it is available, otherwise
+         ;; fall back to DejaVu.
+         ((fam
+            (if (find-font (font-spec :name "Source Code Pro"))
+              "Source Code Pro"
+              "DejaVu Sans Mono")))
+         (set-face-attribute 'default nil
+                             :family fam
+                             :height 140
+                             :weight 'normal
+                             :width 'normal))))
 
 ;; Set the cursor color to red to match Vim in the terminal.
 (set-cursor-color "red")
