@@ -269,6 +269,7 @@ map <Leader>rr :CocRestart<CR>
 map <Leader>rn <Plug>(coc-rename)
 map <Leader>rf <Plug>(coc-refactor)
 map <Leader>rj <Plug>(coc-fix-current)
+map <Leader>rs :call coc#rpc#stop()<CR>
 
 map <Leader>al <Plug>(coc-codeaction-line)
 map <Leader>ac <Plug>(coc-codeaction-cursor)
