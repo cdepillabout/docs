@@ -149,7 +149,7 @@ Control Mod4 F5 :TakeToWorkspace 5
 #Control Mod4 F12 :TakeToWorkspace 12
 
 # open terminal
-Mod4 m :Exec on-screen roxterm
+#Mod4 m :Exec on-screen roxterm
 
 # open firefox
 Mod4 b :Exec firefox
@@ -171,7 +171,11 @@ Mod4 Shift k :Kill
 Mod4 F12 :MoveTo 0 0 BottomRight
 
 # change screens to switch monitors
-Mod4 F6 :Exec xrandr-setup-screens
+#Mod4 F6 :Exec xrandr-setup-screens
 
 # take screenshot
 Print :Exec screenshot-to-clipboard
+
+# Raise and lower screen brightness
+XF86MonBrightnessUp :ExecCommand brightnessctl set +7%
+XF86MonBrightnessDown :ExecCommand brightnessctl set 7%-
