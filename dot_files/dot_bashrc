@@ -574,10 +574,21 @@ function gst ()
 #       then use the currently checked-out branch name.
 #       Ex: "origin/master", "my-master", "."
 #   $2: The name of the new branch to create.  If this is not passed, then just
-#       use the basename of the first argument. Ex: "my-cool-branch"
+#       use the basename of the first argument. Ex: "my-cool-branch", "me/cool/branch"
+#   $3: The relative name of the directory to house the worktree, taken to be
+#       under the main worktree directory.  If this is not passed, then the
+#       $2 argument is used.  Ex: "me/cool-branch"
+#
+# Examples:
+#   - $ gwtat origin/fred/branch me/cool/branch me/cb
+#
+#     This command takes the remote branch `origin/fred/branch` as a base,
+#     creates a new branch called `me/cool/branch`, and places it in the
+#     `./worktrees/me/cb/` directory, then changes to that directory.
 function gwtat () {
-    local base_branch="$1"
+    local base_branch="${1}"
     local worktree_name="${2}"
+    local relative_worktree_dir="${3}"
 
     # If $base_branch is just ".", then just base this new worktree on top of
     # the currently checked-out branch.
@@ -588,6 +599,10 @@ function gwtat () {
 
     if [ -z "${worktree_name}" ]; then
         worktree_name="$(basename "$base_branch")"
+    fi
+
+    if [ -z "${relative_worktree_dir}" ]; then
+        relative_worktree_dir="$worktree_name"
     fi
 
     # The name of the directory holding all the worktrees.  Normally set to
@@ -616,7 +631,12 @@ function gwtat () {
 
     # Directory of the new worktree.  Ends up being something like
     # "/path/to/my-repo/worktrees/my-cool-branch".
-    local dir_for_new_worktree="${worktree_dir}/${worktree_name}"
+    local dir_for_new_worktree="${worktree_dir}/${relative_worktree_dir}"
+
+    # echo "base_branch: ${base_branch}"
+    # echo "worktree_name: ${worktree_name}"
+    # echo "relative_worktree_dir: ${relative_worktree_dir}"
+    # echo "dir_for_new_worktree: ${dir_for_new_worktree}"
 
     if git rev-parse --verify "$worktree_name" > /dev/null 2>&1; then
         # If the branch already exists, just create a new worktree dir for that branch.
