@@ -538,9 +538,12 @@ map <F5> :set hlsearch!<CR>
 imap <F5> <ESC>:set hlsearch!<CR>a
 
 " use F6 for turning on and off paste mode
-map <F6> :set paste!<CR>
-imap <F6> <ESC>:set paste!<CR>a
-set pastetoggle=<F6>
+" Neovim no longer needs this, and natively understands paste.
+if exists('+pastetoggle') && !has('nvim')
+	map <F6> :set paste!<CR>
+	imap <F6> <ESC>:set paste!<CR>a
+	set pastetoggle=<F6>
+endif
 
 " use F7 for turning on and off list mode
 map <F7> :set list!<CR>
