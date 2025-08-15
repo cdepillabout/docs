@@ -901,36 +901,16 @@ if [[ $EUID -eq 0 ]] ; then
 	fi
 fi
 
-# add the filesystem from the home directory to the PATH
-append_to_path PATH "$HOME/filesystem/bin"
-
 # This will allow me to start installing individual packages to
-# $HOME/filesystem/PACKAGENAME/ instead of to $HOME/filesystem/.
-# This should let me manage individual packages much more easily
-# and manage them much more similar to how nix manages packages.
-for f in $HOME/filesystem/*/bin
+# $HOME/filesystem/PACKAGENAME/.
+for f in "$HOME"/filesystem/*/bin
 do
 	append_to_path PATH "${f}"
 done
 
-# check to make sure that new packages are not added to $HOME/filesystem/,
-# but instead added to $HOME/filesystem/PACKAGENAME/.
-if [ -d "$HOME/filesystem/bin" ] ; then
-	temp_file="$(mktemp)"
-	touch -t 201502120000 "$temp_file"
-	file_num="$(find "$HOME/filesystem/bin" -newer "$temp_file" | wc -l)"
-	rm -rf "$temp_file"
-	if [ "$file_num" -gt "0" ] ; then
-		echo "WARNING: files in $HOME/filesystem/bin/ are newer than 2015/02/12."
-		echo "Packages should be placed in $HOME/filesystem/PACKAGENAME/ instead."
-		echo "$HOME/filesystem/ should be used like the nix-store."
-	fi
-	append_to_path PATH "$HOME/filesystem/bin"
-fi
-
 # If we have our filesystem, then make sure the python path
 # is set correctly within it.
-for f in $HOME/filesystem/lib/python* $HOME/filesystem/*/lib/python*
+for f in "$HOME"/filesystem/*/lib/python*
 do
 	append_to_path PYTHONPATH "${f}/site-packages/"
 done
