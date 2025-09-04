@@ -8,6 +8,9 @@
 	# When running git push with no remote or refspec, always push the current
 	# branch to a branch of the same name on the remote.
 	default = current
+	# Automatically set the upstream for a given branch the first time you push
+	# if the upstream is not already set.
+	autoSetupRemote = true
 [merge]
 	defaultToUpstream = true
 	ff = only
