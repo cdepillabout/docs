@@ -13,12 +13,14 @@ import Control.Monad (void, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Data.Char (isAscii)
 import Data.Default.Class (def)
+import Data.Foldable (for_)
 import Data.List (isInfixOf)
 import Data.Map (Map)
 import qualified Data.Map as M
 import Data.Maybe (fromMaybe)
 import Graphics.X11.ExtraTypes.XF86
        (xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp)
+import System.Directory (findExecutable)
 import System.Environment (lookupEnv)
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.IO (hGetContents)
@@ -282,7 +284,7 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
   , ((modm, xK_f), spawn "firefox")
 
   -- open chromium
-  , ((modm, xK_g), spawn "chromium")
+  , ((modm, xK_g), spawnFirstFound ["google-chrome", "chromium"])
 
   , ((modm .|. shiftMask, xK_p), spawn "pavucontrol")
 
@@ -345,6 +347,27 @@ startXScreenSaverAndLock = do
 -------------
 -- HELPERS --
 -------------
+
+-- | Given a list of executable names, find the first one present on PATH
+-- and spawn it. Does nothing if none are found.
+spawnFirstFound :: MonadIO m => [String] -> m ()
+spawnFirstFound candidates = do
+  mFound <- liftIO $ findFirst findExecutable candidates
+  for_ mFound spawn
+
+-- | Given a function and a list, find the first element for which the function
+-- returns Just.
+--
+-- TODO: Probably a better way to write this.
+findFirst :: Monad m => (a -> m (Maybe x)) -> [a] -> m (Maybe a)
+findFirst f = go
+  where
+    go [] = pure Nothing
+    go (x:xs) = do
+      mx <- f x
+      case mx of
+        Just _ -> pure (Just x)
+        Nothing -> go xs
 
 type Screen' = W.Screen WorkspaceId (Layout Window) Window ScreenId ScreenDetail
 
