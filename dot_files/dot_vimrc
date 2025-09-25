@@ -1034,6 +1034,29 @@ augroup resCur
 augroup END
 
 
+" Copy current file path and line number to clipboard
+" This is convenient for easily copying and pasting references to lines in
+" files.
+function! CopyFileLineReference()
+  let reference = '@' . expand('%') . ':' . line('.')
+  let @+ = reference
+  echo 'Copied: ' . reference
+endfunction
+
+" Map it to a convenient key combination
+nnoremap <leader>cl :call CopyFileLineReference()<CR>
+
+" For a range of lines
+function! CopyFileRangeReference() range
+  let reference = '@' . expand('%') . ':' . a:firstline . '-' . a:lastline
+  let @+ = reference
+  echo 'Copied: ' . reference
+endfunction
+
+" Visual mode mapping for ranges
+vnoremap <leader>cl :call CopyFileRangeReference()<CR>
+
+
 """""""""""""""""""""""""""""""""""""""""""""
 """""""" Specific filetype settings """""""""
 """""""""""""""""""""""""""""""""""""""""""""
