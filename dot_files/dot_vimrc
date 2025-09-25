@@ -451,7 +451,7 @@ highlight Comment ctermfg=darkred guifg=#b60000
 highlight LineNr ctermfg=darkgrey guifg=darkgrey
 
 " highlight the popup menu a little differently
-highlight PmenuSel ctermbg=lightblue
+"highlight PmenuSel ctermbg=lightblue
 
 
 """""""""""""""""""""""""""""""""""""""""""""
