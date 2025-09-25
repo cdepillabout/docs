@@ -248,55 +248,7 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 	call vundle#end()
 endif
 
-" Key mappings for coc-nvim
 
-map <Leader>ggd <Plug>(coc-definition)
-map <Leader>ggi <Plug>(coc-implementation)
-map <Leader>ggt <Plug>(coc-type-definition)
-map <Leader>gh :call CocActionAsync('doHover')<CR>
-map <Leader>gd <Plug>(coc-diagnostic-info)
-map <Leader>ge <Plug>(coc-diagnostic-next-error)
-map <Leader>gn <Plug>(coc-diagnostic-next)
-map <Leader>gp <Plug>(coc-diagnostic-prev)
-map <Leader>gr <Plug>(coc-references)
-
-xmap <Leader>ff <Plug>(coc-format)
-nmap <Leader>ff <Plug>(coc-format)
-xmap <leader>fs <Plug>(coc-format-selected)
-nmap <leader>fs <Plug>(coc-format-selected)
-
-map <Leader>rr :CocRestart<CR>
-map <Leader>rn <Plug>(coc-rename)
-map <Leader>rf <Plug>(coc-refactor)
-map <Leader>rj <Plug>(coc-fix-current)
-map <Leader>rs :call coc#rpc#stop()<CR>
-
-map <Leader>al <Plug>(coc-codeaction-line)
-map <Leader>ac <Plug>(coc-codeaction-cursor)
-map <Leader>ao <Plug>(coc-codelens-action)
-
-nnoremap <Leader>kd :<C-u>CocList diagnostics<CR>
-nnoremap <Leader>kc :<C-u>CocList commands<CR>
-nnoremap <Leader>ko :<C-u>CocList outline<CR>
-nnoremap <Leader>kr :<C-u>CocListResume<CR>
-
-" inoremap <silent><expr> <c-space> coc#refresh()
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
-
-" Highlighting for coc-nvim.
-"
-" See :help coc-highlights for all possible highlighting values.
-
-" Background color of all floating message boxes.  Dark blue.
-highlight CocFloating ctermbg=17 guibg=#005fff
-
-" highlight CocInfoFloat ctermfg=Brown
-
-" Color of all "codelens" things that popup around the code.  These are
-" things like computed types for functions without type signatures.
-"
-" This is dark grey.
-highlight CocCodeLens ctermfg=239 guibg=#444444
 
 
 """""""""""""""""""""""""""""""""""""""""""""
@@ -401,11 +353,11 @@ set number
 set laststatus=1
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience for coc-nvim.
+" delays and poor user experience for LSP diagnostics.
 set updatetime=600
 
 " Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved for coc-nvim.
+" diagnostics appear/become resolved.
 if has("nvim-0.5.0") || has("patch-8.1.1564")
   " Recently nvim can merge signcolumn and number column into one
   " set signcolumn=number
@@ -501,8 +453,6 @@ highlight LineNr ctermfg=darkgrey guifg=darkgrey
 " highlight the popup menu a little differently
 highlight PmenuSel ctermbg=lightblue
 
-" Coc floating popup
-highlight CocFloating guibg=blue
 
 """""""""""""""""""""""""""""""""""""""""""""
 """""" Settings for specific syntaxes """""""
