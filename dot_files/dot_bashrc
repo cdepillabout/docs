@@ -269,16 +269,16 @@ fi
 alias man='LC_ALL="C" LANG="C" man'
 
 # make emacs open in non-graphical mode
-alias cemacs='emacs -nw '
+alias cemacs='emacs -nw'
 
 # make vim open with the servername as "vimserver"
 #alias vim='vim --servername "vimserver" '
 
 # make sure vim opens up tabs for multiple files
-alias nvim='nvim -p '
-alias nvimcoc='nvimcoc -p '
-alias vim='vim -p '
-alias gvim='gvim -p '
+alias nvim='nvim -p'
+alias nvimlsp='nvimlsp -p'
+alias vim='vim -p'
+alias gvim='gvim -p'
 
 # make command for opening files on an already open vim browser
 #alias rvim='vim --servername "vimserver" --remote-tab-silent '
