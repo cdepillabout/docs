@@ -16,7 +16,12 @@ defbce "on"
 
 hardstatus on
 hardstatus alwayslastline
-hardstatus string "%{= wb}%-w%{.yb}%n %t%{-}%+w %=%{b r} %H %{..b}%S %{..K}%C%a "
+
+# This is for screen-4.0:
+# hardstatus string "%{= wb}%-w%{.yb}%n %t%{-}%+w %=%{b r} %H %{..b}%S %{..K}%C%a "
+
+# This is for screen-5.0:
+hardstatus string "%{= 4;7}%-w%{= 4;3}%n %t%{-}%{= 4;7}%+w %=%{b 1;7} %H %{= 4;7}%S %{= 8;7}%C%a "
 
 #caption always "%{kB}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kB}%?%+Lw%?"
 
