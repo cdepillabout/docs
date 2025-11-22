@@ -273,9 +273,12 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
   -- Use Ctrl-F12 to re-setup the keyboard.
   , ((controlMask, xK_F12), spawn "setup-keyboard")
 
+  -- Use Ctrl-F11 to re-setup my monitors.
+  , ((controlMask, xK_F11), spawn "setup-monitors")
+
   -- Use mod-s to make a window floating and resize it for a screencast
   , ((modm, xK_s), withFocused setupWindowForScreenCast)
-  , ((modm,               xK_t     ), withFocused $ windows . W.sink)
+  , ((modm, xK_t), withFocused $ windows . W.sink)
 
   -- open graphical emacs
   , ((modm, xK_i), spawn "gemacs")
