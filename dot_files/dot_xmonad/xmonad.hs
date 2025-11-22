@@ -39,7 +39,7 @@ import XMonad
         screenRect, screenWorkspace, sendMessage, setLayout, shiftMask, spawn,
         terminal, tileWindow, windows, windowset, withFocused, withWindowSet,
         whenJust, workspaces, xK_1, xK_9, xK_b, xK_c, xK_comma, xK_e, xK_f,
-        xK_F1, xK_F9, xK_F12, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n,
+        xK_F1, xK_F9, xK_F11, xK_F12, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n,
         xK_o, xK_p, xK_Print, xK_q, xK_period, xK_r, xK_Return, xK_s, xK_space,
         xK_t, xK_Tab, xK_w, xK_z, xfork, {- xmessage, -} xmonad)
 import XMonad.Actions.CycleWS (shiftNextScreen, swapNextScreen)
