@@ -1046,7 +1046,7 @@ endfunction
 " Map it to a convenient key combination
 nnoremap <leader>cl :call CopyFileLineReference()<CR>
 
-" For a range of lines
+" Copy current file path and line number to clipboard for a range of lines
 function! CopyFileRangeReference() range
   let reference = '@' . expand('%') . ':' . a:firstline . '-' . a:lastline
   let @+ = reference
@@ -1055,6 +1055,32 @@ endfunction
 
 " Visual mode mapping for ranges
 vnoremap <leader>cl :call CopyFileRangeReference()<CR>
+
+
+" Delete all the open buffers which are not visible in any window/tab.
+function! s:DeleteHiddenBuffers() abort
+  let l:current = bufnr('%')
+
+  " Go through all existing buffer numbers
+  for l:buf in range(1, bufnr('$'))
+    " Skip unlisted buffers and the current buffer
+    if !buflisted(l:buf) || l:buf == l:current
+      continue
+    endif
+
+    " Skip special buffers (help, terminal, etc.)
+    if getbufvar(l:buf, '&buftype') !=# ''
+      continue
+    endif
+
+    " win_findbuf() returns all windows (in all tabpages) showing this buffer
+    if empty(win_findbuf(l:buf))
+      execute 'bdelete' l:buf
+    endif
+  endfor
+endfunction
+
+command! BDeleteHidden call s:DeleteHiddenBuffers()
 
 
 """""""""""""""""""""""""""""""""""""""""""""
