@@ -732,6 +732,18 @@ function gbu () {
     git branch --set-upstream-to "origin/${current_branch_name}"
 }
 
+# Take me to the root of either the current git worktree, or just to the repo root.
+function grt() {
+    local root
+    root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -n "$root" ]]; then
+        cd "$root"
+    else
+        echo "Not in a git repository" >&2
+        return 1
+    fi
+}
+
 # these are aliases for cd'ing and ls'ing at the same time
 function cd_and_ls_func(){
 	cd "$@" && ls
