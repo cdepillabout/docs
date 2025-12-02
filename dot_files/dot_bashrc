@@ -746,33 +746,33 @@ function grt() {
 
 # these are aliases for cd'ing and ls'ing at the same time
 function cd_and_ls_func(){
-	cd "$@" && ls
+    cd "$@" && ls
 }
 function cd_and_lsl_func(){
-	cd "$@" && ls -l
+    cd "$@" && ls -l
 }
 function autojump_func() {
-	new_path="$(autojump $@)"
-	if [ -n "$new_path" ]; then
-		echo -e "\\033[31m${new_path}\\033[0m"
-		cd "$new_path"
-	fi
+    new_path="$(autojump $@)"
+    if [ -n "$new_path" ]; then
+        echo -e "\\033[31m${new_path}\\033[0m"
+        cd "$new_path"
+    fi
 }
 function autojump_and_ls_func(){
-	new_path="$(autojump $@)"
-	if [ -n "$new_path" ]; then
-		echo -e "\\033[31m${new_path}\\033[0m"
-		cd "$new_path"
-		ls
-	fi
+    new_path="$(autojump $@)"
+    if [ -n "$new_path" ]; then
+        echo -e "\\033[31m${new_path}\\033[0m"
+        cd "$new_path"
+        ls
+    fi
 }
 function autojump_and_lsl_func(){
-	new_path="$(autojump $@)"
-	if [ -n "$new_path" ]; then
-		echo -e "\\033[31m${new_path}\\033[0m"
-		cd "$new_path"
-		ls -l
-	fi
+    new_path="$(autojump $@)"
+    if [ -n "$new_path" ]; then
+        echo -e "\\033[31m${new_path}\\033[0m"
+        cd "$new_path"
+        ls -l
+    fi
 }
 alias c='cd_and_ls_func'
 alias cl='cd_and_lsl_func'
