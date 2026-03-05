@@ -1056,6 +1056,15 @@ endfunction
 " Visual mode mapping for ranges
 vnoremap <leader>cl :call CopyFileRangeReference()<CR>
 
+" Copy current file path (without line number) to clipboard
+function! CopyFileReference()
+  let reference = '@' . expand('%')
+  let @+ = reference
+  echo 'Copied: ' . reference
+endfunction
+
+nnoremap <leader>cf :call CopyFileReference()<CR>
+
 
 " Delete all the open buffers which are not visible in any window/tab.
 function! s:DeleteHiddenBuffers() abort
