@@ -572,7 +572,9 @@ function gst ()
 #
 # Args
 #   $1: Name of the branch to base this on. If "." is passed as the base branch
-#       then use the currently checked-out branch name.
+#       then use the currently checked-out branch name. If the given name does
+#       not resolve to a ref, "origin/" is prepended and retried (so you can
+#       pass "fred/branch" as shorthand for "origin/fred/branch").
 #       Ex: "origin/master", "my-master", "."
 #   $2: The name of the new branch to create.  If this is not passed, then just
 #       use the basename of the first argument. Ex: "my-cool-branch", "me/cool/branch"
@@ -597,6 +599,20 @@ function gwtat () {
         base_branch="$(git rev-parse --abbrev-ref HEAD)"
         echo "Using \"${base_branch}\" as the base branch..."
     fi
+
+    # If $base_branch doesn't resolve on its own, try prefixing with "origin/".
+    if ! git rev-parse --verify "$base_branch" > /dev/null 2>&1; then
+        if git rev-parse --verify "origin/${base_branch}" > /dev/null 2>&1; then
+            base_branch="origin/${base_branch}"
+            echo "Using \"${base_branch}\" as the base branch..."
+        fi
+    fi
+
+    # Resolve $base_branch to a SHA up front: if we passed it as the <commit-ish>
+    # to "git worktree add -b" below, git's DWIM-from-remote behavior would
+    # create a local branch named after $base_branch and silently ignore our -b.
+    local base_sha
+    base_sha="$(git rev-parse --verify "${base_branch}^{commit}")" || return 1
 
     if [ -z "${worktree_name}" ]; then
         worktree_name="$(basename "$base_branch")"
@@ -644,7 +660,7 @@ function gwtat () {
         git worktree add "$dir_for_new_worktree" "$worktree_name" || return 1
     else
         # If the branch doesn't already exist, then create a new worktree from the base branch.
-        git worktree add --no-track -b "$worktree_name" "$dir_for_new_worktree" "$base_branch" || return 1
+        git worktree add --no-track -b "$worktree_name" "$dir_for_new_worktree" "$base_sha" || return 1
     fi
 
     cd "$dir_for_new_worktree" || return 1
