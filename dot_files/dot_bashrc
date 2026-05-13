@@ -601,8 +601,11 @@ function gwtat () {
     fi
 
     # If $base_branch doesn't resolve on its own, try prefixing with "origin/".
-    if ! git rev-parse --verify "$base_branch" > /dev/null 2>&1; then
-        if git rev-parse --verify "origin/${base_branch}" > /dev/null 2>&1; then
+    # Use `command git` here (and below) to bypass any `git` alias --- e.g. the
+    # `alias git='ssh-gas -q ; git'` wrapper, which gets glued into the `if`
+    # condition and makes `! git ...` negate ssh-gas instead of git.
+    if ! command git rev-parse --verify "$base_branch" > /dev/null 2>&1; then
+        if command git rev-parse --verify "origin/${base_branch}" > /dev/null 2>&1; then
             base_branch="origin/${base_branch}"
             echo "Using \"${base_branch}\" as the base branch..."
         fi
@@ -612,7 +615,10 @@ function gwtat () {
     # to "git worktree add -b" below, git's DWIM-from-remote behavior would
     # create a local branch named after $base_branch and silently ignore our -b.
     local base_sha
-    base_sha="$(git rev-parse --verify "${base_branch}^{commit}")" || return 1
+    if ! base_sha="$(command git rev-parse --verify "${base_branch}^{commit}" 2>/dev/null)"; then
+        echo "ERROR: Could not resolve \"${base_branch}\" to a commit."
+        return 1
+    fi
 
     if [ -z "${worktree_name}" ]; then
         worktree_name="$(basename "$base_branch")"
@@ -655,7 +661,7 @@ function gwtat () {
     # echo "relative_worktree_dir: ${relative_worktree_dir}"
     # echo "dir_for_new_worktree: ${dir_for_new_worktree}"
 
-    if git rev-parse --verify "$worktree_name" > /dev/null 2>&1; then
+    if command git rev-parse --verify "$worktree_name" > /dev/null 2>&1; then
         # If the branch already exists, just create a new worktree dir for that branch.
         git worktree add "$dir_for_new_worktree" "$worktree_name" || return 1
     else
