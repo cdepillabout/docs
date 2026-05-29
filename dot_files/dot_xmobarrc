@@ -60,5 +60,5 @@ Config
 	  , Run StdinReader
 	  ]
   , template =
-      "%StdinReader% }{ dcut %dcut% | %cpu% | %memory% | %coretemp% | %battery% | <fc=#ee9a00>%date%</fc> | %uname% "
+      "%StdinReader% }{ %battery% | <fc=#ee9a00>%date%</fc> | %coretemp% | dcut %dcut% | %cpu% | %memory% | %uname% "
   }
