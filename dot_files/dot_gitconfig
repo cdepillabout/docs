@@ -24,6 +24,7 @@
 	br = branch
 	ci = commit
 	co = checkout
+	dt = difftool
 	ps = push
 [fetch]
 	prune = true
