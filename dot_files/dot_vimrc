@@ -198,23 +198,23 @@ if isdirectory(expand("~/.vim/bundle/vundle/.git"))
 
 
 	" PureScript
-	Bundle 'purescript-contrib/purescript-vim'
-	let g:purescript_indent_if = 2
-	let g:purescript_indent_case = 2
-	let g:purescript_indent_let = 4
-	let g:purescript_indent_where = 2
-	let g:purescript_indent_do = 2
-	let g:purescript_indent_in = 0
-	" https://github.com/purescript-contrib/purescript-vim/issues/65
-	autocmd FileType purescript setlocal complete=.,w,b,u,t
+	" Bundle 'purescript-contrib/purescript-vim'
+	" let g:purescript_indent_if = 2
+	" let g:purescript_indent_case = 2
+	" let g:purescript_indent_let = 4
+	" let g:purescript_indent_where = 2
+	" let g:purescript_indent_do = 2
+	" let g:purescript_indent_in = 0
+	" " https://github.com/purescript-contrib/purescript-vim/issues/65
+	" autocmd FileType purescript setlocal complete=.,w,b,u,t
 
 
 	" Dhall
-	Bundle 'vmchale/dhall-vim'
+	" Bundle 'vmchale/dhall-vim'
 
 
 	" Rust
-	Bundle 'rust-lang/rust.vim'
+	" Bundle 'rust-lang/rust.vim'
 
 
 	" Typescript
