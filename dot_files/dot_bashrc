@@ -409,12 +409,11 @@ alias gdb='gdb -q'
 # for this new connection.)
 function ssh-gas ()
 {
-    local auth_sock="$(get-ssh-auth-sock "$@")"
-    local ret="$?"
-
-    if [ "$ret" = 0 ] ; then
-        export SSH_AUTH_SOCK="$auth_sock"
-    fi
+    # Keep the declaration separate: `local x="$(cmd)"` returns the status of
+    # `local`, not of `cmd`, and a failure then clears SSH_AUTH_SOCK.
+    local auth_sock
+    auth_sock="$(get-ssh-auth-sock "$@")" || return
+    export SSH_AUTH_SOCK="$auth_sock"
 }
 
 # Call ssh-gas and then git.

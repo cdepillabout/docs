@@ -33,6 +33,17 @@ for arg in "$@" ; do
   fi
 done
 
+# On macOS, use the socket of the launchd-managed agent. That agent also
+# listens on a ~/.ssh/agent/ socket, but requests on that socket hang.
+if command -v launchctl >/dev/null 2>&1 ; then
+  launchd_sock="$(launchctl getenv SSH_AUTH_SOCK 2>/dev/null || true)"
+  if [[ -S "$launchd_sock" ]] ; then
+    [ "$VERBOSE" ] && echo "using auth sock: $launchd_sock" >&2
+    echo "$launchd_sock"
+    exit 0
+  fi
+fi
+
 # get all the existing agent files
 shopt -s extglob nullglob
 
@@ -49,7 +60,8 @@ for f in "${potential_agent_file_locations[@]}"; do
   # make sure it is a socket
   [[ -S "$f" ]] || continue
 
-  mtime=$(stat -c %Y -- "$f" 2>/dev/null) || continue
+  # GNU stat takes -c, BSD (macOS) stat takes -f.
+  mtime=$(stat -c %Y -- "$f" 2>/dev/null || stat -f %m -- "$f" 2>/dev/null) || continue
   if (( mtime > best_mtime )); then
     best_mtime=$mtime
     auth_sock=$f
@@ -58,7 +70,7 @@ done
 
 # make sure there is an auth sock
 if [ -z "$auth_sock" ] ; then
-  [ ! "$QUIET" ] && echo "ERROR: no auth sock available"
+  [ ! "$QUIET" ] && echo "ERROR: no auth sock available" >&2
   exit 1
 fi
 
