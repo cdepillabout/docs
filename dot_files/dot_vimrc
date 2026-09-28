@@ -12,7 +12,7 @@ if filereadable("/etc/vimrc") " arch linux
 endif
 
 set nocompatible		" Explicitly turn off compatibility mode
-filetype off
+filetype plugin indent off
 
 " This has to come first because it resets all highlighting.
 set background=dark
