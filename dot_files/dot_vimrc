@@ -1065,6 +1065,24 @@ endfunction
 
 nnoremap <leader>cf :call CopyFileReference()<CR>
 
+" Copy the absolute file path to the clipboard.
+function! CopyAbsoluteFileReference()
+  let reference = '@' . expand('%:p')
+  let @+ = reference
+endfunction
+
+" Keep the mapping command out of Vim's command area.
+nnoremap <silent> <leader>cg :call CopyAbsoluteFileReference()<CR>
+
+" Copy the absolute file path and current line number to the clipboard.
+function! CopyAbsoluteFileLineReference()
+  let reference = '@' . expand('%:p') . ':' . line('.')
+  let @+ = reference
+endfunction
+
+" Keep the mapping command out of Vim's command area.
+nnoremap <silent> <leader>ck :call CopyAbsoluteFileLineReference()<CR>
+
 
 " Delete all the open buffers which are not visible in any window/tab.
 function! s:DeleteHiddenBuffers() abort
