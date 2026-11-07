@@ -51,6 +51,7 @@ potential_agent_file_locations=(
   /tmp/ssh-+([A-Za-z0-9 ])/agent.+([0-9])
   "$HOME/.ssh/agent"/s.+([A-Za-z0-9]).agent.+([A-Za-z0-9])
   "$HOME/.ssh/agent"/s.+([A-Za-z0-9]).sshd.+([A-Za-z0-9])
+  "$HOME/.ssh/agent"/s.+([A-Za-z0-9]).local.+([A-Za-z0-9.])
 )
 
 # pick the most recently created/modified *socket*
